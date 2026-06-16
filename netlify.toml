@@ -1,0 +1,13 @@
+# Netlify deployment config for the Offload Security documentation wiki.
+# This is a STANDALONE repo (the docs site is the repo root), so base is ".".
+# In Netlify: "Add new site" -> connect this repo -> settings below are auto-applied.
+
+[build]
+  base = "."
+  publish = "build"
+  command = "npm ci && npm run build"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# SPA-friendly 404 handling is provided by Docusaurus; no redirects needed for clean URLs.

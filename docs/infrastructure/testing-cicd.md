@@ -1,0 +1,177 @@
+---
+title: "Testing & CI/CD"
+sidebar_position: 5
+---
+
+The OffloadSecurity CSPM platform utilizes a multi-layered testing strategy and a robust GitHub Actions-based CI/CD pipeline to ensure code quality, architectural integrity, and reliable deployments. The testing suite spans from AST-based architectural enforcement to asynchronous unit tests for the Celery-based scanning engine, AI security services, and CI/CD policy gates.
+
+## CI/CD Pipeline Architecture
+
+The platform's lifecycle is managed through the `deploy.yml` GitHub Action workflow, which handles Continuous Integration and Deployment to EC2 environments.
+
+### CI/CD Workflow Data Flow
+The following diagram illustrates the progression from code push to production deployment, including the service dependencies required for integration testing.
+
+**CI/CD Pipeline Flow**
+```mermaid
+graph TD
+    "Push/PR"["Code Push / PR"] --> "Lint"["🔍 Job 1: Lint & Quality"]
+    
+    subgraph "QualityChecks"
+    "Lint" --> "Ruff"["Ruff (Python)"]
+    "Lint" --> "Pylint"["Pylint (Python)"]
+    "Lint" --> "ESLint"["ESLint (JS/React)"]
+    end
+    
+    "QualityChecks" --> "Tests"["🧪 Job 2: Run Tests"]
+    
+    subgraph "TestEnvironment"
+    "Tests" --> "Pytest"["Pytest (Backend)"]
+    "Tests" --> "YarnTest"["Yarn Test (Frontend)"]
+    "Pytest" -.-> "MongoDB"["mongo:7"]
+    "Pytest" -.-> "Redis"["redis:7-alpine"]
+    end
+    
+    "Tests" --> "Build"["🏗️ Job 3: Build & Package"]
+    "Build" --> "Deploy"["🚀 Job 4: Deploy to EC2"]
+    
+    "Pytest" --> "Codecov"["📊 Coverage Upload"]
+```
+Sources: `.github/workflows/deploy.yml:1-102`, `.github/workflows/deploy.yml:106-131`
+
+### Key Pipeline Components
+*   **Environment**: Uses Python 3.12 and Node 20 `.github/workflows/deploy.yml:17-18`.
+*   **Linting**: Employs `ruff` for Python linting and `pylint` for deep code quality analysis of `core/`, `services/`, and `routes/` `.github/workflows/deploy.yml:54-62`.
+*   **Services**: Backend tests run against live containers for MongoDB and Redis to validate repository and caching layers `.github/workflows/deploy.yml:111-131`.
+*   **Coverage**: Coverage reports are generated via `pytest-cov` and uploaded to Codecov `.github/workflows/deploy.yml:169-177`.
+
+---
+
+## Architectural Enforcement: Scan Storage Contract
+
+A critical component of the testing suite is the **Scan Storage Contract** test. This is a machine-enforceable architectural constraint that prevents "data siloing" by ensuring all scan results are persisted through a single canonical service.
+
+### Implementation Details
+The test in `test_scan_storage_contract.py` uses the Python `ast` (Abstract Syntax Tree) module to parse every route, service, and task file `backend/tests/architecture/test_scan_storage_contract.py:29-33`. It identifies any direct calls to MongoDB mutating methods (e.g., `insert_one`, `update_many`, `bulk_write`) on collections that are not explicitly allow-listed `backend/tests/architecture/test_scan_storage_contract.py:38-50`.
+
+**Contract Enforcement Logic**
+```mermaid
+graph TD
+    "ASTParser"["ast.parse()"] --> "TargetFiles"["_ROUTE_GLOBS"]
+    "TargetFiles" --> "RouteFiles"["backend/routes/*_scan_routes.py"]
+    "TargetFiles" --> "TaskFiles"["backend/tasks/*_scan_tasks.py"]
+    "TargetFiles" --> "SvcFiles"["backend/services/*_scan_orchestration_service.py"]
+    
+    "ASTParser" --> "CheckMethod"{"Is Mutating Method?"}
+    "CheckMethod" -- "Yes" --> "CheckAllowList"{"In ALLOWED_DIRECT_WRITE_COLLECTIONS?"}
+    
+    "CheckAllowList" -- "No" --> "Fail"["❌ Fail CI: Direct Write to Legacy Collection"]
+    "CheckAllowList" -- "Yes" --> "Pass"["✅ Pass: Metadata/Audit Write"]
+    
+    "Pass" --> "Rule"["Rule: Must use native_scan_results_service.store_scan_result"]
+```
+Sources: `backend/tests/architecture/test_scan_storage_contract.py:1-25`, `backend/tests/architecture/test_scan_storage_contract.py:115-135`
+
+---
+
+## Unit & Integration Testing
+
+The platform utilizes `pytest` and `pytest-asyncio` for comprehensive backend testing, using `AsyncMock` to simulate database interactions.
+
+### Authentication & Security Middleware
+Tests for the `AuthService` validate the security of the identity layer:
+*   **Password Hashing**: Verifies PBKDF2 salt uniqueness and verification logic in `TestPasswordHashing` `backend/tests/unit/test_auth.py:54-97`.
+*   **Registration**: Validates that the first user becomes an `ADMIN` and prevents duplicate email registration `backend/tests/unit/test_auth.py:110-171`.
+*   **Security Middleware**: Validates that rate limits and security headers are correctly applied `backend/tests/unit/test_security_middleware.py:1-10`.
+*   **Rate Limiting Logic**: The `RateLimiter` is tested for endpoint-specific rules (e.g., stricter limits for `/api/auth/login`) and IP-based client ID generation `backend/tests/unit/test_security_middleware.py:51-77`.
+
+### CI/CD Policy Gate & Webhook Security
+The platform includes specific tests for CI/CD integration and webhook safety:
+*   **Policy Gates**: The `CICDIntegrationService` is tested for its ability to evaluate "Pass/Fail" results based on severity thresholds and CISA KEV status `backend/services/cicd_integration_service.py:54-147`.
+*   **Webhook Security**: Tests in `test_webhook_security.py` ensure that HMAC signatures are verified and SSRF protections prevent targeting internal IP ranges during webhook delivery `backend/tests/unit/test_webhook_security.py:1-35`.
+
+### Container & Cloud Security Integration
+Integration tests validate the scanning and policy enforcement layers:
+*   **Container Security**: Tests in `test_container_security.py` verify SBOM generation with Syft and vulnerability scanning with Grype using mocked tool outputs `backend/tests/integration/test_container_security.py:72-91`.
+*   **GCP Org Scanning**: Hierarchical scanning tests (Phase 3) validate the multi-layer approach combining Cloud Asset Inventory and Prowler checks across an entire organization `backend/tests/test_gcp_org_phase3.py:1-22`.
+
+---
+
+## CI/CD Pipeline Integration API
+
+The platform provides a dedicated API for external CI/CD pipelines to trigger scans and check quality gates.
+
+### Trigger & Gate Flow
+External pipelines use API keys to interact with `cicd_scan_routes.py` and `cicd_integration_routes.py`.
+
+**CI/CD API Interaction**
+```mermaid
+sequenceDiagram
+    participant CI as "GitHub Action / Jenkins"
+    participant API as "cicd_integration_routes.py"
+    participant SVC as "CICDIntegrationService"
+    participant STORE as "NativeScanResultsService"
+
+    CI->>API: POST /api/ci/scan (target, scan_type)
+    API->>SVC: trigger_scan(team_id, target, scan_type)
+    SVC-->>API: scan_id
+    API-->>CI: 200 OK (scan_id)
+    
+    loop Polling
+        CI->>API: GET /api/ci/scan/{id}/status
+        API-->>CI: status (running/completed)
+    end
+    
+    CI->>API: GET /api/ci/gate?scan_id={id}
+    API->>SVC: check_gate(team_id, scan_id)
+    SVC->>STORE: get_scan_findings(scan_id)
+    SVC-->>API: {gate: "pass", exit_code: 0}
+    API-->>CI: 200 OK
+```
+Sources: `backend/routes/cicd_integration_routes.py:66-123`, `backend/services/cicd_integration_service.py:54-147`, `backend/routes/cicd_scan_routes.py:82-125`
+
+---
+
+## Build & Runtime Validation
+
+The `validate_build.py` script (often used in the Docker build process) provides a dual-mode verification system to ensure the environment is correctly configured before deployment.
+
+**System Integrity Check Flow**
+```mermaid
+graph TD
+    "Validator"["validate_build.py"] --> "BuildMode"["Build-time (Dockerfile)"]
+    "Validator" --> "RuntimeMode"["Runtime (server.py startup)"]
+    
+    subgraph "BuildChecks"
+    "BuildMode" --> "SCF"["check_scf_data()"]
+    "BuildMode" --> "Routes"["check_routes()"]
+    "BuildMode" --> "Deps"["check_critical_deps()"]
+    end
+    
+    subgraph "RuntimeChecks"
+    "RuntimeMode" --> "Mongo"["check_mongodb()"]
+    "RuntimeMode" --> "Redis"["check_redis()"]
+    "RuntimeMode" --> "Encrypt"["check_encryption_key()"]
+    "RuntimeMode" --> "Docker"["check_docker()"]
+    end
+    
+    "BuildChecks" -- "Fail" --> "AbortBuild"["❌ Build Fails"]
+    "RuntimeChecks" -- "Fail" --> "LogWarning"["⚠️ Log Degradation"]
+```
+Sources: `backend/services/system_integrity_monitor.py:68-132`.
+
+---
+
+## Test Report Structure
+
+| Test Category | Tooling | Key Entities Tested |
+| :--- | :--- | :--- |
+| **Architectural** | AST + Pytest | `Scan Storage Contract`, `Repository Pattern` |
+| **Unit** | Pytest-Asyncio | `AuthService`, `RateLimiter`, `CICDIntegrationService` |
+| **Integration** | TestClient + Mock | `Container Security`, `GCP Org Onboarding`, `GitHub App Webhooks` |
+| **CI/CD Gates** | API Key + Pytest | `check_gate`, `trigger_scan`, `SARIF Export` |
+| **Cloud Security** | Mock SDKs | `GCP Organization Discovery`, `Prowler Layered Scanning` |
+
+Sources: `backend/tests/architecture/test_scan_storage_contract.py:115-135`, `backend/tests/unit/test_auth.py:1-7`, `backend/services/cicd_integration_service.py:38-147`, `backend/tests/integration/test_container_security.py:1-8`, `backend/tests/test_gcp_org_phase3.py:1-22`.
+
+---
