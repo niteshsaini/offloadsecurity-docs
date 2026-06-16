@@ -10,7 +10,7 @@ This guide gets you from "I have access" to "I'm reviewing my first findings." I
 
 ## 1. Sign in
 
-1. Open the platform URL in your browser (for a default local install this is `http://localhost:3000`; for a hosted deployment, use the address your administrator gave you).
+1. Open the platform URL in your browser — e.g. `https://yourdomain.com` (the address your administrator gave you).
 2. Enter your **email** and **password** on the login screen and select **Sign in**.
 3. On success you land on the **Dashboard**.
 
