@@ -7,7 +7,7 @@ This page provides a technical guide for deploying and configuring the OffloadSe
 
 ## Deployment Architecture
 
-The platform follows a multi-service architecture coordinated via `docker-compose.yml`. The backend is built using a multi-stage `Dockerfile.backend` that ensures a lean runtime image while including necessary system dependencies like the Docker CLI, Syft, and Grype for container/SCA scanning.
+The platform follows a multi-service architecture coordinated via Docker Compose. The backend runs as a multi-stage container image that keeps the runtime lean while bundling the system dependencies it needs — the Docker CLI, Syft, and Grype — for container/SCA scanning.
 
 The backend service orchestrates scans by launching sibling containers (Docker-in-Docker pattern). It requires access to the host's Docker socket, which is handled by mapping the socket and adjusting the `DOCKER_GID` to match the host group. For cloud security scans, the `UnifiedProwlerService` uses a bind-mounted directory `PROWLER_HOST_OUTPUT_DIR` to share credentials and artifacts between the worker and the Prowler container.
 
@@ -19,7 +19,7 @@ The following diagram illustrates the bootstrap and runtime connectivity flow du
 graph TD
     subgraph "Orchestration_Space"
         WIZARD["Docker Setup Wizard"]
-        COMPOSE["docker-compose.yml"]
+        COMPOSE["Docker Compose"]
     end
 
     subgraph "Code_Entity_Space"
@@ -36,7 +36,7 @@ graph TD
         HOST_FS["PROWLER_HOST_OUTPUT_DIR"]
     end
 
-    WIZARD -- "Generates .env" --> COMPOSE
+    WIZARD -- "Generates configuration" --> COMPOSE
     COMPOSE -- "Builds & Validates" --> VALIDATOR
     COMPOSE -- "Starts" --> BACKEND
     BACKEND -- "Initializes" --> SETUP_SVC
@@ -51,12 +51,12 @@ graph TD
 
 ## Interactive Docker Setup
 
-The primary entry point for deployment is the interactive `docker-setup.sh` wizard. This script automates environment validation, secret generation, and service orchestration.
+The primary entry point for deployment is an interactive setup wizard that automates environment validation, secret generation, and service orchestration.
 
 ### Key Functions
 - **Pre-flight Checks**: Validates Docker and Docker Compose installations and detects the host Docker socket GID to ensure the `backend` container can launch sibling containers for scanning.
 - **Secret Generation**: The script includes helpers to generate cryptographically secure hex keys, Base64 strings, and Fernet keys (`gen_fernet`) for sensitive configuration.
-- **Environment Configuration**: Populates the `.env` file from `.env.example`, ensuring critical variables like `MONGO_ROOT_PASSWORD` and `REDIS_PASSWORD` are set.
+- **Environment Configuration**: Populates the environment configuration from a provided template, ensuring critical variables like `MONGO_ROOT_PASSWORD` and `REDIS_PASSWORD` are set.
 - **Build Validation**: During the Docker build, the build validation step verifies that critical Python dependencies are present; the build fails if imports are missing.
 
 ### Setup Gate Middleware
@@ -80,13 +80,13 @@ The `ScanResultsDatabase` class provides dedicated persistent storage for all se
 
 ## Manual & Bare-Metal Installation
 
-For deployments on Ubuntu 24.04 or Debian 12 without Docker, the `install.sh` and `manual-deploy-ubuntu24.sh` scripts provide idempotent installation paths.
+For deployments on Ubuntu 24.04 or Debian 12 without Docker, dedicated installation scripts provide idempotent, non-Docker installation paths.
 
 ### Installation Steps
 1. **System Dependencies**: Installs core packages including `build-essential`, `libffi-dev`, `supervisor`, and `nginx`.
 2. **Python 3.12**: Installs Python 3.12, configures a virtual environment, and ensures `pip` is available.
 3. **Infrastructure**: Installs MongoDB 7.0 and Redis-server, enabling them via `systemctl`.
-4. **Nginx Configuration**: The `nginx-ssl.conf.template` or `setup-nginx-single-server.sh` configures Nginx as a reverse proxy with specialized hardening.
+4. **Nginx Configuration**: The platform configures Nginx as a hardened reverse proxy with specialized security hardening.
     - **Security Headers**: Explicitly sets `X-Frame-Options`, `X-Content-Type-Options`, and `Content-Security-Policy`.
     - **Proxy Timeouts**: 900-second `proxy_read_timeout` to match the backend's `upload_heavy_timeout_seconds` for large code/API spec uploads.
 
@@ -94,7 +94,7 @@ For deployments on Ubuntu 24.04 or Debian 12 without Docker, the `install.sh` an
 ```mermaid
 graph LR
     subgraph "Host_OS_(Ubuntu/Debian)"
-        INSTALL_SH["manual-deploy-ubuntu24.sh"]
+        INSTALL_SH["Installation Script"]
         NGINX["Nginx (Reverse Proxy)"]
         SUPERVISOR["SupervisorD"]
     end
@@ -114,9 +114,9 @@ graph LR
 
 ---
 
-## Environment Configuration (`.env`)
+## Environment Configuration
 
-Critical platform behavior is controlled via environment variables. A template is provided in `.env.example`.
+Critical platform behavior is controlled via environment variables, populated from a provided template.
 
 ### Critical Variables
 | Variable | Purpose |

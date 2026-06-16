@@ -7,7 +7,7 @@ The OffloadSecurity CSPM platform utilizes a multi-service architecture designed
 
 ## Docker Compose Architecture
 
-The platform is orchestrated using a production-hardened `docker-compose.yml` that manages the core service categories. This architecture ensures process isolation and provides a standardized environment for security scanning tools.
+The platform is orchestrated using a production-hardened Docker Compose setup that manages the core service categories. This architecture ensures process isolation and provides a standardized environment for security scanning tools.
 
 ### Service Grid & Data Flow
 
@@ -58,7 +58,7 @@ The backend image also pre-installs several scanning binaries directly for perfo
 
 ## Environment Configuration
 
-Configuration is managed via a central `.env` file. The setup wizard automates the generation of these secrets, including Fernet keys and HMAC secrets.
+Configuration is managed via central environment variables. The setup wizard automates the generation of these secrets, including Fernet keys and HMAC secrets.
 
 | Variable | Purpose |
 | :--- | :--- |

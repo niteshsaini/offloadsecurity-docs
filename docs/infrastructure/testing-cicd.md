@@ -136,7 +136,7 @@ The build validation script (often used in the Docker build process) provides a 
 **System Integrity Check Flow**
 ```mermaid
 graph TD
-    "Validator"["Build Validator"] --> "BuildMode"["Build-time (Dockerfile)"]
+    "Validator"["Build Validator"] --> "BuildMode"["Build-time (container build)"]
     "Validator" --> "RuntimeMode"["Runtime (server startup)"]
     
     subgraph "BuildChecks"

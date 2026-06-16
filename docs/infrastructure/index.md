@@ -10,7 +10,7 @@ This section provides a technical overview of the OffloadSecurity CSPM platform'
 The platform is designed as a multi-service architecture orchestrated via **Docker Compose**. It utilizes a hardened production configuration that isolates infrastructure components (MongoDB, Redis) from the public-facing services (Backend API, React Frontend).
 
 ### Multi-Service Architecture
-The standard deployment consists of several interconnected services. The backend is built using a multi-stage Dockerfile to ensure a lean runtime environment.
+The standard deployment consists of several interconnected services. The backend is built as a multi-stage container image to ensure a lean runtime environment.
 
 | Service | Role | Key Technology |
 | :--- | :--- | :--- |
@@ -21,7 +21,7 @@ The standard deployment consists of several interconnected services. The backend
 | `cspm-certbot` | Automated SSL/TLS certificate management | Let's Encrypt / ACME |
 
 ### Infrastructure Setup
-The backend container includes critical security tools like `nmap`, `syft`, `grype`, and `trivy` directly in the image. A specialized build validation script acts as a safety net during the build process, verifying that all route files compile and critical Python packages are importable. Deployment is simplified by the `docker-setup.sh` interactive wizard which handles secret generation, environment configuration, and host-level tuning for Redis.
+The backend container includes critical security tools like `nmap`, `syft`, `grype`, and `trivy` directly in the image. A specialized build validation script acts as a safety net during the build process, verifying that all route files compile and critical Python packages are importable. Deployment is simplified by an interactive setup wizard which handles secret generation, environment configuration, and host-level tuning for Redis.
 
 For details, see **Deployment & Configuration**.
 
@@ -73,7 +73,7 @@ The platform includes a built-in monitoring stack to ensure system integrity and
 
 ### Health & Integrity
 The backend implements a comprehensive health check at `/api/health`, used by Docker to determine container status.
-*   **SSL Automation:** The `nginx-entrypoint.sh` script manages the transition from HTTP to HTTPS automatically once Certbot obtains valid certificates.
+*   **SSL Automation:** The reverse proxy manages the transition from HTTP to HTTPS automatically once Certbot obtains valid certificates.
 *   **Metrics & Logs:** Every module emitter routes through a metrics singleton, rendered at `GET /metrics` for Prometheus scraping. Structured logs are shipped to Loki via **promtail**.
 *   **Resource Limits:** Production hardening is applied via Docker Compose `ulimits` and resource constraints.
 
@@ -121,8 +121,8 @@ For details, see **Testing & CI/CD**.
 | Tool | Purpose |
 | :--- | :--- |
 | Build validation | Build-time integrity & dependency check |
-| `docker-setup.sh` | Interactive configuration and secret generation |
-| `nginx-entrypoint.sh` | Automated SSL activation & ACME challenge |
+| Setup wizard | Interactive configuration and secret generation |
+| Reverse-proxy entrypoint | Automated SSL activation & ACME challenge |
 | `promtail` / `Loki` | Log aggregation and shipping |
 | `syft` / `grype` | Native SBOM and vulnerability scanning |
 

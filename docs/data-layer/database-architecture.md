@@ -112,6 +112,6 @@ The platform uses MongoDB TTL indexes to auto-purge old scan data, typically set
 ## Initialization and Deployment
 
 Database setup is handled idempotently during platform installation and startup:
-1.  **System Level**: The `install.sh` script installs core packages and configures MongoDB as a system service.
+1.  **System Level**: The installation script installs core packages and configures MongoDB as a system service.
 2.  **App Level**: `CSPMDatabaseManager.connect_to_mongo()` is called on startup to initialize database handles and trigger index creation.
 3.  **Cross-Module Support**: The `AssessmentIntegrationService` allows for data migration and "wrapping" of legacy module data into unified global assessment structures.

@@ -64,7 +64,7 @@ The platform implements a multi-tier storage strategy for scan results and compl
 
 ### Object Storage Service
 The `ObjectStorageService` provides a unified interface for S3, GCS, Azure, and local filesystem backends.
-*   **Connectivity Probes**: The platform includes a `test_storage_connectivity` probe that validates credentials and write permissions before configuration is saved to `.env`.
+*   **Connectivity Probes**: The platform includes a `test_storage_connectivity` probe that validates credentials and write permissions before the configuration is saved.
 *   **Cloud-Primary Logic**: The `ScanResultsStorage` service attempts to write to cloud providers first. If the write fails, it falls back to local disk to prevent data loss.
 
 ### Evidence Masking & Collection
