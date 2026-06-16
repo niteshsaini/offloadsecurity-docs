@@ -19,7 +19,7 @@ const config: Config = {
   baseUrl: '/',
 
   organizationName: 'niteshsaini',
-  projectName: 'offload-cspm',
+  projectName: 'offloadsecurity-docs',
 
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
