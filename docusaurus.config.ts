@@ -13,6 +13,7 @@ const config: Config = {
 
   markdown: {
     format: 'md',
+    mermaid: true,
   },
 
   url: 'https://docs.offloadsecurity.com',
@@ -46,8 +47,13 @@ const config: Config = {
     ],
   ],
 
+  themes: ['@docusaurus/theme-mermaid'],
+
   themeConfig: {
     image: 'img/offload-social-card.png',
+    mermaid: {
+      theme: { light: 'neutral', dark: 'dark' },
+    },
     colorMode: {
       defaultMode: 'dark',
       respectPrefersColorScheme: true,
