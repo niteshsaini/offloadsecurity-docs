@@ -10,6 +10,12 @@ Container Security scans the images behind your workloads for vulnerabilities, l
 
 ![Container Security: scan an image and review vulnerability, SBOM, and policy results](/img/screenshots/container-security.png)
 
+:::note Prerequisites (GCP registries)
+Scanning a private **Artifact Registry** needs `roles/artifactregistry.reader`
+(and `roles/storage.objectViewer` for legacy `gcr.io`). See
+**[Required Permissions (GCP)](../cloud-security/permissions.md)**.
+:::
+
 ## What it does
 
 - **Scans images from any registry.** Connect Amazon ECR, Google Artifact Registry (GCR), Azure Container Registry (ACR), or Docker Hub to discover and scan your repositories. You can also scan any public or one-off image by name (for example, `nginx:latest`) without connecting anything.

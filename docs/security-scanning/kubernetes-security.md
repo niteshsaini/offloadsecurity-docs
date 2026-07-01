@@ -10,6 +10,12 @@ Kubernetes Security scans your clusters for misconfigurations, insecure RBAC, ri
 
 ![Kubernetes Security cluster dashboard](/img/screenshots/kubernetes-security.png)
 
+:::note Prerequisites (GCP/GKE)
+GKE cluster discovery needs `roles/container.viewer` **plus** an in-cluster RBAC
+`ClusterRole` (GCP IAM alone can't read workloads). See
+**[Required Permissions (GCP)](../cloud-security/permissions.md)**.
+:::
+
 ## What it does
 
 - **Onboards clusters** with read-only credentials — a kubeconfig file or a service-account token — so the platform can talk to your API server without write access.
