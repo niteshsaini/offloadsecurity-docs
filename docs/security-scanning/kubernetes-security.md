@@ -10,6 +10,12 @@ Kubernetes Security scans your clusters for misconfigurations, insecure RBAC, ri
 
 ![Kubernetes Security cluster dashboard](/img/screenshots/kubernetes-security.png)
 
+:::note Prerequisites
+Cluster discovery (EKS / GKE / AKS) rides on the cloud read role, but reading
+workloads needs an **in-cluster RBAC `ClusterRole`** (cloud IAM alone can't).
+See **[Required Permissions](../cloud-security/permissions.md)**.
+:::
+
 ## What it does
 
 - **Onboards clusters** with read-only credentials — a kubeconfig file or a service-account token — so the platform can talk to your API server without write access.
