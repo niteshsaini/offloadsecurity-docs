@@ -10,10 +10,10 @@ Container Security scans the images behind your workloads for vulnerabilities, l
 
 ![Container Security: scan an image and review vulnerability, SBOM, and policy results](/img/screenshots/container-security.png)
 
-:::note Prerequisites (GCP registries)
-Scanning a private **Artifact Registry** needs `roles/artifactregistry.reader`
-(and `roles/storage.objectViewer` for legacy `gcr.io`). See
-**[Required Permissions (GCP)](../cloud-security/permissions.md)**.
+:::note Prerequisites
+Scanning private registries needs pull access — ECR (`ReadOnlyAccess`),
+Artifact Registry (`artifactregistry.reader`), or ACR (`AcrPull`). See
+**[Required Permissions](../cloud-security/permissions.md)**.
 :::
 
 ## What it does

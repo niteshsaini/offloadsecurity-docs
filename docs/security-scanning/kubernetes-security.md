@@ -10,10 +10,10 @@ Kubernetes Security scans your clusters for misconfigurations, insecure RBAC, ri
 
 ![Kubernetes Security cluster dashboard](/img/screenshots/kubernetes-security.png)
 
-:::note Prerequisites (GCP/GKE)
-GKE cluster discovery needs `roles/container.viewer` **plus** an in-cluster RBAC
-`ClusterRole` (GCP IAM alone can't read workloads). See
-**[Required Permissions (GCP)](../cloud-security/permissions.md)**.
+:::note Prerequisites
+Cluster discovery (EKS / GKE / AKS) rides on the cloud read role, but reading
+workloads needs an **in-cluster RBAC `ClusterRole`** (cloud IAM alone can't).
+See **[Required Permissions](../cloud-security/permissions.md)**.
 :::
 
 ## What it does

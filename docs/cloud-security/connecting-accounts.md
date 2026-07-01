@@ -12,7 +12,7 @@ To scan your cloud posture, you connect each cloud account (AWS, Azure, or GCP) 
 
 :::tip Grant permissions first
 Onboarding most often fails because the service account is missing IAM roles.
-See **[Required Permissions (GCP)](./permissions.md)** for the exact APIs and
+See **[Required Permissions](./permissions.md)** for the exact APIs and
 roles per capability — cloud/CSPM, asset inventory, Kubernetes, container
 registries, and cloud events.
 :::
