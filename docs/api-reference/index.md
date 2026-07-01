@@ -35,7 +35,8 @@ from the running server:
 | What | URL |
 | --- | --- |
 | Swagger UI (try requests in the browser) | `https://<your-offload-host>/api/docs` |
-| OpenAPI schema (JSON — import into Postman/Insomnia/codegen) | `https://<your-offload-host>/openapi.json` |
+| ReDoc (clean reference view) | `https://<your-offload-host>/api/redoc` |
+| OpenAPI schema (JSON — import into Postman/Insomnia/codegen) | `https://<your-offload-host>/api/openapi.json` |
 
 Use the Swagger UI for the **exhaustive** endpoint list and to experiment. This
 documentation focuses on **authentication, conventions, and the common
