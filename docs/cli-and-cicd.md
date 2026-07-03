@@ -10,6 +10,10 @@ Run Offload Security scans straight from your pipeline and **gate releases on th
 
 Every scan you trigger from CI/CD also shows up in the platform UI alongside your other scans, so findings flow into the same Vulnerability Management, Risk, and Reporting workflows you already use.
 
+:::tip Looking for the full API?
+This page covers the pipeline/scan workflow. For the platform's complete REST API — authentication, the endpoint reference, and automation patterns beyond scanning (pulling findings, provisioning accounts, exporting reports, reacting to webhooks) — see **[API & Automation](./api-automation/index.md)**.
+:::
+
 ## What it does
 
 - **Trigger scans from a pipeline** — start a web, network, SSL/TLS, API, container, Kubernetes, or code-security scan with a single authenticated request.
