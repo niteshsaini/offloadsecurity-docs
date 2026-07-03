@@ -134,4 +134,4 @@ Begin with one channel and the default alerts, confirm they land correctly, then
 - **[Third-party integrations](./third-party.md)** — connect ticketing, SIEM, and other external tools.
 - **[Integrations overview](./index.md)** — all of the platform's connectivity options.
 - **[Roles & Team Management](../authentication/rbac-team-management.md)** — who can configure integrations and notifications.
-- **[CI/CD integration](../infrastructure/testing-cicd.md)** — gate pipelines on scan results.
+- **[CLI & CI/CD integration](../cli-and-cicd.md)** — gate pipelines on scan results.
