@@ -31,9 +31,13 @@ Browse the full catalog in the **Integrations** area, filtered by category. The 
 | Category | Tools | Typical use |
 |---|---|---|
 | **Ticketing** | Jira, ServiceNow | Auto-create incident/change tickets from findings; two-way status sync; custom field and project mapping. |
-| **SIEM & SOAR** | Splunk, IBM QRadar, Microsoft Sentinel, Splunk Phantom, Wazuh | Forward audit events and findings; correlation/alerting; compliance dashboards. |
+| **SIEM & SOAR** | Splunk, IBM QRadar, Microsoft Sentinel, Splunk Phantom, **Wazuh** | Forward audit events and findings; correlation/alerting; compliance dashboards. |
 | **Incident response** | PagerDuty | Page on critical findings or SLA breaches with an auditable response timeline. |
 | **Collaboration & evidence** | Slack, Microsoft Teams, Confluence, SMTP Email | Channel alerts, reviewer sign-off prompts, and published evidence/audit-report pages. |
+
+:::note Wazuh is more than a SIEM forwarder
+The **[Wazuh integration](../on-premises/wazuh-integration.md)** is a first-class part of Offload Security's on-premises story: it brings endpoint (agent) data, security events, alerts, vulnerability state, file-integrity monitoring, and SCA compliance checks into a customized in-platform dashboard, and correlates them with the rest of your posture. For internal vulnerability scanning of private assets, see **[OpenVAS Scanning](../on-premises/openvas-scanning.md)**.
+:::
 
 :::tip There's more in the catalog
 The Integrations area also lists vulnerability scanners (Qualys, Tenable, Rapid7), code security (Snyk, SonarQube, Checkmarx, Veracode, GitHub CodeQL), container/cloud security (Aqua, Prisma Cloud, Sysdig, Prowler, AWS Security Hub), DevOps/CI/CD (Jenkins, GitHub Actions), and monitoring (Datadog, Grafana). Each tile shows what the tool does, its setup requirements, and a link to the vendor's documentation.

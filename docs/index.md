@@ -12,7 +12,10 @@ slug: "/"
 This documentation helps you **onboard, configure, and operate** the platform end to end — whether you're connecting your first cloud account or rolling it out across a security organization.
 
 :::tip New here?
-If you just want to get up and running, jump straight to **[Getting Started](./getting-started.md)**.
+- **Understand the "why"** → **[Introduction](./introduction/index.md)**: what Offload Security is, the problem it solves, and why to choose it over fragmented tools.
+- **Cover your private infrastructure** → **[On-Premises & Private Infrastructure](./on-premises/index.md)**: internal-network visibility, OpenVAS scanning, and the Wazuh integration.
+- **See it for your sector** → **[Solutions by Industry](./industries/index.md)**, including a detailed **[Banking & Financial Services](./industries/banking-financial-services.md)** breakdown.
+- **Just get running** → jump straight to **[Getting Started](./getting-started.md)**.
 :::
 
 ---
