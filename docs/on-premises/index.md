@@ -67,6 +67,6 @@ The internal scanning engines and Wazuh run **where your assets are** — inside
 
 ## Deployment shapes
 
-The on-premises model supports common enterprise topologies — hybrid (cloud posture in the platform, internal scanning inside your network), fully self-hosted, and restricted/segmented networks. For deployment mechanics, prerequisites, and operations, see **[Deployment](../infrastructure/deployment.md)**.
+The on-premises model supports common enterprise topologies — hybrid (cloud posture in the platform, internal scanning inside your network), fully self-hosted, and restricted/segmented networks. Deployment mechanics, prerequisites, and network placement are scoped with your implementation team during onboarding.
 
 Continue to **[Internal Network Visibility](./internal-network-visibility.md)** to see how discovery and monitoring work behind the firewall.

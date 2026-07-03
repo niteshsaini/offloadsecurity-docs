@@ -51,7 +51,7 @@ OpenVAS findings are normalized into the same finding schema as every other sour
 3. Schedule scans; results appear in Vulnerability Management alongside your cloud, application, and container findings.
 
 :::note Positioning and credentials
-Scan quality depends on network reachability and, for authenticated scans, valid host credentials. Placement of the scanner relative to your network segments is part of deployment planning — see **[Deployment](../infrastructure/deployment.md)**.
+Scan quality depends on network reachability and, for authenticated scans, valid host credentials. Placement of the scanner relative to your network segments is part of deployment planning handled during onboarding.
 :::
 
 ## OpenVAS and Wazuh together
