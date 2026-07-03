@@ -10,6 +10,13 @@ To scan your cloud posture, you connect each cloud account (AWS, Azure, or GCP) 
 
 ![Cloud Security management](/img/screenshots/cloud-security.png)
 
+:::tip Grant permissions first
+Onboarding most often fails because the service account is missing IAM roles.
+See **[Required Permissions](./permissions.md)** for the exact APIs and
+roles per capability — cloud/CSPM, asset inventory, Kubernetes, container
+registries, and cloud events.
+:::
+
 ## How connection works
 
 1. In the platform, go to **Cloud Security → Cloud Accounts** (or **Account Setup**) and select **Add Cloud Account**.
