@@ -43,7 +43,7 @@ Centralized ingestion is what makes those connections visible automatically, ins
 
 ## Data residency and control
 
-Because the internal scanning and telemetry engines run **inside your network**, centralized ingestion does not mean shipping raw internal data to a third party by default. On-prem and hybrid deployments keep sensitive telemetry within your boundary while still delivering a unified view — a requirement for many banks, healthcare providers, and regulated enterprises. For deployment topologies and data-flow options, see **[Deployment](../infrastructure/deployment.md)**.
+Because the internal scanning and telemetry engines run **inside your network**, centralized ingestion does not mean shipping raw internal data to a third party by default. On-prem and hybrid deployments keep sensitive telemetry within your boundary while still delivering a unified view — a requirement for many banks, healthcare providers, and regulated enterprises. Deployment topologies and data-flow options are scoped with your implementation team during onboarding.
 
 ## The outcome
 

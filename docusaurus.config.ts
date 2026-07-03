@@ -90,16 +90,16 @@ const config: Config = {
           title: 'Documentation',
           items: [
             {
+              label: 'Introduction',
+              to: '/introduction',
+            },
+            {
               label: 'Getting Started',
-              to: '/platform-overview/getting-started',
+              to: '/getting-started',
             },
             {
-              label: 'Architecture',
-              to: '/platform-overview/architecture',
-            },
-            {
-              label: 'Deployment',
-              to: '/infrastructure/deployment',
+              label: 'On-Premises',
+              to: '/on-premises',
             },
           ],
         },

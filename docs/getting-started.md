@@ -6,7 +6,7 @@ sidebar_position: 1
 
 # Getting Started
 
-This guide gets you from "I have access" to "I'm reviewing my first findings." It assumes the platform is already deployed and you have an account. If you're standing the platform up yourself, see **[Onboarding & Setup](./platform-overview/getting-started.md)** first.
+This guide gets you from "I have access" to "I'm reviewing my first findings." It assumes the platform is already deployed and you have an account.
 
 ## 1. Sign in
 
