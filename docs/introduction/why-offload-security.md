@@ -18,6 +18,8 @@ Because everything lands in one model:
 - Duplicate findings from different scanners are **reconciled**, so an analyst triages an issue once.
 - Risk and compliance state **update automatically** as findings open and close — no manual re-keying.
 
+This shared model is a **data lake** that every module writes to and reads from, and the **Vulnerability Dashboard** is the single pane of glass onto it — surfacing findings from the platform's own scanners *and* from your integrated third-party tools in one deduplicated queue. It's important enough to have its own page: **[The Data Lake & Single Pane of Glass](./unified-data-layer.md)**.
+
 ## What you get from unification
 
 ### A live picture of risk

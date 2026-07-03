@@ -1,12 +1,12 @@
 ---
 title: "Platform at a Glance"
 sidebar_label: "Platform at a Glance"
-sidebar_position: 3
+sidebar_position: 4
 ---
 
 # Platform at a Glance
 
-Offload Security is organized into modules that each own a domain of security work — and all feed the same correlated data model. This page is a map: what each module does, and where to read more.
+Offload Security is organized into modules that each own a domain of security work — and all feed the same correlated data model, or **[data lake](./unified-data-layer.md)**. This page is a map: what each module does, and where to read more.
 
 ## How the modules connect
 

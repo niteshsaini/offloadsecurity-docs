@@ -34,7 +34,8 @@ It is built for teams that need to **prove** security, not just perform it — w
 
 1. **[The Problem: Security Tool Sprawl](./the-problem.md)** — why fragmented tools and manual processes leave organizations exposed and audit-fatigued.
 2. **[Why Offload Security](./why-offload-security.md)** — how a unified platform changes the economics and outcomes of a security program, with a side-by-side comparison.
-3. **[Platform at a Glance](./platform-at-a-glance.md)** — the modules, how they connect, and where to go for each.
+3. **[The Data Lake & Single Pane of Glass](./unified-data-layer.md)** — the shared data layer that interlinks every module, and how the Vulnerability Dashboard becomes one view of all findings — including data from your integrated third-party tools.
+4. **[Platform at a Glance](./platform-at-a-glance.md)** — the modules, how they connect, and where to go for each.
 
 :::tip Just want to get hands-on?
 Skip ahead to **[Getting Started](../getting-started.md)** and connect your first environment.

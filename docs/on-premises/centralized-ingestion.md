@@ -6,7 +6,7 @@ sidebar_position: 5
 
 # Centralized Security Data Ingestion
 
-The point of on-premises support is not to add another dashboard — it's to remove one. Every internal capability the platform provides feeds a **single, correlated source of truth** that also holds your cloud, application, and container posture. This page explains what "centralized ingestion" actually means and why it's the difference between coverage and clarity.
+The point of on-premises support is not to add another dashboard — it's to remove one. Every internal capability the platform provides feeds the same **[unified data layer](../introduction/unified-data-layer.md)** — the data lake — that also holds your cloud, application, and container posture, and that the Vulnerability Dashboard renders as a single pane of glass. This page explains what "centralized ingestion" actually means and why it's the difference between coverage and clarity.
 
 ## One dashboard, every source
 
