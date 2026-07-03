@@ -60,10 +60,6 @@ const config: Config = {
     },
     navbar: {
       title: 'Offload Security',
-      logo: {
-        alt: 'Offload Security Logo',
-        src: 'img/logo.svg',
-      },
       items: [
         {
           type: 'docSidebar',
