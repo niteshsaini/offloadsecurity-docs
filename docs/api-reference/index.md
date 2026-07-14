@@ -74,7 +74,7 @@ curl -s "$OFFLOAD_HOST/api/vulnerabilities/occurrences?limit=5" \
 - **Multi‑tenancy:** every call is scoped to the API key's team — you only ever see your team's data.
 - **IDs:** resources use prefixed IDs (`osk_…` API keys, `clus_…` clusters, `occur_…` vulnerability occurrences, `alert_…` alerts).
 
-:::note Response shapes vary by endpoint
+:::note[Response shapes vary by endpoint]
 Most endpoints wrap results in a `{ "success": true, "data": … }` envelope, but a
 few return the payload directly. Each guide shows the **actual** response for that
 endpoint, and [Conventions](./conventions.md) explains the patterns. When in

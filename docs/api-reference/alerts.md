@@ -117,7 +117,7 @@ curl -s -X PUT "$OFFLOAD_HOST/api/alerts/alert_3f9c2a1b7e4d/status" \
 Each action returns the **updated alert object**. `acknowledge-all` returns
 `{ "acknowledged": <count> }`.
 
-:::note There is no separate "resolve" or "dismiss" endpoint
+:::note[There is no separate "resolve" or "dismiss" endpoint]
 Resolving, dismissing (false positive), closing, and reopening are all done via
 `PUT /api/alerts/{alert_id}/status` with the target `status`. Invalid transitions
 return **400**.

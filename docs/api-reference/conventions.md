@@ -22,7 +22,7 @@ Most endpoints wrap their payload in a standard envelope:
 
 The meaningful result is always under **`data`**.
 
-:::note Some endpoints return the payload directly
+:::note[Some endpoints return the payload directly]
 A few list endpoints (notably **Alerts** and **native scan results**) return their
 object directly instead of wrapping it — e.g. Alerts returns
 `{ "items": […], "pagination": {…} }` at the top level. Each guide shows the
@@ -88,7 +88,7 @@ exist depending on the layer that rejected the request:
 | `429 Too Many Requests` | Rate limit exceeded |
 | `500 Internal Server Error` | Unexpected server error |
 
-:::tip 404 vs 403
+:::tip[404 vs 403]
 Because every resource is team‑scoped, requesting an ID that belongs to another
 team returns **404** (not 403) — the platform never confirms the existence of
 resources outside your team.

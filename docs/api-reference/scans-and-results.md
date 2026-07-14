@@ -131,7 +131,7 @@ GET /api/native-scans/statistics
 | `403` | Missing *Run Scans* (trigger) or *View Scans* (read) |
 | `404` | `Scan result not found: {scan_id}` — wrong id, or the scan belongs to another team |
 
-:::note Two scan stores
+:::note[Two scan stores]
 Native scans (`/api/native-scans/*`, team‑scoped) and the aggregate history
 (`/api/scan-management/*`, user‑scoped) read from **different** collections. To
 fetch a single native scan's findings, use `GET /api/native-scans/results/{scan_id}`.

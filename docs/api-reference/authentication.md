@@ -77,7 +77,7 @@ prefix is retained afterward.
 }
 ```
 
-:::warning Store the key immediately
+:::warning[Store the key immediately]
 The plaintext `api_key` is shown **only** in this create response — the platform
 stores just a SHA‑256 hash and the 12‑char prefix. If you lose it, rotate or
 create a new one.
@@ -115,7 +115,7 @@ curl -s "$OFFLOAD_HOST/api/api-keys/scopes" -H "X-API-Key: $OFFLOAD_API_KEY"
 | `security_automation` | `scans:*`, `vulnerabilities:read/manage`, `cloud:read`, `reports:read/generate` |
 | `full_access` | all scopes |
 
-:::note Two permission layers
+:::note[Two permission layers]
 Offload Security checks **both** your key's **scopes** *and* the key owner's
 **team role** depending on the endpoint (e.g. onboarding a cloud account requires
 the *Manage Cloud Accounts* team permission; listing vulnerabilities only

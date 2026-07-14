@@ -64,12 +64,12 @@ curl -s -X POST "$OFFLOAD_HOST/api/k8s/clusters" \
 }
 ```
 
-:::note Treat any 2xx as success
+:::note[Treat any 2xx as success]
 Onboarding returns **201** with the cluster object. Don't gate success on a
 `success: true` field here — check the HTTP status.
 :::
 
-:::warning Kubeconfig safety validation
+:::warning[Kubeconfig safety validation]
 The platform **rejects** kubeconfigs that use `exec:` credential plugins,
 `cmd:`‑based token sources, or file token references (they'd run arbitrary
 commands on the scanner). Such a kubeconfig returns **400 `Unsafe kubeconfig: …`**.
