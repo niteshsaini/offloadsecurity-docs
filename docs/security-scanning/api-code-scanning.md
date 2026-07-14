@@ -8,6 +8,8 @@ sidebar_position: 5
 
 The **Code Command Center** scans your source code and software supply chain for security problems before they ship. Point it at a repository (or upload code or an SBOM) and it runs static analysis, secrets detection, dependency vulnerability checks, and open-source **license-compliance** review — then rolls the results into findings you can triage like any other scan.
 
+![Code Command Center overview with scan, upload, WAF testing, and Git connection tabs](/img/screenshots/code-command-center.png)
+
 ## What it does
 
 The Code Command Center runs several industry-standard scanners and consolidates their output for you:

@@ -5,6 +5,8 @@ sidebar_position: 2
 
 The Cloud Account Management subsystem provides enterprise-grade onboarding and lifecycle management for AWS, Azure, and GCP environments. It centralizes credential handling with high-security encryption, performs real-time connection validation using provider SDKs, and automates initial security posture discovery.
 
+![Cloud account setup wizard with AWS, GCP, and Azure providers](/img/screenshots/account-setup.png)
+
 ## CloudAccountService Lifecycle
 
 The `CloudAccountService` is the primary orchestrator for managing cloud identities and their associated metadata. It manages the transition from raw credentials to an active, monitored cloud account.

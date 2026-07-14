@@ -8,6 +8,8 @@ sidebar_position: 2
 
 Offload Security connects to the tools your team already uses, so security findings turn into tracked work, alerts reach the right people, and your audit evidence lands where reviewers can see it. You connect each tool once from the **Integrations** area; credentials are stored **encrypted at rest** and isolated to your **active team**.
 
+![External tool integrations catalog with categories and connection status](/img/screenshots/integrations.png)
+
 This page focuses on the integrations that close the loop on a finding: **ticketing**, **SIEM**, **incident response**, and **evidence/audit** systems. (For built-in Email, Slack, and Microsoft Teams alerting, see **[Notifications](./notifications.md)**.)
 
 ## What it does

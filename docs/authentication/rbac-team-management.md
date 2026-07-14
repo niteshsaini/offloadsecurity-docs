@@ -8,6 +8,8 @@ sidebar_position: 1
 
 Offload Security is multi-tenant: every scan, finding, asset, risk, and report belongs to a **team**, and what each person can do inside a team is governed by their **role**. This page explains the role catalog, how to invite teammates and assign roles, how to switch your active team, and how to create and manage API keys for automation.
 
+![Team management with member roles and invitations](/img/screenshots/team-management.png)
+
 You manage all of this from **Team Management** (under the **Management** section of the left navigation). API keys are managed alongside it.
 
 ## What it does

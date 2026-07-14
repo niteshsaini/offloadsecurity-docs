@@ -8,6 +8,8 @@ sidebar_position: 5
 
 The DPDP module operationalizes India's **Digital Personal Data Protection Act, 2023** for your organization: a readiness assessment against the Act's obligations, **Data Protection Impact Assessments (DPIAs)**, **Significant Data Fiduciary (SDF)** obligation tracking, **vendor / data-processor due diligence**, and a full **breach-incident workflow** with the notification deadlines the Act and CERT-In expect — all backed by a tamper-evident audit trail you can export as an audit pack.
 
+![DPDP Compliance module with DPIA, SDF, vendor assessment, and breach management tabs](/img/screenshots/dpdp-compliance.png)
+
 ## What it does
 
 - **DPDP readiness assessment** — a control-by-control view of where you stand against the Act, with a readiness score and a ranked list of the top findings to fix first.

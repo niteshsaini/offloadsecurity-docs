@@ -8,6 +8,8 @@ sidebar_position: 0
 
 Everything Offload Security does in the UI is backed by a **REST API** — so anything you can do by clicking, you can also do programmatically. The API is how teams automate the platform: trigger scans from a pipeline, pull findings into another system, provision cloud accounts, export reports on a schedule, and feed security data into a SIEM, ticketing system, or BI dashboard.
 
+![API key management for CI/CD pipelines and automation](/img/screenshots/api-key-management.png)
+
 This section explains how the API works, how to authenticate, and the common automation patterns. For the pipeline-specific workflow (gating releases on scan results), see **[CLI & CI/CD Integration](../cli-and-cicd.md)**.
 
 ## API basics

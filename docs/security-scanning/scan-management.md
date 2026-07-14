@@ -8,6 +8,8 @@ sidebar_position: 6
 
 Once you've run a few scans, you'll want them to keep running on their own and you'll want a tidy place to review everything that has run. This page covers the day-to-day management side of scanning: scheduling scans to run automatically, browsing your scan history, re-running past scans, and controlling how long results are kept.
 
+![Unified Scheduler for scans, assessments, evidence collection, and reports](/img/screenshots/unified-scheduler.png)
+
 :::note[Running pipeline scans]
 Triggering scans from a build pipeline (GitHub Actions, Jenkins, and the like) is covered separately on the **CLI & CI/CD** page. This page is about scheduling and managing scans inside the platform.
 :::

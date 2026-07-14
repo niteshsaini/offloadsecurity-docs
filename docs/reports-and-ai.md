@@ -8,6 +8,8 @@ sidebar_position: 5.5
 
 Every module on the platform feeds one reporting layer, and AI assistance is available wherever a human has to read, explain, or act on the results. This page covers what you can produce — from a per-repository findings report to an executive compliance package — and what the AI features do (and deliberately don't do).
 
+![Unified security reports across modules](/img/screenshots/reports.png)
+
 ## Reports
 
 - **Unified findings reports.** Findings from cloud, code, containers, Kubernetes, on-prem scanners, and integrated third-party tools share one normalized model — so a report can slice by module, source, severity, asset, or team without stitching exports together.

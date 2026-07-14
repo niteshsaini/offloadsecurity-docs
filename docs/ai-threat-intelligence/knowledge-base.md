@@ -8,6 +8,8 @@ sidebar_position: 4
 
 The **Knowledge Base** turns your own security documents — policies, standards, runbooks, prior questionnaires — into a searchable library that an AI assistant can answer questions from. Instead of digging through files to find "what's our MFA policy?" or "how do we handle a data breach?", you ask in plain language and get an answer grounded in **your** documents, with the sources cited.
 
+![AI Knowledge Base with assistant, document management, and questionnaire auto-fill tabs](/img/screenshots/knowledge-base.png)
+
 It also helps with two recurring chores: auto-filling security questionnaires from your existing material, and searching across everything you've uploaded.
 
 ## What it does

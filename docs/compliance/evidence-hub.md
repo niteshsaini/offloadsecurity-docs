@@ -8,6 +8,8 @@ sidebar_position: 4
 
 The Evidence Hub is where Offload Security gathers, stores, and exports the audit artifacts that prove your controls are in place. Instead of chasing screenshots and spreadsheets before every audit, the platform continuously collects evidence from your scans and assessments, attaches it to the right controls, and packages it up when an auditor asks.
 
+![Evidence Hub with framework-aware coverage, auto-collected evidence, and review queue](/img/screenshots/evidence-hub.png)
+
 Every piece of evidence is mapped to a control in the **Secure Controls Framework (SCF)** — a common control set that satisfies many frameworks at once (SOC 2, ISO 27001/27002, NIST CSF 2.0, NIST 800-53, PCI DSS 4.0, HIPAA, GDPR, and more). Collect a control's evidence once, and it counts toward every framework that maps to it.
 
 ## What it does
