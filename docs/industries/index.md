@@ -21,6 +21,7 @@ This section explains how the platform serves specific industries. The underlyin
 | **Manufacturing & Logistics** | Internal-network and OT visibility, on-prem vulnerability scanning, endpoint monitoring, supply-chain security. | [Manufacturing & Logistics](./manufacturing-and-logistics.md) |
 | **Retail & E-commerce** | PCI-DSS for payment environments, cloud and application security, store/branch network coverage. | [Retail & E-commerce](./retail.md) |
 | **Regulated Enterprises** | Centralized governance across a complex estate, data residency, continuous audit readiness. | [Regulated Enterprises](./regulated-enterprises.md) |
+| **India Regulatory Readiness** | RBI directions, SEBI CSCRF, CERT-In reporting clocks, and the DPDP Act — mapped to platform capabilities. | [India Regulatory Readiness](./india-regulatory-readiness.md) |
 
 ## How the platform maps to industry needs
 
