@@ -18,7 +18,7 @@ Integrations fall into a few groups:
 - **Security tooling** — connect external scanners and analysis tools (for example **OWASP ZAP** and **SonarQube**) into the platform.
 - **CI/CD** — run scans from your pipeline and fail builds on policy violations using the CLI and the official GitHub Action.
 
-:::note Team-scoped and encrypted
+:::note[Team-scoped and encrypted]
 Every integration belongs to a **team**. Credentials you enter are **encrypted at rest** and isolated by team, so connecting a tool in one team never exposes it to another. Make sure your **active team** is correct before adding a connection.
 :::
 
@@ -51,7 +51,7 @@ Slack support goes beyond a single firehose channel. You can create **routing ru
 
 A typical setup might route critical security alerts to `#security-critical`, lower-severity findings to `#security-findings`, and operational errors to `#ops-alerts`. If no rule matches an alert, it falls back to your default Slack channel.
 
-:::tip Send a test message
+:::tip[Send a test message]
 After adding a Slack channel, use **Send test message** to confirm the webhook works and the alert lands in the right place before you rely on it. A status view shows which channels are configured.
 :::
 
@@ -72,11 +72,11 @@ The platform continuously watches your connections so you find out about a broke
 - Each integration shows a **connection status** and the time of its **last sync** so you can spot a stale or failing connection at a glance.
 - If a sync fails, the integration is flagged and an error message explains what went wrong.
 
-:::tip Keep an eye on last-sync times
+:::tip[Keep an eye on last-sync times]
 A connection that shows **Connected** but hasn't synced recently usually points to expired credentials or a rotated token. Re-open the integration and re-enter its credentials to restore syncing.
 :::
 
-:::warning Rotate credentials before they expire
+:::warning[Rotate credentials before they expire]
 API tokens, webhook URLs, and service-account keys can be revoked or expire on the provider side. When that happens the integration's status turns to an error state. Rotate credentials proactively and update them here to avoid missed alerts.
 :::
 

@@ -20,7 +20,7 @@ Alongside the per-region work, every scan also runs two **account-wide** discove
 - **Kubernetes cluster discovery** — finds EKS, GKE, and AKS clusters in the account so they can be scanned in [Kubernetes Security](../security-scanning/kubernetes-security.md).
 - **Container registry discovery** — finds ECR, GCR/Artifact Registry, and ACR repositories so their images can be scanned in [Container Security](../security-scanning/container-security.md).
 
-:::note Read-only, always
+:::note[Read-only, always]
 Scans only ever **read** your environment using the read-only credentials you provided when [connecting the account](./connecting-accounts.md). Nothing is changed in your cloud.
 :::
 
@@ -44,7 +44,7 @@ If you have resources outside the default set, specify the exact regions you wan
 4. **Results stream in** as each job finishes — assets land in your inventory and findings appear in Cloud Security, so you don't have to wait for the entire scan to complete before reviewing early results.
 5. **The scan reaches a final state** once all jobs have finished (see below).
 
-:::tip One scan per account at a time
+:::tip[One scan per account at a time]
 To avoid duplicate work and conflicting results, only one scan can run for a given cloud account within your team at a time. If you try to start another, the platform tells you a scan is already in progress and shows its ID and status.
 :::
 
@@ -80,7 +80,7 @@ When a scan finishes it reports a **summary**: total assets discovered, total fi
 
 If the platform hits a permission gap or an API limit in your account, it surfaces a **warning** on the scan rather than failing silently — so a missing read permission shows up as an explicit note instead of a quietly incomplete result.
 
-:::warning A "Partial" result usually means permissions or limits
+:::warning[A "Partial" result usually means permissions or limits]
 The most common causes of partial scans are **missing read permissions** for a service or region, or **API rate limits** in your cloud account. Check the scan's warnings first, then revisit the IAM role or service account you set up when [connecting the account](./connecting-accounts.md).
 :::
 

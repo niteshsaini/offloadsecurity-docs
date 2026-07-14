@@ -26,7 +26,7 @@ Individual findings rarely tell the whole story. **Attack Path Analysis** connec
 4. Use the **risk score** and **blast radius** to prioritize — focus on paths that reach your most critical assets.
 5. Apply the recommended remediation, then re-scan; resolved findings drop out of the graph and shorten or eliminate the path.
 
-:::tip Tip
+:::tip[Tip]
 Attack Path Analysis is only as complete as your connected data. The more you connect — cloud accounts, container registries, and Kubernetes clusters — the richer and more accurate the graph becomes.
 :::
 

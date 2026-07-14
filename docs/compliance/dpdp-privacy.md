@@ -19,7 +19,7 @@ The DPDP module operationalizes India's **Digital Personal Data Protection Act, 
 - **Audit trail & audit packs** — every DPDP action is logged; you can assemble events into a verifiable **audit pack**, export it as PDF, and configure how long audit records are retained.
 - **Privacy dashboard** — readiness, open DPIAs, vendor status, and breach posture on one screen.
 
-:::note Scope of the module
+:::note[Scope of the module]
 The module covers readiness, DPIA, SDF, vendor due diligence, breach management, and audit evidence. Consent management and data-principal request handling (access / correction / erasure) are on the product roadmap and not part of the module today.
 :::
 
@@ -39,7 +39,7 @@ Run the **SDF assessment** from its template. If you qualify as a Significant Da
 2. Answer the questionnaire — use **auto-fill suggestions** to pre-populate answers from evidence the platform already holds, then review and correct them.
 3. **Submit** for review; an approver **approves or rejects** with comments.
 
-:::tip Auto-fill is a draft, not an answer
+:::tip[Auto-fill is a draft, not an answer]
 Suggestions come from your existing platform evidence and prior assessments. Always review them — the reviewer sign-off is the point of the DPIA.
 :::
 

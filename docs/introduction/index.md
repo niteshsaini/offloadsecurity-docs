@@ -37,6 +37,6 @@ It is built for teams that need to **prove** security, not just perform it — w
 3. **[The Data Lake & Single Pane of Glass](./unified-data-layer.md)** — the shared data layer that interlinks every module, and how the Vulnerability Dashboard becomes one view of all findings — including data from your integrated third-party tools.
 4. **[Platform at a Glance](./platform-at-a-glance.md)** — the modules, how they connect, and where to go for each.
 
-:::tip Just want to get hands-on?
+:::tip[Just want to get hands-on?]
 Skip ahead to **[Getting Started](../getting-started.md)** and connect your first environment.
 :::

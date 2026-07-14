@@ -10,7 +10,7 @@ Cloud-native security tools stop at the cloud's edge. But most enterprises — a
 
 Offload Security closes that gap. The same platform that assesses your cloud reaches **inside your network** to discover internal assets, scan private applications and APIs, run vulnerability scans against internal hosts, and ingest endpoint and SIEM telemetry — and it lands all of it in the **same unified dashboard** as your cloud, code, and container posture.
 
-:::tip One platform, both worlds
+:::tip[One platform, both worlds]
 You don't run a separate on-prem product with its own console. Internal-network findings, OpenVAS vulnerability results, and Wazuh security events are correlated alongside cloud and application posture in one place — one inventory, one risk register, one compliance view.
 :::
 

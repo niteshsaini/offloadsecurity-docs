@@ -75,7 +75,7 @@ The **[Vulnerability Dashboard](../vulnerability-risk/vulnerability-management.m
 
 The result is a genuine single pane of glass: one place where a team can see **all** of its vulnerability exposure — from the platform's own scanners *and* from the tools it already runs — instead of logging into each product to assemble the picture by hand.
 
-:::tip Why "single pane of glass" is more than a slogan here
+:::tip[Why "single pane of glass" is more than a slogan here]
 Many tools claim a single pane by *linking out* to other consoles. Offload Security is different: the data itself is ingested into a shared lake and normalized, so the Vulnerability Dashboard shows a unified, deduplicated, comparable list — not a directory of other dashboards. One severity scale, one asset identity, one queue.
 :::
 

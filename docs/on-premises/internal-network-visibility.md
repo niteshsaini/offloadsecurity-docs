@@ -25,7 +25,7 @@ You cannot secure what you cannot see — and for most organizations the least-v
 
 Internal assets are first-class citizens in the platform. A vulnerability found on an internal host is triaged in the same **[Vulnerability Management](../vulnerability-risk/vulnerability-management.md)** queue as a cloud misconfiguration, promoted into the same **[Risk Register](../vulnerability-risk/risk-register.md)**, and counted toward the same **[compliance](../compliance/index.md)** controls. There is no separate "internal" dashboard to reconcile.
 
-:::note Network reachability
+:::note[Network reachability]
 Internal discovery and scanning run from within your network so they can reach private segments. Which segments are in scope, and how the scanner is positioned, is part of deployment planning handled during onboarding.
 :::
 

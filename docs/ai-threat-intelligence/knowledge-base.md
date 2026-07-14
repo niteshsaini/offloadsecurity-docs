@@ -17,7 +17,7 @@ It also helps with two recurring chores: auto-filling security questionnaires fr
 - **Questionnaire auto-fill** — upload a security questionnaire as an Excel (`.xlsx`) file and the assistant fills in answers from your knowledge base, complete with confidence scores and source citations, then hands you the completed file to download and review.
 - **Usage analytics** — see how the knowledge base is being used: total documents, questions asked, popular questions, and the most-referenced documents.
 
-:::note Bring your own AI provider
+:::note[Bring your own AI provider]
 The assistant works with major model providers, including OpenAI, Anthropic (Claude), and Google Gemini, plus a built-in default. Your administrator chooses and configures the provider; you select which one to use from the **AI Assistant** tab.
 :::
 
@@ -34,7 +34,7 @@ The assistant can only answer from what you've given it, so start by adding docu
 3. Select a **file**, give it a **title**, pick a **section**, and optionally set a document type, sensitivity level, tags, and description.
 4. Select **Upload**. The document is processed in the background and becomes available for Q&A shortly — its status changes to **Ready** when it's searchable.
 
-:::tip Supported files
+:::tip[Supported files]
 You can upload **PDF, Word (`.doc` / `.docx`), text (`.txt`), and Markdown (`.md`)** files, up to **50 MB each**. Bulk upload accepts up to **50 files** at a time.
 :::
 
@@ -61,21 +61,21 @@ Need a starting point? The **Quick Start Templates** on the same tab pre-fill co
 3. Select **Auto-Fill Questionnaire**. The assistant searches your documents for relevant answers (this can take a few minutes for large files).
 4. The completed Excel downloads automatically, with AI answers, confidence scores, and source citations. A summary shows how many questions were filled, skipped, and the average confidence.
 
-:::warning Always review AI answers
+:::warning[Always review AI answers]
 Auto-fill is a drafting aid, not a final submission. Review every answer — especially low-confidence ones — before you send a questionnaire to a customer or auditor.
 :::
 
 ## Tips & prerequisites
 
-:::tip Better answers from cleaner documents
+:::tip[Better answers from cleaner documents]
 If the assistant returns low-confidence answers, or a document is flagged as unreadable, use **Re-extract & Re-embed** (on the Questionnaire Auto-Fill tab) to redo text extraction, or **Regenerate AI Summaries** if only the summaries are missing. Both run in the background.
 :::
 
-:::note Everything stays in your team
+:::note[Everything stays in your team]
 Your documents, questions, and answers are scoped to your **active team**. You only see — and the assistant only answers from — material that belongs to the team you're currently in. Check the team selector in the top-right before uploading or asking.
 :::
 
-:::warning Mind document sensitivity
+:::warning[Mind document sensitivity]
 Anything you upload can be used to answer questions for your team. Only add material your team is permitted to see, set an appropriate **sensitivity level**, and review your team membership before adding confidential policies.
 :::
 

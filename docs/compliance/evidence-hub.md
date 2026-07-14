@@ -46,7 +46,7 @@ Not all evidence is equally strong, so each artifact carries a **quality score**
 | Policy / procedure document | 365 days | Medium |
 | Manual screenshot or log | 365 days | Lowest |
 
-:::note Why validity matters
+:::note[Why validity matters]
 Auditors expect evidence to be current. The Evidence Hub re-collects automated evidence on each scan, so as long as your scans run on a schedule, your technical evidence stays fresh on its own.
 :::
 
@@ -60,7 +60,7 @@ Go to **Compliance → Evidence Hub**. The page shows your frameworks with their
 
 Select **Collect All** to run a full collection across every connected source — cloud, vulnerabilities, containers, Kubernetes, and assessments. The platform links each result to its controls and refreshes your compliance posture when it finishes. You can re-run this any time; it's also kicked off automatically after scans complete.
 
-:::tip Connect first, then collect
+:::tip[Connect first, then collect]
 The more you've connected and scanned, the more evidence appears automatically. Before your first collection, [connect your cloud accounts](../cloud-security/connecting-accounts.md) and run a posture scan, and complete any relevant [assessments](./interactive-assessments.md).
 :::
 
@@ -101,7 +101,7 @@ Hand the package to your auditor as your starting evidence set.
 
 Before evidence is stored or exported, the platform redacts sensitive values — passwords, secret keys, API keys, tokens, and identifiers like account IDs embedded in resource names — while keeping the rest of the artifact intact and useful. You get evidence that proves the control without leaking secrets.
 
-:::warning Always review before sharing
+:::warning[Always review before sharing]
 Masking is automatic, but you remain the final reviewer. Spot-check exported packages and approve evidence before sending anything to an external auditor.
 :::
 

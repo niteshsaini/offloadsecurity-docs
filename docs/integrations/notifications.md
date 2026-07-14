@@ -18,7 +18,7 @@ Notifications keep your team informed the moment something important happens —
 
 Notifications are **team-scoped**: each team configures its own channels and rules, and only sees its own alerts. Connection details and secrets are stored **encrypted**.
 
-:::note Who can configure this
+:::note[Who can configure this]
 Setting up channels and rules requires the **Manage Integrations** permission (Admins have it by default). See **[Roles & Team Management](../authentication/rbac-team-management.md)**.
 :::
 
@@ -53,7 +53,7 @@ For finer control, you can add **routing rules** so different kinds of alerts la
 
 **Example:** send only critical and high security alerts to `#security-critical` by creating a rule with category **Security Alerts**, severities `critical, high`, and that channel's webhook.
 
-:::tip Default channel
+:::tip[Default channel]
 If no rule matches an alert, it goes to your default Slack channel (configured during setup). Use rules to peel off high-priority alerts, and let everything else fall through to the default.
 :::
 
@@ -74,7 +74,7 @@ If no rule matches an alert, it goes to your default Slack channel (configured d
 3. Select **Test Connection** to confirm the platform can reach your mail server and authenticate.
 4. Select **Save Configuration**.
 
-:::tip Use an app password
+:::tip[Use an app password]
 Many providers (such as Gmail and Microsoft 365) block plain account passwords for SMTP. Generate an **app password** in your provider's security settings and use that instead.
 :::
 
@@ -97,7 +97,7 @@ Webhooks let you forward platform events as JSON to any HTTPS endpoint — your 
    - **Custom headers** *(optional)* — extra HTTP headers to include with each delivery.
 3. Use **Test delivery** to send a sample event, and check the **delivery log** to confirm it was received.
 
-:::warning Use a reachable, public HTTPS endpoint
+:::warning[Use a reachable, public HTTPS endpoint]
 Webhook URLs must point to a routable address. Private, internal, or cloud-metadata addresses are rejected for security reasons. Make sure the endpoint is reachable from the platform before relying on it.
 :::
 
@@ -125,7 +125,7 @@ Out of the box, the platform automatically alerts on the events that matter most
 - Check the notification channel status in **Integrations** to see which channels are configured.
 - For webhooks, review the **delivery log** to confirm events are reaching your endpoint and to troubleshoot failures.
 
-:::tip Start narrow, then expand
+:::tip[Start narrow, then expand]
 Begin with one channel and the default alerts, confirm they land correctly, then add routing rules and webhook subscriptions for additional teams, severities, or destinations.
 :::
 

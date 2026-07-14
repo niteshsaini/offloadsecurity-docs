@@ -39,6 +39,18 @@ Wherever the tools stop, people fill the gap with spreadsheets, shared drives, a
 
 This manual layer is invisible on a budget line but enormous in practice. It is slow, error-prone, and impossible to scale — and it is where most security programs actually spend their time.
 
+## A simple test
+
+If the stack were working, these questions would take minutes, not meetings:
+
+- What are our most critical risks *right now* — and which assets are most exposed?
+- Which findings are new this week, which are recurring, and which are duplicates another tool already reported?
+- Which compliance controls are failing, and what evidence do we already hold for the ones that pass?
+- Which alerts actually need action today?
+- What should leadership focus on this quarter — and can we defend that answer with current data?
+
+In a fragmented stack, every one of these becomes an ad-hoc project. That gap between "the data exists somewhere" and "we can answer the question" is the problem.
+
 ## The real cost
 
 Fragmentation isn't just inefficient; it is a security and governance risk in its own right:

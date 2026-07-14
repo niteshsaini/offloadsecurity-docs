@@ -46,7 +46,7 @@ Each framework's score is a weighted percentage of its in-scope controls:
 
 So a framework at, say, 82% means its in-scope controls, weighted this way, add up to 82% of the possible total. Closing findings moves controls toward **implemented** and raises the score; new findings do the opposite.
 
-:::tip Reading pass / fail / partial at a glance
+:::tip[Reading pass / fail / partial at a glance]
 - **Pass (implemented)** → nothing to do; keep the supporting evidence current.
 - **Partial** → you're close. Look at the findings or missing evidence linked to the control and close the remaining gap to earn full credit.
 - **Fail (not implemented)** → start here. These have open findings actively working against your score and are usually the highest-leverage fixes.
@@ -75,11 +75,11 @@ Use drift alerts as your early-warning signal: they tell you a previously passin
 
 When you have context the scanners can't see — for example, a compensating control or an accepted exception — you can set a control's status manually. A manually set control is **locked** so automated syncs won't change it based on new findings, until you clear the override.
 
-:::note Keep overrides honest
+:::note[Keep overrides honest]
 Manual overrides are powerful but bypass the automation. Use them deliberately, attach evidence where you can, and revisit them periodically so your reported posture stays trustworthy.
 :::
 
-:::tip Make sure you're in the right team
+:::tip[Make sure you're in the right team]
 Compliance status is scoped to your **active team**. Confirm you're in the correct team (top-right account menu) before reviewing scores or setting overrides, so you're acting on the right environment's data.
 :::
 

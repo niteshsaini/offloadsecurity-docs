@@ -11,7 +11,7 @@ slug: "/"
 
 This documentation helps you **onboard, configure, and operate** the platform end to end — whether you're connecting your first cloud account or rolling it out across a security organization.
 
-:::tip New here?
+:::tip[New here?]
 - **Understand the "why"** → **[Introduction](./introduction/index.md)**: what Offload Security is, the problem it solves, and why to choose it over fragmented tools.
 - **Cover your private infrastructure** → **[On-Premises & Private Infrastructure](./on-premises/index.md)**: internal-network visibility, OpenVAS scanning, and the Wazuh integration.
 - **See it for your sector** → **[Solutions by Industry](./industries/index.md)**, including a detailed **[Banking & Financial Services](./industries/banking-financial-services.md)** breakdown.
@@ -78,7 +78,7 @@ Configure, integrate, and administer.
 3. **Run your first scan** and review findings in [Vulnerability Management](./vulnerability-risk/vulnerability-management.md).
 4. **Automate it** — wire scans into your pipeline with [CLI & CI/CD integration](./security-scanning/scan-management.md).
 
-:::note A note on accuracy
+:::note[A note on accuracy]
 This documentation describes capabilities that exist in the platform today. Where a feature requires specific configuration, prerequisites, or permissions, those are called out explicitly so you can plan accordingly.
 :::
 

@@ -46,6 +46,6 @@ The point of all of this is central governance. **[Centralized Ingestion](../on-
 
 The risk in this sector concentrates exactly where cloud-native tools can't reach: the internal networks of dozens of physical sites. Offload Security puts scanning and monitoring inside those networks and rolls everything into one governed picture — so protecting uptime and production becomes a managed, centralized discipline instead of a per-site blind spot.
 
-:::note A note on OT
+:::note[A note on OT]
 OT and ICS environments are sensitive to active probing. Offload Security is designed to prioritize discovery, passive monitoring, and carefully-scoped assessment for these assets. Scope and scan settings for OT segments are part of deployment planning — see **[Getting Started](../getting-started.md)**.
 :::
