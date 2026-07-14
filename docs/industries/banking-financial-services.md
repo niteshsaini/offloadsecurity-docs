@@ -61,3 +61,7 @@ Fragmented tools force a bank to *assemble* its security and compliance story by
 :::tip Where to start
 Financial institutions typically begin by connecting cloud accounts and standing up internal scanning ([OpenVAS](../on-premises/openvas-scanning.md)) and endpoint monitoring ([Wazuh](../on-premises/wazuh-integration.md)) in parallel, then mapping the resulting findings to their PCI-DSS and SOC 2 control sets. See **[Getting Started](../getting-started.md)**.
 :::
+
+:::note Operating in India?
+For the specific obligations Indian financial institutions face — RBI directions, SEBI CSCRF, CERT-In reporting clocks, and the DPDP Act — see **[India Regulatory Readiness](./india-regulatory-readiness.md)**.
+:::

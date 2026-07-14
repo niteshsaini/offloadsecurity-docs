@@ -20,6 +20,8 @@ The Code Command Center runs several industry-standard scanners and consolidates
 | **SCA (dependency scanning)** | Known vulnerabilities (CVEs) in your open-source dependencies | OSV (OSV.dev database) |
 | **SBOM generation** | A complete Software Bill of Materials of every component and version | Syft (CycloneDX / SPDX) |
 | **License compliance** | Open-source licenses classified by risk — permissive, weak copyleft, strong copyleft, or commercially restrictive | SBOM-based analysis |
+| **Malicious-package & typosquat checks** | Dependencies flagged as known-malicious, plus suspicious package names that imitate popular libraries (typosquatting) | SCA rulebook (OSV malicious-package data) |
+| **Import-level reachability** | Whether your code actually imports a vulnerable package — advisory context that helps you deprioritize CVEs in dependencies you never load | Import analysis |
 
 Every finding carries a **severity** so you can focus on what matters first, and results flow into the platform's central [Vulnerability Management](../vulnerability-risk/vulnerability-management.md) view alongside the rest of your security data.
 
