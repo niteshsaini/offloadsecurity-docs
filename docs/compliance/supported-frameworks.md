@@ -48,7 +48,7 @@ Additional frameworks with dedicated assessment modules:
 - **Evidence reuse.** Evidence attached in the [Evidence Hub](./evidence-hub.md) is control-mapped, so a single artifact (say, your access-review export) counts toward SOC 2, ISO 27001, and NIST CSF simultaneously.
 - **Scan findings map to controls.** Cloud, code, container, and Kubernetes findings link to the controls they affect, so technical drift shows up as compliance drift.
 
-:::tip Start with one anchor framework
+:::tip[Start with one anchor framework]
 Pick the framework your customers or regulators actually ask for (commonly SOC 2 or ISO 27001), get it green, and let the SCF mappings pull the others along — rather than assessing everything at once.
 :::
 

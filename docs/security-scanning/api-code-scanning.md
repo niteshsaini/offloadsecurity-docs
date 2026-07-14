@@ -68,15 +68,15 @@ From a scan you can also:
 - **Download the SBOM** as CycloneDX JSON for use in your own tooling.
 - **Export a license-compliance report** (PDF or HTML) to share with engineering or legal.
 
-:::tip Run it in CI/CD
+:::tip[Run it in CI/CD]
 You don't have to start every scan by hand. Wire code scanning into your pipeline so each build is checked automatically and you can gate merges on the results. See **[Scan Management & CI/CD](./scan-management.md)**.
 :::
 
-:::note License enrichment is opt-in
+:::note[License enrichment is opt-in]
 To resolve licenses that an SBOM leaves blank, the platform can look up component coordinates against the public **deps.dev** service. This is **off by default** — until your team explicitly turns it on, no dependency information leaves your environment. You can change the setting from the Code Command Center's license settings.
 :::
 
-:::warning Scans run isolated, but mind what you scan
+:::warning[Scans run isolated, but mind what you scan]
 Code scans run in a hardened, sandboxed environment with no network access to your code. Still, only scan repositories and archives you trust and are authorized to analyze. Private-repo scans require a valid Git connection with appropriate access.
 :::
 

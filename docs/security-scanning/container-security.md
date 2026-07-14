@@ -10,7 +10,7 @@ Container Security scans the images behind your workloads for vulnerabilities, l
 
 ![Container Security: scan an image and review vulnerability, SBOM, and policy results](/img/screenshots/container-security.png)
 
-:::note Prerequisites
+:::note[Prerequisites]
 Scanning private registries needs pull access — ECR (`ReadOnlyAccess`),
 Artifact Registry (`artifactregistry.reader`), or ACR (`AcrPull`). See
 **[Required Permissions](../cloud-security/permissions.md)**.
@@ -48,7 +48,7 @@ Use this for a public image or one that isn't onboarded through a registry.
 2. Browse the discovered repositories. The list supports pagination, search, scan-status filters, and per-image vulnerability badges so you can spot risky images at a glance.
 3. Scan an image directly from the repository list, or open it to view its latest results.
 
-:::tip Reuse your cloud connections
+:::tip[Reuse your cloud connections]
 If you've already connected an AWS, GCP, or Azure account for cloud posture scanning, the platform can discover your ECR, Artifact Registry, and ACR repositories from it — no separate credentials needed. See **[Connecting Cloud Accounts](../cloud-security/connecting-accounts.md)**.
 :::
 
@@ -89,11 +89,11 @@ The **SBOM** tab manages software bills of materials with their own status track
 
 The **Compliance** tab generates container compliance reports (for example, against the CIS Docker Benchmark) for a target and shows your posture trend over time.
 
-:::note Prerequisites
+:::note[Prerequisites]
 To scan images in a private registry, connect the registry first (or connect the underlying cloud account). Quick Scan works without any connection for public images.
 :::
 
-:::tip Catch issues earlier
+:::tip[Catch issues earlier]
 Pair **Webhooks** with an **Image Policy** so every newly pushed image is scanned and gated automatically — failing risky images before they reach production.
 :::
 

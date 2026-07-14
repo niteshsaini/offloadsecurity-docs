@@ -51,7 +51,7 @@ The platform is built with the same controls it sells: static analysis, dependen
 
 If you believe you've found a security vulnerability in Offload Security, email **security@offloadsecurity.com**. We acknowledge reports promptly, keep you informed through remediation, and credit reporters who wish to be named. Please don't test against other customers' data — on request we can provide a test tenant.
 
-:::note Certifications
+:::note[Certifications]
 Formal third-party certifications for the platform are in progress. Ask us for the current status and available attestation documents as part of your vendor review.
 :::
 

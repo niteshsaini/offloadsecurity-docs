@@ -14,7 +14,7 @@ This guide gets you from "I have access" to "I'm reviewing my first findings." I
 2. Enter your **email** and **password** on the login screen and select **Sign in**.
 3. On success you land on the **Dashboard**.
 
-:::info First administrator
+:::info[First administrator]
 The first administrator account is created during platform setup. If you're the operator who installed the platform, sign in with the admin email and the password you set (`DEFAULT_ADMIN_EMAIL` / `DEFAULT_ADMIN_PASSWORD`). You can then invite teammates and assign roles from **Team Management**.
 :::
 
@@ -67,6 +67,6 @@ Now connect something real and run your first scan:
 - **[Work your findings](./vulnerability-risk/vulnerability-management.md)** — triage, prioritize, and track to remediation.
 - **[Automate in CI/CD](./security-scanning/scan-management.md)** — gate pipelines on scan results.
 
-:::tip Tip
+:::tip[Tip]
 You can change your **active team** at any time from the account menu in the top-right. Make sure you're in the right team before running scans or reviewing data.
 :::

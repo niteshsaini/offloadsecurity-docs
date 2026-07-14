@@ -8,7 +8,7 @@ sidebar_position: 1
 
 This page shows common ways teams drive Offload Security programmatically. All calls authenticate with the `X-API-Key` header (see **[API & Automation](./index.md)**), and responses wrap their payload in a `data` object. The exact routes and parameters for your version are in the interactive API reference; the examples below show the shape of each workflow.
 
-:::note Set these first
+:::note[Set these first]
 ```bash
 export OFFLOAD_API_URL="https://security.yourcompany.com"
 export OFFLOAD_API_KEY="ofsk_...your key..."   # created in Team Management → API Keys

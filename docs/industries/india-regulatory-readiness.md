@@ -29,7 +29,7 @@ How the platform fits:
 - **VAPT evidence in one place.** Findings from your VAPT providers and scanners are ingested alongside the platform's own scans ([third-party integrations](../integrations/third-party.md), [OpenVAS](../on-premises/openvas-scanning.md)), tracked to closure in the [Risk Register](../vulnerability-risk/risk-register.md) — closure evidence auditors ask for.
 - **Smaller REs.** For mid-size, small, and self-certification REs, the platform's compliance automation and reporting does the heavy lifting of demonstrating conformance without a large internal team.
 
-:::note Audits stay with empanelled firms
+:::note[Audits stay with empanelled firms]
 CSCRF audits and VAPT must be conducted by CERT-In-empanelled organizations. The platform is the system of record that makes those audits fast — it does not replace the empanelled auditor.
 :::
 

@@ -68,9 +68,14 @@ const config: Config = {
           label: 'Documentation',
         },
         {
-          href: 'https://offloadsecurity.com',
+          href: 'https://beta.offloadsecurity.com',
           label: 'Platform',
           position: 'left',
+        },
+        {
+          href: 'mailto:contact@offloadsecurity.com',
+          label: 'Contact Us',
+          position: 'right',
         },
         {
           href: 'https://github.com/niteshsaini/offload-cspm',
@@ -122,6 +127,14 @@ const config: Config = {
             {
               label: 'Offload Security',
               href: 'https://offloadsecurity.com',
+            },
+            {
+              label: 'Platform',
+              href: 'https://beta.offloadsecurity.com',
+            },
+            {
+              label: 'Contact Us',
+              href: 'mailto:contact@offloadsecurity.com',
             },
             {
               label: 'GitHub',

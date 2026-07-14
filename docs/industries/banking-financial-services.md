@@ -58,10 +58,10 @@ Ultimately, a bank needs **one source of truth** its regulators, auditors, board
 
 Fragmented tools force a bank to *assemble* its security and compliance story by hand — expensively, slowly, and never quite completely. Offload Security produces that story continuously and defensibly, across the modern and traditional halves of the estate at once. For an institution that must **prove** its security to regulators and its board, that is the difference between managing risk and merely reacting to it.
 
-:::tip Where to start
+:::tip[Where to start]
 Financial institutions typically begin by connecting cloud accounts and standing up internal scanning ([OpenVAS](../on-premises/openvas-scanning.md)) and endpoint monitoring ([Wazuh](../on-premises/wazuh-integration.md)) in parallel, then mapping the resulting findings to their PCI-DSS and SOC 2 control sets. See **[Getting Started](../getting-started.md)**.
 :::
 
-:::note Operating in India?
+:::note[Operating in India?]
 For the specific obligations Indian financial institutions face — RBI directions, SEBI CSCRF, CERT-In reporting clocks, and the DPDP Act — see **[India Regulatory Readiness](./india-regulatory-readiness.md)**.
 :::

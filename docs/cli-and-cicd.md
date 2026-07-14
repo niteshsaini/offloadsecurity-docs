@@ -10,7 +10,7 @@ Run Offload Security scans straight from your pipeline and **gate releases on th
 
 Every scan you trigger from CI/CD also shows up in the platform UI alongside your other scans, so findings flow into the same Vulnerability Management, Risk, and Reporting workflows you already use.
 
-:::tip Looking for the full API?
+:::tip[Looking for the full API?]
 This page covers the pipeline/scan workflow. For the platform's complete REST API — authentication, the endpoint reference, and automation patterns beyond scanning (pulling findings, provisioning accounts, exporting reports, reacting to webhooks) — see **[API & Automation](./api-automation/index.md)**.
 :::
 
@@ -22,7 +22,7 @@ This page covers the pipeline/scan workflow. For the platform's complete REST AP
 - **Get a verdict** — each completed scan returns a `gate_passed` flag and a severity breakdown so your job can pass or fail accordingly.
 - **Use the GitHub Action** — a turn-key action that runs the scan, waits for it, posts a summary comment on the PR, and exposes findings counts and a report link as step outputs.
 
-:::note Authentication
+:::note[Authentication]
 Pipeline requests authenticate with an **API key** (not your login). Create the key once, store it as a CI secret, and send it on every request. Keys are scoped, expirable, and revocable.
 :::
 
@@ -41,7 +41,7 @@ API keys are managed from the **API Keys** screen, reached from the **account me
 
 Store the key in your CI provider's secret store (GitHub Actions secrets, GitLab CI/CD variables, Jenkins credentials, a vault, etc.). Never commit it to your repository.
 
-:::tip Least privilege & rotation
+:::tip[Least privilege & rotation]
 Pick the narrowest preset that works (start with **CI/CD Pipeline (Basic)**), keep an expiry set, and rotate keys periodically. You can **revoke** a key at any time from the same screen if it is ever exposed.
 :::
 
@@ -93,7 +93,7 @@ curl -s -X POST "$OFFLOAD_API_URL/api/cicd/scans/trigger" \
 | `code_security` | SAST + dependencies + secrets + IaC + SBOM | `standard` |
 | `sast` / `dependency_scan` / `secret_scan` / `iac_scan` / `sbom` | Individual code-security scans | `standard` |
 
-:::tip Discover scan types programmatically
+:::tip[Discover scan types programmatically]
 `GET /api/cicd/scan-types` (with your `X-API-Key`) returns the live list of supported scan types, their available profiles, and descriptions — handy for keeping pipeline config in sync.
 :::
 
@@ -151,7 +151,7 @@ fi
 
 The results payload includes `status`, `findings_count`, `findings_by_severity`, `gate_passed`, `fail_on_severity`, your `pipeline_context`, and the full `result` object.
 
-:::note Container image policies
+:::note[Container image policies]
 For `container_image` scans, any **enforce-mode** image policies configured for your team are evaluated against the findings, and a failing policy also sets `gate_passed=false`. Audit-mode policies are recorded but don't fail the gate. See **[Container Security](./security-scanning/container-security.md)**.
 :::
 
@@ -252,11 +252,11 @@ The action exposes results you can use in later steps, including `scan_id`, `sta
           exit 1
 ```
 
-:::tip Authenticated scans
+:::tip[Authenticated scans]
 To scan behind a login, pass an `auth_config` JSON string (`form`, `bearer`, `cookie`, or `header`). Store credentials as secrets and reference them inside the JSON. Authenticated scans take longer — raise `timeout` accordingly.
 :::
 
-:::warning Reachability
+:::warning[Reachability]
 The platform performs the scan from its own network, so `target_url` (and registry images) must be **reachable from the platform** — `localhost` and private-only addresses won't work. For PR workflows, point at a preview or staging environment.
 :::
 

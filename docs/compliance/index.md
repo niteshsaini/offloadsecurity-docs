@@ -40,7 +40,7 @@ Every control carries a status, and that status drives your framework score:
 | **Not Applicable** | Out of scope for your environment. | Excluded from the score |
 | **Not Assessed** | Not yet evaluated. | Excluded from the score |
 
-:::note How the score is calculated
+:::note[How the score is calculated]
 A framework score reflects only the controls that are **in scope** — controls marked *Not Applicable* or *Not Assessed* are left out of the math, so your percentage reflects real, evaluated coverage rather than being diluted by items that don't apply to you.
 :::
 
@@ -62,11 +62,11 @@ The platform keeps your posture current by connecting day-to-day security activi
 5. **Override where automation can't see the full picture.** For controls satisfied by a process or document rather than a scan, set the status manually. A manual status is **locked** so the automated sync won't overwrite it.
 6. **Re-check after changes.** As scans re-run and you add evidence, statuses and scores update on their own — and any regression is surfaced as drift.
 
-:::tip Lock controls you've judged manually
+:::tip[Lock controls you've judged manually]
 Use a manual override for controls that depend on policy or human review. The platform respects your decision and won't auto-change a locked control, while still tracking everything else automatically.
 :::
 
-:::warning Watch for drift
+:::warning[Watch for drift]
 A control can fall out of compliance without anyone touching it — a new misconfiguration appears, or a piece of evidence ages out. Review drift alerts regularly so your reported posture stays accurate between audits.
 :::
 

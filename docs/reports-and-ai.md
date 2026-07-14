@@ -16,7 +16,7 @@ Every module on the platform feeds one reporting layer, and AI assistance is ava
 - **Executive & audit outputs.** Compliance and risk reporting is generated from live data — the same numbers the dashboard shows — in **PDF, HTML, and Excel**, and evidence-backed packages come from the [Evidence Hub](./compliance/evidence-hub.md) and [DPDP audit packs](./compliance/dpdp-privacy.md).
 - **Scheduled and on-demand.** Run reports ad hoc, or export on a schedule via the [API](./api-automation/index.md).
 
-:::tip Reports are team-scoped
+:::tip[Reports are team-scoped]
 Like everything else on the platform, reports contain only the active team's data. Switch teams before generating a report intended for a different business unit.
 :::
 
@@ -29,7 +29,7 @@ AI features are built to save analyst time, with a human deciding what to do:
 - **Questionnaire & assessment auto-fill.** Security questionnaires, DPIAs, and assessments can be pre-populated from evidence the platform already holds — see [Knowledge Base](./ai-threat-intelligence/knowledge-base.md) and [DPDP](./compliance/dpdp-privacy.md) — then reviewed and approved by a person.
 - **The assistant.** Platform questions ("how do I connect a GCP org?", "what does this control require?") are answered from a curated knowledge layer; common questions are served from a cache without a model call at all.
 
-:::note How AI handles your data
+:::note[How AI handles your data]
 AI answers are generated only from data your team can already access, and nothing derived from your tenant is stored in any shared cache. Details in [Trust & Security](./trust-and-security.md#how-ai-features-handle-your-data).
 :::
 

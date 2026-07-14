@@ -38,7 +38,7 @@ Each scan runs asynchronously: you launch it, it runs in the background, and the
 6. Select **Launch** (the button at the bottom of the form). You'll get a confirmation that the scan has started, with a scan ID.
 7. Open the **Scans** page to watch progress and open results once the status shows **Completed**.
 
-:::note Targets you're allowed to scan
+:::note[Targets you're allowed to scan]
 Only scan systems you own or are explicitly authorized to test. Active scans (ZAP, Nmap, Nuclei) send real traffic to the target.
 :::
 
@@ -51,7 +51,7 @@ Most scans offer a few intensity levels. Heavier profiles find more but take lon
 - **Network Discovery (Nmap)** — **Ping Sweep** (host discovery), **Port Scan** (top 1000 ports), **Service Detection**, **Comprehensive** (with OS detection), or **Vulnerability Scan**.
 - **SSL/TLS (testssl.sh)** — **Quick**, **Standard**, **Comprehensive**, or **Vulnerability Focus**.
 
-:::tip Start with Standard
+:::tip[Start with Standard]
 When in doubt, choose **Standard**. It balances depth and runtime and is the recommended default. Move up to Comprehensive once you've confirmed the target responds well.
 :::
 
@@ -79,7 +79,7 @@ For web and Nuclei scans you can enable **Authenticated Scan** so the scanner ca
 
 Before an authenticated web scan starts, the platform **verifies your credentials against the target**. If they're rejected, the scan is blocked and the reason is shown, so you don't end up with a clean-looking scan that never actually logged in.
 
-:::tip Run several tools at once
+:::tip[Run several tools at once]
 Use **Run All Scans** (or **App Scan**) to fire ZAP, Nmap, testssl.sh, Nuclei, and the headers check against a single target in one click, then review everything together.
 :::
 

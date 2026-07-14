@@ -36,7 +36,7 @@ Findings are normalized into the same schema as every other source, so an issue 
 
 Internal application and API findings land in **[Vulnerability Management](../vulnerability-risk/vulnerability-management.md)** with severity, affected asset, and remediation guidance — deduplicated against other sources, tracked to SLA, and promoted into the **[Risk Register](../vulnerability-risk/risk-register.md)** and **[compliance evidence](../compliance/evidence-hub.md)** just like cloud and code findings.
 
-:::tip Pair with discovery
+:::tip[Pair with discovery]
 Point internal scanning at the assets found by **[Internal Network Visibility](./internal-network-visibility.md)** so coverage keeps up automatically as the internal estate changes.
 :::
 
