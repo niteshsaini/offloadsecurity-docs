@@ -4,13 +4,13 @@
  */
 
 :root {
-  --ifm-color-primary: #3b82f6;
-  --ifm-color-primary-dark: #2563eb;
-  --ifm-color-primary-darker: #1d4ed8;
-  --ifm-color-primary-darkest: #1e40af;
-  --ifm-color-primary-light: #60a5fa;
-  --ifm-color-primary-lighter: #93bbfd;
-  --ifm-color-primary-lightest: #bfdbfe;
+  --ifm-color-primary: #2563eb;        /* platform primary (blue-600) */
+  --ifm-color-primary-dark: #1d4ed8;
+  --ifm-color-primary-darker: #1e40af;
+  --ifm-color-primary-darkest: #1e3a8a;
+  --ifm-color-primary-light: #3b82f6;
+  --ifm-color-primary-lighter: #60a5fa;
+  --ifm-color-primary-lightest: #93bbfd;
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
   --ifm-font-family-base: 'Inter', system-ui, -apple-system, sans-serif;
@@ -32,12 +32,12 @@
 
 /* Navbar styling */
 .navbar {
-  border-bottom: 1px solid rgba(59, 130, 246, 0.15);
+  border-bottom: 1px solid #d1d5db; /* gray-200, matches the platform light border */
 }
 
 [data-theme='dark'] .navbar {
   background-color: #0f172a;
-  border-bottom: 1px solid rgba(96, 165, 250, 0.15);
+  border-bottom: 1px solid #334155; /* slate-700, matches the platform dark border */
 }
 
 /* Sidebar styling */
