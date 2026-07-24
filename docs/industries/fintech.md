@@ -30,7 +30,7 @@ Most fintech workloads run in containers. [Container Security](../security-scann
 
 ### Prioritized vulnerabilities, tracked as real risk
 
-Raw findings are noise; decisions need context. [Vulnerability Management](../vulnerability-risk/vulnerability-management.md) deduplicates and prioritizes across every source, and the [Risk Register](../vulnerability-risk/risk-register.md) turns material exposure into tracked, owned, board-reportable items — the language your investors and auditors expect.
+Raw findings are noise; decisions need context. [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) deduplicates and prioritizes across every source, and the [Risk Register](../vulnerability-risk/risk-register.md) turns material exposure into tracked, owned, board-reportable items — the language your investors and auditors expect.
 
 ### Security questionnaires answered in hours, not weeks
 
@@ -48,9 +48,9 @@ The same evidence that satisfies a SOC 2 auditor usually satisfies a partner que
 | Secure the APIs that move money | SAST, API testing, and SBOM/license checks in [API & Code Scanning](../security-scanning/api-code-scanning.md) |
 | Prove a strong cloud posture | Continuous CSPM across AWS/Azure/GCP in [Cloud Security](../cloud-security/index.md) |
 | Ship containers safely | Image and cluster scanning in [Container Security](../security-scanning/container-security.md) |
-| Turn findings into board-level risk | [Vulnerability Management](../vulnerability-risk/vulnerability-management.md) feeding the [Risk Register](../vulnerability-risk/risk-register.md) |
+| Turn findings into board-level risk | [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) feeding the [Risk Register](../vulnerability-risk/risk-register.md) |
 | Answer diligence and partner questionnaires fast | Auto-fill from the [Knowledge Base](../ai-threat-intelligence/knowledge-base.md) |
-| Cover internal networks and legacy systems | Internal scanning, OpenVAS, and Wazuh SIEM in [On-Premises](../on-premises/index.md) |
+| Cover internal networks and legacy systems | Internal scanning, OpenVAS, and Wazuh SIEM in [On-Premises](../on-premises/index.mdx) |
 
 ## The bottom line
 

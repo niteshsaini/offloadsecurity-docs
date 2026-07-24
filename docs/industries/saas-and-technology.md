@@ -18,7 +18,7 @@ Your attack surface is your cloud accounts. [Cloud Security](../cloud-security/i
 
 ### Shift-left security in the CI/CD pipeline
 
-Engineering-led teams want security to meet code where it's written. Offload Security folds static analysis, secrets detection, and infrastructure-as-code checks into the pipeline with [API & Code Scanning](../security-scanning/api-code-scanning.md), then extends that coverage to dependencies. SBOM generation and license compliance surface risky or non-permissive packages early, and vulnerable dependencies flow straight into [Vulnerability Management](../vulnerability-risk/vulnerability-management.md) with severity, exploitability, and fix guidance already attached.
+Engineering-led teams want security to meet code where it's written. Offload Security folds static analysis, secrets detection, and infrastructure-as-code checks into the pipeline with [API & Code Scanning](../security-scanning/api-code-scanning.md), then extends that coverage to dependencies. SBOM generation and license compliance surface risky or non-permissive packages early, and vulnerable dependencies flow straight into [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) with severity, exploitability, and fix guidance already attached.
 
 ### Containers and Kubernetes, covered end to end
 
@@ -46,7 +46,7 @@ Correlation is what makes speed safe. A finding from a code scan, a cloud miscon
 | --- | --- |
 | Cloud-native posture across AWS/Azure/GCP | [Cloud Security](../cloud-security/index.md) with continuous config assessment and drift detection |
 | Shift-left in CI/CD (SAST, secrets, IaC) | [API & Code Scanning](../security-scanning/api-code-scanning.md) integrated into the pipeline |
-| SBOM and open-source license compliance | Dependency and license scanning feeding [Vulnerability Management](../vulnerability-risk/vulnerability-management.md) |
+| SBOM and open-source license compliance | Dependency and license scanning feeding [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) |
 | Container image security | [Container Security](../security-scanning/container-security.md) pre-deployment image scanning |
 | Kubernetes cluster and workload posture | [Kubernetes Security](../security-scanning/kubernetes-security.md) config, RBAC, and workload checks |
 | SOC 2 Type II / ISO 27001 attestations | [Compliance](../compliance/index.md) mapping plus the [Evidence Hub](../compliance/evidence-hub.md) |

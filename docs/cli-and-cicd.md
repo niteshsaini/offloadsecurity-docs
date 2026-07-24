@@ -267,7 +267,7 @@ The platform performs the scan from its own network, so `target_url` (and regist
 Scans triggered from CI/CD are first-class citizens in the platform:
 
 - They appear in your scan history and on the **Dashboard**, scoped to your active team.
-- Findings flow into **[Vulnerability Management](./vulnerability-risk/vulnerability-management.md)** for triage and SLA tracking.
+- Findings flow into **[Vulnerability Management](./vulnerability-risk/vulnerability-management.mdx)** for triage and SLA tracking.
 - Significant findings can be promoted to the **[Risk Register](./vulnerability-risk/risk-register.md)** and rolled into reports.
 
 ## Troubleshooting
@@ -285,4 +285,4 @@ Scans triggered from CI/CD are first-class citizens in the platform:
 - **[Scan Management](./security-scanning/scan-management.md)** — review, filter, and re-run scans in the UI.
 - **[Container Security](./security-scanning/container-security.md)** — image scanning, SBOMs, and image policies.
 - **[API & Code Scanning](./security-scanning/api-code-scanning.md)** — SAST, secrets, dependency, and IaC scanning details.
-- **[Vulnerability Management](./vulnerability-risk/vulnerability-management.md)** — work the findings your pipeline produces.
+- **[Vulnerability Management](./vulnerability-risk/vulnerability-management.mdx)** — work the findings your pipeline produces.

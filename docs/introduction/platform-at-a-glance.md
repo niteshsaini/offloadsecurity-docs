@@ -6,7 +6,7 @@ sidebar_position: 4
 
 # Platform at a Glance
 
-Offload Security is organized into modules that each own a domain of security work — and all feed the same correlated data model, or **[data lake](./unified-data-layer.md)**. This page is a map: what each module does, and where to read more.
+Offload Security is organized into modules that each own a domain of security work — and all feed the same correlated data model, or **[data lake](./unified-data-layer.mdx)**. This page is a map: what each module does, and where to read more.
 
 ## How the modules connect
 
@@ -65,13 +65,13 @@ Findings from every source converge in **Vulnerability Management**, resolve aga
 | **SBOM & License Scanning** | Software bill-of-materials generation and open-source **license compliance** across code and container images. | [Container Security](../security-scanning/container-security.md) |
 | **Container Security** | Image scanning across ECR, GCR, ACR, and Docker Hub, with SBOMs, signature verification, and layer secret detection. | [Container Security](../security-scanning/container-security.md) |
 | **Kubernetes Security** | Cluster scanning (kube-bench, Polaris, Kubescape, Trivy) mapped to the MITRE ATT&CK Container Matrix. | [Kubernetes Security](../security-scanning/kubernetes-security.md) |
-| **On-Premises Scanning** | Internal network visibility, private URL/API scanning, OpenVAS vulnerability scanning, and Wazuh endpoint/SIEM data — for assets that never leave your network. | [On-Premises](../on-premises/index.md) |
+| **On-Premises Scanning** | Internal network visibility, private URL/API scanning, OpenVAS vulnerability scanning, and Wazuh endpoint/SIEM data — for assets that never leave your network. | [On-Premises](../on-premises/index.mdx) |
 
 ### Unify, prioritize & govern
 
 | Module | What it does | Read more |
 |---|---|---|
-| **Vulnerability Management** | The unified queue: triage, risk scoring, deduplication, SLA tracking, and remediation guidance across every source. | [Vulnerability Management](../vulnerability-risk/vulnerability-management.md) |
+| **Vulnerability Management** | The unified queue: triage, risk scoring, deduplication, SLA tracking, and remediation guidance across every source. | [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) |
 | **Asset Inventory** | A live catalog of resources across clouds, accounts, regions, and the internal network. | [Asset Inventory](../cloud-security/asset-inventory.md) |
 | **Risk Register** | An enterprise risk register auto-minted from findings, with treatment plans and SLAs. | [Risk Register](../vulnerability-risk/risk-register.md) |
 | **Compliance & GRC** | Framework tracking (SOC 2, ISO 27001, NIST CSF, PCI-DSS, and more), guided assessments, and drift detection. | [Compliance](../compliance/index.md) |

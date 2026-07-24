@@ -34,5 +34,5 @@ Attack Path Analysis is only as complete as your connected data. The more you co
 
 - **[Asset Inventory](./asset-inventory.md)** — the resource catalog the graph is built from.
 - **[Cloud Security](./index.md)** — the posture findings that become graph nodes.
-- **[Vulnerability Management](../vulnerability-risk/vulnerability-management.md)** — triage the vulnerabilities that appear in attack paths.
+- **[Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)** — triage the vulnerabilities that appear in attack paths.
 - **[Risk Management](../vulnerability-risk/risk-register.md)** — promote a critical path into a tracked risk.

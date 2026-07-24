@@ -3,7 +3,10 @@ title: "Welcome to Offload Security"
 sidebar_label: "Welcome"
 sidebar_position: 0
 slug: "/"
+description: "Offload Security is a unified CNAPP, vulnerability management and compliance platform that consolidates cloud, code, container, Kubernetes and on-prem findings into one governed risk view — SaaS or fully on-premises."
 ---
+
+import DocFaq from '@site/src/components/DocFaq';
 
 # Offload Security
 
@@ -11,9 +14,9 @@ slug: "/"
 
 This documentation helps you **onboard, configure, and operate** the platform end to end — whether you're connecting your first cloud account or rolling it out across a security organization.
 
-:::tip New here?
+:::tip[New here?]
 - **Understand the "why"** → **[Introduction](./introduction/index.md)**: what Offload Security is, the problem it solves, and why to choose it over fragmented tools.
-- **Cover your private infrastructure** → **[On-Premises & Private Infrastructure](./on-premises/index.md)**: internal-network visibility, OpenVAS scanning, and the Wazuh integration.
+- **Cover your private infrastructure** → **[On-Premises & Private Infrastructure](./on-premises/index.mdx)**: internal-network visibility, OpenVAS scanning, and the Wazuh integration.
 - **See it for your sector** → **[Solutions by Industry](./industries/index.md)**, including a detailed **[Banking & Financial Services](./industries/banking-financial-services.md)** breakdown.
 - **Just get running** → jump straight to **[Getting Started](./getting-started.md)**.
 :::
@@ -75,10 +78,10 @@ Configure, integrate, and administer.
 
 1. **[Getting Started](./getting-started.md)** — sign in and take a tour of the dashboard and core concepts.
 2. **Connect your environment** — add a [cloud account](./cloud-security/account-management.md) (AWS, Azure, GCP), a container registry, or a Kubernetes cluster.
-3. **Run your first scan** and review findings in [Vulnerability Management](./vulnerability-risk/vulnerability-management.md).
+3. **Run your first scan** and review findings in [Vulnerability Management](./vulnerability-risk/vulnerability-management.mdx).
 4. **Automate it** — wire scans into your pipeline with [CLI & CI/CD integration](./security-scanning/scan-management.md).
 
-:::note A note on accuracy
+:::note[A note on accuracy]
 This documentation describes capabilities that exist in the platform today. Where a feature requires specific configuration, prerequisites, or permissions, those are called out explicitly so you can plan accordingly.
 :::
 
@@ -86,3 +89,19 @@ This documentation describes capabilities that exist in the platform today. Wher
 
 - Visit [offloadsecurity.com](https://offloadsecurity.com) for the platform.
 - See the **[Glossary](./glossary.md)** for key terms used throughout this documentation.
+
+<DocFaq items={[
+  {
+    q: "What is Offload Security?",
+    a: "Offload Security is a unified CNAPP, vulnerability management and compliance platform that consolidates findings across cloud, code, containers, Kubernetes, applications, on-premises infrastructure and existing security tools into one governed risk view.",
+  },
+  {
+    q: "Is Offload Security SaaS or on-premises?",
+    a: "Both. Offload Security runs as a multi-tenant SaaS platform or can be deployed fully on-premises / self-hosted, so regulated organisations can keep data inside their own environment.",
+  },
+  {
+    q: "What does Offload Security consolidate?",
+    a: "Cloud security (CSPM), code and supply-chain security, container and Kubernetes security, vulnerability management, compliance and risk (GRC), threat intelligence, and the findings from third-party scanners you connect — all into one deduplicated, risk-scored view.",
+  },
+]} />
+

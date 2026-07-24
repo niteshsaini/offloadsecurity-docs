@@ -22,7 +22,7 @@ With multiple audits and examinations per year, point-in-time evidence collectio
 Subsidiaries, business units, and mixed cloud/on-prem infrastructure normally fragment security into many local views. Offload Security's multi-tenant model and unified **[Risk Register](../vulnerability-risk/risk-register.md)** roll findings from every source and every part of the organization into one governed picture — the foundation of defensible, board-level oversight.
 
 ### Cloud *and* private infrastructure, together
-Large regulated organizations keep critical systems on private infrastructure by choice and by mandate. Offload Security governs both: continuous **[Cloud Security](../cloud-security/index.md)** posture for the modern estate, and a full **[on-premises model](../on-premises/index.md)** — internal scanning, OpenVAS vulnerability assessment, and **[Wazuh](../on-premises/wazuh-integration.md)** endpoint and SIEM visibility — for the systems that never leave the network.
+Large regulated organizations keep critical systems on private infrastructure by choice and by mandate. Offload Security governs both: continuous **[Cloud Security](../cloud-security/index.md)** posture for the modern estate, and a full **[on-premises model](../on-premises/index.mdx)** — internal scanning, OpenVAS vulnerability assessment, and **[Wazuh](../on-premises/wazuh-integration.md)** endpoint and SIEM visibility — for the systems that never leave the network.
 
 ### Data residency and sovereignty
 For many regulated enterprises, security telemetry cannot leave the boundary. Because the internal scanning and monitoring engines run inside your network, **[centralized ingestion](../on-premises/centralized-ingestion.md)** delivers a unified view while keeping sensitive data on-prem — reconciling the need for oversight with the constraints of sovereignty.
@@ -37,7 +37,7 @@ Ultimately these organizations must report risk upward with confidence. Because 
 | **Multiple frameworks at once** | One control library with overlap handling + drift detection — [Compliance](../compliance/index.md) |
 | **Continuous audit readiness** | Control-mapped [evidence](../compliance/evidence-hub.md) and on-demand [reports](../vulnerability-risk/index.md) |
 | **Centralized governance** | Multi-tenant model + unified [Risk Register](../vulnerability-risk/risk-register.md) across the estate |
-| **Hybrid coverage** | [Cloud Security](../cloud-security/index.md) + full [on-premises](../on-premises/index.md) scanning and monitoring |
+| **Hybrid coverage** | [Cloud Security](../cloud-security/index.md) + full [on-premises](../on-premises/index.mdx) scanning and monitoring |
 | **Data residency** | On-prem engines + [centralized ingestion](../on-premises/centralized-ingestion.md) that keeps telemetry in-boundary |
 | **SOC / endpoint visibility** | [Wazuh](../on-premises/wazuh-integration.md) plus enterprise SIEM/SOAR integrations |
 | **Board reporting** | Complete, trended risk from one correlated data model |

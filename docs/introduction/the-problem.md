@@ -50,4 +50,4 @@ Fragmentation isn't just inefficient; it is a security and governance risk in it
 
 The problem was never the individual tools. It was the absence of a single place where their findings become one coherent, trustworthy, and continuously current picture of risk.
 
-That place is what Offload Security is built to be. Continue to **[Why Offload Security](./why-offload-security.md)**.
+That place is what Offload Security is built to be. Continue to **[Why Offload Security](./why-offload-security.mdx)**.

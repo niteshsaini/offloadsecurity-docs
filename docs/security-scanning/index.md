@@ -35,7 +35,7 @@ Scanning is the first step in the platform's core data flow:
 3. **Risk** — significant findings can be promoted into the [Risk Register](../vulnerability-risk/risk-register.md) with treatment plans and SLAs.
 4. **Report** — findings map to compliance controls and can be exported as audit-ready reports.
 
-This means scanning isn't a dead end: whatever you find here flows straight into [Vulnerability Management](../vulnerability-risk/vulnerability-management.md), risk, compliance, and reporting.
+This means scanning isn't a dead end: whatever you find here flows straight into [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx), risk, compliance, and reporting.
 
 ## How to run a scan
 
@@ -77,6 +77,6 @@ For web and API scans behind a login, provide credentials (bearer token, cookie,
 
 ## Related
 
-- [Vulnerability Management](../vulnerability-risk/vulnerability-management.md) — triage and track the findings your scans produce.
+- [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) — triage and track the findings your scans produce.
 - [Risk Register](../vulnerability-risk/risk-register.md) — promote findings into managed risks.
 - [Connecting Cloud Accounts](../cloud-security/connecting-accounts.md) — connect accounts to unlock container and Kubernetes scanning.

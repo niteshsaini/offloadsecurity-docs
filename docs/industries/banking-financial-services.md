@@ -22,7 +22,7 @@ Financial institutions carry a heavy compliance load — **PCI-DSS** for card da
 Audits and regulatory examinations are relentless in finance. Offload Security captures **evidence continuously** and maps it to the relevant controls automatically, storing it in an auditable vault. When an examiner or auditor asks for proof, producing the package is a click — not weeks of chasing owners and screenshots. See **[Evidence Hub](../compliance/evidence-hub.md)**.
 
 ### 4. Vulnerability management with accountability
-Regulators expect demonstrable, timely remediation. The unified **[Vulnerability Management](../vulnerability-risk/vulnerability-management.md)** queue deduplicates findings from cloud, application, code, container, and internal-host scans; risk-scores them; and tracks them to **SLA** — producing exactly the evidence of a functioning remediation program that examinations require.
+Regulators expect demonstrable, timely remediation. The unified **[Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)** queue deduplicates findings from cloud, application, code, container, and internal-host scans; risk-scores them; and tracks them to **SLA** — producing exactly the evidence of a functioning remediation program that examinations require.
 
 ### 5. Cloud security posture done right
 As banks modernize onto AWS, Azure, and GCP, misconfiguration is the leading cause of cloud incidents. **[Cloud Security (CSPM)](../cloud-security/index.md)** continuously assesses cloud accounts, ingests the cloud providers' own findings, and detects drift — keeping the modern side of the estate as governed as the traditional side.
@@ -48,9 +48,9 @@ Ultimately, a bank needs **one source of truth** its regulators, auditors, board
 | **Risk visibility** | Correlated findings from every source → unified [Risk Register](../vulnerability-risk/risk-register.md), trended over time |
 | **Compliance readiness** | Live tracking of PCI-DSS, SOC 2, ISO 27001, NIST CSF with drift detection — [Compliance](../compliance/index.md) |
 | **Audit evidence** | Continuous, control-mapped [evidence vault](../compliance/evidence-hub.md) and on-demand [reports](../vulnerability-risk/index.md) |
-| **Vulnerability management** | Deduplicated, risk-scored, SLA-tracked [queue](../vulnerability-risk/vulnerability-management.md) across cloud and on-prem |
+| **Vulnerability management** | Deduplicated, risk-scored, SLA-tracked [queue](../vulnerability-risk/vulnerability-management.mdx) across cloud and on-prem |
 | **Cloud posture** | Continuous CSPM for [AWS, Azure, GCP](../cloud-security/index.md) with drift detection |
-| **On-prem support** | [Internal scanning](../on-premises/index.md), [OpenVAS](../on-premises/openvas-scanning.md), private [app/API testing](../on-premises/private-infrastructure-scanning.md) |
+| **On-prem support** | [Internal scanning](../on-premises/index.mdx), [OpenVAS](../on-premises/openvas-scanning.md), private [app/API testing](../on-premises/private-infrastructure-scanning.md) |
 | **SIEM integration** | [Wazuh](../on-premises/wazuh-integration.md) endpoint/SIEM visibility + [SIEM/SOAR integrations](../integrations/third-party.md) |
 | **Centralized governance** | One correlated [source of truth](../on-premises/centralized-ingestion.md) for the whole institution |
 

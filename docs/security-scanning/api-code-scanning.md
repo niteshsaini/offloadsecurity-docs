@@ -21,7 +21,7 @@ The Code Command Center runs several industry-standard scanners and consolidates
 | **SBOM generation** | A complete Software Bill of Materials of every component and version | Syft (CycloneDX / SPDX) |
 | **License compliance** | Open-source licenses classified by risk — permissive, weak copyleft, strong copyleft, or commercially restrictive | SBOM-based analysis |
 
-Every finding carries a **severity** so you can focus on what matters first, and results flow into the platform's central [Vulnerability Management](../vulnerability-risk/vulnerability-management.md) view alongside the rest of your security data.
+Every finding carries a **severity** so you can focus on what matters first, and results flow into the platform's central [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) view alongside the rest of your security data.
 
 ## How to use it
 
@@ -83,4 +83,4 @@ Code scans run in a hardened, sandboxed environment with no network access to yo
 - [Native Security Scans (Web, Network, SSL)](./native-scans.md) — scan running web apps, networks, and TLS.
 - [Container & Registry Security](./container-security.md) — image scanning, SBOMs, and secret detection in layers.
 - [Scan Management & CI/CD](./scan-management.md) — automate scans and gate your pipelines.
-- [Vulnerability Management](../vulnerability-risk/vulnerability-management.md) — triage, prioritize, and track every finding to remediation.
+- [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) — triage, prioritize, and track every finding to remediation.

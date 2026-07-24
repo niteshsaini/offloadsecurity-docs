@@ -6,7 +6,7 @@ sidebar_position: 5
 
 # Centralized Security Data Ingestion
 
-The point of on-premises support is not to add another dashboard — it's to remove one. Every internal capability the platform provides feeds the same **[unified data layer](../introduction/unified-data-layer.md)** — the data lake — that also holds your cloud, application, and container posture, and that the Vulnerability Dashboard renders as a single pane of glass. This page explains what "centralized ingestion" actually means and why it's the difference between coverage and clarity.
+The point of on-premises support is not to add another dashboard — it's to remove one. Every internal capability the platform provides feeds the same **[unified data layer](../introduction/unified-data-layer.mdx)** — the data lake — that also holds your cloud, application, and container posture, and that the Vulnerability Dashboard renders as a single pane of glass. This page explains what "centralized ingestion" actually means and why it's the difference between coverage and clarity.
 
 ## One dashboard, every source
 
@@ -27,7 +27,7 @@ All of it resolves against **one model** of assets, findings, controls, and evid
 Cloud resources and internal assets live in the same **[Asset Inventory](../cloud-security/asset-inventory.md)**. An asset has one identity, whether it was discovered in a cloud account or on an internal subnet.
 
 ### One triage queue
-Internal-host CVEs, cloud misconfigurations, application bugs, and Wazuh detections are deduplicated and prioritized together in **[Vulnerability Management](../vulnerability-risk/vulnerability-management.md)** and **[Alerts](../integrations/notifications.md)** — so analysts work one list, not six.
+Internal-host CVEs, cloud misconfigurations, application bugs, and Wazuh detections are deduplicated and prioritized together in **[Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)** and **[Alerts](../integrations/notifications.md)** — so analysts work one list, not six.
 
 ### One risk and compliance view
 Findings from every source — cloud and on-prem alike — promote into the same **[Risk Register](../vulnerability-risk/risk-register.md)** and map to the same **[compliance controls](../compliance/index.md)**, producing one **[evidence vault](../compliance/evidence-hub.md)** and one set of **[reports](../vulnerability-risk/index.md)**.

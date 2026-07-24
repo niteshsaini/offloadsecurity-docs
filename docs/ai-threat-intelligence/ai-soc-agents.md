@@ -72,5 +72,5 @@ AI reasoning works with major model providers (OpenAI, Anthropic, and Google Gem
 
 - [AI & Threat Intelligence overview](./index.md) — how the AI and threat-intelligence area fits together.
 - [Threat Intelligence & Feeds](./threat-intelligence.md) — the KEV, NVD, and OTX feeds that power exploit-aware prioritization.
-- [Vulnerability Management](../vulnerability-risk/vulnerability-management.md) — triage, risk scoring, and tracking findings to remediation.
+- [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) — triage, risk scoring, and tracking findings to remediation.
 - [Risk Register](../vulnerability-risk/risk-register.md) — promote significant findings into the risk register with treatment plans.

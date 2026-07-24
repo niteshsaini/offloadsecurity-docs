@@ -64,7 +64,7 @@ Open a completed scan from the **Scans** page to see its findings. Results are n
 - a **recommendation** for how to fix it;
 - the affected target and the tool that reported it.
 
-The scan list shows status (**Completed**, **Running**, **Pending**, or **Failed**), the finding count, and a risk level badge. Findings flow into [Vulnerability Management](../vulnerability-risk/vulnerability-management.md), where they're deduplicated and can be tracked to remediation.
+The scan list shows status (**Completed**, **Running**, **Pending**, or **Failed**), the finding count, and a risk level badge. Findings flow into [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx), where they're deduplicated and can be tracked to remediation.
 
 If you run an **App Scan**, findings from every selected tool are combined into one report, mapped to standards you choose (such as ASVS or the OWASP Top 10), and graded with an overall **security rating (A–F)** so you get a single at-a-glance score for the application.
 
@@ -89,4 +89,4 @@ Use **Run All Scans** (or **App Scan**) to fire ZAP, Nmap, testssl.sh, Nuclei, a
 - [API & Code Scanning](./api-code-scanning.md) — deeper API and source-code testing.
 - [Container Security](./container-security.md) — scan container images and registries.
 - [Kubernetes Security](./kubernetes-security.md) — assess your clusters.
-- [Vulnerability Management](../vulnerability-risk/vulnerability-management.md) — triage and track the findings your scans produce.
+- [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) — triage and track the findings your scans produce.

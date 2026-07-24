@@ -45,7 +45,7 @@ On the **Indicators** tab, filter by type, severity, or confidence to find what 
 The platform automatically checks incoming indicators against your asset inventory and cloud activity. When an IOC matches something in your environment — or lines up with a high-impact cloud event such as an IAM policy change or firewall-rule modification — it's flagged so you can investigate a possible active compromise.
 
 ### 5. Let threat data drive prioritization
-You don't need to act on the threat feed in isolation. Threat context flows into **[Vulnerability Management](../vulnerability-risk/vulnerability-management.md)**: vulnerabilities that appear in the CISA KEV catalog or relate to trending indicators are scored higher and rise to the top of your remediation work.
+You don't need to act on the threat feed in isolation. Threat context flows into **[Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)**: vulnerabilities that appear in the CISA KEV catalog or relate to trending indicators are scored higher and rise to the top of your remediation work.
 
 ## Advanced capabilities
 
@@ -68,6 +68,6 @@ Threat Intelligence is most powerful when paired with vulnerability data. The mo
 
 ## Related
 
-- **[Vulnerability Management](../vulnerability-risk/vulnerability-management.md)** — where threat-prioritized findings are triaged and tracked.
+- **[Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)** — where threat-prioritized findings are triaged and tracked.
 - **[Asset Inventory](../cloud-security/asset-inventory.md)** — the catalog of resources IOCs are correlated against.
 - **[Security Command Center (AI-SOC)](./ai-soc-agents.md)** — AI-assisted incident correlation and prioritization.
