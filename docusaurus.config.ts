@@ -4,7 +4,11 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'Offload Security Docs',
-  tagline: 'AI-Powered Cloud Security Posture Management',
+  // Canonical entity positioning — kept consistent with the marketing site's
+  // single source of truth (offloadsecurity-website/src/data/company.js).
+  // Docusaurus uses `tagline` as the default site meta description, so this
+  // must describe the whole platform, not CSPM alone.
+  tagline: 'Unified CNAPP, vulnerability management and compliance — one governed risk view',
   favicon: 'img/favicon.ico',
 
   future: {
@@ -51,6 +55,15 @@ const config: Config = {
 
   themeConfig: {
     image: 'img/offload-social-card.png',
+    // Explicit entity description for search + AI answer engines. Matches the
+    // canonical short description used across the marketing site and profiles.
+    metadata: [
+      {
+        name: 'description',
+        content:
+          'Offload Security is a unified CNAPP, vulnerability management and compliance platform that consolidates findings across cloud, code, containers, Kubernetes, applications, on-premises infrastructure and existing security tools into one governed risk view.',
+      },
+    ],
     mermaid: {
       theme: { light: 'neutral', dark: 'dark' },
     },
