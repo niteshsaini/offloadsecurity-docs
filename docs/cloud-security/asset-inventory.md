@@ -37,7 +37,7 @@ Asset Inventory is a live, searchable catalog of everything you run in the cloud
 
 Go to **Cloud Security → Asset Inventory** in the left navigation. You'll land on the **Overview** tab.
 
-:::note Connect an account first
+:::note[Connect an account first]
 Inventory is populated from your connected cloud accounts. If you haven't added one yet, start with **[Connecting Cloud Accounts](./connecting-accounts.md)**. Until at least one account is connected, the inventory will be empty.
 :::
 
@@ -57,7 +57,7 @@ Discovery runs as a quick cloud scan against the account you choose.
 2. The scan kicks off in the background and typically completes in **2–5 minutes**.
 3. When it finishes, the inventory and summary counts update automatically.
 
-:::tip Keep it current
+:::tip[Keep it current]
 Schedule recurring cloud scans so your inventory stays fresh without manual refreshes. See **[Scan Orchestration](./scan-orchestration.md)** for how cloud discovery and posture scans are run and scheduled.
 :::
 
@@ -83,15 +83,15 @@ The inventory isn't just a list — it's the map of your environment that **Atta
 
 ## Prerequisites & tips
 
-:::tip Read-only by design
+:::tip[Read-only by design]
 Discovery uses the same read-only credentials you set up when connecting an account — it never modifies your cloud resources.
 :::
 
-:::note Team isolation
+:::note[Team isolation]
 Inventory is scoped to your **active team**. You only see assets discovered for the team you're currently in. Switch teams from the account menu (top-right) if you expect to see different resources.
 :::
 
-:::warning Newly created resources
+:::warning[Newly created resources]
 A resource appears in the inventory only after the next discovery run for its account. If you just provisioned something, refresh that account (or wait for the next scheduled scan) before expecting to see it.
 :::
 

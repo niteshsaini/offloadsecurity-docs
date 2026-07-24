@@ -37,15 +37,15 @@ The AI SOC agents combine fast, rule-based checks with AI reasoning for the tric
 
 The result is a prioritized list that puts actively exploited and high-likelihood issues at the top, instead of treating every finding the same.
 
-:::tip Everything stays in your team
+:::tip[Everything stays in your team]
 All AI and threat-intelligence work is scoped to your **active team**. You only see — and the agents only act on — data that belongs to the team you're currently in. Check the team selector in the top-right before reviewing results.
 :::
 
-:::note Bring your own AI provider
+:::note[Bring your own AI provider]
 The AI features work with major model providers, including OpenAI, Anthropic, and Google Gemini. Your administrator configures the provider and API key in platform settings. Every AI decision is recorded — including its reasoning and confidence — so you have an audit trail.
 :::
 
-:::warning Sensitive documents
+:::warning[Sensitive documents]
 Documents you add to the Knowledge Base are used to answer questions for your team. Only upload material your team is permitted to see, and review your team membership before sharing sensitive policies.
 :::
 

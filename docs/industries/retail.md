@@ -42,6 +42,6 @@ A retailer's risk is spread across the cloud, the storefront, and every store ne
 
 The cost of a payment breach — fines, forensics, and lost trust — dwarfs the cost of preventing one. Offload Security gives retailers continuous PCI-DSS evidence, hardened storefront and cloud security, and real coverage of the store networks where card data actually lives — in one platform, so a central team can protect the whole business.
 
-:::tip Where to start
+:::tip[Where to start]
 Retailers typically begin by scoping the cardholder-data environment, connecting cloud accounts, and standing up internal [OpenVAS](../on-premises/openvas-scanning.md) scanning against store/PCI segments, then mapping the results to PCI-DSS controls. See **[Getting Started](../getting-started.md)**.
 :::

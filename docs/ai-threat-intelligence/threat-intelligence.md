@@ -54,15 +54,15 @@ You don't need to act on the threat feed in isolation. Threat context flows into
 - **Threat actors & campaigns.** Group related indicators under known actors and the campaigns they run, with Traffic Light Protocol (TLP) handling so intelligence is shared at the right sensitivity.
 - **Hunting & alert rules.** Save IOC queries and turn them into rules that raise alerts automatically when new matching indicators arrive.
 
-:::tip Start with CISA KEV
+:::tip[Start with CISA KEV]
 If you only enable one feed, make it **CISA KEV**. It directly powers vulnerability prioritization by flagging the CVEs that are confirmed to be exploited in the wild.
 :::
 
-:::note Indicators expire on purpose
+:::note[Indicators expire on purpose]
 Indicators have an expiration so old intelligence is retired automatically. An IOC that no longer appears in this module has aged out — that's expected behavior, not a gap.
 :::
 
-:::note Why CVE context matters
+:::note[Why CVE context matters]
 Threat Intelligence is most powerful when paired with vulnerability data. The more of your environment you've connected and scanned, the more matches the platform can make between live threats and your actual exposure.
 :::
 

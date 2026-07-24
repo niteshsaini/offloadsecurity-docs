@@ -31,19 +31,24 @@ curl -s "$OFFLOAD_API_URL/api/cicd/scan-types" \
 - **Scope least privilege.** A pipeline that only triggers scans doesn't need a key that can manage accounts. Pick the narrowest preset that fits the job.
 - **Keys are secrets.** Store them in your CI/CD secret store or a vault — never in source control. Rotate and revoke from the same screen; every key's usage is auditable.
 
-:::warning Treat keys like passwords
+:::warning[Treat keys like passwords]
 An API key carries its scopes' permissions for your team. If a key is exposed, revoke it immediately and issue a new one.
 :::
 
 ## The API reference
 
-The platform is built on a standard **OpenAPI** foundation, so it publishes a machine-readable specification and an interactive reference you can use to explore every available endpoint, its parameters, and its response shape.
+The platform is built on a standard **OpenAPI** foundation and serves its own interactive reference — self-hosted from your instance, so it works in air-gapped and on-premises deployments with no external dependencies:
 
-- **Interactive API reference** and the **OpenAPI (`openapi.json`) specification** are served from your platform instance (commonly at `/docs` and `/openapi.json`). Availability of the interactive docs endpoint can depend on your deployment's configuration — check with your administrator.
-- Use the OpenAPI spec to **generate a client SDK** in your language of choice, or to keep an integration in sync as the API evolves.
+| What | Where on your instance |
+|---|---|
+| **Swagger UI** — browse and try every endpoint | `https://<your-offload-host>/api/docs` |
+| **ReDoc** — clean, readable reference view | `https://<your-offload-host>/api/redoc` |
+| **OpenAPI schema (JSON)** — import into Postman/Insomnia, or generate a client SDK | `https://<your-offload-host>/api/openapi.json` |
 
-:::tip This section vs. the API reference
-These pages explain the *concepts and common workflows*. The interactive API reference is the *authoritative, always-current list of endpoints* for your version — use them together.
+For curated, task-oriented endpoint guides (authentication, conventions, cloud accounts, Kubernetes, vulnerabilities, alerts, and copy-paste workflows), see the **[API Reference](../api-reference/index.md)** section.
+
+:::tip[This section vs. the API reference]
+These pages explain the *concepts and common workflows*. The interactive reference on your instance is the *authoritative, always-current list of endpoints* for your version — use them together.
 :::
 
 ## What you can automate

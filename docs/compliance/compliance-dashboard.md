@@ -34,7 +34,7 @@ The row of tiles at the top of the **Compliance Posture** tab summarizes your ov
 - **Dedup Ratio** — how much duplicate effort the platform saved by reusing one piece of evidence across multiple controls and frameworks.
 - **Frameworks** — how many frameworks are active out of those available. Select this tile to open the **Framework Activation** panel.
 
-:::tip Choose the frameworks you report on
+:::tip[Choose the frameworks you report on]
 Use the **Framework Activation** panel to turn frameworks on or off. Deactivated frameworks are hidden from the dashboard and scores, but their controls stay in the database — so you can re-enable them later without losing anything. Select **Save Activation** to apply your choices.
 :::
 
@@ -82,7 +82,7 @@ Sometimes a control is satisfied in a way the automated engine can't detect — 
 2. Enter a **Justification** — this field is required.
 3. Select **Apply Override**.
 
-:::note Overrides are tracked
+:::note[Overrides are tracked]
 Every manual override is recorded for audit purposes, and it prevents the autonomous engine from overwriting your decision on the next scan. Always give a clear justification so auditors understand the reasoning.
 :::
 
@@ -95,7 +95,7 @@ Posture isn't static — a new misconfiguration can break a control that was pas
 
 Select **Detect Drift** to run a check on demand, or review the history of past drift events. Where a remediation playbook matches a drift type, you can trigger it directly from the event. You can also create **alert policies** to be notified when drift of a chosen type and severity occurs.
 
-:::tip Keep scores fresh
+:::tip[Keep scores fresh]
 The dashboard is populated automatically as scans run and findings are mapped to controls. If a framework shows **No Compliance Data Yet**, run a cloud security scan or complete an assessment checklist, then return here — the engine maps the results to controls for you. Use **Refresh** to pull the latest at any time.
 :::
 

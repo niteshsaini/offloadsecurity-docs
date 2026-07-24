@@ -21,6 +21,7 @@ This section explains how the platform serves specific industries. The underlyin
 | **Manufacturing & Logistics** | Internal-network and OT visibility, on-prem vulnerability scanning, endpoint monitoring, supply-chain security. | [Manufacturing & Logistics](./manufacturing-and-logistics.md) |
 | **Retail & E-commerce** | PCI-DSS for payment environments, cloud and application security, store/branch network coverage. | [Retail & E-commerce](./retail.md) |
 | **Regulated Enterprises** | Centralized governance across a complex estate, data residency, continuous audit readiness. | [Regulated Enterprises](./regulated-enterprises.md) |
+| **India Regulatory Readiness** | RBI directions, SEBI CSCRF, CERT-In reporting clocks, and the DPDP Act — mapped to platform capabilities. | [India Regulatory Readiness](./india-regulatory-readiness.md) |
 
 ## How the platform maps to industry needs
 
@@ -32,6 +33,6 @@ Regardless of sector, the same building blocks are recombined to fit:
 - **Unified risk governance** — findings from every source promote into one **[Risk Register](../vulnerability-risk/risk-register.md)** with treatment plans and SLAs.
 - **SIEM and endpoint visibility** — **[Wazuh](../on-premises/wazuh-integration.md)** and **[SIEM integrations](../integrations/third-party.md)** bring security-operations data into the same picture.
 
-:::tip Start with your regulator, then your estate
+:::tip[Start with your regulator, then your estate]
 The fastest way to scope a rollout is to start from the frameworks you're accountable to and the systems that hold your most sensitive data — then let the platform's unified model connect the two. The **[Banking & Financial Services](./banking-financial-services.md)** page is the most detailed worked example.
 :::

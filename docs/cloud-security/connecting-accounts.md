@@ -10,7 +10,7 @@ To scan your cloud posture, you connect each cloud account (AWS, Azure, or GCP) 
 
 ![Cloud Security management](/img/screenshots/cloud-security.png)
 
-:::tip Grant permissions first
+:::tip[Grant permissions first]
 Onboarding most often fails because the service account is missing IAM roles.
 See **[Required Permissions](./permissions.md)** for the exact APIs and
 roles per capability — cloud/CSPM, asset inventory, Kubernetes, container
@@ -24,7 +24,7 @@ registries, and cloud events.
 3. The platform runs a **connection test** using the provider SDK (for AWS, an STS `GetCallerIdentity` call) to confirm the credentials and permissions are valid.
 4. On success, credentials are encrypted and stored, and an initial posture scan can be kicked off automatically.
 
-:::tip Least privilege
+:::tip[Least privilege]
 Offload Security only needs **read/security-audit** permissions. Never give it write or administrative access. The Terraform below provisions exactly the read-only roles required — nothing more.
 :::
 
@@ -151,7 +151,7 @@ resource "local_file" "key_json" {
 
 In the platform choose **GCP**, upload the generated `offload-gcp-sa.json` (or paste its contents), and enter your `project_id`.
 
-:::warning Key hygiene
+:::warning[Key hygiene]
 Service-account keys are sensitive. Upload the key, then delete the local file. The platform warns when a key approaches its rotation window (60 days) and recommends rotation by 90 days.
 :::
 
@@ -198,7 +198,7 @@ output "tenant_id"     { value = data.azurerm_subscription.current.tenant_id }
 
 In the platform choose **Azure**, then enter `tenant_id`, `client_id`, `client_secret`, and `subscription_id`.
 
-:::tip Workload identity
+:::tip[Workload identity]
 To avoid managing a client secret, configure a **federated credential** (workload identity) on the application instead. Azure secrets should be rotated within 90 days.
 :::
 

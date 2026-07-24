@@ -25,7 +25,7 @@ The posture engine runs read-only checks against your AWS, Azure, and GCP accoun
 - **Severity and remediation.** Every failing check is rated **Critical**, **High**, **Medium**, **Low**, or **Informational**, and includes a plain-language description of the problem plus the recommended fix (often with a reference link).
 - **Security domains.** Findings are grouped into categories — **IAM**, **Network**, **Storage**, **Compute**, **Logging**, and **Encryption** — so you can focus on one area at a time.
 
-:::note Framework availability differs by cloud
+:::note[Framework availability differs by cloud]
 NIST 800-53 mapping is available for **AWS only**. HIPAA, GDPR, FedRAMP, FFIEC, and AWS Well-Architected are AWS-specific as well. If you need a framework that isn't listed for a provider, the underlying CIS and best-practice checks still run — only the framework labels differ.
 :::
 
@@ -40,7 +40,7 @@ NIST 800-53 mapping is available for **AWS only**. HIPAA, GDPR, FedRAMP, FFIEC, 
 4. **Open a finding to remediate.** Each finding shows what failed, why it matters, and how to fix it — including a deep link into the relevant cloud console. For supported checks you can launch a guided remediation workflow.
 5. **Re-scan and track over time.** Run scans on a schedule or after making fixes. Drift detection flags posture that regresses — for example, audit logging being turned off again — so a closed finding doesn't quietly come back.
 
-:::tip Match the scan to the moment
+:::tip[Match the scan to the moment]
 Use a **quick** scan day to day for fast signal, and run a **comprehensive** scan before an audit or framework review so every applicable control is evaluated.
 :::
 
@@ -53,7 +53,7 @@ Once a scan finishes, its results flow straight into the standard **Cloud Securi
 - They can be promoted into the **Risk Register** and exported in compliance and audit reports, just like any other finding.
 - You can resolve or temporarily **suppress** individual findings during triage.
 
-:::warning Suppressions expire
+:::warning[Suppressions expire]
 A suppressed finding is hidden only for the window you choose. When that window ends, the finding returns to a failing state so it isn't lost — review suppressed items periodically.
 :::
 

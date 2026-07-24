@@ -34,7 +34,7 @@ The Command Center brings five jobs together on one screen:
    - **Activity Log** — a chronological record of every agent decision across the platform.
 4. To run agents on demand, use **Run Triage Now** or **Run Threat Hunt** on the Overview tab, or **Process All Findings** in the Auto-Fix Engine. Otherwise, agents run automatically after a scan completes (see below).
 
-:::tip It runs itself after a scan
+:::tip[It runs itself after a scan]
 You don't have to kick off the Command Center manually. When a cloud scan finishes, the agents automatically triage the new findings, draft remediation, and map them to compliance — so by the time you open the page, the work is usually already done. If the page is empty, connect a cloud account and run a scan to populate it.
 :::
 
@@ -46,7 +46,7 @@ The **Auto-Fix Engine** is the only part of the Command Center that can change y
 2. **Approve** an action to queue it, then **Execute** it to apply the fix — or **Deny** it (with a reason) to discard it.
 3. After execution, you can **Roll back** an action if the result isn't what you expected.
 
-:::warning Approval is required for changes
+:::warning[Approval is required for changes]
 Triage and remediation *suggestions* are generated automatically, but no automated fix is applied to your environment until you explicitly approve and execute it. High-impact triage outcomes (such as marking a finding a false positive or auto-resolving it) are also routed for human review rather than acted on silently.
 :::
 
@@ -60,11 +60,11 @@ Triage and remediation *suggestions* are generated automatically, but no automat
 | **MITRE ATT&CK tactic/technique** | The attacker behavior the finding maps to, added during threat hunting. |
 | **LLM Active / Rule-Based Mode** badge | Whether AI reasoning is enabled. In Rule-Based Mode the platform still triages and prioritizes using its built-in rules. |
 
-:::note Every decision is auditable
+:::note[Every decision is auditable]
 Each agent decision is recorded with the agent that made it, the finding it relates to, its reasoning, and a confidence score. All of this is scoped to your **active team**, so the Command Center only ever shows — and only ever acts on — data that belongs to the team you're currently in.
 :::
 
-:::tip Bring your own AI provider
+:::tip[Bring your own AI provider]
 AI reasoning works with major model providers (OpenAI, Anthropic, and Google Gemini). Your administrator configures the provider and key in platform settings. If no provider is configured, the Command Center continues to operate in Rule-Based Mode.
 :::
 

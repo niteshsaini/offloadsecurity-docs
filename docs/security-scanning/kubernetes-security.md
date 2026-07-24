@@ -10,7 +10,7 @@ Kubernetes Security scans your clusters for misconfigurations, insecure RBAC, ri
 
 ![Kubernetes Security cluster dashboard](/img/screenshots/kubernetes-security.png)
 
-:::note Prerequisites
+:::note[Prerequisites]
 Cluster discovery (EKS / GKE / AKS) rides on the cloud read role, but reading
 workloads needs an **in-cluster RBAC `ClusterRole`** (cloud IAM alone can't).
 See **[Required Permissions](../cloud-security/permissions.md)**.
@@ -42,7 +42,7 @@ See **[Required Permissions](../cloud-security/permissions.md)**.
    - **Extended** — additionally reads ConfigMap and Secret **metadata** (not values). Use only when you need that depth.
 5. Save. The platform runs a **connectivity test** that confirms the API server is reachable, detects the Kubernetes version, and counts nodes and namespaces. On success, the cluster shows as connected and is ready to scan.
 
-:::tip Least privilege
+:::tip[Least privilege]
 Onboard with **read-only** credentials and the **Minimal** access profile wherever possible. The platform never needs write access to your cluster — it only reads configuration and workload specs to assess posture.
 :::
 
@@ -55,7 +55,7 @@ Onboard with **read-only** credentials and the **Minimal** access profile wherev
    - **Severity** — return only findings at or above a chosen severity (for example, Critical and High).
 4. Start the scan. It runs in the background; the cluster view updates with status and a count of findings by severity when it completes.
 
-:::note Large clusters
+:::note[Large clusters]
 Scans are bounded by a per-scan API-call budget so they stay safe to run against big production clusters. Very large environments may take longer to complete.
 :::
 
@@ -78,7 +78,7 @@ Use the **severity filters** to focus on what matters first, and the **MITRE ATT
 
 ## Prerequisites
 
-:::note Before you onboard
+:::note[Before you onboard]
 - Network connectivity from the platform to your cluster's **API server**.
 - A **read-only** kubeconfig or service-account token. For managed clusters, EKS/GKE/AKS clusters can also be auto-discovered from a connected cloud account — see **[Connecting Cloud Accounts](../cloud-security/connecting-accounts.md)**.
 - Confirm you're working in the correct **team** before onboarding or scanning — clusters and findings are scoped to your active team.

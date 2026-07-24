@@ -49,7 +49,7 @@ Wazuh exposes its data through two services, and the platform connects to both:
 - **The Wazuh Manager API** — for agents, Security Configuration Assessment (SCA), File Integrity Monitoring, and manager status.
 - **The Wazuh Indexer (OpenSearch)** — for security alerts/events and vulnerability state.
 
-:::note Configure both endpoints
+:::note[Configure both endpoints]
 The Indexer typically runs on its own host and has **separate credentials** from the Manager API. Provide both when configuring the integration so alerts, events, and vulnerability data come through — not just the agent list. The platform's connection test probes the Indexer and tells you if it's unreachable, rather than masking a partial connection.
 :::
 

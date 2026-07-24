@@ -20,6 +20,8 @@ The Code Command Center runs several industry-standard scanners and consolidates
 | **SCA (dependency scanning)** | Known vulnerabilities (CVEs) in your open-source dependencies | OSV (OSV.dev database) |
 | **SBOM generation** | A complete Software Bill of Materials of every component and version | Syft (CycloneDX / SPDX) |
 | **License compliance** | Open-source licenses classified by risk — permissive, weak copyleft, strong copyleft, or commercially restrictive | SBOM-based analysis |
+| **Malicious-package & typosquat checks** | Dependencies flagged as known-malicious, plus suspicious package names that imitate popular libraries (typosquatting) | SCA rulebook (OSV malicious-package data) |
+| **Import-level reachability** | Whether your code actually imports a vulnerable package — advisory context that helps you deprioritize CVEs in dependencies you never load | Import analysis |
 
 Every finding carries a **severity** so you can focus on what matters first, and results flow into the platform's central [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) view alongside the rest of your security data.
 
@@ -66,15 +68,15 @@ From a scan you can also:
 - **Download the SBOM** as CycloneDX JSON for use in your own tooling.
 - **Export a license-compliance report** (PDF or HTML) to share with engineering or legal.
 
-:::tip Run it in CI/CD
+:::tip[Run it in CI/CD]
 You don't have to start every scan by hand. Wire code scanning into your pipeline so each build is checked automatically and you can gate merges on the results. See **[Scan Management & CI/CD](./scan-management.md)**.
 :::
 
-:::note License enrichment is opt-in
+:::note[License enrichment is opt-in]
 To resolve licenses that an SBOM leaves blank, the platform can look up component coordinates against the public **deps.dev** service. This is **off by default** — until your team explicitly turns it on, no dependency information leaves your environment. You can change the setting from the Code Command Center's license settings.
 :::
 
-:::warning Scans run isolated, but mind what you scan
+:::warning[Scans run isolated, but mind what you scan]
 Code scans run in a hardened, sandboxed environment with no network access to your code. Still, only scan repositories and archives you trust and are authorized to analyze. Private-repo scans require a valid Git connection with appropriate access.
 :::
 

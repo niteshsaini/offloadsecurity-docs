@@ -67,7 +67,7 @@ Instead of answering everything by hand, let the platform propose answers:
 - Trigger **auto-fill** to have the platform suggest responses based on your **previous assessments** and **automated scan findings**.
 - Each suggestion comes with a **confidence level** (for example, high or medium) and a short reason, so you can review and accept or adjust it rather than taking it blindly.
 
-:::tip Assess once, comply many
+:::tip[Assess once, comply many]
 Because frameworks share common controls, answering a requirement in one assessment can pre-fill the equivalent requirement elsewhere. The more scans you run and assessments you complete, the more the platform can fill in for you.
 :::
 
@@ -87,15 +87,15 @@ Strengthen each answer with evidence:
 
 ## Tips & prerequisites
 
-:::note Permissions
+:::note[Permissions]
 Creating assessments and submitting answers requires the **assessment management** permission (for example, the **Compliance Officer** or **Admin** role). Read-only roles can view results but not change answers.
 :::
 
-:::tip Run scans first
+:::tip[Run scans first]
 Auto-fill and automated evidence are only as good as the data behind them. Connect your cloud accounts and run your scans **before** starting an assessment so there's real data to draw on.
 :::
 
-:::warning Not Applicable vs. No
+:::warning[Not Applicable vs. No]
 Use **Not Applicable** only when a requirement genuinely doesn't apply — it's removed from scoring entirely. Marking something **No** keeps it in the score as a gap, which is what you want for controls you simply haven't implemented yet.
 :::
 

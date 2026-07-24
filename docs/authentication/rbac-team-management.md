@@ -30,7 +30,7 @@ Each team member is assigned exactly one of six roles. Roles are additive — hi
 | **Auditor** | Read-only across security data and reports, with the ability to **export** reports for evidence. |
 | **Viewer** | Basic read-only visibility into dashboards, scans, risks, and reports. |
 
-:::note Inviting and managing members
+:::note[Inviting and managing members]
 The ability to invite teammates and change their roles belongs to **Admins** and **Security Managers** (both hold the "manage users" permission). As a safeguard, only an **Admin** can invite or promote someone to the **Admin** role.
 :::
 
@@ -41,7 +41,7 @@ The ability to invite teammates and change their roles belongs to **Admins** and
 3. In the **Invite Member** dialog, enter the person's **email address**, choose a **role**, and optionally add a personal message.
 4. Select **Send Invitation**. The invitee receives an email with a link to accept and set up their account; once they accept, they join the team with the role you chose.
 
-:::tip Prerequisites and limits
+:::tip[Prerequisites and limits]
 - If your organization has restricted invitations to a specific email domain, you can only invite addresses on that domain — others are rejected.
 - Invitations are rate-limited per inviter (by default, up to 20 in a rolling hour) to prevent accidental floods.
 - Invitation links expire after a set window (7 days by default). If a link expires, simply send a new invitation.
@@ -59,7 +59,7 @@ If you belong to more than one team, you can switch which one is active:
 2. In the list of your teams, select the team you want to work in. Your current team is marked as the active one.
 3. The platform switches your context and refreshes so that scans, findings, and reports all reflect the team you just selected.
 
-:::tip Always confirm your active team first
+:::tip[Always confirm your active team first]
 Before you run a scan, connect an account, or review data, make sure the correct team is active — the action and its results are scoped to whatever team you're currently in. You can also switch teams from the account menu in the top-right.
 :::
 
@@ -84,7 +84,7 @@ API keys give CI/CD pipelines, scripts, and integrations programmatic access to 
 4. Optionally set an **expiry** (default 90 days, up to 365), an **environment** label, and a per-minute rate limit.
 5. Select **Create Key**.
 
-:::warning Copy your key immediately
+:::warning[Copy your key immediately]
 The full key is shown **only once**, right after you create it — use the **Copy** button and store it somewhere secure (a secrets manager or your CI/CD secret store). The platform keeps only a hashed version and can never show you the full key again. Keys begin with the `osk_` prefix so they're easy to recognize.
 :::
 
@@ -100,7 +100,7 @@ From the key list you can:
 - **Revoke** a key to disable it immediately. This can't be undone — issue a new key if you need one again.
 - **Monitor** each key's usage count, last-used time, and environment to spot keys that are unused or behaving unexpectedly.
 
-:::note Key limits and hardening
+:::note[Key limits and hardening]
 - Each user can hold up to **25** active keys at a time; revoke unused keys before creating more.
 - For extra protection you can restrict a key to a set of allowed IP addresses (up to 50), so it can only be used from your pipeline's network.
 :::

@@ -28,15 +28,15 @@ All cloud resources discovered during scanning also flow into your live **[Asset
 4. **Remediate.** Open a finding to read its remediation steps, follow the deep link into the relevant cloud console, or launch a guided remediation workflow. You can also resolve or temporarily suppress findings in bulk.
 5. **Track over time.** Re-scan on a schedule (or after making fixes) and let drift detection alert you if posture regresses.
 
-:::tip Group connected accounts by environment
+:::tip[Group connected accounts by environment]
 Because data is scoped per **team**, connect production and non-production accounts under the teams that should see them. Confirm you're in the right active team before adding an account or kicking off a scan.
 :::
 
-:::note What you need first
+:::note[What you need first]
 You can only scan accounts you've connected. If Cloud Security looks empty, start by adding a cloud account. Each provider needs a specific set of read-only permissions — these are listed, with copy-paste Terraform, on the connecting page.
 :::
 
-:::warning Suppressions expire
+:::warning[Suppressions expire]
 A suppressed finding is hidden only for the duration you choose. When that window ends, the finding automatically returns to a failing state so it isn't lost — review suppressed items periodically.
 :::
 

@@ -8,7 +8,7 @@ sidebar_position: 6
 
 Once you've run a few scans, you'll want them to keep running on their own and you'll want a tidy place to review everything that has run. This page covers the day-to-day management side of scanning: scheduling scans to run automatically, browsing your scan history, re-running past scans, and controlling how long results are kept.
 
-:::note Running pipeline scans
+:::note[Running pipeline scans]
 Triggering scans from a build pipeline (GitHub Actions, Jenkins, and the like) is covered separately on the **CLI & CI/CD** page. This page is about scheduling and managing scans inside the platform.
 :::
 
@@ -51,7 +51,7 @@ For full control, build a schedule from scratch:
 5. Under **Notifications**, choose when to be alerted — on **completion**, on **failure**, and on **expiry warnings**. Notifications can be delivered in-app and, where configured, by email or Slack.
 6. Select **Create Schedule**.
 
-:::tip Time zones and timing
+:::tip[Time zones and timing]
 Schedules use **UTC** by default. When you set a cron expression, double-check it against your team's working hours, and prefer off-peak times (like overnight) so scans don't compete with production traffic.
 :::
 
@@ -66,7 +66,7 @@ Each schedule in the list shows its type, its cadence, the **Next Run** time, an
 
 You can filter the list by entity type using the tabs (including a dedicated **Scans** tab), search by name, and filter by status. The **Expiring Soon** tab highlights schedules whose validity is about to lapse so you can renew them in time.
 
-:::note Permissions
+:::note[Permissions]
 Creating, editing, pausing, and deleting schedules requires the **Manage Scans** permission. If you only have view access, you'll see the schedules but won't be able to change them. See **[Roles (RBAC)](../getting-started.md)** for what each role can do.
 :::
 
@@ -100,7 +100,7 @@ From a completed run you can:
 - **Download a report** — generate a consolidated security report; you can select multiple completed scans to roll them into a single report.
 - **Delete** runs you no longer need.
 
-:::tip Re-running vs. scheduling
+:::tip[Re-running vs. scheduling]
 Use **Re-scan** for a one-off "run that again" check. If you find yourself re-scanning the same target regularly, turn it into a **schedule** instead so it happens automatically.
 :::
 
@@ -123,11 +123,11 @@ You can also toggle whether summarization and archival run at all. Separate poli
 
 The retention cycle **runs automatically on a daily schedule** — summarizing, archiving, and cleaning up data as each stage's threshold is reached. If you ever need to, you can also trigger a retention run on demand.
 
-:::note Who can change retention
+:::note[Who can change retention]
 Adjusting retention policies (or running a retention cycle manually) requires the **Manage Scans** permission. Summaries created during the warm stage are retained for long-term trend reporting, so historical dashboards stay useful even after the full detail is gone.
 :::
 
-:::warning Deletion is permanent
+:::warning[Deletion is permanent]
 Once data passes the **Delete** threshold it is removed for good. If you have a compliance requirement to retain scan evidence for a set period, increase the relevant policy's thresholds **before** that data ages out.
 :::
 

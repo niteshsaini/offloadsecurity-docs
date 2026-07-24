@@ -23,7 +23,7 @@ Offload Security is built for teams that handle sensitive security data, so cont
 3. On success you land on the **Dashboard**, and your session keeps you signed in across the app.
 4. Selecting **Log out** ends your session immediately so the token can't be reused.
 
-:::tip Turn on MFA
+:::tip[Turn on MFA]
 For an extra layer of protection, enable MFA from your account settings. You scan a QR code with an authenticator app and are issued one-time backup codes to store safely.
 :::
 
@@ -51,7 +51,7 @@ The platform is **multi-tenant**: each team's data is fully separated from every
 - New members join a team by **invitation**. Admins send an invite to a specific email address, and the invitee must register with that address. Only team admins can invite someone as an admin, and invitations can be rate-limited.
 - When access is revoked, it takes effect immediately.
 
-:::note Pick the right team first
+:::note[Pick the right team first]
 Before you run scans or review data, confirm your active team in the top-right account menu. Everything you create is recorded under that team.
 :::
 
@@ -75,7 +75,7 @@ Significant actions are captured in an **immutable audit trail** that records wh
 
 ## How your data is protected
 
-:::tip Your credentials and data are protected
+:::tip[Your credentials and data are protected]
 - **Encrypted credentials at rest** — cloud account credentials (AWS, Azure, GCP keys and service principals) are **encrypted before they're stored**, and the platform uses **read-only** access to your environments.
 - **Passwords are never stored in plain text** — they're protected with strong, industry-standard hashing.
 - **Tokens and keys are never stored in the clear** — session identifiers, API keys, and invitation tokens are stored only as one-way hashes, so a database copy can't be used to impersonate you.

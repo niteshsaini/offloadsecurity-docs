@@ -50,7 +50,7 @@ OpenVAS findings are normalized into the same finding schema as every other sour
 2. Connect it to Offload Security and define the internal targets to scan (drawn from **[Internal Network Visibility](./internal-network-visibility.md)** or specified directly).
 3. Schedule scans; results appear in Vulnerability Management alongside your cloud, application, and container findings.
 
-:::note Positioning and credentials
+:::note[Positioning and credentials]
 Scan quality depends on network reachability and, for authenticated scans, valid host credentials. Placement of the scanner relative to your network segments is part of deployment planning handled during onboarding.
 :::
 

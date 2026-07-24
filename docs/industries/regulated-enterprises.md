@@ -46,6 +46,6 @@ Ultimately these organizations must report risk upward with confidence. Because 
 
 For an organization accountable to multiple regulators across a hybrid estate, the hard part isn't finding issues — it's *governing* them coherently and *proving* it, continuously and defensibly. Offload Security makes that the default: one source of truth spanning cloud and private infrastructure, one control library across every framework, and evidence that accumulates as a natural product of the work.
 
-:::tip Where to start
+:::tip[Where to start]
 Large regulated organizations typically begin by mapping their active frameworks in Compliance, connecting cloud accounts, and rolling out internal scanning and endpoint monitoring per business unit. See **[Getting Started](../getting-started.md)**.
 :::

@@ -33,7 +33,7 @@ Supported regulatory frameworks include the **EU AI Act**, **NIST AI RMF**, US A
    - Optional **last assessment** and **next review** dates.
 3. Save. The system is added to your registry with a lifecycle stage of *registered* and a compliance status of *pending assessment*.
 
-:::tip Start with what's in production
+:::tip[Start with what's in production]
 Register customer-facing and decision-making systems first — these are the ones most likely to fall into a higher EU AI Act tier and to need governance controls soonest.
 :::
 
@@ -50,7 +50,7 @@ Run the EU AI Act classification to find out where a system sits. The platform l
 
 For each result you also get the **compliance requirements** for that tier (such as conformity assessment, CE marking, FRIA, quality-management system, and post-market monitoring for high-risk systems), the **immediate next steps**, an **effort and timeline estimate**, and a short **rationale** explaining the classification.
 
-:::note High-risk systems need a FRIA
+:::note[High-risk systems need a FRIA]
 If a system lands in the high-risk tier, complete a **Fundamental Rights Impact Assessment** from the same module. It walks you through human dignity, privacy and data protection, non-discrimination, and the rights of children.
 :::
 
@@ -80,7 +80,7 @@ For production systems, use the operational tools to keep evidence current:
 
 You don't manage AI risk separately from everything else. Registered AI systems and their assessments surface as governance items scoped to your active team and, like other findings on the platform, can be promoted into the **Risk Register** for treatment, ownership, and review. This follows the platform's **Scan → Finding → Risk → Report** flow, so an AI risk is tracked, reported on, and closed out the same way a cloud misconfiguration or vulnerability is.
 
-:::tip Team scoping
+:::tip[Team scoping]
 AI systems, assessments, and evidence belong to your **active team**. Switch to the correct team before registering systems or running assessments so the records — and any risks they raise — land in the right place.
 :::
 

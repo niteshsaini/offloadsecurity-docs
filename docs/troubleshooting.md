@@ -8,7 +8,7 @@ sidebar_position: 11
 
 Most problems in Offload Security come down to one of a few things: a credential or permission that's slightly off, a target that doesn't match what you typed, or a scan that ran out of time. This page walks through the issues people hit most often, framed as **symptom → likely cause → fix** so you can get unblocked quickly.
 
-:::tip Read the status and warnings first
+:::tip[Read the status and warnings first]
 Before you dig in, open the scan and check its **status** and any **warnings**. The platform deliberately surfaces a **Partial** or **Failed** status (rather than a misleadingly clean "green" run) and attaches a plain-language reason whenever it can. That note is usually the fastest path to the fix.
 :::
 
@@ -25,7 +25,7 @@ Before you dig in, open the scan and check its **status** and any **warnings**. 
 2. If the status is **Partial**, expand the scan and read its **warnings**. For cloud scans you can also expand the **per-region** breakdown to see exactly which region or check failed.
 3. If the status really is **Completed** with zero findings, that's a clean result — nothing was wrong with the resources or target you scanned. Confirm you scanned the target you intended (right account, right regions, right image).
 
-:::note "Partial" almost always means permissions or API limits
+:::note["Partial" almost always means permissions or API limits]
 For cloud scans, the two most common causes of a partial result are a **missing read permission** for a service or region, or **API rate limits** in your cloud account. Check the scan's warnings, then revisit the IAM role or service account from [Connecting Cloud Accounts](./cloud-security/connecting-accounts.md).
 :::
 
@@ -79,7 +79,7 @@ The identity is valid but lacks the **read-only** access the platform needs.
 For the recommended IAM-role option, the **external ID** you entered in the platform must exactly match the one in the role's trust policy.
 - *Fix:* Compare the two values character for character and make sure the role's trust policy also allows the platform's principal to assume it. A mismatch here is the single most common IAM-role failure.
 
-:::warning Read-only, always
+:::warning[Read-only, always]
 Offload Security only reads your environment and stores credentials **encrypted at rest**. If a connection works but a later scan returns a **Partial** result, that's typically a *specific* permission gap (one service or region), not a broken connection — check the scan's warnings.
 :::
 
@@ -109,7 +109,7 @@ Quick Scan works for **public** images with no setup, but a **private** image ne
 When scanning a registry tied to a cloud account, the scan must reference the correct connected account.
 - *Fix:* If you're driving scans by registry or account, make sure you're pointing at the **cloud account ID** that actually owns that registry. You can find these IDs in the **Cloud Accounts** and **Container Registries** sections. Pointing at the wrong account means the platform authenticates against a registry that doesn't contain your image.
 
-:::tip Confirm with a public image first
+:::tip[Confirm with a public image first]
 If a private scan won't run, try a known public image (like `nginx:latest`) in **Quick Scan**. If that works, the problem is registry access — not the scanner.
 :::
 
@@ -127,7 +127,7 @@ If a private scan won't run, try a known public image (like `nginx:latest`) in *
 3. **Check the key's scope.** A key can only do what it's scoped for. To trigger scans it needs the scan-trigger scope; to read results it needs the read scope. A key without the right scope is rejected even though it's authentic.
 4. **Check IP allowlisting.** If the key is restricted to specific IP addresses, calls from any other address are blocked. Confirm your CI runner's egress IP is on the list.
 
-:::note Where to manage keys
+:::note[Where to manage keys]
 Create, scope, rotate, and IP-restrict API keys under **Team Management**. For setup and pipeline examples, see [RBAC, API Keys & Team Management](./authentication/rbac-team-management.md).
 :::
 

@@ -55,15 +55,15 @@ The scan history gives you one view across every scan type:
 - **Re-scan** a previous target in one click to confirm a fix.
 - **Reports** can be generated per scan, or you can merge several scans into a single consolidated executive report (PDF, HTML, or Excel).
 
-:::tip Scan responsibly
+:::tip[Scan responsibly]
 Web and network scans support **rate-limit profiles** (gentle, normal, aggressive). Choose a gentler profile for fragile or production targets so the scan doesn't overload them.
 :::
 
-:::note Only scan what you own
+:::note[Only scan what you own]
 Run scans only against systems you own or are explicitly authorized to test. Active scanning sends real traffic to the target.
 :::
 
-:::warning Authenticated scans
+:::warning[Authenticated scans]
 For web and API scans behind a login, provide credentials (bearer token, cookie, or username/password) so the scanner can reach protected areas. The platform validates them with a pre-scan check, and your credentials are encrypted and never shown in saved results or reports.
 :::
 

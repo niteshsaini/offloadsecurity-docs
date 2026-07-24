@@ -159,7 +159,7 @@ done
 </TabItem>
 </Tabs>
 
-:::tip Scope = grant once
+:::tip[Scope = grant once]
 Grant at the **AWS Organization / GCP org node / Azure management group** to cover
 every account/project/subscription (current and future) with one binding.
 Everything above also works at single account/project/subscription scope.

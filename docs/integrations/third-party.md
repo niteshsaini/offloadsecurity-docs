@@ -20,7 +20,7 @@ Once connected, third-party tools let you:
 - **Page on what matters.** Trigger incidents on critical findings or SLA breaches and route them through your on-call escalation policy.
 - **Publish evidence for auditors.** Auto-publish policies, evidence, and audit reports to a documentation space your reviewers can access.
 
-:::note Complementary, not competing
+:::note[Complementary, not competing]
 Offload Security integrates with the tooling that *surrounds* a compliance program — ticketing, SIEM, incident response, team chat, and evidence docs. It is itself the audit and compliance system of record, so it does not require a separate compliance-automation platform.
 :::
 
@@ -35,11 +35,11 @@ Browse the full catalog in the **Integrations** area, filtered by category. The 
 | **Incident response** | PagerDuty | Page on critical findings or SLA breaches with an auditable response timeline. |
 | **Collaboration & evidence** | Slack, Microsoft Teams, Confluence, SMTP Email | Channel alerts, reviewer sign-off prompts, and published evidence/audit-report pages. |
 
-:::note Wazuh is more than a SIEM forwarder
+:::note[Wazuh is more than a SIEM forwarder]
 The **[Wazuh integration](../on-premises/wazuh-integration.md)** is a first-class part of Offload Security's on-premises story: it brings endpoint (agent) data, security events, alerts, vulnerability state, file-integrity monitoring, and SCA compliance checks into a customized in-platform dashboard, and correlates them with the rest of your posture. For internal vulnerability scanning of private assets, see **[OpenVAS Scanning](../on-premises/openvas-scanning.md)**.
 :::
 
-:::tip There's more in the catalog
+:::tip[There's more in the catalog]
 The Integrations area also lists vulnerability scanners (Qualys, Tenable, Rapid7), code security (Snyk, SonarQube, Checkmarx, Veracode, GitHub CodeQL), container/cloud security (Aqua, Prisma Cloud, Sysdig, Prowler, AWS Security Hub), DevOps/CI/CD (Jenkins, GitHub Actions), and monitoring (Datadog, Grafana). Each tile shows what the tool does, its setup requirements, and a link to the vendor's documentation.
 :::
 
@@ -60,21 +60,21 @@ Connecting any integration follows the same guided, five-step wizard.
 
 After setup, the platform runs **periodic health checks** on each active integration and shows its current status, so a broken token or expired credential surfaces before you rely on it.
 
-:::note You need the right role
+:::note[You need the right role]
 Adding, editing, or removing integrations requires the **Manage Integrations** permission — typically held by **Admin** and **Security Manager** roles. Other roles can view connected tools and their status.
 :::
 
 ## Tips & prerequisites
 
-:::tip Use least-privilege credentials
+:::tip[Use least-privilege credentials]
 Create a dedicated service account or scoped API token for each tool, with only the access Offload Security needs (for example, permission to create issues in a single Jira project). Rotate tokens on your normal schedule — the integration's health status will flag a credential that has stopped working.
 :::
 
-:::warning Integrations are team-scoped
+:::warning[Integrations are team-scoped]
 An integration you connect belongs to your **active team** and is not visible to other teams. Confirm you're in the correct team (top-right account menu) before connecting a tool, and connect it again in each team that needs it.
 :::
 
-:::note Credential security
+:::note[Credential security]
 All integration credentials are encrypted at rest. The connection test never stores credentials until the integration is saved, and tokens are never shown back to you in plain text after setup.
 :::
 
