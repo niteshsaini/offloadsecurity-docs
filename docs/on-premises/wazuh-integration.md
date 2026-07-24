@@ -37,7 +37,7 @@ Rather than forcing analysts to context-switch into Wazuh, Offload Security rend
 Wazuh data doesn't just sit in its own tab — it's **correlated with the rest of your posture:**
 
 - **Into Alerts.** Wazuh security events feed the platform's centralized **[Alerts](../integrations/notifications.md)**, so host-level detections are triaged alongside cloud, application, and compliance alerts in one place — deduplicated, not multiplied.
-- **Into Vulnerability Management.** Host vulnerability state contributes to the unified **[Vulnerability Management](../vulnerability-risk/vulnerability-management.md)** view of your estate.
+- **Into Vulnerability Management.** Host vulnerability state contributes to the unified **[Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)** view of your estate.
 - **Into Compliance & Evidence.** SCA and FIM results become **[compliance evidence](../compliance/evidence-hub.md)** — proof that endpoint hardening and integrity controls are in place and monitored.
 
 This is the SIEM value proposition without the SIEM silo: real-time host visibility that is part of your posture, not adjacent to it.

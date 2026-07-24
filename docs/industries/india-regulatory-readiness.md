@@ -14,7 +14,7 @@ RBI's directions on outsourcing of IT services shape what regulated entities mus
 
 | Obligation | How the platform supports it |
 |---|---|
-| **Data localization** — regulated data stored in India per applicable directions | [On-premises / private deployment](../on-premises/index.md): the platform runs entirely inside your environment, so scan data, findings, evidence, and reports never leave your network or the country |
+| **Data localization** — regulated data stored in India per applicable directions | [On-premises / private deployment](../on-premises/index.mdx): the platform runs entirely inside your environment, so scan data, findings, evidence, and reports never leave your network or the country |
 | **Incident reporting on tight clocks** — REs report incidents to RBI within hours, which means vendors and internal teams must surface incidents immediately | Real-time [alerts](../integrations/notifications.md) to Slack/Teams/email/webhooks, plus the [DPDP breach workflow](../compliance/dpdp-privacy.md) with deadline watchdogs for CERT-In-style reporting windows |
 | **Vendor oversight without audit fatigue** — RBI permits reliance on recognized third-party certifications and structured due diligence | [Vendor due-diligence questionnaires](../compliance/dpdp-privacy.md), continuous [evidence collection](../compliance/evidence-hub.md), and audit-ready [reports](../vulnerability-risk/index.md) for your own supervisory examinations |
 | **IT & cyber risk governance** — a board-visible risk process | The [Risk Register](../vulnerability-risk/risk-register.md) with ownership, treatment, and executive reporting |
@@ -43,7 +43,7 @@ The [DPDP module](../compliance/dpdp-privacy.md) covers readiness assessment, DP
 
 ## Typical deployment for Indian regulated entities
 
-1. **Private deployment** inside your network for data residency ([On-Premises](../on-premises/index.md)).
+1. **Private deployment** inside your network for data residency ([On-Premises](../on-premises/index.mdx)).
 2. **Connect the estate** — cloud accounts, repositories, clusters, registries, plus [Wazuh](../on-premises/wazuh-integration.md) and [OpenVAS](../on-premises/openvas-scanning.md) for on-prem visibility.
 3. **Anchor compliance** on your primary framework and let the [SCF mappings](../compliance/supported-frameworks.md) carry the rest.
 4. **Wire the clocks** — alert routing and the breach workflow configured before an incident, not during one.

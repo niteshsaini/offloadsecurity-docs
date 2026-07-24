@@ -64,7 +64,7 @@ Now connect something real and run your first scan:
 
 - **[Connect a cloud account](./cloud-security/account-management.md)** — AWS, Azure, or GCP, for continuous posture scanning.
 - **[Run and review scans](./security-scanning/native-scans.md)** — web, network, and API testing.
-- **[Work your findings](./vulnerability-risk/vulnerability-management.md)** — triage, prioritize, and track to remediation.
+- **[Work your findings](./vulnerability-risk/vulnerability-management.mdx)** — triage, prioritize, and track to remediation.
 - **[Automate in CI/CD](./security-scanning/scan-management.md)** — gate pipelines on scan results.
 
 :::tip[Tip]

@@ -37,7 +37,7 @@ The platform's AI features (summaries, remediation suggestions, questionnaire au
 ## Deployment options & data residency
 
 - **SaaS** — the managed platform.
-- **On-premises / private deployment** — the full platform inside your own environment, where **scan data, findings, evidence, and reports never leave your network**. This is the deployment regulated customers (banks, entities with data-localization obligations) typically choose. See [On-Premises](./on-premises/index.md) and [India regulatory readiness](./industries/india-regulatory-readiness.md).
+- **On-premises / private deployment** — the full platform inside your own environment, where **scan data, findings, evidence, and reports never leave your network**. This is the deployment regulated customers (banks, entities with data-localization obligations) typically choose. See [On-Premises](./on-premises/index.mdx) and [India regulatory readiness](./industries/india-regulatory-readiness.md).
 
 ## Data retention & deletion
 
@@ -59,5 +59,5 @@ Formal third-party certifications for the platform are in progress. Ask us for t
 
 - [Authentication & Access Control](./authentication/index.md)
 - [API & Automation](./api-automation/index.md)
-- [On-Premises deployment](./on-premises/index.md)
+- [On-Premises deployment](./on-premises/index.mdx)
 - [DPDP Act (India) Privacy](./compliance/dpdp-privacy.md)

@@ -74,7 +74,7 @@ Use the **severity filters** to focus on what matters first, and the **MITRE ATT
 ### 4. Track compliance and remediate
 
 - Findings roll up to **CIS Kubernetes Benchmark** controls and cross-map to **NIST 800-53, PCI-DSS, and SOC 2**, so you can show control status to auditors.
-- Significant findings can be promoted into the **Risk Register** and tracked to closure like any other finding. See **[Vulnerability Management](../vulnerability-risk/vulnerability-management.md)** for triage and SLA tracking.
+- Significant findings can be promoted into the **Risk Register** and tracked to closure like any other finding. See **[Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)** for triage and SLA tracking.
 
 ## Prerequisites
 
@@ -88,5 +88,5 @@ Use the **severity filters** to focus on what matters first, and the **MITRE ATT
 
 - [Connecting Cloud Accounts](../cloud-security/connecting-accounts.md) — auto-discover EKS/GKE/AKS from connected accounts.
 - [Container Security](./container-security.md) — scan the images that run in your clusters.
-- [Vulnerability Management](../vulnerability-risk/vulnerability-management.md) — triage and track Kubernetes findings to remediation.
+- [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) — triage and track Kubernetes findings to remediation.
 - [Getting Started](../getting-started.md) — sign in and learn the Scan → Finding → Risk → Report flow.

@@ -58,7 +58,7 @@ The API spans the same domains as the platform. Common resource families:
 | Area | Automate |
 |---|---|
 | **Scanning** | Trigger web/API/network/container scans, poll status, fetch results (`/api/cicd/scans/...`). See **[CLI & CI/CD](../cli-and-cicd.md)**. |
-| **Vulnerabilities & findings** | Pull the unified findings queue, filter by severity/status/source, push updates to another system. See **[Vulnerability Management](../vulnerability-risk/vulnerability-management.md)**. |
+| **Vulnerabilities & findings** | Pull the unified findings queue, filter by severity/status/source, push updates to another system. See **[Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)**. |
 | **Cloud accounts** | Connect and manage AWS/Azure/GCP accounts and organizations, kick off cloud scans. See **[Cloud Security](../cloud-security/index.md)**. |
 | **Assets** | Read the unified asset inventory across cloud and on-prem. |
 | **Compliance & evidence** | Read control status, export evidence and audit data. See **[Compliance](../compliance/index.md)**. |

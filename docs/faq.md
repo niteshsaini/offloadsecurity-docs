@@ -12,7 +12,7 @@ sidebar_position: 13
 A unified security platform: cloud posture (CSPM), code and container security, vulnerability management, Kubernetes, on-prem visibility, compliance automation, risk management, and privacy (DPDP) — all feeding one normalized findings model, one risk register, and one reporting layer. Start with [What is Offload Security](./introduction/index.md).
 
 **Is it SaaS or on-premises?**
-Both. The managed platform is the default; regulated customers can run the full platform **inside their own environment**, where data never leaves their network. See [On-Premises](./on-premises/index.md).
+Both. The managed platform is the default; regulated customers can run the full platform **inside their own environment**, where data never leaves their network. See [On-Premises](./on-premises/index.mdx).
 
 **Which cloud providers are supported?**
 AWS, Google Cloud, and Azure — with read-only access wherever the provider supports it. Depth varies by provider (AWS and GCP include organization-level onboarding). See [Cloud Security](./cloud-security/index.md) and [permissions](./cloud-security/permissions.md).

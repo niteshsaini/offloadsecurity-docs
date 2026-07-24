@@ -14,11 +14,11 @@ OffloadSecurity gives these teams one correlated source of truth across cloud, a
 
 ### The internal network is treated as a first-class citizen
 
-Medical devices, imaging systems, nurse workstations, and OT rarely leave the hospital network — and often can't be patched or re-imaged like a laptop. OffloadSecurity's [On-Premises](../on-premises/index.md) model scans these environments in place. [Internal Network Visibility](../on-premises/internal-network-visibility.md) maps what's actually running behind the firewall, so segments full of unmanaged devices stop being blind spots.
+Medical devices, imaging systems, nurse workstations, and OT rarely leave the hospital network — and often can't be patched or re-imaged like a laptop. OffloadSecurity's [On-Premises](../on-premises/index.mdx) model scans these environments in place. [Internal Network Visibility](../on-premises/internal-network-visibility.md) maps what's actually running behind the firewall, so segments full of unmanaged devices stop being blind spots.
 
 ### Vulnerability management that reaches legacy internal systems
 
-Authenticated and unauthenticated scanning via [OpenVAS Scanning](../on-premises/openvas-scanning.md) surfaces exposures on internal hosts, then feeds them into unified [Vulnerability Management](../vulnerability-risk/vulnerability-management.md) alongside cloud and container findings. Instead of a separate spreadsheet for "the stuff inside the hospital," internal risk is scored and prioritized in the same queue as everything else.
+Authenticated and unauthenticated scanning via [OpenVAS Scanning](../on-premises/openvas-scanning.md) surfaces exposures on internal hosts, then feeds them into unified [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) alongside cloud and container findings. Instead of a separate spreadsheet for "the stuff inside the hospital," internal risk is scored and prioritized in the same queue as everything else.
 
 ### Endpoint and telemetry monitoring without shipping data out
 
@@ -45,8 +45,8 @@ Because internal scans, endpoint telemetry, and cloud findings share one data mo
 | Healthcare need | How Offload Security delivers it |
 | --- | --- |
 | Protect PHI and patient privacy | Correlated posture across cloud and internal systems, with data-protection framework mapping in [Compliance](../compliance/index.md) |
-| Secure large internal networks and medical devices/IoT/OT | [Internal Network Visibility](../on-premises/internal-network-visibility.md) and in-place scanning via [On-Premises](../on-premises/index.md) |
-| Vulnerability management on legacy internal hosts | [OpenVAS Scanning](../on-premises/openvas-scanning.md) feeding unified [Vulnerability Management](../vulnerability-risk/vulnerability-management.md) |
+| Secure large internal networks and medical devices/IoT/OT | [Internal Network Visibility](../on-premises/internal-network-visibility.md) and in-place scanning via [On-Premises](../on-premises/index.mdx) |
+| Vulnerability management on legacy internal hosts | [OpenVAS Scanning](../on-premises/openvas-scanning.md) feeding unified [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) |
 | Endpoint and behavioral monitoring | [Wazuh Integration](../on-premises/wazuh-integration.md) for endpoint/SIEM coverage |
 | Keep sensitive telemetry in the boundary | [Centralized Ingestion](../on-premises/centralized-ingestion.md) within the on-premises model |
 | Audit-ready, continuous evidence | [Evidence Hub](../compliance/evidence-hub.md) collecting artifacts as work happens |

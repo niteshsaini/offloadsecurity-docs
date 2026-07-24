@@ -88,3 +88,9 @@ html {
 .menu__link:hover {
   color: var(--ifm-color-primary);
 }
+
+/* Answer-engine FAQ blocks (see src/components/DocFaq.tsx) */
+.doc-faq { margin-top: 2.5rem; border-top: 1px solid var(--ifm-toc-border-color); padding-top: 1.25rem; }
+.doc-faq__item { padding: 0.6rem 0; border-bottom: 1px solid var(--ifm-toc-border-color); }
+.doc-faq__q { cursor: pointer; font-weight: 600; }
+.doc-faq__a { margin-top: 0.5rem; color: var(--ifm-color-emphasis-800); }

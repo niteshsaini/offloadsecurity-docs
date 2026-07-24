@@ -16,7 +16,9 @@ const config: Config = {
   },
 
   markdown: {
-    format: 'md',
+    // 'detect' = CommonMark for .md, MDX for .mdx. (A fixed 'md' would force
+    // CommonMark on .mdx too, rendering JSX components as literal text.)
+    format: 'detect',
     mermaid: true,
   },
 

@@ -102,4 +102,4 @@ Pair **Webhooks** with an **Image Policy** so every newly pushed image is scanne
 - **[Connecting Cloud Accounts](../cloud-security/connecting-accounts.md)** — connect AWS, GCP, or Azure to auto-discover your registries.
 - **[Kubernetes Security](./kubernetes-security.md)** — scan the clusters that run your containers.
 - **[API & Code Security Scanning](./api-code-scanning.md)** — SAST, dependency, and SBOM scanning for your source code.
-- **[Vulnerability Management](../vulnerability-risk/vulnerability-management.md)** — triage and track container findings to remediation.
+- **[Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)** — triage and track container findings to remediation.

@@ -8,7 +8,7 @@ sidebar_position: 4
 
 OpenVAS (part of the Greenbone Vulnerability Management stack) is the platform's engine for **network vulnerability scanning of internal and private assets.** It complements cloud posture assessment and application testing with deep, host-level vulnerability detection against the systems that live inside your network — servers, network devices, databases, and appliances that a public SaaS scanner can't reach.
 
-Running OpenVAS inside your environment means the scan happens **where the assets are**, and the results flow straight into Offload Security's unified **[Vulnerability Management](../vulnerability-risk/vulnerability-management.md)**.
+Running OpenVAS inside your environment means the scan happens **where the assets are**, and the results flow straight into Offload Security's unified **[Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)**.
 
 ## What it scans
 
@@ -39,7 +39,7 @@ Scans can be **unauthenticated** (an outside-in view of what's exposed on the ne
 
 OpenVAS findings are normalized into the same finding schema as every other source, so an internal-host CVE behaves exactly like a cloud or application finding:
 
-- **Triaged in one queue** — deduplicated and risk-scored in **[Vulnerability Management](../vulnerability-risk/vulnerability-management.md)**.
+- **Triaged in one queue** — deduplicated and risk-scored in **[Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)**.
 - **Tracked to SLA** and promoted into the **[Risk Register](../vulnerability-risk/risk-register.md)** with a treatment plan.
 - **Counted toward compliance** and captured as **[audit evidence](../compliance/evidence-hub.md)**.
 - **Correlated with the asset** in the shared **[Asset Inventory](../cloud-security/asset-inventory.md)**, and with endpoint activity from **[Wazuh](./wazuh-integration.md)** on the same host.

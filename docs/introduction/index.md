@@ -25,7 +25,7 @@ It is built for teams that need to **prove** security, not just perform it — w
 ## What makes it different
 
 - **One source of truth.** Cloud posture, vulnerabilities, application and code findings, container and Kubernetes risk, threat intelligence, compliance state, and on-prem/SIEM data are correlated in one data model — not stitched together in a report at quarter-end.
-- **Cloud *and* on-premises.** The same platform that assesses AWS, Azure, and GCP also reaches inside your network — internal asset discovery, private URL/API scanning, OpenVAS-based vulnerability scanning, and Wazuh-powered endpoint and SIEM visibility — and lands all of it in the same dashboard. See **[On-Premises & Private Infrastructure](../on-premises/index.md)**.
+- **Cloud *and* on-premises.** The same platform that assesses AWS, Azure, and GCP also reaches inside your network — internal asset discovery, private URL/API scanning, OpenVAS-based vulnerability scanning, and Wazuh-powered endpoint and SIEM visibility — and lands all of it in the same dashboard. See **[On-Premises & Private Infrastructure](../on-premises/index.mdx)**.
 - **Findings become governance.** A finding doesn't stop at "detected." It flows into risk registers, SLAs, compliance controls, and audit evidence automatically, so operational security and governance stay in lockstep.
 - **AI where it saves time.** AI assists with triage, remediation guidance, control mapping, questionnaire responses, and incident correlation — accelerating the work, not replacing the operator's judgment.
 - **Built on proven, open foundations.** The platform orchestrates trusted, industry-standard engines (for cloud, code, container, and network scanning) under one roof, and integrates with the SIEM, ticketing, and evidence systems you already run.
@@ -33,8 +33,8 @@ It is built for teams that need to **prove** security, not just perform it — w
 ## Read this section next
 
 1. **[The Problem: Security Tool Sprawl](./the-problem.md)** — why fragmented tools and manual processes leave organizations exposed and audit-fatigued.
-2. **[Why Offload Security](./why-offload-security.md)** — how a unified platform changes the economics and outcomes of a security program, with a side-by-side comparison.
-3. **[The Data Lake & Single Pane of Glass](./unified-data-layer.md)** — the shared data layer that interlinks every module, and how the Vulnerability Dashboard becomes one view of all findings — including data from your integrated third-party tools.
+2. **[Why Offload Security](./why-offload-security.mdx)** — how a unified platform changes the economics and outcomes of a security program, with a side-by-side comparison.
+3. **[The Data Lake & Single Pane of Glass](./unified-data-layer.mdx)** — the shared data layer that interlinks every module, and how the Vulnerability Dashboard becomes one view of all findings — including data from your integrated third-party tools.
 4. **[Platform at a Glance](./platform-at-a-glance.md)** — the modules, how they connect, and where to go for each.
 
 :::tip[Just want to get hands-on?]

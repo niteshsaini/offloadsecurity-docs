@@ -2,7 +2,10 @@
 title: "Why Offload Security"
 sidebar_label: "Why Offload Security"
 sidebar_position: 2
+description: "Why choose Offload Security over fragmented tools: one correlated source of truth that unifies cloud, code, container, Kubernetes, on-prem and third-party scanner findings into one governed risk view."
 ---
+
+import DocFaq from '@site/src/components/DocFaq';
 
 # Why Offload Security
 
@@ -18,7 +21,7 @@ Because everything lands in one model:
 - Duplicate findings from different scanners are **reconciled**, so an analyst triages an issue once.
 - Risk and compliance state **update automatically** as findings open and close — no manual re-keying.
 
-This shared model is a **data lake** that every module writes to and reads from, and the **Vulnerability Dashboard** is the single pane of glass onto it — surfacing findings from the platform's own scanners *and* from your integrated third-party tools in one deduplicated queue. It's important enough to have its own page: **[The Data Lake & Single Pane of Glass](./unified-data-layer.md)**.
+This shared model is a **data lake** that every module writes to and reads from, and the **Vulnerability Dashboard** is the single pane of glass onto it — surfacing findings from the platform's own scanners *and* from your integrated third-party tools in one deduplicated queue. It's important enough to have its own page: **[The Data Lake & Single Pane of Glass](./unified-data-layer.mdx)**.
 
 ## What you get from unification
 
@@ -64,4 +67,19 @@ Offload Security is complementary to the systems that *surround* a security prog
 
 ---
 
-Next, see the full module map in **[Platform at a Glance](./platform-at-a-glance.md)**, or explore the **[On-Premises & Private Infrastructure](../on-premises/index.md)** model.
+Next, see the full module map in **[Platform at a Glance](./platform-at-a-glance.md)**, or explore the **[On-Premises & Private Infrastructure](../on-premises/index.mdx)** model.
+
+<DocFaq items={[
+  {
+    q: "What makes Offload Security different from other security tools?",
+    a: "Instead of adding another point tool, Offload consolidates cloud, code, container, Kubernetes, on-premises and existing third-party scanner findings into one normalized model and a single governed risk view — and it runs as SaaS or fully on-premises.",
+  },
+  {
+    q: "Is Offload Security just a CSPM?",
+    a: "No. CSPM (cloud posture) is one module. Offload is a unified CNAPP, vulnerability management and compliance platform that also covers code, containers, Kubernetes, on-prem infrastructure, threat intelligence and GRC.",
+  },
+  {
+    q: "How does Offload Security reduce security-tool sprawl?",
+    a: "It ingests findings from many scanners into one vendor-neutral data lake, deduplicates them against a shared asset and finding model, and surfaces one risk-scored queue — so teams triage an issue once instead of reconciling a dozen consoles.",
+  },
+]} />

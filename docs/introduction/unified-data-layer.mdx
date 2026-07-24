@@ -2,7 +2,10 @@
 title: "The Data Lake & Single Pane of Glass"
 sidebar_label: "Data Lake & Single Pane of Glass"
 sidebar_position: 3
+description: "How Offload Security's data lake normalizes findings from every scanner into one shared model — deduplicated and correlated to assets, controls and evidence — and renders it as a single pane of glass."
 ---
+
+import DocFaq from '@site/src/components/DocFaq';
 
 # The Data Lake & Single Pane of Glass
 
@@ -67,7 +70,7 @@ A vulnerability resolves against an **asset**; the asset carries its **cloud, co
 
 ## The Vulnerability Dashboard is the single pane of glass
 
-The **[Vulnerability Dashboard](../vulnerability-risk/vulnerability-management.md)** is where the data lake becomes visible and actionable. It is not "the cloud scanner's results" or "the code scanner's results" — it is **every finding from every source, in one queue**, deduplicated, risk-scored, and tracked to closure:
+The **[Vulnerability Dashboard](../vulnerability-risk/vulnerability-management.mdx)** is where the data lake becomes visible and actionable. It is not "the cloud scanner's results" or "the code scanner's results" — it is **every finding from every source, in one queue**, deduplicated, risk-scored, and tracked to closure:
 
 - **Native modules** — Cloud Security, application/API/network scanning, SAST and code, SBOM/license, container and Kubernetes, and on-prem OpenVAS all land here.
 - **On-prem telemetry** — host and endpoint findings from Wazuh contribute to the same view.
@@ -89,3 +92,18 @@ Many tools claim a single pane by *linking out* to other consoles. Offload Secur
 ---
 
 In short: the data lake is the foundation, the interlinked modules are the structure, and the **Vulnerability Dashboard is the window** — one pane of glass onto everything, including the products you've already integrated.
+
+<DocFaq items={[
+  {
+    q: "How does Offload Security deduplicate findings from multiple scanners?",
+    a: "Every finding is normalized into a shared model keyed to a common notion of the asset and the issue. Duplicate findings reported by different scanners are reconciled against that model, so an analyst triages each issue once.",
+  },
+  {
+    q: "What is the difference between scanner aggregation and unified vulnerability management?",
+    a: "Aggregation simply collects outputs side by side. Unified vulnerability management normalizes findings into one model, deduplicates them, correlates each to its asset, control and evidence, and updates risk and compliance state automatically as findings open and close.",
+  },
+  {
+    q: "Can Offload ingest findings from tools like Qualys, Tenable, Snyk or Wazuh?",
+    a: "Yes. Third-party scanner findings are streamed into the same vendor-neutral data lake and surface in the single deduplicated, risk-scored Vulnerability Dashboard alongside Offload's own findings.",
+  },
+]} />
