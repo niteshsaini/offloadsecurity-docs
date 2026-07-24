@@ -3,7 +3,7 @@ title: "Authentication & Session Management"
 sidebar_position: 2
 ---
 
-The OffloadSecurity CSPM platform implements an enterprise-grade authentication and session management system designed for high security and resilience. It features PBKDF2-based password hashing, multi-tier session persistence, and a challenge-response MFA flow.
+The Offload Security platform implements an authentication and session management system designed for high security and resilience. It features PBKDF2-based password hashing, multi-tier session persistence, and a challenge-response MFA flow.
 
 ## 1. Authentication Flow & Security
 

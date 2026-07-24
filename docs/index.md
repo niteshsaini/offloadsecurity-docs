@@ -7,7 +7,7 @@ slug: "/"
 
 # Offload Security
 
-**Offload Security is a unified, AI-assisted Cloud Security Posture Management (CSPM) platform.** It brings cloud security, vulnerability management, container and Kubernetes security, code and supply-chain security, compliance and risk (GRC), threat intelligence, and AI-driven security operations together in a single, multi-tenant platform — so your team works from one source of truth instead of a dozen disconnected tools.
+**Offload Security is a unified CNAPP, vulnerability management and compliance platform that consolidates findings across cloud, code, containers, Kubernetes, applications, on-premises infrastructure and existing security tools into one governed risk view.** It brings cloud security, vulnerability management, container and Kubernetes security, code and supply-chain security, compliance and risk (GRC), threat intelligence, and AI-driven security operations together in a single, multi-tenant platform — so your team works from one source of truth instead of a dozen disconnected tools.
 
 This documentation helps you **onboard, configure, and operate** the platform end to end — whether you're connecting your first cloud account or rolling it out across a security organization.
 
