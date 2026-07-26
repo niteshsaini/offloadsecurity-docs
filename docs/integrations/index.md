@@ -8,6 +8,8 @@ sidebar_position: 0
 
 Integrations connect Offload Security to the tools your team already uses — so findings, alerts, and evidence flow into your existing workflows instead of staying locked in one more dashboard. From here you can send security alerts to Slack, Microsoft Teams, or email, open tickets in Jira or ServiceNow, forward events to your SIEM, gate your CI/CD pipeline on scan results, and monitor the health of every connection in one place.
 
+![Offload Security external tool integrations — connecting SIEM, scanners, ticketing and CI/CD into one operational view](/img/screenshots/integrations.png)
+
 ## What it does
 
 Integrations fall into a few groups:
