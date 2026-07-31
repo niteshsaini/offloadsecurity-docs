@@ -43,7 +43,6 @@ const config: Config = {
         docs: {
           sidebarPath: './sidebars.ts',
           routeBasePath: '/',
-          editUrl: 'https://github.com/niteshsaini/offload-cspm/tree/main/docs-site/',
         },
         blog: false,
         theme: {
@@ -83,18 +82,13 @@ const config: Config = {
           label: 'Documentation',
         },
         {
-          href: 'https://beta.offloadsecurity.com',
+          href: 'https://offloadsecurity.com/platform',
           label: 'Platform',
           position: 'left',
         },
         {
           href: 'mailto:contact@offloadsecurity.com',
           label: 'Contact Us',
-          position: 'right',
-        },
-        {
-          href: 'https://github.com/niteshsaini/offload-cspm',
-          label: 'GitHub',
           position: 'right',
         },
       ],
@@ -145,15 +139,11 @@ const config: Config = {
             },
             {
               label: 'Platform',
-              href: 'https://beta.offloadsecurity.com',
+              href: 'https://offloadsecurity.com/platform',
             },
             {
               label: 'Contact Us',
               href: 'mailto:contact@offloadsecurity.com',
-            },
-            {
-              label: 'GitHub',
-              href: 'https://github.com/niteshsaini/offload-cspm',
             },
           ],
         },
