@@ -9,7 +9,7 @@ const config: Config = {
   // Docusaurus uses `tagline` as the default site meta description, so this
   // must describe the whole platform, not CSPM alone.
   tagline: 'Unified CNAPP, vulnerability management and compliance — one governed risk view',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/favicon.png',
 
   future: {
     v4: true,
