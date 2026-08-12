@@ -6,41 +6,48 @@ sidebar_position: 6
 
 # Supported Frameworks
 
-The compliance engine is built on the **Secure Controls Framework (SCF)** as a common-control backbone: you implement a control once, and it maps out to every framework that references it. That's why evidence collected for one framework automatically advances the others.
+The compliance engine is built on the **Secure Controls Framework (SCF), release 2026.2** as a common-control backbone: you implement a control once, and it maps out to every framework that references it. That's why evidence collected for one framework automatically advances the others. The bundled catalog is **over 1,500 controls mapped across 27 frameworks**.
 
 ## Framework catalog
 
-Frameworks mapped through the SCF backbone:
+All 27 frameworks below are mapped through the SCF 2026.2 backbone, so a single control satisfies every framework that references it:
 
 | Framework | Domain |
 |---|---|
 | **SOC 2** (AICPA Trust Services Criteria) | Service-organization trust |
+| **CIS Controls v8.1** | Baseline cyber hygiene |
 | **ISO/IEC 27001:2022** | Information security management |
 | **ISO/IEC 27002:2022** | Security controls |
-| **ISO/IEC 27701** | Privacy information management |
+| **ISO/IEC 27017:2015** | Cloud security controls |
+| **ISO/IEC 27018:2025** | Cloud PII protection |
+| **ISO/IEC 27701:2025** | Privacy information management |
 | **ISO/IEC 42001:2023** | AI management systems |
-| **PCI DSS 4.0.1** | Payment-card security |
-| **NIST CSF 2.0** | Cybersecurity framework |
-| **NIST SP 800-53 Rev 5** | Security & privacy controls |
-| **NIST SP 800-171 Rev 2 / Rev 3** | Controlled unclassified information |
+| **CSA CCM 4.1.0** | Cloud controls matrix |
+| **NIST AI RMF (AI 100-1)** | AI risk management |
 | **NIST Privacy Framework** | Privacy |
-| **CIS Controls v8.1** | Baseline cyber hygiene |
-| **OWASP Top 10 (2021)** | Application security |
-| **EU GDPR** | EU data protection |
+| **NIST SP 800-53 Rev 5** | Security & privacy controls |
+| **NIST SP 800-171 Rev 2** | Controlled unclassified information |
+| **NIST SP 800-171 Rev 3** | Controlled unclassified information |
+| **NIST SSDF (SP 800-218)** | Secure software development |
+| **NIST CSF 2.0** | Cybersecurity framework |
+| **OWASP Top 10 (2025)** | Application security |
+| **PCI DSS 4.0.1** | Payment-card security |
+| **CMMC 2.0 Level 2** | Defense supply-chain maturity |
 | **HIPAA** | US healthcare privacy & security |
+| **EU AI Act** | AI regulation |
+| **EU DORA (2023)** | Financial-sector operational resilience |
+| **EU GDPR** | EU data protection |
+| **EU NIS2 (2022)** | EU network & information security |
+| **EU NIS2 Annex (2024)** | NIS2 sector annex |
+| **India DPDP Act, 2023** | India data protection |
+| **SEBI CSCRF (2024)** | India securities-market cyber resilience |
 
-Additional frameworks with dedicated assessment modules:
+Several of these also have **dedicated, guided modules** on top of the SCF mapping:
 
-| Framework | Where |
+| Framework | Dedicated module |
 |---|---|
-| **India DPDP Act, 2023** | [DPDP Act (India) Privacy](./dpdp-privacy.md) — readiness, DPIA, SDF, vendor due diligence, breach workflow |
-| **EU AI Act** & **NIST AI RMF** | [AI Governance](../ai-threat-intelligence/ai-governance.md) — risk-tier classification, FRIA, assessments |
-| **OWASP ASVS 5.0** | Application security verification assessments |
-| **OWASP API Security Top 10** | API security assessments |
-| **NIST SSDF** | Secure software development |
-| **OWASP SAMM** | Software assurance maturity |
-| **DevSecOps maturity** | Pipeline & practice maturity |
-| **Insider threat** | Insider-risk program assessment |
+| **India DPDP Act, 2023** | [DPDP Act (India) Privacy](./dpdp-privacy.md) — readiness, DPIA, SDF classification, vendor due diligence, breach workflow with statutory DPB / CERT-In deadlines |
+| **EU AI Act**, **NIST AI RMF**, **ISO 42001** | [AI Governance](../ai-threat-intelligence/ai-governance.md) — risk-tier classification, model discovery, prompt-injection testing, assessments |
 
 ## How mappings work in practice
 
