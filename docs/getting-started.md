@@ -8,6 +8,24 @@ sidebar_position: 1
 
 This guide gets you from "I have access" to "I'm reviewing my first findings." It assumes the platform is already deployed and you have an account.
 
+:::info[Before you begin]
+A quick checklist so your first scan goes smoothly:
+
+- **A platform account.** Your administrator provides your login. What you can do depends on your role — viewing findings needs *view* access, while connecting accounts and starting scans needs *management* access. See [RBAC & Team Management](./authentication/rbac-team-management.md).
+- **Permission to connect your first cloud account** — the main setup step:
+  - **AWS** — the ability to create a **read-only IAM role** in the target account (the role Offload assumes is read-only; you need IAM access to create it). Ready-to-use Terraform is provided.
+  - **GCP** — a role that can create a service account and grant read-only access (Project IAM Admin or Owner); organization onboarding needs organization-level access.
+  - **Azure** — the ability to register an application and assign the **Reader** role on the subscription.
+
+  See [Connecting Cloud Accounts](./cloud-security/connecting-accounts.md) for the exact permissions and copy-paste setup.
+- **Nothing to install.** There is no CLI or agent to download — everyday use is the web app, and CI/CD integration uses plain `curl` / the REST API or the [GitHub Action](./cli-and-cicd.md). (Deploying the platform itself is a separate operator task — see [On-Premises](./on-premises/index.mdx).)
+- **Time to value:** connecting your first cloud account takes about **3 minutes**; the first scan then runs in the background.
+:::
+
+:::tip[Scans are read-only — you won't touch production]
+Every scan uses **read-only** credentials and only ever *reads* your environment; Offload never changes anything in your cloud. There's no separate sandbox to configure — but if you'd rather start small, scope your first scan to a single non-production account or region.
+:::
+
 ## 1. Sign in
 
 1. Open the platform URL in your browser — e.g. `https://yourdomain.com` (the address your administrator gave you).

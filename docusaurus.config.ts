@@ -43,6 +43,10 @@ const config: Config = {
         docs: {
           sidebarPath: './sidebars.ts',
           routeBasePath: '/',
+          // Surface a "Last updated" date on every page (derived from git
+          // history at build time). Helps API users and self-hosters judge
+          // freshness. Author is omitted — the date is the useful signal.
+          showLastUpdateTime: true,
         },
         blog: false,
         theme: {
@@ -52,7 +56,21 @@ const config: Config = {
     ],
   ],
 
-  themes: ['@docusaurus/theme-mermaid'],
+  themes: [
+    '@docusaurus/theme-mermaid',
+    // Offline, self-hosted full-text search — no external service or API key.
+    // Indexes the docs at build time and renders a search bar in the navbar.
+    [
+      require.resolve('@easyops-cn/docusaurus-search-local'),
+      {
+        hashed: true,
+        indexBlog: false,
+        docsRouteBasePath: '/',
+        highlightSearchTermsOnTargetPage: true,
+        searchResultLimits: 8,
+      },
+    ],
+  ],
 
   themeConfig: {
     image: 'img/offload-social-card.png',
@@ -82,9 +100,26 @@ const config: Config = {
           label: 'Documentation',
         },
         {
+          type: 'dropdown',
+          label: 'Reference',
+          position: 'left',
+          items: [
+            {to: '/api-reference', label: 'API Reference'},
+            {to: '/cli-and-cicd', label: 'CLI & CI/CD'},
+            {to: '/glossary', label: 'Glossary'},
+            {to: '/faq', label: 'FAQ'},
+            {to: '/troubleshooting', label: 'Troubleshooting'},
+          ],
+        },
+        {
+          to: '/getting-started',
+          label: 'Get Started',
+          position: 'left',
+        },
+        {
           href: 'https://offloadsecurity.com/platform',
           label: 'Platform',
-          position: 'left',
+          position: 'right',
         },
         {
           href: 'mailto:contact@offloadsecurity.com',
@@ -131,19 +166,44 @@ const config: Config = {
           ],
         },
         {
-          title: 'More',
+          title: 'Reference',
           items: [
+            {
+              label: 'API Reference',
+              to: '/api-reference',
+            },
+            {
+              label: 'CLI & CI/CD',
+              to: '/cli-and-cicd',
+            },
+            {
+              label: 'Glossary',
+              to: '/glossary',
+            },
+          ],
+        },
+        {
+          title: 'Help & support',
+          items: [
+            {
+              label: 'FAQ',
+              to: '/faq',
+            },
+            {
+              label: 'Troubleshooting',
+              to: '/troubleshooting',
+            },
+            {
+              label: 'Trust & Security',
+              to: '/trust-and-security',
+            },
+            {
+              label: 'Contact support',
+              href: 'mailto:contact@offloadsecurity.com',
+            },
             {
               label: 'Offload Security',
               href: 'https://offloadsecurity.com',
-            },
-            {
-              label: 'Platform',
-              href: 'https://offloadsecurity.com/platform',
-            },
-            {
-              label: 'Contact Us',
-              href: 'mailto:contact@offloadsecurity.com',
             },
           ],
         },
