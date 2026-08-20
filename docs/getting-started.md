@@ -8,6 +8,24 @@ sidebar_position: 1
 
 This guide gets you from "I have access" to "I'm reviewing my first findings." It assumes the platform is already deployed and you have an account.
 
+:::info[Before you begin]
+A quick checklist so your first scan goes smoothly:
+
+- **A platform account.** Your administrator provides your login. What you can do depends on your role — viewing findings needs *view* access, while connecting accounts and starting scans needs *management* access. See [RBAC & Team Management](./authentication/rbac-team-management.md).
+- **Permission to connect your first cloud account** — the main setup step:
+  - **AWS** — the ability to create a **read-only IAM role** in the target account (the role Offload assumes is read-only; you need IAM access to create it). Ready-to-use Terraform is provided.
+  - **GCP** — a role that can create a service account and grant read-only access (Project IAM Admin or Owner); organization onboarding needs organization-level access.
+  - **Azure** — the ability to register an application and assign the **Reader** role on the subscription.
+
+  See [Connecting Cloud Accounts](./cloud-security/connecting-accounts.md) for the exact permissions and copy-paste setup.
+- **Nothing to install.** There is no CLI or agent to download — everyday use is the web app, and CI/CD integration uses plain `curl` / the REST API or the [GitHub Action](./cli-and-cicd.md). (Deploying the platform itself is a separate operator task — see [On-Premises](./on-premises/index.mdx).)
+- **Time to value:** connecting your first cloud account takes about **3 minutes**; the first scan then runs in the background.
+:::
+
+:::tip[Scans are read-only — you won't touch production]
+Every scan uses **read-only** credentials and only ever *reads* your environment; Offload never changes anything in your cloud. There's no separate sandbox to configure — but if you'd rather start small, scope your first scan to a single non-production account or region.
+:::
+
 ## 1. Sign in
 
 1. Open the platform URL in your browser — e.g. `https://yourdomain.com` (the address your administrator gave you).
@@ -58,14 +76,37 @@ This is the backbone of how work moves through the platform:
 3. **Risk** — significant findings (and compliance gaps) can be promoted into the **Risk Register** with treatment plans and SLAs.
 4. **Compliance & Reports** — findings map to framework controls, and everything can be exported as an audit-ready report.
 
-## 4. Next steps
+## 4. Your first scan — a guided walkthrough
 
-Now connect something real and run your first scan:
+Follow this end-to-end path to go from a connected environment to a tracked, alerted finding. Each step notes **what success looks like** and **how to confirm it** in the product.
 
-- **[Connect a cloud account](./cloud-security/account-management.md)** — AWS, Azure, or GCP, for continuous posture scanning.
-- **[Run and review scans](./security-scanning/native-scans.md)** — web, network, and API testing.
-- **[Work your findings](./vulnerability-risk/vulnerability-management.mdx)** — triage, prioritize, and track to remediation.
-- **[Automate in CI/CD](./security-scanning/scan-management.md)** — gate pipelines on scan results.
+### Step 1 — Connect a cloud account
+In **Cloud Security → Cloud Accounts**, select **Add Cloud Account** and follow **[Connecting Cloud Accounts](./cloud-security/connecting-accounts.md)** for your provider (read-only, with copy-paste Terraform).
+- **Expected result:** the account appears with a **Connected / Active** status, and a first scan starts automatically.
+- **Verify:** the account is listed as Connected, and you can see a scan in progress with a scan run ID.
+
+### Step 2 — Run and watch a scan
+The first scan runs on connect; you can also start one at any time, or run a **[native web / API / network scan](./security-scanning/native-scans.md)** against a target you own.
+- **Expected result:** the scan reaches **Completed** (or **Partial**, if some checks couldn't run), and findings appear.
+- **Verify:** on the **Scans** page the status shows Completed with a finding count — open it to see the results.
+
+### Step 3 — Understand a finding
+Open **[Vulnerability Management](./vulnerability-risk/vulnerability-management.mdx)** and select a finding.
+- **Expected result:** the finding shows its severity, the affected resource, remediation guidance, and exploit context (CISA KEV / EPSS where applicable).
+- **Verify:** you can see the affected asset and a concrete remediation step — and the same issue found by two scanners appears as **one** deduplicated record.
+
+### Step 4 — Create a remediation ticket
+With **[Jira connected](./integrations/third-party.md)**, push a finding to your tracker.
+- **Expected result:** a Jira issue is created and linked to the finding.
+- **Verify:** the finding shows a linked ticket, and its status stays in sync as the ticket moves.
+
+### Step 5 — Configure an alert
+Set up **[notifications](./integrations/notifications.md)** to Slack, Microsoft Teams, email, or a webhook.
+- **Expected result:** new or reopened high-severity findings notify your channel.
+- **Verify:** send a test (or trigger a finding) and confirm the message arrives — the alert also appears in **Alerts**.
+
+### Then automate it
+Once the manual path works, **[gate your CI/CD pipelines](./cli-and-cicd.md)** on scan results so this runs on every build.
 
 :::tip[Tip]
 You can change your **active team** at any time from the account menu in the top-right. Make sure you're in the right team before running scans or reviewing data.
