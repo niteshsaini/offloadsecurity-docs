@@ -13,7 +13,7 @@ Every module on the platform feeds one reporting layer, and AI assistance is ava
 - **Unified findings reports.** Findings from cloud, code, containers, Kubernetes, on-prem scanners, and integrated third-party tools share one normalized model — so a report can slice by module, source, severity, asset, or team without stitching exports together.
 - **Per-repository report.** A single consolidated report per code repository: SAST, secrets, dependency (SCA), SBOM, and license findings for that repo in one place, suitable for handing to the owning engineering team.
 - **Module reports.** Cloud posture, vulnerability management, container/SBOM and license, compliance posture, and risk register views each export their own report.
-- **Executive & audit outputs.** Compliance and risk reporting is generated from live data — the same numbers the dashboard shows — in **PDF, HTML, and Excel**, and evidence-backed packages come from the [Evidence Hub](./compliance/evidence-hub.md) and [DPDP audit packs](./compliance/dpdp-privacy.md).
+- **Executive & audit outputs.** Compliance and risk reporting is generated from live data — the same numbers the dashboard shows — in **PDF and HTML** (risk data also exports to CSV), and evidence-backed packages come from the [Evidence Hub](./compliance/evidence-hub.md) and [DPDP audit packs](./compliance/dpdp-privacy.md).
 - **Scheduled and on-demand.** Run reports ad hoc, or export on a schedule via the [API](./api-automation/index.md).
 
 :::tip[Reports are team-scoped]

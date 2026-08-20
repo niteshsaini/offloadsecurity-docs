@@ -3,11 +3,11 @@ title: "Audit Trail & Webhook Events"
 sidebar_position: 4
 ---
 
-This section documents the platform's observability and event-driven architecture. It covers the immutable audit trail for user actions, the platform event bus for internal reactivity, the webhook subsystem for external integrations, and the automation of evidence collection and risk management.
+This section documents the platform's observability and event-driven architecture. It covers the append-only audit trail for user actions, the platform event bus for internal reactivity, the webhook subsystem for external integrations, and the automation of evidence collection and risk management.
 
 ## Platform Audit Trail
 
-The platform implements a unified audit trail via the `AuditTrailMiddleware`. This middleware captures every authenticated API request and persists it to an immutable MongoDB collection named `event_bus_audit_log`. This system provides compliance-ready logs that answer who did what, when, and with what outcome.
+The platform implements a unified audit trail via the `AuditTrailMiddleware`. This middleware captures every authenticated API request and persists it to an append-only MongoDB collection named `platform_audit_trail`. This system provides compliance-ready logs that answer who did what, when, and with what outcome.
 
 ### AuditTrailMiddleware Implementation
 The middleware operates as a `BaseHTTPMiddleware` within the FastAPI pipeline. It classifies actions, redacts sensitive data, and performs asynchronous background writes to minimize latency.
@@ -24,7 +24,7 @@ sequenceDiagram
     participant M as "AuditTrailMiddleware"
     participant A as "AuthService"
     participant R as "Route Handler"
-    participant DB as "MongoDB (event_bus_audit_log)"
+    participant DB as "MongoDB (platform_audit_trail)"
 
     C->>M: "HTTP Request (POST /api/risks)"
     M->>A: "get_user_from_session()"
@@ -93,7 +93,7 @@ graph TD
     end
 
     subgraph "Data Store (MongoDB)"
-        EBAL["event_bus_audit_log"]
+        EBAL["platform_audit_trail"]
         KS["kri_snapshots"]
         RES["risk_exceptions"]
     end

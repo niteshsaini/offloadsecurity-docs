@@ -53,7 +53,7 @@ The scan history gives you one view across every scan type:
 - **Tabs** separate **completed**, **running**, and **failed** scans, and the running tab refreshes on its own.
 - **Filter** by tool or scan type to find a specific run.
 - **Re-scan** a previous target in one click to confirm a fix.
-- **Reports** can be generated per scan, or you can merge several scans into a single consolidated executive report (PDF, HTML, or Excel).
+- **Reports** can be generated per scan, or you can merge several scans into a single consolidated executive report (PDF, HTML, or Word).
 
 :::tip[Scan responsibly]
 Web and network scans support **rate-limit profiles** (gentle, normal, aggressive). Choose a gentler profile for fragile or production targets so the scan doesn't overload them.

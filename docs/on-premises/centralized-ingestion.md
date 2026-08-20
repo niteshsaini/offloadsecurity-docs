@@ -15,11 +15,10 @@ Offload Security ingests and correlates:
 - **Cloud posture** — AWS, Azure, GCP misconfigurations and native findings.
 - **Application, API, code, and container** findings.
 - **Internal-network discovery** and private URL/API scan results.
-- **OpenVAS** internal vulnerability scans.
 - **Wazuh** endpoint events, alerts, vulnerability state, SCA, and FIM.
 - **Threat intelligence** and third-party scanner data via integrations.
 
-All of it resolves against **one model** of assets, findings, controls, and evidence — so the internal database server, the CVE OpenVAS found on it, the Wazuh events from it, and the compliance control it supports are all connected.
+All of it resolves against **one model** of assets, findings, controls, and evidence — so the internal database server, its vulnerability state, the Wazuh events from it, and the compliance control it supports are all connected.
 
 ## What unification changes
 
@@ -36,7 +35,7 @@ Findings from every source — cloud and on-prem alike — promote into the same
 
 Separate tools can each be excellent and still leave you blind, because the risk that matters most often only appears when sources are combined:
 
-- An **internal host** (Asset Inventory) with a **critical OpenVAS CVE** *and* **anomalous Wazuh activity** is a very different priority than any one of those signals alone.
+- An **internal host** (Asset Inventory) with a **critical vulnerability** *and* **anomalous Wazuh activity** is a very different priority than any one of those signals alone.
 - A **failed SCA compliance check** (Wazuh) on a host that also has an **open vulnerability** ties an operational finding directly to a control gap and its evidence.
 
 Centralized ingestion is what makes those connections visible automatically, instead of requiring an analyst to notice them across three consoles.

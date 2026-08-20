@@ -71,4 +71,4 @@ For the integrations model in general, see **[Integrations](../integrations/inde
 ## Related
 
 - **[OpenVAS Scanning](./openvas-scanning.md)** — network vulnerability scanning to pair with Wazuh's endpoint view.
-- **[Centralized Ingestion](./centralized-ingestion.md)** — how Wazuh, OpenVAS, cloud, and app data become one picture.
+- **[Centralized Ingestion](./centralized-ingestion.md)** — how Wazuh, cloud, and app data become one picture.

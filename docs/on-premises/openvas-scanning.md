@@ -6,9 +6,9 @@ sidebar_position: 4
 
 # OpenVAS Vulnerability Scanning
 
-OpenVAS (part of the Greenbone Vulnerability Management stack) is the platform's engine for **network vulnerability scanning of internal and private assets.** It complements cloud posture assessment and application testing with deep, host-level vulnerability detection against the systems that live inside your network — servers, network devices, databases, and appliances that a public SaaS scanner can't reach.
+OpenVAS (part of the Greenbone Vulnerability Management stack) is a **supported integration for network vulnerability scanning of internal and private assets.** OpenVAS performs the scanning inside your network — deep, host-level vulnerability detection against servers, network devices, databases, and appliances that a public SaaS scanner can't reach. Offload Security connects to your Greenbone/OpenVAS deployment and verifies connectivity to it, so it fits alongside your cloud posture and application testing as part of one program.
 
-Running OpenVAS inside your environment means the scan happens **where the assets are**, and the results flow straight into Offload Security's unified **[Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)**.
+Running OpenVAS inside your environment means the scan happens **where the assets are** — against the systems that live behind your perimeter.
 
 ## What it scans
 
@@ -35,20 +35,19 @@ Scans can be **unauthenticated** (an outside-in view of what's exposed on the ne
 - **Data residency.** Because the scanner runs on your infrastructure, scan data about sensitive internal systems stays inside your boundary — important for banking, healthcare, and other regulated sectors.
 - **Regulatory expectation.** Regular internal vulnerability scanning is an explicit control in many frameworks (for example, PCI-DSS internal scanning requirements). OpenVAS provides the capability and the evidence.
 
-## How results flow into the platform
+## How the integration works
 
-OpenVAS findings are normalized into the same finding schema as every other source, so an internal-host CVE behaves exactly like a cloud or application finding:
+Offload Security connects to your Greenbone/OpenVAS deployment and **verifies connectivity** to it, so OpenVAS becomes part of your overall program rather than a wholly separate tool. You run and review the network scans in OpenVAS/Greenbone, which is where the scan configuration and results live.
 
-- **Triaged in one queue** — deduplicated and risk-scored in **[Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)**.
-- **Tracked to SLA** and promoted into the **[Risk Register](../vulnerability-risk/risk-register.md)** with a treatment plan.
-- **Counted toward compliance** and captured as **[audit evidence](../compliance/evidence-hub.md)**.
-- **Correlated with the asset** in the shared **[Asset Inventory](../cloud-security/asset-inventory.md)**, and with endpoint activity from **[Wazuh](./wazuh-integration.md)** on the same host.
+:::note[Scope of the integration today]
+This integration establishes and validates the connection to your OpenVAS/Greenbone instance. Automated import of OpenVAS scan results into Offload Security's unified [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) is **not** part of the integration today — OpenVAS remains the system of record for these scans. Wazuh, by contrast, does stream telemetry into the platform (see [Wazuh Integration](./wazuh-integration.md)).
+:::
 
 ## Setting it up
 
 1. Deploy OpenVAS/Greenbone inside your network with reachability to the target segments.
-2. Connect it to Offload Security and define the internal targets to scan (drawn from **[Internal Network Visibility](./internal-network-visibility.md)** or specified directly).
-3. Schedule scans; results appear in Vulnerability Management alongside your cloud, application, and container findings.
+2. Connect it to Offload Security, which verifies connectivity to your OpenVAS/Greenbone deployment.
+3. Configure and run your network scans from the OpenVAS/Greenbone console against the internal targets (informed by **[Internal Network Visibility](./internal-network-visibility.md)** or specified directly).
 
 :::note[Positioning and credentials]
 Scan quality depends on network reachability and, for authenticated scans, valid host credentials. Placement of the scanner relative to your network segments is part of deployment planning handled during onboarding.
@@ -61,4 +60,4 @@ OpenVAS and Wazuh are complementary halves of internal coverage:
 - **OpenVAS** answers *"what vulnerabilities exist on this host and network?"* — active, scan-based detection.
 - **[Wazuh](./wazuh-integration.md)** answers *"what is happening on this host?"* — passive, agent-based monitoring, events, and integrity.
 
-Run both, and an internal server has both its weaknesses (OpenVAS) and its live activity and hardening state (Wazuh) represented in one correlated view.
+Run both for full internal coverage — OpenVAS for host and network weaknesses, and Wazuh (whose telemetry streams into the platform) for live activity and hardening state.

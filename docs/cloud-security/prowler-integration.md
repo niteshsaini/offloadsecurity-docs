@@ -33,9 +33,9 @@ NIST 800-53 mapping is available for **AWS only**. HIPAA, GDPR, FedRAMP, FFIEC, 
 
 1. **Connect a cloud account.** Posture checks only run against accounts you've connected. See **[Connecting Cloud Accounts](./connecting-accounts.md)** for setup and ready-to-use Terraform.
 2. **Run a posture scan.** Start a scan from **Cloud Security**, or let the first scan kick off automatically when an account connects. You can choose how broad the scan is:
-   - A **quick** scan runs a focused subset of checks for fast feedback.
-   - A **full** scan runs the complete set of checks.
-   - A **comprehensive** scan runs every check and evaluates all applicable compliance frameworks.
+   - A **quick** scan covers a single primary region for fast feedback.
+   - A **full** scan covers the platform's standard set of major regions.
+   - A **comprehensive** scan covers that same broad region set. In every case Prowler runs its complete check set and maps results to all applicable compliance frameworks — the scan type controls how many regions are covered, not which checks run.
 3. **Review the findings.** Open the findings view to see every failing check, ranked by severity and tagged with its security domain and framework controls. Identical issues across resources are grouped into a single actionable check to cut down on noise.
 4. **Open a finding to remediate.** Each finding shows what failed, why it matters, and how to fix it — including a deep link into the relevant cloud console. For supported checks you can launch a guided remediation workflow.
 5. **Re-scan and track over time.** Run scans on a schedule or after making fixes. Drift detection flags posture that regresses — for example, audit logging being turned off again — so a closed finding doesn't quietly come back.
@@ -46,7 +46,7 @@ Use a **quick** scan day to day for fast signal, and run a **comprehensive** sca
 
 ## How findings show up
 
-Once a scan finishes, its results flow straight into the standard **Cloud Security** findings view — the same place you see your cloud providers' own alerts (GuardDuty, Security Command Center, Defender for Cloud). That means benchmark and compliance findings are triaged, scored, and reported alongside everything else:
+Once a scan finishes, its results flow straight into the standard **Cloud Security** findings view — the same place you review the rest of your findings. That means benchmark and compliance findings are triaged, scored, and reported alongside everything else:
 
 - They appear in the findings list with severity, affected resource, security domain, and mapped framework controls.
 - They roll up into your **[Compliance Posture](../compliance/compliance-dashboard.md)**, contributing pass/fail counts per framework.

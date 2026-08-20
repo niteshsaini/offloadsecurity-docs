@@ -26,7 +26,7 @@ CSCRF tiers regulated entities — from Market Infrastructure Institutions down 
 How the platform fits:
 
 - **Continuous compliance between audits.** CSCRF's control expectations (asset inventory, vulnerability management, logging, access control) map onto the platform's [compliance engine](../compliance/index.md) and [supported frameworks](../compliance/supported-frameworks.md), so the annual audit confirms a posture you maintain continuously rather than assembling annually.
-- **VAPT evidence in one place.** Findings from your VAPT providers and scanners are ingested alongside the platform's own scans ([third-party integrations](../integrations/third-party.md), [OpenVAS](../on-premises/openvas-scanning.md)), tracked to closure in the [Risk Register](../vulnerability-risk/risk-register.md) — closure evidence auditors ask for.
+- **VAPT evidence in one place.** Findings from your VAPT providers and scanners are ingested alongside the platform's own scans via [third-party integrations](../integrations/third-party.md), tracked to closure in the [Risk Register](../vulnerability-risk/risk-register.md) — closure evidence auditors ask for. Internal hosts are covered by the [OpenVAS integration](../on-premises/openvas-scanning.md).
 - **Smaller REs.** For mid-size, small, and self-certification REs, the platform's compliance automation and reporting does the heavy lifting of demonstrating conformance without a large internal team.
 
 :::note[Audits stay with empanelled firms]

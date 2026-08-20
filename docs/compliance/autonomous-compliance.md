@@ -12,7 +12,7 @@ Autonomous Compliance keeps your framework status up to date automatically. As s
 
 ## What it does
 
-At the center is a single **common controls registry** of 1,451 controls organized into 33 domains, built on the **Secure Controls Framework (SCF)**. Each control is pre-mapped to the requirements it satisfies across frameworks like **SOC 2, ISO 27001, NIST CSF, PCI-DSS**, and more.
+At the center is a single **common controls registry** of over 1,500 controls (1,534 in SCF 2026.2) organized into 34 domains, built on the **Secure Controls Framework (SCF)**. Each control is pre-mapped to the requirements it satisfies across frameworks like **SOC 2, ISO 27001, NIST CSF, PCI-DSS**, and more.
 
 Because one control can satisfy requirements in several frameworks at once, a single security check updates every framework it touches — assess once, comply many. That means you don't maintain a separate checklist per framework; you maintain one set of controls, and the platform translates their status into each framework's scoring for you.
 

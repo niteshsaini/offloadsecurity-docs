@@ -18,7 +18,7 @@ Both. The managed platform is the default; regulated customers can run the full 
 AWS, Google Cloud, and Azure — with read-only access wherever the provider supports it. Depth varies by provider (AWS and GCP include organization-level onboarding). See [Cloud Security](./cloud-security/index.md) and [permissions](./cloud-security/permissions.md).
 
 **Can we keep our existing scanners and tools?**
-Yes — that's the point of the unified model. Findings from tools like Trivy, Prowler, ZAP, Grype, Syft, and kube-bench can be ingested via API, and SIEM/scanner integrations like [Wazuh](./on-premises/wazuh-integration.md) and [OpenVAS](./on-premises/openvas-scanning.md) feed the same dashboards. See [Integrations](./integrations/index.md).
+Yes — that's the point of the unified model. Findings from tools like Trivy, Prowler, ZAP, Grype, Syft, and kube-bench can be ingested via API, and [Wazuh](./on-premises/wazuh-integration.md) streams SIEM/endpoint telemetry into the same dashboards. [OpenVAS](./on-premises/openvas-scanning.md) connects as a network-scanning integration (OpenVAS performs the scanning). See [Integrations](./integrations/index.md).
 
 **How are findings prioritized?**
 Severity is normalized across sources, then enriched with exploit intelligence — findings on the **CISA KEV** list or with high **EPSS** scores are flagged so actively-exploited issues rise to the top. Critical findings can auto-promote into the [Risk Register](./vulnerability-risk/risk-register.md).

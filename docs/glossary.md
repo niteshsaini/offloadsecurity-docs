@@ -12,7 +12,7 @@ The primary domain of the application, focusing on the automated identification 
 *   **Implementation**: Managed via the `CloudSecurityManagement` component and the `CloudScanOrchestrationService`.
 
 ### ScanRun & SubJob
-The hierarchical model used to track cloud security scans. A `ScanRun` represents a high-level request (e.g., "Scan AWS Account X"), while `SubJobs` are granular tasks dispatched to Celery workers for specific regions or tools (Prowler, Steampipe).
+The hierarchical model used to track cloud security scans. A `ScanRun` represents a high-level request (e.g., "Scan AWS Account X"), while `SubJobs` are granular tasks dispatched to Celery workers — for example a compliance check (Prowler) or asset discovery (native cloud APIs) for a given region.
 *   **Implementation**: Defined in the `ScanRun` and `SubJob` models. Orchestrated by `execute_cloud_scan`.
 
 ### Unified Scan Results Store
