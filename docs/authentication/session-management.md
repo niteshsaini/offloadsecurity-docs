@@ -64,7 +64,7 @@ graph TD
         Redis[("Redis: Session_Cache")]
     end
 
-    LoginComp -- "POST /auth/login" --> AuthSvc
+    LoginComp -- "POST /api/auth/login" --> AuthSvc
     ApiSvc -- "Authorization: Bearer" --> AuthStd
     AuthStd -- "auth_service.get_user_from_session()" --> AuthSvc
     AuthSvc -- "session_storage.get_session()" --> SessionSvc
@@ -100,13 +100,13 @@ sequenceDiagram
     participant M as "MFA Service"
     participant S as "Session Storage"
 
-    U->>R: "POST /login (email, password)"
+    U->>R: "POST /api/auth/login (email, password)"
     R->>M: "get_mfa_status(user_id)"
     M-->>R: "enabled=true"
     R->>S: "create_session(mfa_token, temp_data)"
     R-->>U: "200 OK (mfa_required=true, mfa_token)"
     
-    U->>R: "POST /mfa/verify (mfa_token, code)"
+    U->>R: "POST /api/auth/mfa/verify (mfa_token, code)"
     R->>M: "verify_totp(user_id, code)"
     M-->>R: "valid=true"
     R->>S: "create_session(user_id, session_data)"

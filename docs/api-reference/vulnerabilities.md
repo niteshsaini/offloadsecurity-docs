@@ -117,7 +117,7 @@ GET /api/vulnerabilities/grouped?severity=critical&limit=50
 The endpoints above are for **CVE‑style vulnerabilities**. Two adjacent surfaces:
 
 - **`GET /api/cspm/findings`** — cloud **misconfiguration** findings (Prowler/CSPM).
-- **`GET /api/risk-management/…`** — the unified **risk register**.
+- **`GET /api/risk-management/risks`** — the unified **risk register**.
 
 ## Errors
 

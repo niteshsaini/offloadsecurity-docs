@@ -35,9 +35,9 @@ Offload Security only needs **read/security-audit** permissions. Never give it w
 ### Option A — IAM role (recommended)
 A cross-account IAM **role** with an external ID is the most secure option (no long-lived keys).
 
-**Required permissions** (read-only): `securityhub:GetFindings`, `config:GetComplianceSummaryByConfigRule`, `guardduty:ListDetectors`, `guardduty:ListFindings`, `guardduty:GetFindings`, `ec2:Describe*`, `iam:Get*`, `iam:List*`, `s3:Get*`, `s3:List*`, `rds:Describe*`, `lambda:GetFunction*`, `lambda:List*`, `cloudtrail:DescribeTrails`, `cloudtrail:LookupEvents`, `kms:DescribeKey`, `kms:ListKeys`, `tag:GetResources`. For container (ECR) scanning, also add `ecr:DescribeRepositories` and `ecr:DescribeImages`.
+**Required permissions** (read-only): `securityhub:GetFindings`, `config:GetComplianceSummaryByConfigRule`, `guardduty:ListDetectors`, `guardduty:ListFindings`, `guardduty:GetFindings`, `inspector2:List*`, `inspector2:Get*`, `access-analyzer:List*`, `access-analyzer:Get*`, `ec2:Describe*`, `iam:Get*`, `iam:List*`, `s3:Get*`, `s3:List*`, `rds:Describe*`, `lambda:GetFunction*`, `lambda:List*`, `cloudtrail:DescribeTrails`, `cloudtrail:LookupEvents`, `kms:DescribeKey`, `kms:ListKeys`, `tag:GetResources`. For container (ECR) scanning, also add `ecr:DescribeRepositories` and `ecr:DescribeImages`.
 
-The AWS-managed **`SecurityAudit`** policy covers most of these; the Terraform below uses it plus a small supplement so you stay current as services evolve.
+The role uses the AWS-managed **`SecurityAudit`** and **`ReadOnlyAccess`** policies for broad read coverage, plus a small inline supplement (Security Hub, GuardDuty, Amazon Inspector, IAM Access Analyzer, Config, CloudTrail, and ECR) — matching the policy the in-app onboarding wizard generates, so you stay current as services evolve.
 
 ```hcl
 # offload-security-aws.tf
@@ -71,7 +71,12 @@ resource "aws_iam_role_policy_attachment" "security_audit" {
   policy_arn = "arn:aws:iam::aws:policy/SecurityAudit"
 }
 
-# Supplemental permissions for findings ingestion + container scanning
+resource "aws_iam_role_policy_attachment" "read_only" {
+  role       = aws_iam_role.offload_security_scanner.name
+  policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
+}
+
+# Supplemental permissions for security services + container scanning
 resource "aws_iam_role_policy" "offload_supplement" {
   name = "OffloadSecuritySupplement"
   role = aws_iam_role.offload_security_scanner.id
@@ -85,6 +90,10 @@ resource "aws_iam_role_policy" "offload_supplement" {
         "guardduty:ListDetectors",
         "guardduty:ListFindings",
         "guardduty:GetFindings",
+        "inspector2:List*",
+        "inspector2:Get*",
+        "access-analyzer:List*",
+        "access-analyzer:Get*",
         "config:GetComplianceSummaryByConfigRule",
         "cloudtrail:LookupEvents",
         "tag:GetResources",

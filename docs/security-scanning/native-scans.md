@@ -18,10 +18,12 @@ Native scanning gives you one launcher for several proven open-source tools, eac
 |---|---|---|
 | **Web Vulnerability** | OWASP ZAP | Web app vulnerabilities — spider crawl plus active testing for issues like injection and cross-site scripting. |
 | **Nuclei Vulnerability** | Nuclei | Fast template-based detection of known CVEs, exposures, and misconfigurations (6000+ templates). |
-| **Security Headers** | shcheck | HTTP security headers (HSTS, CSP, X-Frame-Options, and more) with scoring and recommendations. |
+| **Security Headers** | Built-in header analyzer | HTTP security headers (HSTS, CSP, X-Frame-Options, and more) with scoring and recommendations. |
 | **Network Discovery** | Nmap | Live hosts, open ports, running services, and OS detection across an IP, hostname, or CIDR range. |
 | **SSL/TLS Security** | testssl.sh | Certificate details, supported protocols and ciphers, and TLS vulnerabilities such as Heartbleed. |
-| **API Security** | API testing platform | Endpoint discovery, authentication-bypass checks, injection testing, and business-logic flaws. |
+| **API Security** | Built-in API tester | Endpoint discovery, authentication-bypass checks, injection testing, and business-logic and rate-limiting checks (OWASP API Top 10). |
+
+When you run several tools together with **App Scan** (below), a few additional lightweight checks run inline against the same target: **WAF detection**, **technology fingerprinting** with a per-technology CVE lookup (matched against NVD, CISA KEV, and EPSS), and — for authenticated runs — **traffic capture** that drives a headless browser through the logged-in app to record the real request surface before testing it.
 
 Each scan runs asynchronously: you launch it, it runs in the background, and the results appear on the **Scans** page when it finishes. You can run a single targeted scan, or use **App Scan** to run several tools at once against one URL and get a single consolidated report with a security rating.
 

@@ -18,7 +18,7 @@ Medical devices, imaging systems, nurse workstations, and OT rarely leave the ho
 
 ### Vulnerability management that reaches legacy internal systems
 
-Authenticated and unauthenticated scanning via [OpenVAS Scanning](../on-premises/openvas-scanning.md) surfaces exposures on internal hosts, then feeds them into unified [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) alongside cloud and container findings. Instead of a separate spreadsheet for "the stuff inside the hospital," internal risk is scored and prioritized in the same queue as everything else.
+Authenticated and unauthenticated scanning via the [OpenVAS integration](../on-premises/openvas-scanning.md) surfaces exposures on internal hosts a public SaaS scanner can't reach — the internal-host coverage regulated healthcare environments require, running inside your own network so scan data about sensitive systems stays within your boundary.
 
 ### Endpoint and telemetry monitoring without shipping data out
 
@@ -46,7 +46,7 @@ Because internal scans, endpoint telemetry, and cloud findings share one data mo
 | --- | --- |
 | Protect PHI and patient privacy | Correlated posture across cloud and internal systems, with data-protection framework mapping in [Compliance](../compliance/index.md) |
 | Secure large internal networks and medical devices/IoT/OT | [Internal Network Visibility](../on-premises/internal-network-visibility.md) and in-place scanning via [On-Premises](../on-premises/index.mdx) |
-| Vulnerability management on legacy internal hosts | [OpenVAS Scanning](../on-premises/openvas-scanning.md) feeding unified [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) |
+| Vulnerability scanning of legacy internal hosts | [OpenVAS integration](../on-premises/openvas-scanning.md) for internal-host coverage |
 | Endpoint and behavioral monitoring | [Wazuh Integration](../on-premises/wazuh-integration.md) for endpoint/SIEM coverage |
 | Keep sensitive telemetry in the boundary | [Centralized Ingestion](../on-premises/centralized-ingestion.md) within the on-premises model |
 | Audit-ready, continuous evidence | [Evidence Hub](../compliance/evidence-hub.md) collecting artifacts as work happens |

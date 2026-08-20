@@ -13,7 +13,7 @@ Cloud Security is the platform's Cloud Security Posture Management (CSPM) module
 ## What it does
 
 - **Continuous posture scanning.** Checks your AWS, Azure, and GCP configuration against hundreds of security best practices and benchmarks, then surfaces every misconfiguration as a finding with a severity and the affected resource.
-- **Native findings ingestion.** Reads the findings your cloud providers already generate — **AWS GuardDuty** (and Security Hub), **GCP Security Command Center**, and **Microsoft Defender for Cloud** — and folds them into the same view, so you don't have to jump between consoles.
+- **AWS Security Hub ingestion.** Where you enable it, the platform pulls in findings from **AWS Security Hub** — which itself aggregates GuardDuty, Amazon Inspector, and more — so those provider-native alerts sit alongside the platform's own posture findings, and you don't have to jump between consoles.
 - **Remediation guidance.** Every finding comes with a description, severity, and step-by-step fix. For supported checks you can launch a guided remediation workflow from a built-in playbook catalog.
 - **Drift and continuous monitoring.** Watches for changes to your security posture over time — for example a logging or threat-detection service being disabled — and flags the drift so a fixed issue doesn't silently regress.
 - **Read-only and least-privilege.** Connections use **read/security-audit** access only and credentials are stored **encrypted at rest**. The platform never needs write or admin permissions on your cloud.
