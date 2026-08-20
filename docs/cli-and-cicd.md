@@ -262,6 +262,76 @@ The platform performs the scan from its own network, so `target_url` (and regist
 
 ---
 
+## 4. SARIF export, release-gate policy, and badges
+
+Beyond triggering scans, the platform exposes CI helpers under `/api/ci` for teams that want native GitHub Code Scanning, a reusable gate policy, or status badges. These accept the same **`X-API-Key`** header as the scan endpoints.
+
+### Export findings as SARIF
+
+Fetch a scan's findings as **SARIF 2.1.0** and hand them to GitHub Code Scanning — or any SARIF-aware tool:
+
+```bash
+curl -s "$OFFLOAD_API_URL/api/ci/scan/$SCAN_ID/sarif" \
+  -H "X-API-Key: $OFFLOAD_API_KEY" -o offload.sarif
+```
+
+```yaml
+      - uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: offload.sarif
+```
+
+SARIF is **export-only** — the platform produces SARIF for other tools to consume; it does not import SARIF from other scanners.
+
+### Configure a release-gate policy
+
+Instead of a per-request `fail_on_severity`, set a **team-wide gate policy** once and evaluate any scan (or your overall posture) against it:
+
+```bash
+# View the current policy
+curl -s "$OFFLOAD_API_URL/api/ci/gate/policy" -H "X-API-Key: $OFFLOAD_API_KEY"
+
+# Update it (requires the integrations-management permission)
+curl -s -X PUT "$OFFLOAD_API_URL/api/ci/gate/policy" \
+  -H "X-API-Key: $OFFLOAD_API_KEY" -H "Content-Type: application/json" \
+  -d '{"max_critical":0,"max_high":5,"max_medium":50,"block_on_critical":true,"block_on_known_exploited":true}'
+
+# Evaluate a scan against the policy — returns a pass/fail verdict and exit code
+curl -s "$OFFLOAD_API_URL/api/ci/gate?scan_id=$SCAN_ID" -H "X-API-Key: $OFFLOAD_API_KEY"
+```
+
+The policy caps findings by severity and can **block on any critical** finding or on any finding in the **CISA KEV** (Known Exploited Vulnerabilities) catalog. Past evaluations are available at `GET /api/ci/gate/history`.
+
+### Status badges
+
+Two live SVG badges reflect your team's posture:
+
+- `GET /api/ci/badge/security.svg` — passing, or the count of high / critical findings.
+- `GET /api/ci/badge/compliance.svg` — compliance coverage percentage.
+
+Both **require authentication**, so embed them in an internal dashboard rather than a public README.
+
+### Generate starter pipeline config
+
+`GET /api/ci/pipeline/{provider}` returns a ready-to-edit config snippet — `github_actions`, `gitlab_ci`, `bitbucket`, `azure_devops`, or `jenkins` — each wired to call the endpoints above. These are starter templates you commit and adapt; there's no server-side runner for GitLab/Bitbucket/Azure/Jenkins (the deepest native integration is with GitHub — see below).
+
+### PR / MR comment
+
+`GET /api/ci/scan/{scan_id}/pr-comment` returns a preformatted Markdown summary you can post as a pull-request or merge-request comment from any CI system.
+
+---
+
+## 5. Deeper GitHub integration: the GitHub App
+
+The [GitHub Action](#3-the-github-action) is the simplest option and works in any repo. For tighter integration, install the **Offload Security GitHub App**, which:
+
+- posts findings as **inline annotations on the pull request** using GitHub's Check Runs, and
+- can **auto-scan** on pushes to the default branch and on pull requests — no workflow file to maintain.
+
+Because the App creates a GitHub **check** on each pull request, you can mark that check as a **required status** so a failing scan blocks the merge. Configure per-repository auto-scan and check behavior from the platform's integration settings.
+
+---
+
 ## After the scan
 
 Scans triggered from CI/CD are first-class citizens in the platform:
