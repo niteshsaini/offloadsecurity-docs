@@ -1,12 +1,22 @@
 ---
-title: "Getting Started"
-sidebar_label: "Getting Started"
+title: "Quickstart (30 minutes)"
+sidebar_label: "Quickstart"
 sidebar_position: 1
 ---
 
-# Getting Started
+# Quickstart — first value in about 30 minutes
 
-This guide gets you from "I have access" to "I'm reviewing my first findings." It assumes the platform is already deployed and you have an account.
+This guide gets you from "I have access" to "I'm reviewing my first findings" in a single sitting. It assumes the platform is already deployed and you have an account.
+
+In roughly 30 minutes you will:
+
+1. Sign in and get oriented on the dashboard.
+2. Connect one cloud account (read-only — about 3 minutes of setup).
+3. Run your first scan and watch it complete.
+4. Open and understand a real finding.
+5. Push a finding to Jira and set up an alert channel.
+
+When you finish, jump to the **[First 7 Days plan](./adoption/first-7-days.md)** to turn this first scan into an operating security program.
 
 :::info[Before you begin]
 A quick checklist so your first scan goes smoothly:
@@ -111,3 +121,21 @@ Once the manual path works, **[gate your CI/CD pipelines](./cli-and-cicd.md)** o
 :::tip[Tip]
 You can change your **active team** at any time from the account menu in the top-right. Make sure you're in the right team before running scans or reviewing data.
 :::
+
+## You're done when…
+
+Use this checklist to confirm the quickstart worked end to end:
+
+- [ ] At least one cloud account shows **Connected / Active** in Cloud Security.
+- [ ] One scan has reached **Completed** and produced findings.
+- [ ] You've opened a finding and can name its affected resource and remediation step.
+- [ ] A finding is linked to a Jira ticket (or you've consciously skipped ticketing for now).
+- [ ] A notification channel (Slack, Teams, email, or webhook) received a test message.
+
+If any box won't check, see [Troubleshooting](./troubleshooting.md).
+
+## Where to next
+
+- **[First 7 Days](./adoption/first-7-days.md)** — a day-by-day plan that takes this first scan to an operating program: baseline, prioritization, SLAs, compliance, shift-left, and executive reporting.
+- **[Recommended Production Configuration](./adoption/production-configuration.md)** — opinionated starting points for schedules, alerting, and coverage.
+- **Role guides:** the [Security Engineer journey](./adoption/security-engineer-journey.md) or the [Compliance Officer journey](./adoption/compliance-officer-journey.md), depending on what you're here to do.
