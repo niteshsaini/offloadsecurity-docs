@@ -36,3 +36,7 @@ Attack Path Analysis is only as complete as your connected data. The more you co
 - **[Cloud Security](./index.md)** — the posture findings that become graph nodes.
 - **[Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)** — triage the vulnerabilities that appear in attack paths.
 - **[Risk Management](../vulnerability-risk/risk-register.md)** — promote a critical path into a tracked risk.
+
+:::info[Evaluating Offload Security?]
+This is the technical reference. For the product overview, see **[Attack Path Analysis on offloadsecurity.com](https://offloadsecurity.com/platform/attack-path-analysis/)** — or **[book a demo](https://offloadsecurity.com/contact/)**.
+:::

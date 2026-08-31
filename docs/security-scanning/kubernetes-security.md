@@ -90,3 +90,7 @@ Use the **severity filters** to focus on what matters first, and the **MITRE ATT
 - [Container Security](./container-security.md) — scan the images that run in your clusters.
 - [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) — triage and track Kubernetes findings to remediation.
 - [Quickstart](../getting-started.md) — sign in and learn the Scan → Finding → Risk → Report flow.
+
+:::info[Evaluating Offload Security?]
+This is the technical reference. For the product overview, see **[Kubernetes Security on offloadsecurity.com](https://offloadsecurity.com/platform/kubernetes-security/)** — or **[book a demo](https://offloadsecurity.com/contact/)**.
+:::

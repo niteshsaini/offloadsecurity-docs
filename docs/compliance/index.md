@@ -82,3 +82,7 @@ A control can fall out of compliance without anyone touching it — a new miscon
 - **[Autonomous Compliance Engine](./autonomous-compliance.md)** — how findings are continuously synced to controls.
 - **[Executive Compliance Dashboard & Reporting](./compliance-dashboard.md)** — leadership-level scores, trends, and audit reports.
 - **[Quickstart](../getting-started.md)** — sign in, teams, roles, and the Scan → Finding → Risk → Report flow.
+
+:::info[Evaluating Offload Security?]
+This is the technical reference. For the product overview, see **[Compliance & Risk (GRC) on offloadsecurity.com](https://offloadsecurity.com/platform/compliance-risk/)** — or **[book a demo](https://offloadsecurity.com/contact/)**.
+:::

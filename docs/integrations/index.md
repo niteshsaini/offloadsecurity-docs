@@ -88,3 +88,7 @@ API tokens, webhook URLs, and service-account keys can be revoked or expire on t
 - **[Third-Party Integrations](./third-party.md)** — the full catalog of connectable tools.
 - **[CLI & CI/CD integration](../security-scanning/scan-management.md)** — automate scans in your pipeline.
 - **[Team Management](../authentication/rbac-team-management.md)** — set your active team and manage roles and API keys.
+
+:::info[Evaluating Offload Security?]
+This is the technical reference. For the product overview, see **[Integrations & SIEM on offloadsecurity.com](https://offloadsecurity.com/platform/integrations-siem/)** — or **[book a demo](https://offloadsecurity.com/contact/)**.
+:::

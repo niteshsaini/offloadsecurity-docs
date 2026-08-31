@@ -47,3 +47,7 @@ A suppressed finding is hidden only for the duration you choose. When that windo
 - **[Scan Orchestration & Lifecycle](./scan-orchestration.md)** — how scans are queued, run, and tracked.
 - **[Prowler Integration & Findings](./prowler-integration.md)** — how compliance findings are produced and grouped.
 - **[Asset Inventory](./asset-inventory.md)** — the live catalog of cloud resources discovered by scans.
+
+:::info[Evaluating Offload Security?]
+This is the technical reference. For the product overview, see **[Cloud Security (CSPM) on offloadsecurity.com](https://offloadsecurity.com/platform/cloud-security/)** — or **[book a demo](https://offloadsecurity.com/contact/)**.
+:::

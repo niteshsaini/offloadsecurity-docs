@@ -92,3 +92,7 @@ Code scans run in a hardened, sandboxed environment with no network access to yo
 - [Container & Registry Security](./container-security.md) — image scanning, SBOMs, and secret detection in layers.
 - [Scan Management & CI/CD](./scan-management.md) — automate scans and gate your pipelines.
 - [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) — triage, prioritize, and track every finding to remediation.
+
+:::info[Evaluating Offload Security?]
+This is the technical reference. For the product overview, see **[Code Security on offloadsecurity.com](https://offloadsecurity.com/platform/code-security/)** — or **[book a demo](https://offloadsecurity.com/contact/)**.
+:::

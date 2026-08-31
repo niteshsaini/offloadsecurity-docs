@@ -103,3 +103,7 @@ Pair **Webhooks** with an **Image Policy** so every newly pushed image is scanne
 - **[Kubernetes Security](./kubernetes-security.md)** — scan the clusters that run your containers.
 - **[API & Code Security Scanning](./api-code-scanning.md)** — SAST, dependency, and SBOM scanning for your source code.
 - **[Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)** — triage and track container findings to remediation.
+
+:::info[Evaluating Offload Security?]
+This is the technical reference. For the product overview, see **[Container Security on offloadsecurity.com](https://offloadsecurity.com/platform/container-security/)** — or **[book a demo](https://offloadsecurity.com/contact/)**.
+:::

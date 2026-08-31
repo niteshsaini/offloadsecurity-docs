@@ -55,3 +55,7 @@ Documents you add to the Knowledge Base are used to answer questions for your te
 - [Threat Intelligence & Feeds](./threat-intelligence.md) — feed ingestion and IOC correlation in detail.
 - [Knowledge Base & AI Security Testing](./knowledge-base.md) — document Q&A and the AI security assistant.
 - [AI Governance & Privacy Compliance](./ai-governance.md) — govern your own AI systems against the EU AI Act and other regulations.
+
+:::info[Evaluating Offload Security?]
+This is the technical reference. For the product overview, see **[Threat Intelligence](https://offloadsecurity.com/platform/threat-intelligence/)** or **[AI Security Operations](https://offloadsecurity.com/platform/ai-security-operations/)** on offloadsecurity.com — or **[book a demo](https://offloadsecurity.com/contact/)**.
+:::

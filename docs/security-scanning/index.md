@@ -80,3 +80,7 @@ For web and API scans behind a login, provide credentials (bearer token, cookie,
 - [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) — triage and track the findings your scans produce.
 - [Risk Register](../vulnerability-risk/risk-register.md) — promote findings into managed risks.
 - [Connecting Cloud Accounts](../cloud-security/connecting-accounts.md) — connect accounts to unlock container and Kubernetes scanning.
+
+:::info[Evaluating Offload Security?]
+This is the technical reference. For the product overview, see **[Security Scanning & Reporting on offloadsecurity.com](https://offloadsecurity.com/platform/scanning-reporting/)** — or **[book a demo](https://offloadsecurity.com/contact/)**.
+:::

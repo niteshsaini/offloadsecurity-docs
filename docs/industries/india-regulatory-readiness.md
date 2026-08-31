@@ -55,3 +55,7 @@ The [DPDP module](../compliance/dpdp-privacy.md) covers readiness assessment, DP
 - [Fintech](./fintech.md)
 - [DPDP Act (India) Privacy](../compliance/dpdp-privacy.md)
 - [Trust & Security](../trust-and-security.md)
+
+:::info[Evaluating Offload Security?]
+This is the technical reference. For the product overview, see the **[India compliance overview on offloadsecurity.com](https://offloadsecurity.com/india-compliance/)** — or **[book a demo](https://offloadsecurity.com/contact/)**.
+:::

@@ -61,3 +61,7 @@ Use **audit packs** to bundle DPDP activity into a verifiable, PDF-exportable pa
 - [Supported frameworks](./supported-frameworks.md)
 - [Evidence Hub](./evidence-hub.md)
 - [India regulatory readiness](../industries/india-regulatory-readiness.md)
+
+:::info[Evaluating Offload Security?]
+This is the technical reference. For the product overview, see **[DPDP & Privacy Operations on offloadsecurity.com](https://offloadsecurity.com/platform/dpdp-privacy/)** — or **[book a demo](https://offloadsecurity.com/contact/)**.
+:::

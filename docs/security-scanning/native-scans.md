@@ -92,3 +92,7 @@ Use **Run All Scans** (or **App Scan**) to fire ZAP, Nmap, testssl.sh, Nuclei, a
 - [Container Security](./container-security.md) — scan container images and registries.
 - [Kubernetes Security](./kubernetes-security.md) — assess your clusters.
 - [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) — triage and track the findings your scans produce.
+
+:::info[Evaluating Offload Security?]
+This is the technical reference. For the product overview, see **[DAST on offloadsecurity.com](https://offloadsecurity.com/platform/dast/)** — or **[book a demo](https://offloadsecurity.com/contact/)**.
+:::
