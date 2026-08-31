@@ -2,6 +2,7 @@
 title: "Quickstart (30 minutes)"
 sidebar_label: "Quickstart"
 sidebar_position: 1
+description: "Go from sign-in to your first reviewed finding in about 30 minutes: connect a cloud account, run a scan, triage a finding, create a ticket, and set up alerts."
 ---
 
 # Quickstart — first value in about 30 minutes
@@ -92,11 +93,11 @@ Follow this end-to-end path to go from a connected environment to a tracked, ale
 
 ### Step 1 — Connect a cloud account
 In **Cloud Security → Cloud Accounts**, select **Add Cloud Account** and follow **[Connecting Cloud Accounts](./cloud-security/connecting-accounts.md)** for your provider (read-only, with copy-paste Terraform).
-- **Expected result:** the account appears with a **Connected / Active** status, and a first scan starts automatically.
+- **Expected result:** the account appears with a **Connected / Active** status, and an initial posture scan can start automatically — trigger one from **Cloud Security** if it doesn't.
 - **Verify:** the account is listed as Connected, and you can see a scan in progress with a scan run ID.
 
 ### Step 2 — Run and watch a scan
-The first scan runs on connect; you can also start one at any time, or run a **[native web / API / network scan](./security-scanning/native-scans.md)** against a target you own.
+Start a cloud scan at any time (an initial scan may already have started on connect), or run a **[native web / API / network scan](./security-scanning/native-scans.md)** against a target you own.
 - **Expected result:** the scan reaches **Completed** (or **Partial**, if some checks couldn't run), and findings appear.
 - **Verify:** on the **Scans** page the status shows Completed with a finding count — open it to see the results.
 

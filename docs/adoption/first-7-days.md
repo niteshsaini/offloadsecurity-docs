@@ -7,7 +7,7 @@ description: "A day-by-day plan that takes you from a first connected account to
 
 # First 7 Days — from first scan to operating program
 
-The **[Quickstart](../getting-started.md)** gets you to your first finding. This plan takes the next step: seven focused sessions that end with the platform running as a program — scheduled scans, owned findings, SLAs, alerts, compliance tracking, and an executive view.
+The **[Quickstart](../getting-started.md)** gets you through your first scan, finding, ticket, and alert. This plan takes the next step: seven focused sessions that end with the platform running as a program — scheduled scans, owned findings, SLAs, alerts, compliance tracking, and an executive view.
 
 Each "day" is a working session of roughly one to two hours. Compress or stretch the calendar as you like — the **order** is what matters, because each day builds on the previous one.
 
@@ -25,13 +25,13 @@ Days 1–4 need the **Admin** or **Security Manager** role (connecting accounts 
 4. Onboard Kubernetes clusters — EKS, GKE, and AKS clusters are auto-discovered from connected cloud accounts; on-prem clusters onboard with a read-only kubeconfig or service-account token — [Kubernetes Security](../security-scanning/kubernetes-security.md).
 5. Review what was found — [Asset Inventory](../cloud-security/asset-inventory.md).
 
-**Done when:** every production cloud account shows **Connected**, and Asset Inventory lists resources from each of them.
+**Done when:** every production cloud account shows **Connected / Active**, and Asset Inventory lists resources from each of them.
 
 ## Day 2 — Establish a security baseline
 
 **Goal: one full scan of everything connected, so you have a "day zero" picture.**
 
-1. Cloud posture: a first scan starts automatically when an account connects — confirm each account's scan reached **Completed** on the Scans page ([How Cloud Scans Run](../cloud-security/scan-orchestration.md)).
+1. Cloud posture: an initial scan can start automatically when an account connects — trigger one from **Cloud Security** for any account that hasn't scanned yet, and confirm each account's scan reached **Completed** on the Scans page ([How Cloud Scans Run](../cloud-security/scan-orchestration.md)).
 2. Run scans for the surfaces you own: web applications and APIs ([Native Scans](../security-scanning/native-scans.md)), container images ([Container Security](../security-scanning/container-security.md)), and clusters ([Kubernetes Security](../security-scanning/kubernetes-security.md)).
 3. Connect a repository and run code scanning — SAST, secrets, SCA, SBOM, and license checks — [Code Command Center](../security-scanning/api-code-scanning.md).
 4. Open [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) and note your baseline: total findings by severity. This is the number you'll measure progress against.
@@ -52,10 +52,10 @@ Days 1–4 need the **Admin** or **Security Manager** role (connecting accounts 
 
 **Goal: the platform chases the work, not you.**
 
-1. Create SLA policies — the **Create Default Policies** button gives you documented starting points (Critical–Production: 24 hours; High–Production: 7 days; Medium–Production: 30 days) — [SLA Management](../vulnerability-risk/sla-management.md).
+1. Create SLA policies — the **Create Default Policies** button gives you documented starting points per severity and environment — [SLA Management](../vulnerability-risk/sla-management.md).
 2. Connect Jira or ServiceNow so findings become tickets with two-way status sync — [Third-Party Integrations](../integrations/third-party.md).
-3. Set up Slack, Microsoft Teams, or email notifications, with routing rules so critical findings reach the right channel — [Notifications](../integrations/notifications.md).
-4. Schedule recurring scans in **Management → Unified Scheduler** — cloud accounts already get a daily incremental and weekly full scan; add schedules for web, container, Kubernetes, and code scans. Turn on schedule **failure notifications** so a silently broken scan can't hide — [Scan Management & Scheduling](../security-scanning/scan-management.md).
+3. Set up Slack, Microsoft Teams, or email notifications; on Slack, add routing rules so critical findings reach the right channel — [Notifications](../integrations/notifications.md).
+4. Schedule recurring scans in **Management → Unified Scheduler** — a daily incremental plus weekly full scan for cloud accounts, and schedules for web, container, Kubernetes, and code scans. Turn on schedule **failure notifications** so a silently broken scan can't hide — [Scan Management & Scheduling](../security-scanning/scan-management.md).
 
 **Done when:** a test notification has arrived in your channel, a finding is linked to a real ticket, SLA policies are active, and every scan type you rely on has a schedule.
 

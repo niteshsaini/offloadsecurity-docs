@@ -83,4 +83,4 @@ All integration credentials are encrypted at rest. The connection test never sto
 - **[Integrations & Notifications](./index.md)** — overview of the connectivity layer.
 - **[Notifications](./notifications.md)** — built-in Email, Slack, and Microsoft Teams alerting and routing.
 - **[Connecting Cloud Accounts](../cloud-security/connecting-accounts.md)** — connect AWS, Azure, and GCP for posture scanning.
-- **[Getting Started](../getting-started.md)** — teams, roles, and the Scan → Finding → Risk → Report flow.
+- **[Quickstart](../getting-started.md)** — teams, roles, and the Scan → Finding → Risk → Report flow.

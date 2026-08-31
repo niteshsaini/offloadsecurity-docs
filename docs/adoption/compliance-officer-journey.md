@@ -5,7 +5,7 @@ sidebar_position: 3
 description: "The path for the person who owns frameworks, assessments, evidence, and audits — from framework activation to an exportable audit package."
 ---
 
-# Compliance Officer journey
+# Compliance Officer Journey
 
 You own frameworks, assessments, evidence, and audit readiness. This path assumes the security team has already connected accounts and run scans (Days 1–2 of the [First 7 Days](./first-7-days.md)) — compliance scores are computed from that scan data, so coverage comes first.
 
@@ -52,7 +52,7 @@ Typical role: **Compliance Officer**, with **Auditor** accounts for external rev
 
 ## Stage 6 — Face the audit
 
-1. Export the audit package for your framework from the [Evidence Hub](../compliance/evidence-hub.md) — four layers per control: policy, procedure, technical proof, attestation.
+1. Export the audit package for your framework from the [Evidence Hub](../compliance/evidence-hub.md) — up to four layers of proof per control: policy, procedure, technical proof, attestation.
 2. Generate executive and audit reports in PDF/HTML — [Reports & AI Assistance](../reports-and-ai.md).
 3. Give your external auditor an **Auditor** account: read-only access to evidence and reports, with export rights — [Roles, Teams & API Keys](../authentication/rbac-team-management.md).
 
@@ -61,6 +61,6 @@ Typical role: **Compliance Officer**, with **Auditor** accounts for external rev
 ## Ongoing rhythm
 
 - **Weekly:** check the Compliance Dashboard for drift and newly failing controls.
-- **Monthly:** review the Evidence Hub for expiring evidence (cloud/scan evidence ages out at 90 days by design — fresh scans refresh it automatically).
+- **Monthly:** review the Evidence Hub for expiring evidence (technical evidence ages out on its validity window by design — fresh scans refresh it automatically).
 - **Quarterly:** re-run interactive assessments and update the Risk Register treatment plans.
 - **Continuously:** let [scheduled scans](../security-scanning/scan-management.md) keep the technical evidence current — that's what makes this posture *continuous* rather than an annual scramble.

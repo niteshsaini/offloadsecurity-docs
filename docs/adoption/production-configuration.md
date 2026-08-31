@@ -30,11 +30,11 @@ All scanning access is **read-only** — there is no write path from the scanner
 
 ## Scan schedules
 
-Cloud accounts already get a built-in cadence — a **daily incremental** scan and a **weekly full** scan of active accounts ([How Cloud Scans Run](../cloud-security/scan-orchestration.md)). Add schedules for the rest in **Management → Unified Scheduler** ([Scan Management & Scheduling](../security-scanning/scan-management.md)):
+For cloud posture, the platform can run a **daily incremental** and a **weekly full** scan automatically ([How Cloud Scans Run](../cloud-security/scan-orchestration.md)) — confirm those recurring scans actually exist for your accounts rather than assuming them. Create them, and schedules for everything else, in **Management → Unified Scheduler** ([Scan Management & Scheduling](../security-scanning/scan-management.md)):
 
 | Scan type | Recommended starting cadence |
 |---|---|
-| Cloud posture | Built-in daily incremental + weekly full — keep it. |
+| Cloud posture | Daily incremental + weekly full — confirm both schedules exist for every account. |
 | Container images | Weekly, plus webhook auto-scan on push where the registry supports it. |
 | Kubernetes | Weekly. |
 | Web application / API (DAST) | Weekly for key applications; after major releases for the rest. |
@@ -57,7 +57,7 @@ Start with the documented defaults via **Create Default Policies** in [SLA Manag
 
 Then:
 
-- Add an escalation rule so an approaching breach notifies the finding's owner, and an actual breach notifies their manager.
+- Configure escalation rules so an approaching deadline and an actual breach each notify the right people automatically.
 - Treat the **Breach Dashboard** as your weekly operational health check.
 - Rely on scan-verified closure: a finding reaches **Verified** only when a follow-up scan no longer detects it, and reappearing findings are automatically **Reopened** — a closed Jira ticket is not proof of a fix ([Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)).
 
@@ -65,7 +65,7 @@ Then:
 
 **Principle: criticals interrupt a human; everything else batches.**
 
-- **Slack or Teams** ([Notifications](../integrations/notifications.md)): route **Critical and High** findings to your on-call/security channel using routing rules. Don't route Medium/Low to chat — that's how channels get muted.
+- **Slack or Teams** ([Notifications](../integrations/notifications.md)): send **Critical and High** findings to your on-call/security channel. On Slack, routing rules can map category, severity, and source to different channels. Don't send Medium/Low to chat — that's how channels get muted.
 - **Email (SMTP)**: configure as the fallback channel and for people who don't live in chat.
 - **Jira or ServiceNow** ([Third-Party Integrations](../integrations/third-party.md)): connect with two-way sync so remediation happens in the tool engineers already use.
 - **Webhooks / SIEM**: if you run Splunk, Sentinel, or QRadar, forward events so the SOC sees platform activity alongside everything else.
@@ -73,7 +73,7 @@ Then:
 ## Compliance
 
 - Activate **one or two frameworks** you actually answer to — not the whole catalog. The SCF common-control model means adding more later costs little ([Supported Frameworks](../compliance/supported-frameworks.md)).
-- Run **Collect All** in the [Evidence Hub](../compliance/evidence-hub.md) once scans are flowing, then keep evidence fresh automatically: cloud and scan evidence is valid for 90 days, so your weekly full scans keep it perpetually current.
+- Run **Collect All** in the [Evidence Hub](../compliance/evidence-hub.md) once scans are flowing, then keep evidence fresh automatically: cloud and scan evidence expires on a validity window (see the Evidence Hub validity table), so recurring scans keep it perpetually current.
 - **Indian regulated entities:** follow the deployment shape in [India Regulatory Readiness](../industries/india-regulatory-readiness.md) (private deployment, anchor framework, reporting clocks) and enable the [DPDP module](../compliance/dpdp-privacy.md).
 
 ## Access control

@@ -87,7 +87,7 @@ Use **Run All Scans** (or **App Scan**) to fire ZAP, Nmap, testssl.sh, Nuclei, a
 
 ## Related
 
-- [Getting Started](../getting-started.md) — sign in and find the scan launcher.
+- [Quickstart](../getting-started.md) — sign in and find the scan launcher.
 - [API & Code Scanning](./api-code-scanning.md) — deeper API and source-code testing.
 - [Container Security](./container-security.md) — scan container images and registries.
 - [Kubernetes Security](./kubernetes-security.md) — assess your clusters.
