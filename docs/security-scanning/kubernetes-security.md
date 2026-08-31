@@ -89,4 +89,4 @@ Use the **severity filters** to focus on what matters first, and the **MITRE ATT
 - [Connecting Cloud Accounts](../cloud-security/connecting-accounts.md) — auto-discover EKS/GKE/AKS from connected accounts.
 - [Container Security](./container-security.md) — scan the images that run in your clusters.
 - [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) — triage and track Kubernetes findings to remediation.
-- [Getting Started](../getting-started.md) — sign in and learn the Scan → Finding → Risk → Report flow.
+- [Quickstart](../getting-started.md) — sign in and learn the Scan → Finding → Risk → Report flow.

@@ -55,4 +55,4 @@ Correlation is what makes speed safe. A finding from a code scan, a cloud miscon
 
 ## Bottom line
 
-For SaaS and technology companies, security has to move at engineering speed and stand up to customer scrutiny at the same time. Offload Security covers cloud posture, pipeline scanning, containers, Kubernetes, compliance, and questionnaires in one correlated platform — so you ship fast, prove your posture, and answer buyers without spinning up a dozen disconnected tools. To get started, see [Getting Started](../getting-started.md).
+For SaaS and technology companies, security has to move at engineering speed and stand up to customer scrutiny at the same time. Offload Security covers cloud posture, pipeline scanning, containers, Kubernetes, compliance, and questionnaires in one correlated platform — so you ship fast, prove your posture, and answer buyers without spinning up a dozen disconnected tools. To get started, see [Quickstart](../getting-started.md).

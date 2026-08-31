@@ -38,5 +38,5 @@ It is built for teams that need to **prove** security, not just perform it — w
 4. **[Platform at a Glance](./platform-at-a-glance.md)** — the modules, how they connect, and where to go for each.
 
 :::tip[Just want to get hands-on?]
-Skip ahead to **[Getting Started](../getting-started.md)** and connect your first environment.
+Skip ahead to **[Quickstart](../getting-started.md)** and connect your first environment.
 :::

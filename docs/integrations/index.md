@@ -87,4 +87,4 @@ API tokens, webhook URLs, and service-account keys can be revoked or expire on t
 - **[Notifications & Event Bus](./notifications.md)** — channels, routing, and alert delivery in detail.
 - **[Third-Party Integrations](./third-party.md)** — the full catalog of connectable tools.
 - **[CLI & CI/CD integration](../security-scanning/scan-management.md)** — automate scans in your pipeline.
-- **[Team Management](../getting-started.md)** — set your active team and manage roles and API keys.
+- **[Team Management](../authentication/rbac-team-management.md)** — set your active team and manage roles and API keys.

@@ -73,7 +73,7 @@ A control can fall out of compliance without anyone touching it — a new miscon
 ## Prerequisites
 
 - **Connect your environment first.** The more you scan — cloud accounts, containers, Kubernetes, code, and web apps — the more controls update automatically from real findings. See **[Connecting Cloud Accounts](../cloud-security/connecting-accounts.md)**.
-- **Compliance roles.** Driving assessments and evidence is typically done by a **Compliance Officer**, while **Auditors** and **Viewers** have read-only access. See your team's roles in **[Getting Started](../getting-started.md)**.
+- **Compliance roles.** Driving assessments and evidence is typically done by a **Compliance Officer**, while **Auditors** and **Viewers** have read-only access. See your team's roles in **[Roles, Teams & API Keys](../authentication/rbac-team-management.md)**.
 
 ## Related
 
@@ -81,4 +81,4 @@ A control can fall out of compliance without anyone touching it — a new miscon
 - **[Evidence Hub & Collection](./evidence-hub.md)** — where automated and uploaded evidence is gathered and linked to controls.
 - **[Autonomous Compliance Engine](./autonomous-compliance.md)** — how findings are continuously synced to controls.
 - **[Executive Compliance Dashboard & Reporting](./compliance-dashboard.md)** — leadership-level scores, trends, and audit reports.
-- **[Getting Started](../getting-started.md)** — sign in, teams, roles, and the Scan → Finding → Risk → Report flow.
+- **[Quickstart](../getting-started.md)** — sign in, teams, roles, and the Scan → Finding → Risk → Report flow.

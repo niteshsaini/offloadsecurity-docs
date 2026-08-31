@@ -87,5 +87,5 @@ Significant actions are captured in an **immutable audit trail** that records wh
 - **[Authentication & Session Management](./session-management.md)** — sign-in, MFA, and how sessions work.
 - **[RBAC, API Keys & Team Management](./rbac-team-management.md)** — roles, permissions, API keys, and team setup.
 - **[Audit Trail & Webhook Events](./audit-trail.md)** — the audit log and event notifications.
-- **[Getting Started](../getting-started.md)** — sign in and learn the core concepts.
+- **[Quickstart](../getting-started.md)** — sign in and learn the core concepts.
 - **[Connecting Cloud Accounts](../cloud-security/connecting-accounts.md)** — how read-only, encrypted cloud credentials are set up.

@@ -107,7 +107,7 @@ From the key list you can:
 
 ## Related
 
-- **[Getting Started](../getting-started.md)** — sign in and learn the core concepts, including teams and roles.
+- **[Quickstart](../getting-started.md)** — sign in and learn the core concepts, including teams and roles.
 - **[Authentication & Session Management](./session-management.md)** — how sign-in, sessions, and MFA work.
 - **[Audit Trail & Webhook Events](./audit-trail.md)** — see who did what across your team.
 - **[Connecting Cloud Accounts](../cloud-security/connecting-accounts.md)** — add the accounts your team will scan.

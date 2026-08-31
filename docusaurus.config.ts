@@ -139,7 +139,7 @@ const config: Config = {
               to: '/introduction',
             },
             {
-              label: 'Getting Started',
+              label: 'Quickstart',
               to: '/getting-started',
             },
             {

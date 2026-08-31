@@ -58,4 +58,4 @@ OffloadSecurity speaks to data-protection and privacy frameworks and internal/en
 
 ## The bottom line
 
-Healthcare security fails most often at the seams — between the cloud program and the hospital floor, between the audit binder and what's actually running. OffloadSecurity closes those seams by bringing internal-network scanning, endpoint monitoring, cloud posture, and compliance evidence into one correlated view, with sensitive telemetry kept inside your boundary. To see it against your own environment, start with [Getting Started](../getting-started.md).
+Healthcare security fails most often at the seams — between the cloud program and the hospital floor, between the audit binder and what's actually running. OffloadSecurity closes those seams by bringing internal-network scanning, endpoint monitoring, cloud posture, and compliance evidence into one correlated view, with sensitive telemetry kept inside your boundary. To see it against your own environment, start with [Quickstart](../getting-started.md).

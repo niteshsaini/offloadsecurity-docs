@@ -67,7 +67,7 @@ Each schedule in the list shows its type, its cadence, the **Next Run** time, an
 You can filter the list by entity type using the tabs (including a dedicated **Scans** tab), search by name, and filter by status. The **Expiring Soon** tab highlights schedules whose validity is about to lapse so you can renew them in time.
 
 :::note[Permissions]
-Creating, editing, pausing, and deleting schedules requires the **Manage Scans** permission. If you only have view access, you'll see the schedules but won't be able to change them. See **[Roles (RBAC)](../getting-started.md)** for what each role can do.
+Creating, editing, pausing, and deleting schedules requires the **Manage Scans** permission. If you only have view access, you'll see the schedules but won't be able to change them. See **[Roles (RBAC)](../authentication/rbac-team-management.md)** for what each role can do.
 :::
 
 ---
@@ -139,4 +139,4 @@ Once data passes the **Delete** threshold it is removed for good. If you have a 
 - **[API & Code Security Scanning](./api-code-scanning.md)** — API discovery and source-code analysis.
 - **[Container & Registry Security](./container-security.md)** — scan container images across your registries.
 - **[Kubernetes Security](./kubernetes-security.md)** — cluster posture and CIS benchmark scanning.
-- **[Getting Started](../getting-started.md)** — sign in, tour the dashboard, and learn the Scan → Finding → Risk → Report flow.
+- **[Quickstart](../getting-started.md)** — sign in, tour the dashboard, and learn the Scan → Finding → Risk → Report flow.
