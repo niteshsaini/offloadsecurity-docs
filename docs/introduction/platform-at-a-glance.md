@@ -14,7 +14,7 @@ Offload Security is organized into modules that each own a domain of security wo
 flowchart TB
     subgraph Sources["Detection & ingestion"]
         CL["Cloud Security<br/>(AWS / Azure / GCP)"]
-        SC["Security Scanning<br/>(web / API / network / SSL)"]
+        SC["App Scanning<br/>(web / API / network / SSL)"]
         CODE["Code & Supply Chain<br/>(SAST / secrets / SBOM)"]
         CN["Container & Kubernetes"]
         ONP["On-Premises<br/>(internal net / OpenVAS / Wazuh)"]
@@ -60,7 +60,7 @@ Findings from every source converge in **Vulnerability Management**, resolve aga
 | Module | What it does | Read more |
 |---|---|---|
 | **Cloud Security (CSPM)** | Continuous misconfiguration assessment of AWS, Azure, and GCP, with native findings ingestion and drift detection. | [Cloud Security](../cloud-security/index.md) |
-| **Application Security** | Web (OWASP ZAP, Nuclei), API, network (Nmap), and SSL/TLS testing of your applications and services. | [Security Scanning](../security-scanning/index.md) |
+| **Application Security** | Web (OWASP ZAP, Nuclei), API, network (Nmap), and SSL/TLS testing of your applications and services. | [App & Infrastructure Scanning](../security-scanning/index.md) |
 | **SAST & Code Security** | Static analysis, secrets detection, and IaC scanning of your source and pipelines. | [API & Code Scanning](../security-scanning/api-code-scanning.md) |
 | **SBOM & License Scanning** | Software bill-of-materials generation and open-source **license compliance** across code and container images. | [Container Security](../security-scanning/container-security.md) |
 | **Container Security** | Image scanning across ECR, GCR, ACR, and Docker Hub, with SBOMs, signature verification, and layer secret detection. | [Container Security](../security-scanning/container-security.md) |

@@ -19,7 +19,7 @@ Many of an organization's most sensitive applications are never exposed to the i
 
 The internal scanning capability applies the platform's application and network testing to private targets, including:
 
-- **Web application weaknesses** — the OWASP-style issues surfaced by the platform's web scanning engines (see **[Security Scanning](../security-scanning/index.md)**).
+- **Web application weaknesses** — the OWASP-style issues surfaced by the platform's web scanning engines (see **[App & Infrastructure Scanning](../security-scanning/index.md)**).
 - **API security issues** — authentication, authorization, and input-handling weaknesses in internal APIs.
 - **Transport security** — SSL/TLS configuration on internal services.
 - **Network exposure** — open ports and services on internal hosts.
@@ -44,4 +44,4 @@ Point internal scanning at the assets found by **[Internal Network Visibility](.
 
 - **[Internal Network Visibility](./internal-network-visibility.md)** — find the internal targets to scan.
 - **[OpenVAS Scanning](./openvas-scanning.md)** — host-level vulnerability scanning to complement app/API testing.
-- **[Security Scanning](../security-scanning/index.md)** — the underlying web, API, network, and SSL testing engines.
+- **[App & Infrastructure Scanning](../security-scanning/index.md)** — the underlying web, API, network, and SSL testing engines.

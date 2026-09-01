@@ -22,7 +22,7 @@ Typical role: **Security Manager** — Stages 1 and 5 involve connecting account
 
 ## Stage 2 — Understand how scanning works
 
-1. [Security Scanning overview](../security-scanning/index.md) — every scan type and the open-source engines behind it.
+1. [App & Infrastructure Scanning overview](../security-scanning/index.md) — every scan type and the open-source engines behind it.
 2. [How Cloud Scans Run](../cloud-security/scan-orchestration.md) — per-provider partitioning, statuses, and the daily/weekly scheduled-scan options.
 3. [Native Scans](../security-scanning/native-scans.md) — web (ZAP, Nuclei), network (Nmap), TLS, API scanning, and authenticated scanning.
 4. [Compliance & Benchmark Checks](../cloud-security/prowler-integration.md) — CIS benchmarks and framework mappings for cloud posture.

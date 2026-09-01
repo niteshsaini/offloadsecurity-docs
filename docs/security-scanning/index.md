@@ -1,10 +1,10 @@
 ---
-title: "Security Scanning"
+title: "App & Infrastructure Scanning"
 sidebar_label: "Overview"
 sidebar_position: 1
 ---
 
-# Security Scanning
+# App & Infrastructure Scanning
 
 The Scanning module is where you actively test your applications and infrastructure for security problems. From one screen you can launch a web app scan, probe your network, test an API, check SSL/TLS configuration, audit a container image, assess a Kubernetes cluster, or analyze source code — and review every result in a single, consistent history.
 
