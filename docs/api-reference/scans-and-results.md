@@ -140,4 +140,4 @@ fetch a single native scan's findings, use `GET /api/native-scans/results/{scan_
 ## Related
 
 - [Vulnerabilities](./vulnerabilities.md) — the normalized, deduplicated view of findings across all scans
-- [Security Scanning](../security-scanning/index.md)
+- [App & Infrastructure Scanning](../security-scanning/index.md)

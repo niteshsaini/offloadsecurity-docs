@@ -4,5 +4,6 @@
   "link": {
     "type": "doc",
     "id": "api-reference/index"
-  }
+  },
+  "collapsed": true
 }

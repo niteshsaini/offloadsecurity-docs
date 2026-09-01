@@ -16,7 +16,7 @@ Offload Security unifies the two halves of that problem — the cloud and web es
 Payment-card compliance is the sector's dominant driver, and it's demanding: secure configurations, vulnerability management, and — critically — **regular internal vulnerability scanning** of the cardholder-data environment. Offload Security tracks PCI-DSS control status with drift detection in **[Compliance](../compliance/index.md)**, and captures the proof in a continuous **[Evidence Hub](../compliance/evidence-hub.md)** so a QSA assessment is a package you produce, not a project you launch.
 
 ### E-commerce application and API security
-The storefront is the crown jewel and the front line. **[Security Scanning](../security-scanning/index.md)** tests your web applications and APIs for the OWASP-class weaknesses attackers probe for — before a seasonal traffic spike turns a latent flaw into an incident. Findings are risk-scored and tracked to remediation in **[Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)**.
+The storefront is the crown jewel and the front line. **[App & Infrastructure Scanning](../security-scanning/index.md)** tests your web applications and APIs for the OWASP-class weaknesses attackers probe for — before a seasonal traffic spike turns a latent flaw into an incident. Findings are risk-scored and tracked to remediation in **[Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)**.
 
 ### Cloud posture for the e-commerce platform
 Modern commerce runs on cloud infrastructure, where a single misconfigured bucket or over-permissive role can expose customer data. **[Cloud Security (CSPM)](../cloud-security/index.md)** continuously assesses your AWS, Azure, and GCP footprint and detects drift, keeping the platform behind the storefront as governed as the storefront itself.
@@ -33,7 +33,7 @@ A retailer's risk is spread across the cloud, the storefront, and every store ne
 |---|---|
 | **PCI-DSS compliance** | Continuous control tracking + drift detection in [Compliance](../compliance/index.md), with [audit evidence](../compliance/evidence-hub.md) |
 | **Internal PCI scanning** | [OpenVAS](../on-premises/openvas-scanning.md) internal vulnerability scans of the cardholder-data environment |
-| **E-commerce app/API security** | Web and API testing via [Security Scanning](../security-scanning/index.md) |
+| **E-commerce app/API security** | Web and API testing via [App & Infrastructure Scanning](../security-scanning/index.md) |
 | **Cloud posture** | CSPM for the [e-commerce platform](../cloud-security/index.md) with drift detection |
 | **Store & POS coverage** | [Wazuh](../on-premises/wazuh-integration.md) endpoint monitoring across store networks |
 | **Prioritized remediation** | Deduplicated, SLA-tracked [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) |

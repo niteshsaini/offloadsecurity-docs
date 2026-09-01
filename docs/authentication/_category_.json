@@ -1,4 +1,5 @@
 {
-  "label": "Security & Access",
-  "position": 9
+  "label": "Platform Security & Hardening",
+  "position": 9,
+  "collapsed": true
 }
