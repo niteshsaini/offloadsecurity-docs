@@ -1,0 +1,382 @@
+[
+ {
+  "name": "overview-coverage",
+  "url": "/dashboard?section=cloud-security",
+  "delay": 2500
+ },
+ {
+  "name": "accounts-tab",
+  "url": "/dashboard?section=cloud-security",
+  "clicks": [
+   "Accounts"
+  ],
+  "delay": 2500
+ },
+ {
+  "name": "account-setup-provider",
+  "url": "/dashboard?section=account-setup",
+  "delay": 2000
+ },
+ {
+  "name": "account-setup-gcp-org",
+  "url": "/dashboard?section=account-setup",
+  "clicks": [
+   "GCP Organizations"
+  ],
+  "delay": 2000
+ },
+ {
+  "name": "manage-accounts",
+  "url": "/dashboard?section=account-setup",
+  "clicks": [
+   "Manage Accounts"
+  ],
+  "delay": 2500
+ },
+ {
+  "name": "findings-dashboard",
+  "url": "/dashboard?section=cloud-security",
+  "clicks": [
+   "Scanning"
+  ],
+  "delay": 3000
+ },
+ {
+  "name": "findings-instances",
+  "url": "/dashboard?section=cloud-security",
+  "clicks": [
+   "Scanning",
+   {
+    "text": "instances",
+    "exact": false
+   }
+  ],
+  "delay": 2500,
+  "scrollY": 420
+ },
+ {
+  "name": "findings-suppress-dialog",
+  "url": "/dashboard?section=cloud-security",
+  "clicks": [
+   "Scanning",
+   {
+    "text": "Suppress",
+    "exact": false
+   }
+  ],
+  "delay": 2500
+ },
+ {
+  "name": "cloud-scans-list",
+  "url": "/dashboard?section=cloud-security",
+  "clicks": [
+   "Cloud Scans"
+  ],
+  "delay": 2500
+ },
+ {
+  "name": "cloud-scan-detail",
+  "url": "/dashboard?section=cloud-security",
+  "clicks": [
+   "Cloud Scans",
+   {
+    "text": "View",
+    "role": "button",
+    "nth": 0
+   }
+  ],
+  "delay": 2500
+ },
+ {
+  "name": "compliance-tab",
+  "url": "/dashboard?section=cloud-security",
+  "clicks": [
+   "Compliance"
+  ],
+  "delay": 3000
+ },
+ {
+  "name": "remediation-queue",
+  "url": "/dashboard?section=cloud-security",
+  "clicks": [
+   "Remediation Queue"
+  ],
+  "delay": 2500
+ },
+ {
+  "name": "iam-analysis",
+  "url": "/dashboard?section=cloud-security",
+  "clicks": [
+   "IAM Analysis"
+  ],
+  "delay": 2500
+ },
+ {
+  "name": "network-posture",
+  "url": "/dashboard?section=cloud-security",
+  "clicks": [
+   "Network Posture"
+  ],
+  "delay": 2500
+ },
+ {
+  "name": "ssl-certificates",
+  "url": "/dashboard?section=cloud-security",
+  "clicks": [
+   "SSL Certificates"
+  ],
+  "delay": 2500
+ },
+ {
+  "name": "cloud-events",
+  "url": "/dashboard?section=cloud-security",
+  "clicks": [
+   "Cloud Events"
+  ],
+  "delay": 2500
+ },
+ {
+  "name": "asset-inventory-overview",
+  "url": "/dashboard?section=asset-inventory",
+  "delay": 3000
+ },
+ {
+  "name": "attack-paths",
+  "url": "/dashboard?section=attack-paths",
+  "delay": 3500
+ },
+ {
+  "name": "account-setup-environment",
+  "url": "/dashboard?section=account-setup",
+  "actions": [
+   {
+    "click": {
+     "text": "Amazon Web Services",
+     "role": "heading"
+    }
+   },
+   {
+    "click": {
+     "text": "Next \u2192",
+     "role": "button"
+    }
+   },
+   {
+    "fill": {
+     "placeholder": "My AWS Production Account",
+     "value": "Production AWS \u2014 Payments Platform"
+    }
+   },
+   {
+    "fill": {
+     "placeholder": "123456789012",
+     "value": "478915623094"
+    }
+   },
+   {
+    "check": "US East (N. Virginia)"
+   },
+   {
+    "scrollTop": true
+   }
+  ],
+  "delay": 1200
+ },
+ {
+  "name": "account-setup-business-context",
+  "url": "/dashboard?section=account-setup",
+  "actions": [
+   {
+    "click": {
+     "text": "Amazon Web Services",
+     "role": "heading"
+    }
+   },
+   {
+    "click": {
+     "text": "Next \u2192",
+     "role": "button"
+    }
+   },
+   {
+    "fill": {
+     "placeholder": "My AWS Production Account",
+     "value": "Production AWS \u2014 Payments Platform"
+    }
+   },
+   {
+    "fill": {
+     "placeholder": "123456789012",
+     "value": "478915623094"
+    }
+   },
+   {
+    "check": "US East (N. Virginia)"
+   },
+   {
+    "click": {
+     "text": "Next \u2192",
+     "role": "button"
+    }
+   },
+   {
+    "fill": {
+     "placeholder": "owner@company.com",
+     "value": "platform-team@offloadsecurity.com"
+    }
+   },
+   {
+    "check": "SOC2"
+   },
+   {
+    "check": "PCI-DSS"
+   },
+   {
+    "scrollTop": true
+   }
+  ],
+  "delay": 1200
+ },
+ {
+  "name": "account-setup-auth-method",
+  "url": "/dashboard?section=account-setup",
+  "actions": [
+   {
+    "click": {
+     "text": "Amazon Web Services",
+     "role": "heading"
+    }
+   },
+   {
+    "click": {
+     "text": "Next \u2192",
+     "role": "button"
+    }
+   },
+   {
+    "fill": {
+     "placeholder": "My AWS Production Account",
+     "value": "Production AWS \u2014 Payments Platform"
+    }
+   },
+   {
+    "fill": {
+     "placeholder": "123456789012",
+     "value": "478915623094"
+    }
+   },
+   {
+    "check": "US East (N. Virginia)"
+   },
+   {
+    "click": {
+     "text": "Next \u2192",
+     "role": "button"
+    }
+   },
+   {
+    "fill": {
+     "placeholder": "owner@company.com",
+     "value": "platform-team@offloadsecurity.com"
+    }
+   },
+   {
+    "check": "SOC2"
+   },
+   {
+    "check": "PCI-DSS"
+   },
+   {
+    "click": {
+     "text": "Next \u2192",
+     "role": "button"
+    }
+   },
+   {
+    "scrollTop": true
+   }
+  ],
+  "delay": 1200
+ },
+ {
+  "name": "account-setup-credentials",
+  "url": "/dashboard?section=account-setup",
+  "actions": [
+   {
+    "click": {
+     "text": "Amazon Web Services",
+     "role": "heading"
+    }
+   },
+   {
+    "click": {
+     "text": "Next \u2192",
+     "role": "button"
+    }
+   },
+   {
+    "fill": {
+     "placeholder": "My AWS Production Account",
+     "value": "Production AWS \u2014 Payments Platform"
+    }
+   },
+   {
+    "fill": {
+     "placeholder": "123456789012",
+     "value": "478915623094"
+    }
+   },
+   {
+    "check": "US East (N. Virginia)"
+   },
+   {
+    "click": {
+     "text": "Next \u2192",
+     "role": "button"
+    }
+   },
+   {
+    "fill": {
+     "placeholder": "owner@company.com",
+     "value": "platform-team@offloadsecurity.com"
+    }
+   },
+   {
+    "check": "SOC2"
+   },
+   {
+    "check": "PCI-DSS"
+   },
+   {
+    "click": {
+     "text": "Next \u2192",
+     "role": "button"
+    }
+   },
+   {
+    "click": {
+     "text": "Cross-Account Role (Recommended)",
+     "exact": false
+    }
+   },
+   {
+    "click": {
+     "text": "Next \u2192",
+     "role": "button"
+    }
+   },
+   {
+    "scrollTop": true
+   }
+  ],
+  "delay": 1200
+ },
+ {
+  "name": "asset-inventory-table",
+  "url": "/dashboard?section=asset-inventory",
+  "clicks": [
+   "Detailed Inventory"
+  ],
+  "delay": 3000
+ }
+]

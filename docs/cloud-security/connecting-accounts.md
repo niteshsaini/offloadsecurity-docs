@@ -2,58 +2,117 @@
 title: "Connecting Cloud Accounts"
 sidebar_label: "Connecting Cloud Accounts"
 sidebar_position: 1
+description: "Connect an AWS account, GCP project or Azure subscription with read-only access using the six-step wizard, or onboard a whole GCP organization at once."
 ---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 # Connecting Cloud Accounts
 
-To scan your cloud posture, you connect each cloud account (AWS, Azure, or GCP) once. Offload Security stores the credentials **encrypted at rest** and uses **read-only** access to assess configuration, ingest native findings, and build your asset inventory.
+You connect each cloud account once. Offload Security validates the credentials against the provider before saving them, stores them **encrypted at rest**, kicks off a first posture scan and registers a recurring schedule — so a newly connected account shows results within minutes and stays current without further setup.
 
-![Cloud Security management](/img/screenshots/cloud-security.png)
+**Where:** left navigation → **Account Setup** → **Add Account** (also reachable from the **+ Add Account** button on the Cloud Security → Accounts tab).
 
-:::tip[Grant permissions first]
-Onboarding most often fails because the service account is missing IAM roles.
-See **[Required Permissions](./permissions.md)** for the exact APIs and
-roles per capability — cloud/CSPM, asset inventory, Kubernetes, container
-registries, and cloud events.
+:::tip[Provision access first]
+Almost every failed connection is a missing permission, not a wrong credential. Grant the read-only roles from **[Required Permissions](./permissions.md)** before you open the wizard — that page has ready-to-apply Terraform, CloudFormation and CLI for each cloud.
 :::
 
-## How connection works
+## Before you start
 
-1. In the platform, go to **Cloud Security → Cloud Accounts** (or **Account Setup**) and select **Add Cloud Account**.
-2. Choose the provider and enter credentials (details per provider below).
-3. The platform runs a **connection test** using the provider SDK (for AWS, an STS `GetCallerIdentity` call) to confirm the credentials and permissions are valid.
-4. On success, credentials are encrypted and stored, and an initial posture scan can be kicked off automatically.
+| You need | AWS | GCP | Azure |
+| --- | --- | --- | --- |
+| **Identity the platform uses** | Cross-account IAM role (recommended) or an IAM user's access keys | Service account JSON key, or Workload Identity Federation | Service principal (client ID + secret), or a managed identity |
+| **Identifier** | 12-digit account ID | Project ID | Subscription ID + tenant ID |
+| **Access level** | `SecurityAudit` + `ReadOnlyAccess` (+ a small inline supplement) | `roles/viewer`, `cloudasset.viewer`, `iam.securityReviewer`, … | `Reader`, `Security Reader`, … |
+| **Platform permission** | **Manage Cloud Accounts** (see [RBAC](../authentication/rbac-team-management.md)) | same | same |
 
-:::tip[Least privilege]
-Offload Security only needs **read/security-audit** permissions. Never give it write or administrative access. The Terraform below provisions exactly the read-only roles required — nothing more.
-:::
+## The connect wizard
 
----
+The wizard has six steps. Your progress is saved per step, so you can leave and come back.
 
-## AWS
+### 1. Provider
 
-### Option A — IAM role (recommended)
-A cross-account IAM **role** with an external ID is the most secure option (no long-lived keys).
+Pick **Amazon Web Services**, **Google Cloud Platform** or **Microsoft Azure**.
 
-**Required permissions** (read-only): `securityhub:GetFindings`, `config:GetComplianceSummaryByConfigRule`, `guardduty:ListDetectors`, `guardduty:ListFindings`, `guardduty:GetFindings`, `inspector2:List*`, `inspector2:Get*`, `access-analyzer:List*`, `access-analyzer:Get*`, `ec2:Describe*`, `iam:Get*`, `iam:List*`, `s3:Get*`, `s3:List*`, `rds:Describe*`, `lambda:GetFunction*`, `lambda:List*`, `cloudtrail:DescribeTrails`, `cloudtrail:LookupEvents`, `kms:DescribeKey`, `kms:ListKeys`, `tag:GetResources`. For container (ECR) scanning, also add `ecr:DescribeRepositories` and `ecr:DescribeImages`.
+![Account Setup wizard — provider selection with AWS, GCP and Azure cards](/img/screenshots/cloud-security/account-setup-provider.webp)
 
-The role uses the AWS-managed **`SecurityAudit`** and **`ReadOnlyAccess`** policies for broad read coverage, plus a small inline supplement (Security Hub, GuardDuty, Amazon Inspector, IAM Access Analyzer, Config, CloudTrail, and ECR) — matching the policy the in-app onboarding wizard generates, so you stay current as services evolve.
+### 2. Environment
+
+Give the account a **display name** you will recognise in dashboards (for example *Production AWS — Payments Platform*), classify it as **Production / Staging / Development / Testing / Sandbox**, enter the provider's account identifier, and choose the **regions** to scan.
+
+![Environment step — display name, environment classification, AWS account ID and region picker](/img/screenshots/cloud-security/account-setup-environment.webp)
+
+- **AWS:** tick the regions you use. Scans target only the selected regions, which keeps scan time and API calls down. You can add a region that is not in the list (for example a newly launched one) under *Add custom region*.
+- **GCP / Azure:** region selection does not partition the scan — a project or subscription is always scanned as one unit. See [How scans partition work by provider](./scan-orchestration.md#how-scans-partition-work-by-provider).
+
+### 3. Business context
+
+Record the **business unit**, the **account owner's email** (required) and the **compliance requirements** that apply (SOC 2, PCI DSS, HIPAA, GDPR, ISO 27001, NIST, CIS). Owner and business unit appear on findings and reports, so that a critical finding can be routed to the right team.
+
+![Business context step — business unit, owner email and compliance requirement checkboxes](/img/screenshots/cloud-security/account-setup-business-context.webp)
+
+### 4. Authentication method
+
+Choose how the platform will authenticate. The recommended option is listed first for each provider:
+
+| Provider | Methods |
+| --- | --- |
+| **AWS** | **Cross-Account Role (recommended)** — `sts:AssumeRole` with an external ID; no long-lived keys. **Access Keys** — access key ID + secret (+ optional session token). |
+| **GCP** | **Service Account** — JSON key. **Workload Identity** — pool + provider + service-account email; keyless. |
+| **Azure** | **Service Principal** — tenant, client ID, client secret, subscription. **Managed Identity** — when the platform itself runs in Azure. |
+
+![Authentication step — Cross-Account Role (Recommended) and Access Keys options for AWS](/img/screenshots/cloud-security/account-setup-auth-method.webp)
+
+### 5. Credentials
+
+Paste the values for the method you chose. For an AWS cross-account role the step shows the exact setup summary — create the role with `ReadOnlyAccess` and `SecurityAudit`, trust the platform's principal, and use the external ID displayed here — then asks for the **Role ARN** and **External ID**.
+
+![Credentials step — AWS cross-account role setup summary with Role ARN and External ID fields](/img/screenshots/cloud-security/account-setup-credentials.webp)
+
+Secrets are encrypted before they are written and are never returned by the API afterwards.
+
+### 6. Validation
+
+The platform performs a live connection test using the provider SDK (an STS `GetCallerIdentity` on AWS, a Resource Manager / Asset lookup on GCP, a subscription lookup on Azure) and checks that it can enumerate resources. On success the account is created as **active**, an initial scan is queued and the recurring schedule is registered. On failure you see the provider's error verbatim so you can fix the role or key and retry — nothing is saved until validation passes.
+
+## What happens right after connecting
+
+- **A first scan starts** in the background. Watch it on Cloud Security → **Accounts** (the card shows *Scanning…* with a progress bar) or **Cloud Scans**.
+- **Recurring scans are registered** in the Unified Scheduler: a **daily incremental** scan (02:00 UTC) and a **weekly full** scan (Sunday 03:00 UTC). You can retime or pause them from **Unified Scheduler**. Operators can disable auto-scheduling platform-wide with `CSPM_AUTO_SCHEDULE_ON_ACCOUNT_ADD=false`.
+- **Resources appear in [Asset Inventory](./asset-inventory.md)** as discovery jobs complete.
+- **Kubernetes clusters and container registries** in the account are discovered automatically and offered in [Kubernetes Security](../security-scanning/kubernetes-security.md) and [Container Security](../security-scanning/container-security.md).
+
+## Onboarding a GCP organization
+
+If you run many GCP projects, connect the **organization or a folder** once instead of each project. **Account Setup → GCP Organizations → Connect GCP Organization**.
+
+![GCP Organizations tab — connect an org or folder to auto-discover all projects](/img/screenshots/cloud-security/account-setup-gcp-org.webp)
+
+1. Provide a service account with org-level read roles (`roles/resourcemanager.organizationViewer` + `folderViewer` in addition to the project roles — see [Required Permissions](./permissions.md#bucket-a--read-only-scanning)).
+2. The platform runs a **readiness check** (enabled APIs, granted roles) and reports anything missing before you commit.
+3. It **discovers every project** under the org/folder — walking nested folders — and onboards them as individual accounts. Google's hidden `sys-*` system projects are excluded automatically.
+4. A **re-discovery job** runs on a schedule (default daily) to add new projects and retire ones that disappeared; every change is recorded under **Discovery Events**.
+
+You can toggle individual projects in or out of scanning from the connection's hierarchy view.
+
+## Provider setup reference
+
+The wizard tells you what to create; the snippets below let you create it with infrastructure-as-code. They match the roles the wizard's setup summary asks for.
+
+<Tabs groupId="cloud">
+<TabItem value="aws" label="AWS">
+
+### AWS {#aws}
+
+**Cross-account role (recommended).** `SecurityAudit` + `ReadOnlyAccess`, plus a supplement for Security Hub, GuardDuty, Inspector, Access Analyzer, Config, CloudTrail and ECR.
 
 ```hcl
-# offload-security-aws.tf
-variable "offload_principal_arn" {
-  description = "The AWS principal Offload Security uses to assume this role (from your tenant settings)"
-  type        = string
-}
-
-variable "external_id" {
-  description = "A unique external ID you also enter in the platform when adding the account"
-  type        = string
-}
+variable "offload_principal_arn" { type = string }   # shown in the wizard
+variable "external_id"           { type = string }   # shown in the wizard
 
 resource "aws_iam_role" "offload_security_scanner" {
   name = "OffloadSecurityScanner"
-
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
@@ -65,7 +124,6 @@ resource "aws_iam_role" "offload_security_scanner" {
   })
 }
 
-# Broad read-only baseline
 resource "aws_iam_role_policy_attachment" "security_audit" {
   role       = aws_iam_role.offload_security_scanner.name
   policy_arn = "arn:aws:iam::aws:policy/SecurityAudit"
@@ -76,55 +134,38 @@ resource "aws_iam_role_policy_attachment" "read_only" {
   policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
 }
 
-# Supplemental permissions for security services + container scanning
 resource "aws_iam_role_policy" "offload_supplement" {
   name = "OffloadSecuritySupplement"
   role = aws_iam_role.offload_security_scanner.id
-
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
       Effect = "Allow"
       Action = [
-        "securityhub:GetFindings",
-        "guardduty:ListDetectors",
-        "guardduty:ListFindings",
-        "guardduty:GetFindings",
-        "inspector2:List*",
-        "inspector2:Get*",
-        "access-analyzer:List*",
-        "access-analyzer:Get*",
-        "config:GetComplianceSummaryByConfigRule",
-        "cloudtrail:LookupEvents",
-        "tag:GetResources",
-        "ecr:DescribeRepositories",
-        "ecr:DescribeImages"
+        "securityhub:GetFindings", "guardduty:ListDetectors", "guardduty:ListFindings",
+        "guardduty:GetFindings", "inspector2:List*", "inspector2:Get*",
+        "access-analyzer:List*", "access-analyzer:Get*",
+        "config:GetComplianceSummaryByConfigRule", "cloudtrail:LookupEvents",
+        "tag:GetResources", "ecr:DescribeRepositories", "ecr:DescribeImages"
       ]
       Resource = "*"
     }]
   })
 }
 
-output "role_arn" {
-  value = aws_iam_role.offload_security_scanner.arn
-}
+output "role_arn" { value = aws_iam_role.offload_security_scanner.arn }
 ```
 
-Apply it, then in the platform choose **IAM Role**, paste the `role_arn`, and enter the same `external_id`.
+Paste `role_arn` and the external ID into step 5. For **Access Keys**, attach the same policies to an IAM user and rotate the key regularly.
 
-### Option B — Access keys
-For a quick start you can use an IAM user's **access key ID + secret** (and optional session token). Attach the same `SecurityAudit` policy + supplement above to the user. Then in the platform choose **Access Keys** and paste the values. Rotate keys regularly.
+</TabItem>
+<TabItem value="gcp" label="GCP">
 
----
+### GCP {#gcp}
 
-## GCP
-
-Offload Security uses a **service account JSON key** with read-only roles.
-
-**Required roles:** `roles/cloudasset.viewer`, `roles/securitycenter.findingsViewer`, `roles/securitycenter.assetsViewer`, `roles/iam.securityReviewer`, `roles/viewer`. For Artifact Registry scanning, also `roles/artifactregistry.reader`.
+**Service account** with read-only roles (add `artifactregistry.reader` if you will scan Artifact Registry).
 
 ```hcl
-# offload-security-gcp.tf
 variable "project_id" { type = string }
 
 resource "google_service_account" "offload_scanner" {
@@ -135,11 +176,8 @@ resource "google_service_account" "offload_scanner" {
 
 resource "google_project_iam_member" "roles" {
   for_each = toset([
-    "roles/viewer",
-    "roles/cloudasset.viewer",
-    "roles/securitycenter.findingsViewer",
-    "roles/securitycenter.assetsViewer",
-    "roles/iam.securityReviewer",
+    "roles/viewer", "roles/cloudasset.viewer", "roles/iam.securityReviewer",
+    "roles/securitycenter.findingsViewer", "roles/securitycenter.assetsViewer",
     "roles/artifactregistry.reader",
   ])
   project = var.project_id
@@ -150,44 +188,24 @@ resource "google_project_iam_member" "roles" {
 resource "google_service_account_key" "offload_key" {
   service_account_id = google_service_account.offload_scanner.name
 }
-
-# Write the key to a file to upload in the platform (handle securely; delete after upload)
-resource "local_file" "key_json" {
-  content  = base64decode(google_service_account_key.offload_key.private_key)
-  filename = "${path.module}/offload-gcp-sa.json"
-}
 ```
 
-In the platform choose **GCP**, upload the generated `offload-gcp-sa.json` (or paste its contents), and enter your `project_id`.
+Upload the key JSON in step 5, then delete the local copy. Prefer **Workload Identity** where you can — the wizard accepts the pool, provider and service-account email and no key is ever created.
 
-:::warning[Key hygiene]
-Service-account keys are sensitive. Upload the key, then delete the local file. The platform warns when a key approaches its rotation window (60 days) and recommends rotation by 90 days.
-:::
+</TabItem>
+<TabItem value="azure" label="Azure">
 
----
+### Azure {#azure}
 
-## Azure
-
-Offload Security uses a **service principal** (`client_id` + `client_secret` + `tenant_id`) scoped to a subscription.
-
-**Required built-in roles:** `Reader` (general read), `Security Reader` (Defender for Cloud findings), `Log Analytics Reader` (activity log + alerts). Optionally `Storage Blob Data Reader`.
+**Service principal** at subscription scope with `Reader`, `Security Reader` and `Log Analytics Reader`.
 
 ```hcl
-# offload-security-azure.tf
 variable "subscription_id" { type = string }
 
-data "azurerm_subscription" "current" {
-  subscription_id = var.subscription_id
-}
+data "azurerm_subscription" "current" { subscription_id = var.subscription_id }
 
-resource "azuread_application" "offload" {
-  display_name = "Offload Security Scanner"
-}
-
-resource "azuread_service_principal" "offload" {
-  client_id = azuread_application.offload.client_id
-}
-
+resource "azuread_application"       "offload" { display_name = "Offload Security Scanner" }
+resource "azuread_service_principal" "offload" { client_id = azuread_application.offload.client_id }
 resource "azuread_application_password" "offload" {
   application_id = azuread_application.offload.id
   display_name   = "offload-scanner-secret"
@@ -205,27 +223,21 @@ output "client_secret" { value = azuread_application_password.offload.value, sen
 output "tenant_id"     { value = data.azurerm_subscription.current.tenant_id }
 ```
 
-In the platform choose **Azure**, then enter `tenant_id`, `client_id`, `client_secret`, and `subscription_id`.
+Enter tenant ID, client ID, client secret and subscription ID in step 5. To scan ACR images add `AcrPull`.
 
-:::tip[Workload identity]
-To avoid managing a client secret, configure a **federated credential** (workload identity) on the application instead. Azure secrets should be rotated within 90 days.
-:::
-
----
-
-## Container registries & Kubernetes
-
-The same cloud credentials also unlock:
-
-- **Container registries** — once an AWS/GCP/Azure account is connected, the platform can discover and scan **ECR**, **GCP Artifact Registry**, and **ACR** repositories. **Docker Hub** is supported with a username + access token (or anonymously for public images). See **[Container Security](../security-scanning/container-security.md)**.
-- **Kubernetes clusters** — EKS/GKE/AKS clusters are auto-discovered from connected cloud accounts, and you can onboard any cluster with a read-only kubeconfig or service-account token. See **[Kubernetes Security](../security-scanning/kubernetes-security.md)**.
+</TabItem>
+</Tabs>
 
 ## Verify the connection
 
-After adding an account:
+1. On **Account Setup → Manage Accounts**, the new row shows status **active**. Use **Test Connection** at any time to re-run the provider check.
+2. On **Cloud Security → Accounts**, the card shows *Scanning…* until the first run completes, then a **Last Scan** timestamp.
+3. Within a few minutes, findings appear on the **Scanning** tab and resources in **Asset Inventory**.
 
-1. Confirm the status shows **Connected / Active**.
-2. Trigger (or wait for) the first posture scan.
-3. Review results in **Cloud Security** and the new resources in **[Asset Inventory](./asset-inventory.md)**.
+If validation fails, the error names the cause — an unassumable role or mismatched external ID on AWS, a disabled API or missing role on GCP, an expired client secret on Azure. Fix it and retry from step 5; see [Troubleshooting](./troubleshooting.md#connection-and-validation) for the common cases.
 
-If the connection test fails, see **Troubleshooting** for the most common causes (invalid credentials, missing permissions, or — for IAM roles — a mismatched external ID).
+## Related
+
+- [Required Permissions](./permissions.md) — the exact roles per cloud and per capability.
+- [Managing Connected Accounts](./account-management.md) — revalidate, rotate credentials, scan in bulk, remove.
+- [Running Cloud Scans](./scan-orchestration.md) — what the first scan does and how to read its progress.

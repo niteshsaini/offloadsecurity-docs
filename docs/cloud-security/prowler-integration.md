@@ -2,64 +2,70 @@
 title: "Compliance & Benchmark Checks"
 sidebar_label: "Compliance & Benchmark Checks"
 sidebar_position: 5
+description: "What the posture checks assess (CIS Benchmarks and provider best practices), how every finding maps to compliance frameworks, and how to read per-framework scores per account."
 ---
 
 # Compliance & Benchmark Checks
 
-When you run a posture scan, Offload Security checks your cloud configuration against hundreds of industry security benchmarks and best practices — the same checks used to measure CIS Benchmark and framework compliance. Every check that fails becomes a finding in **Cloud Security**, complete with a severity, the affected resource, and step-by-step remediation. This page explains what those checks assess and how the results show up.
+Every cloud scan evaluates your configuration against hundreds of checks and reports each as **pass** or **fail**. A failing check becomes a finding; the pass/fail totals become **compliance scores** per framework, per account. This page explains what the checks cover and how to read the scores.
 
-## What it does
+## What the checks assess
 
-The posture engine runs read-only checks against your AWS, Azure, and GCP accounts and reports each one as **pass** or **fail**:
+- **CIS Benchmarks.** Each provider is evaluated against the CIS Foundations Benchmark — root/privileged accounts without MFA, public storage, open security groups, disabled audit logging, unencrypted data stores, and so on.
+- **Provider best practices.** Beyond CIS: hardening recommended by AWS, Google and Microsoft across identity, network, storage, compute, logging and encryption — including the AWS Foundational Security Best Practices set.
+- **Framework mapping.** Every check carries the control IDs it satisfies in each framework it maps to. That mapping is what turns a technical failure ("S3 bucket public") into an audit statement ("PCI DSS 4.0 req. 1.3.1 not met on 5 resources").
 
-- **CIS Benchmarks.** Your accounts are evaluated against the Center for Internet Security (CIS) Foundations Benchmark for each provider — for example, alerting on root-account usage without MFA, public storage buckets, overly broad security groups, or disabled audit logging.
-- **Security best practices.** Beyond CIS, checks cover provider-recommended hardening across identity, networking, storage, compute, logging, and encryption — even where a check isn't tied to a formal control.
-- **Compliance framework mapping.** Each finding carries the framework controls it relates to, so you can see your posture through the lens of the standard you care about. Supported frameworks vary by provider:
+Checks are grouped into six **categories** you can filter on: **IAM, Network, Storage, Compute, Logging, Encryption**. Each failing check is rated **Critical, High, Medium, Low** or **Informational** and includes the remediation steps and a reference link.
 
-  | Provider | Frameworks available |
-  |---|---|
-  | **AWS** | CIS, NIST 800-53, SOC 2, PCI-DSS, HIPAA, GDPR, ISO 27001, FedRAMP, FFIEC, AWS Well-Architected (Security Pillar) |
-  | **Azure** | CIS, SOC 2, PCI-DSS, ISO 27001, MITRE ATT&CK |
-  | **GCP** | CIS, SOC 2, PCI-DSS, ISO 27001, MITRE ATT&CK |
+The check engine is [Prowler](https://github.com/prowler-cloud/prowler); the platform runs it read-only against your account, normalises the output, deduplicates it across runs, and keeps your triage decisions (see [Reviewing & Triaging Findings](./findings.md#what-happens-between-scans)).
 
-- **Severity and remediation.** Every failing check is rated **Critical**, **High**, **Medium**, **Low**, or **Informational**, and includes a plain-language description of the problem plus the recommended fix (often with a reference link).
-- **Security domains.** Findings are grouped into categories — **IAM**, **Network**, **Storage**, **Compute**, **Logging**, and **Encryption** — so you can focus on one area at a time.
+## Frameworks
 
-:::note[Framework availability differs by cloud]
-NIST 800-53 mapping is available for **AWS only**. HIPAA, GDPR, FedRAMP, FFIEC, and AWS Well-Architected are AWS-specific as well. If you need a framework that isn't listed for a provider, the underlying CIS and best-practice checks still run — only the framework labels differ.
+| Framework | Where it appears |
+| --- | --- |
+| **CIS Benchmarks** (per provider version) | Finding filter, finding detail |
+| **PCI DSS 4.0**, **SOC 2**, **ISO 27001:2022**, **NIST 800-53 rev 5**, **NIST CSF 2.0** | Finding filter, finding detail, Compliance tab |
+| **HIPAA**, **GDPR**, **NIS2** | Finding detail, Compliance tab |
+| **RBI Cyber Security Framework**, **CISA**, **AWS Foundational Security Best Practices** | Compliance tab |
+| **MITRE ATT&CK** | Finding detail (technique tags) |
+
+Availability depends on the provider: AWS has the broadest mapping (including NIST, HIPAA, GDPR, RBI, CISA and FSBP); GCP and Azure carry CIS, PCI DSS 4.0, ISO 27001, SOC 2 and MITRE ATT&CK, with NIS2 on Azure. Where a framework is not mapped for a provider the underlying checks still run — only the label is missing.
+
+:::note[Cloud checks feed the wider compliance picture]
+These are the *technical* controls. **Compliance Posture** combines them with policy, evidence and assessment controls from the Secure Controls Framework catalog to give you the full framework view — see [Compliance Dashboard](../compliance/compliance-dashboard.md) and [Supported Frameworks](../compliance/supported-frameworks.md).
 :::
 
-## How to use it
+## The Compliance tab
 
-1. **Connect a cloud account.** Posture checks only run against accounts you've connected. See **[Connecting Cloud Accounts](./connecting-accounts.md)** for setup and ready-to-use Terraform.
-2. **Run a posture scan.** Start a scan from **Cloud Security**, or let the first scan kick off automatically when an account connects. You can choose how broad the scan is:
-   - A **quick** scan covers a single primary region for fast feedback.
-   - A **full** scan covers the platform's standard set of major regions.
-   - A **comprehensive** scan covers that same broad region set. In every case Prowler runs its complete check set and maps results to all applicable compliance frameworks — the scan type controls how many regions are covered, not which checks run.
-3. **Review the findings.** Open the findings view to see every failing check, ranked by severity and tagged with its security domain and framework controls. Identical issues across resources are grouped into a single actionable check to cut down on noise.
-4. **Open a finding to remediate.** Each finding shows what failed, why it matters, and how to fix it — including a deep link into the relevant cloud console. For supported checks you can launch a guided remediation workflow.
-5. **Re-scan and track over time.** Run scans on a schedule or after making fixes. Drift detection flags posture that regresses — for example, audit logging being turned off again — so a closed finding doesn't quietly come back.
+**Cloud Security → Compliance** turns the pass/fail results into scores.
 
-:::tip[Match the scan to the moment]
-Use a **quick** scan day to day for fast signal, and run a **comprehensive** scan before an audit or framework review so every applicable control is evaluated.
-:::
+![Compliance tab: average score 72%, 10 frameworks, tier cards for Regional & Cloud and Global Standards with per-framework pass counts and percentages](/img/screenshots/cloud-security/compliance-tab.webp)
 
-## How findings show up
+**Score** = passed checks ÷ total checks mapped to that framework, for the account(s) selected. The header tiles summarise the **average score**, the number of frameworks with data, and how many fall in each band:
 
-Once a scan finishes, its results flow straight into the standard **Cloud Security** findings view — the same place you review the rest of your findings. That means benchmark and compliance findings are triaged, scored, and reported alongside everything else:
+| Band | Score | Read it as |
+| --- | --- | --- |
+| **Critical** | below 25% | Systemic gap — usually logging, encryption or identity baselines missing across the account. |
+| **Needs work** | 25–70% | Typical for a newly connected account. Work the Critical/High findings first; the score follows. |
+| **Good** | above 70% | Baseline in place; remaining failures are individual resources. |
 
-- They appear in the findings list with severity, affected resource, security domain, and mapped framework controls.
-- They roll up into your **[Compliance Posture](../compliance/compliance-dashboard.md)**, contributing pass/fail counts per framework.
-- They can be promoted into the **Risk Register** and exported in compliance and audit reports, just like any other finding.
-- You can resolve or temporarily **suppress** individual findings during triage.
+Frameworks are grouped into three tiers — **Global Standards** (SOC 2, ISO 27001, NIST CSF, NIST 800-53), **Industry-Specific** (PCI DSS, HIPAA, GDPR, NIS2) and **Regional & Cloud** (RBI, CISA, AWS FSBP). Use **Account** to score a single account, **Show** to focus on one framework, and **Category** to focus on one tier. Each framework card shows *passed / total* and the percentage.
 
-:::warning[Suppressions expire]
-A suppressed finding is hidden only for the window you choose. When that window ends, the finding returns to a failing state so it isn't lost — review suppressed items periodically.
+Scores are recomputed from the latest finished scan of each account, so a fix that clears findings moves the score on the next run.
+
+## Using scores well
+
+1. **Pick the framework you are accountable for** — e.g. PCI DSS 4.0 for the payments account — and note its score per account.
+2. On the **Scanning** tab, filter **Framework = PCI-DSS** and **Severity = Critical/High**: that list is the shortest path to raising the score.
+3. Record accepted risks as **suppressions with a reason** so the auditor sees a decision, not an ignored failure.
+4. Re-run a **Full scan** before the review so the score reflects current state, then export findings (CSV/Excel) or generate a report.
+
+:::tip[Same checks, wider region set]
+A **Full** scan does not run more checks than a **Quick** scan — it covers more regions (see [Scan types and regions](./scan-orchestration.md#scan-types-and-regions)). If a score looks too good, make sure the run covered every region you use.
 :::
 
 ## Related
 
-- **[Cloud Security (CSPM)](./index.md)** — the module overview and full posture workflow.
-- **[Connecting Cloud Accounts](./connecting-accounts.md)** — add AWS, Azure, or GCP with read-only access.
-- **[Scan Orchestration & Lifecycle](./scan-orchestration.md)** — how posture scans are queued, run, and tracked.
-- **[Asset Inventory](./asset-inventory.md)** — the live catalog of cloud resources discovered during scans.
+- [Reviewing & Triaging Findings](./findings.md) — filter by framework, resolve, suppress.
+- [Running Cloud Scans](./scan-orchestration.md) — keeping scores current.
+- [Compliance Dashboard](../compliance/compliance-dashboard.md) — the organisation-wide framework view.
