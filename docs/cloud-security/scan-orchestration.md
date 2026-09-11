@@ -1,113 +1,105 @@
 ---
-title: "How Cloud Scans Run"
-sidebar_label: "How Cloud Scans Run"
-sidebar_position: 4
+title: "Running Cloud Scans"
+sidebar_label: "Running Cloud Scans"
+sidebar_position: 3
+description: "Start quick or full posture scans, understand how work is split per region and provider, read progress and status, and keep accounts scanned on a schedule."
 ---
 
-# How Cloud Scans Run
+# Running Cloud Scans
 
-When you scan a connected cloud account, Offload Security breaks the work into many smaller jobs and runs them **in parallel**. This keeps even large accounts fast, and it lets you watch progress job by job instead of waiting for one long, opaque run. How the work is partitioned depends on the cloud provider — see [How scans partition work by provider](#how-scans-partition-work-by-provider) below. This page explains what a scan covers, how it executes, and how to read its status and progress.
+A cloud scan inventories the resources in one account and evaluates its configuration against the platform's check set. Scans run in the background as many parallel jobs, results stream in as each job finishes, and every repeat scan is compared to the last one so findings open and close automatically.
 
-## What a scan covers
+## Start a scan
 
-Each scan looks at a single cloud account (one AWS account, one GCP project, or one Azure subscription) and does two main things across the scope it covers:
+| From | How |
+| --- | --- |
+| **Cloud Security → Accounts** | **Quick** or **Full Scan** on an account card. |
+| **Account Setup → Manage Accounts** | **Quick Scan** / **Full Scan** per row, or select several rows and scan them in bulk. |
+| **Automatically** | A first scan runs when an account is connected; a **daily incremental** and **weekly full** scan are scheduled for every account (see [Scheduled scans](#scheduled-scans)). |
+| **API / CI** | `POST /api/cloud-scans/initiate` — see the [Cloud Security API](./api.md#scans). |
 
-- **Asset discovery** — builds an inventory of the resources in scope (compute, storage, networking, IAM, and more). These feed your [Asset Inventory](./asset-inventory.md).
-- **Compliance scanning** — runs security posture checks (powered by Prowler) against those resources to surface misconfigurations and policy violations. These become findings you can triage. See [Prowler Integration](./prowler-integration.md).
-
-Alongside that work, every scan also runs two **account-wide** discovery jobs once:
-
-- **Kubernetes cluster discovery** — finds EKS, GKE, and AKS clusters in the account so they can be scanned in [Kubernetes Security](../security-scanning/kubernetes-security.md).
-- **Container registry discovery** — finds ECR, GCR/Artifact Registry, and ACR repositories so their images can be scanned in [Container Security](../security-scanning/container-security.md).
+Only one scan can run per account at a time. Starting another while one is in progress returns the running scan's ID instead of queuing a duplicate.
 
 :::note[Read-only, always]
-Scans only ever **read** your environment using the read-only credentials you provided when [connecting the account](./connecting-accounts.md). Nothing is changed in your cloud.
+Scans only ever **read** your environment with the credentials you provided at onboarding. Nothing is created, changed or deleted in your cloud.
 :::
 
-## How scans partition work by provider
+## Scan types and regions
 
-The three major clouds have different natural scan boundaries, so Offload Security partitions the work differently for each. This is why "regions" behave differently depending on the provider:
+All scan types run the **complete check set**. The type controls the region footprint the platform picks when you have not configured regions, how long the run is expected to take, and how the run is labelled in history and schedules.
 
-| Provider | Scan boundary | How work is split | Why |
-|---|---|---|---|
-| **AWS** | The account | **Per region** — each selected region gets its own discovery and compliance jobs that run concurrently | AWS resources and Prowler's checks are genuinely region-scoped, so splitting by region does distinct work and parallelizes a large account. |
-| **GCP** | The project | **One job per project** (a single "global" job per scan) | A GCP scan reads project-wide services (Cloud Asset Inventory, Prowler across the project) that aren't region-partitioned. Splitting by region would just repeat the same full project scan N times. |
-| **Azure** | The subscription | **One job per subscription** (a single "global" job per scan) | Azure Resource Graph / ARM enumerate the whole subscription at once, so a subscription is scanned as one unit. |
+| Type | Default region footprint (AWS) | Typical use |
+| --- | --- | --- |
+| **Quick** | Your configured regions; if none are configured, `us-east-1` only | A fast first look or a smoke test after a fix (5–10 min). |
+| **Full** / **Comprehensive** | Your configured regions; if none, a curated set of 13 major commercial regions | The weekly baseline and the run to do before an audit (15–25 min on a large account). |
+| **Incremental** | Same footprint as Full | The daily scheduled run. |
 
-For **GCP and Azure**, breadth comes from **onboarding more projects or subscriptions** (each is its own connected account and scans in parallel with the others), not from fanning a single scan out across regions. Organization onboarding discovers those projects/subscriptions for you — see [Connecting Cloud Accounts](./connecting-accounts.md).
+Region precedence is always: **regions you pass explicitly → the account's configured regions (wizard or *Regions* editor) → the provider default**. On **GCP and Azure** a scan always covers the whole project or subscription, regardless of type.
 
-### Choosing regions (AWS)
+### How scans partition work by provider
 
-For AWS you can choose which regions to scan, or let the platform pick a sensible default based on the scan type:
+| Provider | Boundary | Parallelism | Why |
+| --- | --- | --- | --- |
+| **AWS** | Account | One discovery job **and** one compliance job **per selected region**, run concurrently | AWS resources and checks are genuinely region-scoped; splitting by region parallelises a large account. |
+| **GCP** | Project | One discovery + one compliance job (`global`) | Cloud Asset Inventory and the checks read the whole project; per-region fan-out would repeat identical work. |
+| **Azure** | Subscription | One discovery + one compliance job (`global`) | Resource Graph / ARM enumerate the whole subscription at once. |
 
-| Scan type | Regions covered | When to use it |
-|---|---|---|
-| **Quick** | A single primary region (for example, `us-east-1`) | Fast smoke test or a first look. |
-| **Full / Standard** | A curated set of major commercial AWS regions (around a dozen) | Your everyday, realistic multi-region posture scan. |
-| **Incremental** | Same regional footprint as a full scan, but focused on what changed | Lightweight follow-up runs (used by daily schedules). |
+Every scan additionally runs two account-wide jobs once: **Kubernetes cluster discovery** (EKS / GKE / AKS) and **container registry discovery** (ECR / Artifact Registry / ACR). Discovered clusters and registries appear in [Kubernetes Security](../security-scanning/kubernetes-security.md) and [Container Security](../security-scanning/container-security.md).
 
-If you have resources outside the default set, specify the exact AWS regions you want when you start the scan — the platform will scan precisely those. On **GCP and Azure**, region selection has no effect: each scan already covers the whole project or subscription.
+For GCP and Azure, breadth comes from onboarding **more projects or subscriptions** — each scans in parallel with the others. Organization onboarding does that for you ([Connecting Cloud Accounts](./connecting-accounts.md#onboarding-a-gcp-organization)).
 
-## How a scan executes
+## What happens during a scan
 
-1. **You start a scan** from **Cloud Security** (or it's triggered by a schedule). The platform first checks that no other scan is already running for the same account in your team.
-2. **Jobs are created** — for AWS, one discovery job and one compliance job per selected region; for GCP/Azure, a single discovery and compliance job for the whole project/subscription. Every scan also adds the two account-wide discovery jobs (below).
-3. **Jobs run in parallel.** Discovery and compliance work proceed side by side, and on AWS regions are processed concurrently. Compliance jobs are gently staggered so the scan stays within your cloud provider's API rate limits.
-4. **Results stream in** as each job finishes — assets land in your inventory and findings appear in Cloud Security, so you don't have to wait for the entire scan to complete before reviewing early results.
-5. **The scan reaches a final state** once all jobs have finished (see below).
+1. **Queued.** The platform checks that no other scan is running for the account, records the run and creates its jobs.
+2. **Discovery** jobs enumerate resources per region (or per project/subscription) through the provider's native APIs and write them to [Asset Inventory](./asset-inventory.md).
+3. **Compliance** jobs evaluate configuration with the check engine (Prowler) for the same scope. They are lightly staggered so the run stays under your cloud provider's API rate limits.
+4. **Results stream in** per job. Findings appear on the **Scanning** tab and assets in the inventory before the whole run has finished.
+5. **Delta ingestion.** Every repeat scan is compared against the previous state for the same scope: new failures open as findings, failures that are no longer reported are **auto-resolved**, and findings you resolved or suppressed keep their status. A run that unexpectedly reports **zero** findings is treated as unverified and does **not** resolve anything — a broken credential can never make an account look clean.
+6. **Final state** once every job has finished (see the status table below).
 
-:::tip[One scan per account at a time]
-To avoid duplicate work and conflicting results, only one scan can run for a given cloud account within your team at a time. If you try to start another, the platform tells you a scan is already in progress and shows its ID and status.
-:::
+## Scan history
 
-## Reading scan status and progress
+**Cloud Security → Cloud Scans** lists every run for the team with provider, account, type, findings count, status and date. Tiles at the top summarise total, completed, running and failed runs; filter by status, provider, account or type.
 
-Every scan shows an overall **status**, a **progress** indicator, and a per-region breakdown.
+![Cloud Scans tab: 28 runs with provider, account, type, findings, status and date columns, plus completed / running / failed tiles](/img/screenshots/cloud-security/cloud-scans-list.webp)
 
-### Scan status
+Select **View** on a row for the run's summary — account, type, status, finding count, and metadata such as run ID, total assets, completed and failed sub-jobs, and the queued / running / completed timestamps. **AI Summary** produces a plain-language recap of the run.
 
-| Status | What it means |
-|---|---|
-| **Queued** | The scan has been accepted and is waiting to begin. |
-| **Running** | Jobs are actively discovering assets and running checks. |
+![Scan detail dialog for an AWS full scan: 41 findings, 46 assets, 8 completed sub-jobs and the run timeline](/img/screenshots/cloud-security/cloud-scan-detail.webp)
+
+## Reading status and progress
+
+| Status | Meaning |
+| --- | --- |
+| **Queued** | Accepted and waiting for a worker. |
+| **Running** | Jobs are discovering assets and running checks. The account card shows the overall percentage. |
 | **Completed** | Every job finished successfully. |
-| **Partial** | Some jobs succeeded and some failed — you have usable results, but coverage is incomplete (for example, one region's checks failed). This is deliberately *not* shown as a clean "green" run so you know to look closer. |
-| **Failed** | Every job failed (commonly a credentials or permissions problem). No usable results. |
-| **Cancelled** | The scan was stopped before finishing. |
+| **Partial** | Some jobs succeeded and some failed — for example one region's checks. You have usable results but incomplete coverage, so it is deliberately not shown as a clean green run. Check the run's **warnings**. |
+| **Failed** | Every job failed — almost always a credentials or permissions problem. |
+| **Cancelled** | Stopped before finishing (via the API `DELETE /api/cloud-scans/{run_id}`). |
 
-### Progress
+While a run is in progress you see an **overall percentage** plus separate discovery and compliance progress, and an **estimated completion** that scales with the number of regions (about 15 minutes per region for a full scan, 8 for other types). A finished run reports **total assets**, **total findings** and the **breakdown by severity**.
 
-While a scan is running you'll see:
-
-- An **overall percentage** for the whole scan, plus separate progress for the **discovery** and **compliance** stages.
-- An **estimated completion time**. For AWS this scales with how many regions you're scanning, so a full multi-region scan shows a longer estimate than a quick single-region one.
-
-### Per-job detail
-
-You can expand a scan to see each job's own **status** and **progress**, along with running counts of **assets discovered** and **findings**. For AWS this is a per-region breakdown, so it's easy to spot that one region is lagging or that a specific region failed; for GCP and Azure the scan runs as a single project/subscription job.
-
-### Summary and warnings
-
-When a scan finishes it reports a **summary**: total assets discovered, total findings, and a breakdown of findings by severity (**critical, high, medium, low**).
-
-If the platform hits a permission gap or an API limit in your account, it surfaces a **warning** on the scan rather than failing silently — so a missing read permission shows up as an explicit note instead of a quietly incomplete result.
-
-:::warning[A "Partial" result usually means permissions or limits]
-The most common causes of partial scans are **missing read permissions** for a service or region, or **API rate limits** in your cloud account. Check the scan's warnings first, then revisit the IAM role or service account you set up when [connecting the account](./connecting-accounts.md).
+:::warning[Partial usually means permissions or limits]
+Missing read permission for a service or region, or API throttling in your account, are the usual causes. The run's warnings say which; fix the role or service account described in [Required Permissions](./permissions.md), then re-scan.
 :::
 
 ## Scheduled scans
 
-You don't have to run scans by hand. The platform can keep posture current automatically:
+Every account gets two schedules the moment it connects:
 
-- **Daily** — a lightweight **incremental** scan of your active accounts.
-- **Weekly** — a complete **full** scan that re-runs all checks.
+| Schedule | Cadence | Purpose |
+| --- | --- | --- |
+| **Daily Cloud Incremental Scan** | Every day 02:00 UTC | Keeps findings and inventory current. |
+| **Weekly Cloud Full Scan** | Sunday 03:00 UTC | The baseline that catches drift and deletions. |
 
-Scheduled runs honor the same "one scan per account at a time" rule and skip any account that was scanned very recently, so they never pile up. You can manage timing and other automated runs from the **Unified Scheduler**.
+Manage them in **Unified Scheduler** — retime, pause or resume per account. Scheduled runs honour the one-scan-per-account rule and skip an account that was scanned very recently (within 22 hours for incremental, 6 days for full), so overlapping triggers never pile up. Large fleets are dispatched with a staggered start rather than all at once.
+
+If an account's scheduled scans fail **three times in a row**, further scheduled runs are paused for that account until a scan succeeds or its credentials are updated — see [Managing Connected Accounts](./account-management.md#account-status-and-health).
 
 ## Related
 
-- [Connecting Cloud Accounts](./connecting-accounts.md) — set up the read-only access scans rely on.
-- [Prowler Integration](./prowler-integration.md) — the compliance checks behind your findings.
-- [Asset Inventory](./asset-inventory.md) — where discovered resources show up.
-- [Account Management](./account-management.md) — manage your connected cloud accounts.
+- [Reviewing & Triaging Findings](./findings.md) — what to do with the results.
+- [Compliance & Benchmark Checks](./prowler-integration.md) — the checks behind the findings.
+- [Cloud Security API](./api.md#scans) — start, poll and cancel scans programmatically.
+- [Troubleshooting](./troubleshooting.md#scans) — scans that will not start, stay queued, or come back partial.
