@@ -15,8 +15,8 @@ Typical role: **Security Manager** — Stages 1 and 5 involve connecting account
 
 1. [Connecting Cloud Accounts](../cloud-security/connecting-accounts.md) — AWS, GCP, and Azure with read-only access and copy-paste Terraform.
 2. [Required Permissions](../cloud-security/permissions.md) — the exact per-provider permission sets, and how granting at the org level covers future accounts.
-3. [Container Security](../security-scanning/container-security.md) — connect ECR, Artifact Registry/GCR, ACR, or Docker Hub.
-4. [Kubernetes Security](../security-scanning/kubernetes-security.md) — clusters auto-discovered from cloud accounts, or onboarded via read-only kubeconfig.
+3. [Container Security](../security-scanning/containers/index.md) — connect ECR, Artifact Registry/GCR, ACR, or Docker Hub.
+4. [Kubernetes Security](../security-scanning/kubernetes/index.md) — clusters auto-discovered from cloud accounts, or onboarded via read-only kubeconfig.
 
 **You can now:** see your estate in [Asset Inventory](../cloud-security/asset-inventory.md).
 
@@ -32,9 +32,8 @@ Typical role: **Security Manager** — Stages 1 and 5 involve connecting account
 ## Stage 3 — Work findings like a queue
 
 1. [Vulnerability & Risk overview](../vulnerability-risk/index.md) — the detection-to-remediation lifecycle.
-2. [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) — deduplication, occurrences, lifecycle statuses, and the prioritization signals: CVSS severity, EPSS, CISA KEV, and P0–P4 priority rank.
-3. [Business Impact Analysis](../vulnerability-risk/business-impact-analysis.md) — add asset criticality so scores reflect *your* business, not just CVSS.
-4. [Risk Register](../vulnerability-risk/risk-register.md) — promote what matters into governed risks with owners and treatment plans.
+2. [Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx) — deduplication, occurrences, lifecycle statuses, and the prioritization signals: CVSS severity, EPSS, CISA KEV, and P0–P4 priority rank.
+4. [Risk Register](../vulnerability-risk/risk-management/index.md) — promote what matters into governed risks with owners and treatment plans.
 
 **You can now:** answer "what are our ten most important findings, and why those?"
 
@@ -43,7 +42,7 @@ Typical role: **Security Manager** — Stages 1 and 5 involve connecting account
 1. [SLA Management](../vulnerability-risk/sla-management.md) — policies by severity and environment, breach dashboard, escalation. Use **Create Default Policies** to start.
 2. [Third-Party Integrations](../integrations/third-party.md) — Jira/ServiceNow with two-way status sync.
 3. [Notifications](../integrations/notifications.md) — Slack/Teams/email routing rules so critical findings interrupt someone.
-4. **Verify fixes with scans, not tickets:** a finding only reaches **Verified** when a follow-up scan no longer detects it — and a finding that comes back is automatically **Reopened**. This behavior is documented in [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx).
+4. **Verify fixes with scans, not tickets:** a finding only reaches **Verified** when a follow-up scan no longer detects it — and a finding that comes back is automatically **Reopened**. This behavior is documented in [Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx).
 
 **You can now:** see every finding currently past its SLA on the Breach Dashboard, and prove closures with scan evidence.
 

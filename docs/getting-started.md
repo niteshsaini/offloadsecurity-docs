@@ -102,7 +102,7 @@ Start a cloud scan at any time (an initial scan may already have started on conn
 - **Verify:** on the **Scans** page the status shows Completed with a finding count — open it to see the results.
 
 ### Step 3 — Understand a finding
-Open **[Vulnerability Management](./vulnerability-risk/vulnerability-management.mdx)** and select a finding.
+Open **[Vulnerability Management](./vulnerability-risk/vulnerability-management/index.mdx)** and select a finding.
 - **Expected result:** the finding shows its severity, the affected resource, remediation guidance, and exploit context (CISA KEV / EPSS where applicable).
 - **Verify:** you can see the affected asset and a concrete remediation step — and the same issue found by two scanners appears as **one** deduplicated record.
 

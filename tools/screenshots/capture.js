@@ -1,7 +1,7 @@
 // Docs screenshot harness. Usage:
 //   SESSION_ID=... node capture.js <plan.json> <outDir>
 // plan.json = [{ name, url, clicks?: [text|{selector}|{text,nth}], waitFor?: text, scrollTo?: text, fullPage?, clip?, delay? }]
-const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'playwright');
+const { chromium } = require('/Users/nitesh.saini/offload-cspm/frontend/node_modules/playwright');
 const fs = require('fs'); const path = require('path');
 
 const BASE = process.env.BASE_URL || 'http://localhost:3001';
@@ -60,7 +60,16 @@ const user = {"user_id":"b54cf4e7-3434-4ab4-aa74-632f23b92a2b","email":"admin@of
       }
       if (step.waitFor) await page.getByText(step.waitFor).first().waitFor({ timeout: 15000 }).catch(() => console.log('  (waitFor timed out:', step.waitFor, ')'));
       if (step.scrollTo) { await page.getByText(step.scrollTo).first().scrollIntoViewIfNeeded(); await page.waitForTimeout(400); }
-      if (step.scrollY) { await page.evaluate(y => window.scrollTo(0, y), step.scrollY); await page.waitForTimeout(400); }
+      if (step.scrollY) {
+        // Scroll the window AND the tallest scrollable container (app layouts often scroll an inner main pane).
+        await page.evaluate(y => {
+          window.scrollTo(0, y);
+          let best = null, span = 0;
+          document.querySelectorAll('*').forEach(el => { const s = el.scrollHeight - el.clientHeight; if (s > span && getComputedStyle(el).overflowY !== 'visible') { span = s; best = el; } });
+          if (best) best.scrollTop = y;
+        }, step.scrollY);
+        await page.waitForTimeout(500);
+      }
       if (step.hideSidebar) await page.evaluate(() => { const s = document.querySelector('aside, nav[class*="sidebar"], [class*="Sidebar"]'); if (s) s.style.display = 'none'; });
       const file = path.join(outDir, step.name + '.png');
       if (step.clipSelector) {

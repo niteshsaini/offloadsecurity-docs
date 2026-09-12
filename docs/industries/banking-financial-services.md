@@ -13,7 +13,7 @@ Offload Security is built for exactly this reality: a single platform that unifi
 ## Why financial institutions choose Offload Security
 
 ### 1. Risk visibility across a hybrid estate
-A bank's risk doesn't live in one place. It's spread across cloud workloads, internet-facing applications, internal core-banking and back-office systems, employee endpoints, and third-party connections. Offload Security correlates findings from all of them into **one risk picture** — so the CISO and the board can see total exposure and whether it's trending down, not a partial view assembled from a dozen tools. Findings promote automatically into a unified **[Risk Register](../vulnerability-risk/risk-register.md)** with treatment plans and SLAs, giving risk committees a live, owned, and tracked view.
+A bank's risk doesn't live in one place. It's spread across cloud workloads, internet-facing applications, internal core-banking and back-office systems, employee endpoints, and third-party connections. Offload Security correlates findings from all of them into **one risk picture** — so the CISO and the board can see total exposure and whether it's trending down, not a partial view assembled from a dozen tools. Findings promote automatically into a unified **[Risk Register](../vulnerability-risk/risk-management/index.md)** with treatment plans and SLAs, giving risk committees a live, owned, and tracked view.
 
 ### 2. Compliance readiness, continuously
 Financial institutions carry a heavy compliance load — **PCI-DSS** for card data, **SOC 2** and **ISO 27001** for assurance, **NIST CSF** for program maturity, plus regional and central-bank mandates and data-protection law. The platform tracks these frameworks with **control status and drift detection**, so compliance is a live state you monitor — not a point-in-time scramble. See **[Compliance & GRC](../compliance/index.md)**.
@@ -22,7 +22,7 @@ Financial institutions carry a heavy compliance load — **PCI-DSS** for card da
 Audits and regulatory examinations are relentless in finance. Offload Security captures **evidence continuously** and maps it to the relevant controls automatically, storing it in an auditable vault. When an examiner or auditor asks for proof, producing the package is a click — not weeks of chasing owners and screenshots. See **[Evidence Hub](../compliance/evidence-hub.md)**.
 
 ### 4. Vulnerability management with accountability
-Regulators expect demonstrable, timely remediation. The unified **[Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)** queue deduplicates findings from cloud, application, code, container, and internal-host scans; risk-scores them; and tracks them to **SLA** — producing exactly the evidence of a functioning remediation program that examinations require.
+Regulators expect demonstrable, timely remediation. The unified **[Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx)** queue deduplicates findings from cloud, application, code, container, and internal-host scans; risk-scores them; and tracks them to **SLA** — producing exactly the evidence of a functioning remediation program that examinations require.
 
 ### 5. Cloud security posture done right
 As banks modernize onto AWS, Azure, and GCP, misconfiguration is the leading cause of cloud incidents. **[Cloud Security (CSPM)](../cloud-security/index.md)** continuously assesses cloud accounts, ingests the cloud providers' own findings, and detects drift — keeping the modern side of the estate as governed as the traditional side.
@@ -45,10 +45,10 @@ Ultimately, a bank needs **one source of truth** its regulators, auditors, board
 
 | Financial-sector need | How Offload Security delivers it |
 |---|---|
-| **Risk visibility** | Correlated findings from every source → unified [Risk Register](../vulnerability-risk/risk-register.md), trended over time |
+| **Risk visibility** | Correlated findings from every source → unified [Risk Register](../vulnerability-risk/risk-management/index.md), trended over time |
 | **Compliance readiness** | Live tracking of PCI-DSS, SOC 2, ISO 27001, NIST CSF with drift detection — [Compliance](../compliance/index.md) |
 | **Audit evidence** | Continuous, control-mapped [evidence vault](../compliance/evidence-hub.md) and on-demand [reports](../vulnerability-risk/index.md) |
-| **Vulnerability management** | Deduplicated, risk-scored, SLA-tracked [queue](../vulnerability-risk/vulnerability-management.mdx) across cloud and on-prem |
+| **Vulnerability management** | Deduplicated, risk-scored, SLA-tracked [queue](../vulnerability-risk/vulnerability-management/index.mdx) across cloud and on-prem |
 | **Cloud posture** | Continuous CSPM for [AWS, Azure, GCP](../cloud-security/index.md) with drift detection |
 | **On-prem support** | [Internal scanning](../on-premises/index.mdx), [OpenVAS](../on-premises/openvas-scanning.md), private [app/API testing](../on-premises/private-infrastructure-scanning.md) |
 | **SIEM integration** | [Wazuh](../on-premises/wazuh-integration.md) endpoint/SIEM visibility + [SIEM/SOAR integrations](../integrations/third-party.md) |

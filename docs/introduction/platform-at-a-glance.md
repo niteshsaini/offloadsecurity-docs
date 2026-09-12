@@ -61,19 +61,19 @@ Findings from every source converge in **Vulnerability Management**, resolve aga
 |---|---|---|
 | **Cloud Security (CSPM)** | Continuous misconfiguration assessment of AWS, Azure, and GCP, with native findings ingestion and drift detection. | [Cloud Security](../cloud-security/index.md) |
 | **Application Security** | Web (OWASP ZAP, Nuclei), API, network (Nmap), and SSL/TLS testing of your applications and services. | [App & Infrastructure Scanning](../security-scanning/index.md) |
-| **SAST & Code Security** | Static analysis, secrets detection, and IaC scanning of your source and pipelines. | [API & Code Scanning](../security-scanning/api-code-scanning.md) |
-| **SBOM & License Scanning** | Software bill-of-materials generation and open-source **license compliance** across code and container images. | [Container Security](../security-scanning/container-security.md) |
-| **Container Security** | Image scanning across ECR, GCR, ACR, and Docker Hub, with SBOMs, signature verification, and layer secret detection. | [Container Security](../security-scanning/container-security.md) |
-| **Kubernetes Security** | Cluster scanning (kube-bench, Polaris, Kubescape, Trivy) mapped to the MITRE ATT&CK Container Matrix. | [Kubernetes Security](../security-scanning/kubernetes-security.md) |
+| **SAST & Code Security** | Static analysis, secrets detection, and IaC scanning of your source and pipelines. | [API & Code Scanning](../security-scanning/code/index.md) |
+| **SBOM & License Scanning** | Software bill-of-materials generation and open-source **license compliance** across code and container images. | [Container Security](../security-scanning/containers/index.md) |
+| **Container Security** | Image scanning across ECR, GCR, ACR, and Docker Hub, with SBOMs, signature verification, and layer secret detection. | [Container Security](../security-scanning/containers/index.md) |
+| **Kubernetes Security** | Cluster scanning (kube-bench, Polaris, Kubescape, Trivy) mapped to the MITRE ATT&CK Container Matrix. | [Kubernetes Security](../security-scanning/kubernetes/index.md) |
 | **On-Premises Scanning** | Internal network visibility, private URL/API scanning, OpenVAS vulnerability scanning, and Wazuh endpoint/SIEM data — for assets that never leave your network. | [On-Premises](../on-premises/index.mdx) |
 
 ### Unify, prioritize & govern
 
 | Module | What it does | Read more |
 |---|---|---|
-| **Vulnerability Management** | The unified queue: triage, risk scoring, deduplication, SLA tracking, and remediation guidance across every source. | [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) |
+| **Vulnerability Management** | The unified queue: triage, risk scoring, deduplication, SLA tracking, and remediation guidance across every source. | [Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx) |
 | **Asset Inventory** | A live catalog of resources across clouds, accounts, regions, and the internal network. | [Asset Inventory](../cloud-security/asset-inventory.md) |
-| **Risk Register** | An enterprise risk register auto-minted from findings, with treatment plans and SLAs. | [Risk Register](../vulnerability-risk/risk-register.md) |
+| **Risk Register** | An enterprise risk register auto-minted from findings, with treatment plans and SLAs. | [Risk Register](../vulnerability-risk/risk-management/index.md) |
 | **Compliance & GRC** | Framework tracking (SOC 2, ISO 27001, NIST CSF, PCI-DSS, and more), guided assessments, and drift detection. | [Compliance](../compliance/index.md) |
 | **Evidence Management** | An auditable evidence vault, captured as work happens and mapped to controls. | [Evidence Hub](../compliance/evidence-hub.md) |
 | **Alerts** | Centralized, deduplicated alerting across sources, routable to your notification and SIEM channels. | [Notifications](../integrations/notifications.md) |

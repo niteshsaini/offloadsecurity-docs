@@ -20,9 +20,9 @@ These are recommended defaults for a typical production deployment, not universa
 | Surface | Recommendation |
 |---|---|
 | Cloud accounts | Connect **all** production accounts/projects/subscriptions, not a sample. Grant access at the AWS Organization / GCP org node / Azure management group so future accounts are covered by one binding — [Required Permissions](../cloud-security/permissions.md). |
-| Container registries | Every registry that feeds production deploys — [Container Security](../security-scanning/container-security.md). |
-| Kubernetes | All production clusters; EKS/GKE/AKS are auto-discovered from connected cloud accounts — [Kubernetes Security](../security-scanning/kubernetes-security.md). |
-| Code repositories | Every repo that ships to production — [Code Command Center](../security-scanning/api-code-scanning.md). |
+| Container registries | Every registry that feeds production deploys — [Container Security](../security-scanning/containers/index.md). |
+| Kubernetes | All production clusters; EKS/GKE/AKS are auto-discovered from connected cloud accounts — [Kubernetes Security](../security-scanning/kubernetes/index.md). |
+| Code repositories | Every repo that ships to production — [Code Command Center](../security-scanning/code/index.md). |
 | Web apps & APIs | Your externally reachable applications and APIs — [Native Scans](../security-scanning/native-scans.md). |
 | Internal infrastructure | If you have significant on-prem estate, see [On-Premises & Private Infrastructure](../on-premises/index.mdx). |
 
@@ -59,7 +59,7 @@ Then:
 
 - Configure escalation rules so an approaching deadline and an actual breach each notify the right people automatically.
 - Treat the **Breach Dashboard** as your weekly operational health check.
-- Rely on scan-verified closure: a finding reaches **Verified** only when a follow-up scan no longer detects it, and reappearing findings are automatically **Reopened** — a closed Jira ticket is not proof of a fix ([Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)).
+- Rely on scan-verified closure: a finding reaches **Verified** only when a follow-up scan no longer detects it, and reappearing findings are automatically **Reopened** — a closed Jira ticket is not proof of a fix ([Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx)).
 
 ## Alerting & ticketing
 

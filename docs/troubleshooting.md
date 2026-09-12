@@ -103,7 +103,7 @@ The image name or tag doesn't resolve.
 
 **2. Private registry not authenticated.**
 Quick Scan works for **public** images with no setup, but a **private** image needs access.
-- *Fix:* Connect the registry first on the **Cloud Registries** tab (or connect the underlying AWS/GCP/Azure account, which lets the platform discover and pull from ECR, Artifact Registry, and ACR automatically). For Docker Hub, provide a username and access token. See [Container Security](./security-scanning/container-security.md).
+- *Fix:* Connect the registry first on the **Cloud Registries** tab (or connect the underlying AWS/GCP/Azure account, which lets the platform discover and pull from ECR, Artifact Registry, and ACR automatically). For Docker Hub, provide a username and access token. See [Container Security](./security-scanning/containers/index.md).
 
 **3. Wrong account scope (`cloud_account_id`).**
 When scanning a registry tied to a cloud account, the scan must reference the correct connected account.
@@ -151,6 +151,6 @@ Create, scope, rotate, and IP-restrict API keys under **Team Management**. For s
 
 - [Connecting Cloud Accounts](./cloud-security/connecting-accounts.md) — credentials, permissions, and the external-ID setup for AWS, GCP, and Azure.
 - [How Cloud Scans Run](./cloud-security/scan-orchestration.md) — scan statuses, the meaning of "Partial," and per-region progress.
-- [Container Security](./security-scanning/container-security.md) — scanning images from public and private registries.
+- [Container Security](./security-scanning/containers/index.md) — scanning images from public and private registries.
 - [Scan Management & Scheduling](./security-scanning/scan-management.md) — scan history, re-running, scheduling, and retention.
 - [Authentication & Access](./authentication/index.md) — API keys, teams, and how access is enforced.

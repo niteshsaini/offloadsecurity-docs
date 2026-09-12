@@ -152,7 +152,7 @@ fi
 The results payload includes `status`, `findings_count`, `findings_by_severity`, `gate_passed`, `fail_on_severity`, your `pipeline_context`, and the full `result` object.
 
 :::note[Container image policies]
-For `container_image` scans, any **enforce-mode** image policies configured for your team are evaluated against the findings, and a failing policy also sets `gate_passed=false`. Audit-mode policies are recorded but don't fail the gate. See **[Container Security](./security-scanning/container-security.md)**.
+For `container_image` scans, any **enforce-mode** image policies configured for your team are evaluated against the findings, and a failing policy also sets `gate_passed=false`. Audit-mode policies are recorded but don't fail the gate. See **[Container Security](./security-scanning/containers/index.md)**.
 :::
 
 ### Example: minimal pipeline step
@@ -337,8 +337,8 @@ Because the App creates a GitHub **check** on each pull request, you can mark th
 Scans triggered from CI/CD are first-class citizens in the platform:
 
 - They appear in your scan history and on the **Dashboard**, scoped to your active team.
-- Findings flow into **[Vulnerability Management](./vulnerability-risk/vulnerability-management.mdx)** for triage and SLA tracking.
-- Significant findings can be promoted to the **[Risk Register](./vulnerability-risk/risk-register.md)** and rolled into reports.
+- Findings flow into **[Vulnerability Management](./vulnerability-risk/vulnerability-management/index.mdx)** for triage and SLA tracking.
+- Significant findings can be promoted to the **[Risk Register](./vulnerability-risk/risk-management/index.md)** and rolled into reports.
 
 ## Troubleshooting
 
@@ -353,6 +353,6 @@ Scans triggered from CI/CD are first-class citizens in the platform:
 ## Related
 
 - **[Scan Management](./security-scanning/scan-management.md)** — review, filter, and re-run scans in the UI.
-- **[Container Security](./security-scanning/container-security.md)** — image scanning, SBOMs, and image policies.
-- **[API & Code Scanning](./security-scanning/api-code-scanning.md)** — SAST, secrets, dependency, and IaC scanning details.
-- **[Vulnerability Management](./vulnerability-risk/vulnerability-management.mdx)** — work the findings your pipeline produces.
+- **[Container Security](./security-scanning/containers/index.md)** — image scanning, SBOMs, and image policies.
+- **[API & Code Scanning](./security-scanning/code/index.md)** — SAST, secrets, dependency, and IaC scanning details.
+- **[Vulnerability Management](./vulnerability-risk/vulnerability-management/index.mdx)** — work the findings your pipeline produces.

@@ -61,4 +61,4 @@ flowchart LR
 
 - [Container Security](../containers/index.md) — the images running in your clusters.
 - [Attack Path Analysis](../../cloud-security/attack-paths.md) — cluster findings and namespaces become nodes in the security graph.
-- [Vulnerability Management](../../vulnerability-risk/vulnerability-management.mdx) — SLA tracking for Kubernetes findings.
+- [Vulnerability Management](../../vulnerability-risk/vulnerability-management/index.mdx) — SLA tracking for Kubernetes findings.

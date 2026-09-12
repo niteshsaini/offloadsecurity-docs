@@ -6,7 +6,7 @@ sidebar_position: 6
 
 # SonarQube Integration
 
-Connect **SonarQube** to pull its static-analysis results into Offload Security's unified data layer. Instead of SonarQube findings staying stranded in their own console, they flow into the platform's code-security and **[Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)** views — deduplicated against native findings and prioritized alongside cloud, container, and runtime risk.
+Connect **SonarQube** to pull its static-analysis results into Offload Security's unified data layer. Instead of SonarQube findings staying stranded in their own console, they flow into the platform's code-security and **[Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx)** views — deduplicated against native findings and prioritized alongside cloud, container, and runtime risk.
 
 ## What it brings in
 
@@ -40,4 +40,4 @@ The integration works with a self-hosted SonarQube server reachable by the platf
 ## Related
 
 - **[Third-Party Integrations](./third-party.md)** — the full catalog, including other code-security tools (Snyk, Checkmarx, Veracode, GitHub CodeQL).
-- **[Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)** — where connected findings are triaged and deduplicated.
+- **[Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx)** — where connected findings are triaged and deduplicated.

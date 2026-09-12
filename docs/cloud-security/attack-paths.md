@@ -39,7 +39,7 @@ The graph is only as complete as the data behind it. Connect cloud accounts, con
 2. **Run Attack Path Analysis.** Start on the **Overview** tile counts, then open **Attack Paths** sorted by risk.
 3. For the top path, check **Choke Points** and **Remediation** — the fix that cuts the most paths is usually cheaper than fixing every finding along one path.
 4. Apply the fix in your cloud, re-scan the account, and re-run the analysis: resolved findings drop out of the graph and the path shortens or disappears.
-5. Promote a path you cannot fix quickly into the [Risk Register](../vulnerability-risk/risk-register.md) so it is tracked and owned.
+5. Promote a path you cannot fix quickly into the [Risk Register](../vulnerability-risk/risk-management/index.md) so it is tracked and owned.
 
 :::tip[Blast radius for incident response]
 During an incident, select the compromised asset in **Blast Radius** to get the list of identities, data stores and networks reachable from it — a ready-made containment scope.
@@ -49,5 +49,5 @@ During an incident, select the compromised asset in **Blast Radius** to get the 
 
 - [Asset Inventory](./asset-inventory.md) — the resource catalog the graph is built from.
 - [Identity & Network Posture](./identity-and-network.md) — IAM analysis populates the identity layer of the graph.
-- [Container Security](../security-scanning/container-security.md) and [Kubernetes Security](../security-scanning/kubernetes-security.md) — the image and cluster layers.
-- [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) — triage the vulnerabilities that appear in paths.
+- [Container Security](../security-scanning/containers/index.md) and [Kubernetes Security](../security-scanning/kubernetes/index.md) — the image and cluster layers.
+- [Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx) — triage the vulnerabilities that appear in paths.
