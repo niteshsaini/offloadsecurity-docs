@@ -1,94 +1,73 @@
 ---
-title: "Running Native Scans"
-sidebar_label: "Native Scans"
+title: "Running Web, API & Host Scans"
+sidebar_label: "Web, API & Host Scans"
 sidebar_position: 2
+description: "Launch a web application, API, network, TLS or reconnaissance scan against a URL or host — with authentication, scan profiles and rate limits — and read the results."
 ---
 
-# Running Native Scans
+# Running Web, API & Host Scans
 
-Native scans run industry-standard security tools against a target you specify — a web app, an API, a host, or a network range — and bring the results back into the platform as findings you can review, prioritize, and track. Everything runs on the platform's own infrastructure: you provide a target and pick a profile, and the platform handles the rest.
+The **Scanning** workspace is where you actively test a target you can reach over the network: a web application, an API, a host, a TLS endpoint or a whole domain. You pick an assessment type, give it a target, optionally authenticate, and the platform runs the right engine in the background and files the results in the [Scan Results hub](./scan-results.md).
 
-![Running a native security scan](/img/screenshots/scans.png)
+**Where:** left navigation → **Scanning** → **New Scan**.
 
-## What it does
+![New Web Vulnerability Scan form: assessment type, target URL, OWASP ZAP configuration (Standard: spider + active, 5–10 min), authenticated-scan toggle and launch button](/img/screenshots/security-scanning/scans-new-scan.webp)
 
-Native scanning gives you one launcher for several proven open-source tools, each focused on a different part of your attack surface:
+## What you can run
 
-| Scan type | Tool | What it checks |
-|---|---|---|
-| **Web Vulnerability** | OWASP ZAP | Web app vulnerabilities — spider crawl plus active testing for issues like injection and cross-site scripting. |
-| **Nuclei Vulnerability** | Nuclei | Fast template-based detection of known CVEs, exposures, and misconfigurations (6000+ templates). |
-| **Security Headers** | Built-in header analyzer | HTTP security headers (HSTS, CSP, X-Frame-Options, and more) with scoring and recommendations. |
-| **Network Discovery** | Nmap | Live hosts, open ports, running services, and OS detection across an IP, hostname, or CIDR range. |
-| **SSL/TLS Security** | testssl.sh | Certificate details, supported protocols and ciphers, and TLS vulnerabilities such as Heartbleed. |
-| **API Security** | Built-in API tester | Endpoint discovery, authentication-bypass checks, injection testing, and business-logic and rate-limiting checks (OWASP API Top 10). |
+| Assessment | What it tests | Engine | Typical time |
+| --- | --- | --- | --- |
+| **Web Vulnerability Scan** | Injection (XSS, SQLi, CSRF), insecure configuration, crawl of SPA routes | OWASP ZAP | Quick 1–2 min (passive) · Standard 5–10 min (spider + active) · Comprehensive 15–20 min (AJAX spider + active) |
+| **Nuclei Vulnerability Scan** | Known CVEs, exposures and misconfigurations from a template library | Nuclei | Quick 1–2 min (critical/high templates) · Standard 3–5 min (all severities, 6000+ templates) · Comprehensive 5–10 min |
+| **Security Headers Check** | HSTS, CSP, X-Frame-Options and the rest, with a 0–100 score and grade | native analyzer | seconds |
+| **SSL/TLS Security Test** | Protocol versions, cipher strength, certificate chain, known TLS weaknesses | testssl.sh | 1–3 min |
+| **Network Discovery** | Ping sweep, top-1000 port scan, service and version detection, OS detection (comprehensive) | Nmap | 1–10 min |
+| **API Security Testing** | OWASP API Top 10 (2023) — BOLA, broken auth, SSRF, misconfiguration — across REST, GraphQL and SOAP | native API scanner | 3–15 min |
+| **API Discovery / Deep Scan** | Find every endpoint (JS crawl, OpenAPI, GraphQL introspection), then test them; upload a spec for deeper coverage | native API scanner | varies |
+| **Domain Scan** | Full reconnaissance and OSINT for a domain — DNS, subdomains, email security, exposed services | native recon | 2–10 min |
+| **Lightweight scans** | Technology fingerprint, WAF detection, subdomain enumeration, known CVEs in the detected stack (NVD + CISA KEV + EPSS) | native analyzers | seconds–minutes |
+| **App Scan** | Everything relevant for one application in a single run with standards mapping and a consolidated report | all of the above | 15–30 min |
 
-When you run several tools together with **App Scan** (below), a few additional lightweight checks run inline against the same target: **WAF detection**, **technology fingerprinting** with a per-technology CVE lookup (matched against NVD, CISA KEV, and EPSS), and — for authenticated runs — **traffic capture** that drives a headless browser through the logged-in app to record the real request surface before testing it.
+## Run a scan
 
-Each scan runs asynchronously: you launch it, it runs in the background, and the results appear on the **Scans** page when it finishes. You can run a single targeted scan, or use **App Scan** to run several tools at once against one URL and get a single consolidated report with a security rating.
+1. Choose the **assessment type**.
+2. Enter the **target** — a full URL (`https://app.example.com`) for web and API scans, a hostname or IP for network and TLS scans, a bare domain for reconnaissance.
+3. Pick a **scan profile** where offered: **Quick** for a fast first look, **Standard** (recommended) for everyday use, **Comprehensive** before a release or audit. The form shows what each profile does and how long it takes for that engine.
+4. Choose a **rate-limit profile** for web and network scans: **gentle** for fragile or production targets, **normal** by default, **aggressive** only for backends you know can take it.
+5. For anything behind a login, **Enable Authenticated Scan** (below).
+6. **Launch.** The scan runs in the background; you can leave the page. It appears immediately under **Running** in the hub and moves to **Completed** (or **Failed** / **Partial** if an engine could not finish).
 
-## How to run a scan
+### Authenticated scans
 
-1. From the dashboard, open the scan launcher (the **Scanning** section, or the **Web Application Security** quick-action card).
-2. Under **Assessment Type**, choose the scan you want to run — for example **Web Vulnerability Scan (OWASP ZAP)** or **Network Discovery (Nmap)**.
-3. Enter the **target**. The field adapts to the scan type:
-   - Web, Nuclei, Security Headers, and API scans expect a full URL, for example `https://example.com`.
-   - Network Discovery accepts an IP, a hostname, or a network range, for example `8.8.8.8`, `example.com`, or `192.168.1.0/24`.
-   - SSL/TLS expects a hostname (for example `example.com`) plus a port (default `443`).
-4. **Pick a profile** (see below) to control how deep and how fast the scan runs.
-5. (Optional) Configure **authentication** so the scanner can reach pages or endpoints behind a login — see the tip below.
-6. Select **Launch** (the button at the bottom of the form). You'll get a confirmation that the scan has started, with a scan ID.
-7. Open the **Scans** page to watch progress and open results once the status shows **Completed**.
+Unauthenticated scans only see what an anonymous visitor sees. To reach the parts of an app that matter, supply credentials:
 
-:::note[Targets you're allowed to scan]
-Only scan systems you own or are explicitly authorized to test. Active scans (ZAP, Nmap, Nuclei) send real traffic to the target.
+| Method | Provide |
+| --- | --- |
+| **Basic Auth** | Username and password |
+| **Form login** | Login URL, username and password (the scanner submits the form and keeps the session) |
+| **Bearer / JWT token** | The token — sent as `Authorization: Bearer …` |
+| **Custom headers** | Any header, for example an API key |
+| **Cookie** | A session cookie string |
+| **Session-based (advanced YAML)** | A session script for multi-step logins |
+
+The platform runs a **pre-scan check** to confirm the credentials actually authenticate before the engine starts, so a failed login shows up as a clear error rather than a suspiciously clean report. Credentials are encrypted at rest and are not written into saved results or reports.
+
+:::tip[Scan a staging copy with production data shape]
+Active scans submit payloads. Point comprehensive web and API scans at a staging environment that mirrors production, and use the **gentle** profile plus a **Quick** or **Standard** scan when production is the only option.
 :::
 
-## Picking a profile
+## Reading a result
 
-Most scans offer a few intensity levels. Heavier profiles find more but take longer:
+Open a run from the hub (**View**) to see the summary — target, type, status, finding count — and the findings: each with a severity, what was observed, and the **fix**. Web-scan findings carry the OWASP category; network findings list host, port, protocol, state and detected service; TLS findings list the protocol or cipher concerned. Export the run as **HTML, PDF or Word**, with screenshots for web scans, or ask for an **AI Summary**. Details in [Scan Results](./scan-results.md).
 
-- **Web Vulnerability (ZAP)** — **Quick** (passive only, ~1–2 min), **Standard** (spider + active, ~5–10 min), or **Comprehensive** (AJAX spider + active, ~15–20 min).
-- **Nuclei** — **Quick** (Critical/High only), **Standard** (all severities, full template set), **Comprehensive** (full coverage), or focused **CVE Detection** / **Misconfiguration** runs.
-- **Network Discovery (Nmap)** — **Ping Sweep** (host discovery), **Port Scan** (top 1000 ports), **Service Detection**, **Comprehensive** (with OS detection), or **Vulnerability Scan**.
-- **SSL/TLS (testssl.sh)** — **Quick**, **Standard**, **Comprehensive**, or **Vulnerability Focus**.
+![ZAP scan result dialog: quick scan of a public site, six header-related findings each with a plain-language fix, and HTML / PDF / DOCX / with-screenshots export buttons](/img/screenshots/security-scanning/scans-result-detail.webp)
 
-:::tip[Start with Standard]
-When in doubt, choose **Standard**. It balances depth and runtime and is the recommended default. Move up to Comprehensive once you've confirmed the target responds well.
-:::
+## Automating these scans
 
-## Reading the results
-
-Open a completed scan from the **Scans** page to see its findings. Results are normalized into a consistent format regardless of which tool produced them, so each finding shows:
-
-- a **severity** — Critical, High, Medium, Low, or Info;
-- a **title** and **description** of the issue;
-- a **recommendation** for how to fix it;
-- the affected target and the tool that reported it.
-
-The scan list shows status (**Completed**, **Running**, **Pending**, or **Failed**), the finding count, and a risk level badge. Findings flow into [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx), where they're deduplicated and can be tracked to remediation.
-
-If you run an **App Scan**, findings from every selected tool are combined into one report, mapped to standards you choose (such as ASVS or the OWASP Top 10), and graded with an overall **security rating (A–F)** so you get a single at-a-glance score for the application.
-
-## Scanning behind a login (authentication)
-
-For web and Nuclei scans you can enable **Authenticated Scan** so the scanner can reach protected pages. Supported methods include:
-
-- **Bearer / JWT token**
-- **Cookie string**
-- **Custom header** (for example an API key header)
-- **Form login** — provide the login URL, the username/password field names, and credentials
-
-Before an authenticated web scan starts, the platform **verifies your credentials against the target**. If they're rejected, the scan is blocked and the reason is shown, so you don't end up with a clean-looking scan that never actually logged in.
-
-:::tip[Run several tools at once]
-Use **Run All Scans** (or **App Scan**) to fire ZAP, Nmap, testssl.sh, Nuclei, and the headers check against a single target in one click, then review everything together.
-:::
+Every assessment is an API call (`POST /api/native-scans/web-vulnerability`, `/network-discovery`, `/ssl-security`, `/security-headers`, `/nuclei/url-scan`, `/api-security-testing`) that returns a `scan_id` you poll — see the [Scanning API](./api.md#web-api--host-scans) and, for pipelines, [CI/CD & Automation](./code/ci-cd-and-automation.md). Recurring runs are configured in [Scan Management & Scheduling](./scan-management.md).
 
 ## Related
 
-- [Quickstart](../getting-started.md) — sign in and find the scan launcher.
-- [API & Code Scanning](./api-code-scanning.md) — deeper API and source-code testing.
-- [Container Security](./container-security.md) — scan container images and registries.
-- [Kubernetes Security](./kubernetes-security.md) — assess your clusters.
-- [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) — triage and track the findings your scans produce.
+- [Scan Results](./scan-results.md) — the hub, reports, re-scan and consolidated reports.
+- [Infra Command Center](./infra-command-center.md) — WAF testing and API load tests.
+- [SSL Certificate Monitoring](../cloud-security/ssl-certificates.md) — continuous expiry tracking, complementing the one-off TLS test.

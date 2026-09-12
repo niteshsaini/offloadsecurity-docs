@@ -1,0 +1,342 @@
+[
+ {
+  "name": "scans-results",
+  "url": "/dashboard?section=scans",
+  "delay": 2500
+ },
+ {
+  "name": "scans-result-detail",
+  "url": "/dashboard?section=scans",
+  "delay": 3000,
+  "clicks": [
+   {
+    "text": "View",
+    "role": "button",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "scans-new-scan",
+  "url": "/dashboard?section=new-scan",
+  "delay": 3000
+ },
+ {
+  "name": "k8s-coverage",
+  "url": "/dashboard?section=kubernetes-security",
+  "delay": 2500
+ },
+ {
+  "name": "k8s-clusters",
+  "url": "/dashboard?section=kubernetes-security",
+  "delay": 2500,
+  "clicks": [
+   "Clusters"
+  ]
+ },
+ {
+  "name": "k8s-add-cluster",
+  "url": "/dashboard?section=kubernetes-security",
+  "delay": 2500,
+  "clicks": [
+   "Clusters",
+   {
+    "text": "Add Cluster",
+    "exact": false
+   }
+  ]
+ },
+ {
+  "name": "k8s-cluster-dashboard",
+  "url": "/dashboard?section=kubernetes-security",
+  "delay": 3500,
+  "clicks": [
+   "Clusters",
+   {
+    "selector": "button:has-text('\ud83d\udcca Dashboard')"
+   }
+  ]
+ },
+ {
+  "name": "k8s-findings",
+  "url": "/dashboard?section=kubernetes-security",
+  "delay": 2500,
+  "clicks": [
+   "Findings"
+  ]
+ },
+ {
+  "name": "k8s-fleet-heatmap",
+  "url": "/dashboard?section=kubernetes-security",
+  "delay": 2500,
+  "clicks": [
+   "Fleet Heatmap"
+  ]
+ },
+ {
+  "name": "k8s-compliance",
+  "url": "/dashboard?section=kubernetes-security",
+  "delay": 4000,
+  "clicks": [
+   "Compliance"
+  ]
+ },
+ {
+  "name": "k8s-rbac-profiles",
+  "url": "/dashboard?section=kubernetes-security",
+  "delay": 2500,
+  "clicks": [
+   "RBAC Profiles"
+  ]
+ },
+ {
+  "name": "ctr-coverage",
+  "url": "/dashboard?section=container-security",
+  "delay": 2500
+ },
+ {
+  "name": "ctr-registries",
+  "url": "/dashboard?section=container-security",
+  "delay": 2500,
+  "clicks": [
+   "Cloud Registries"
+  ]
+ },
+ {
+  "name": "ctr-registry-images",
+  "url": "/dashboard?section=container-security",
+  "delay": 3500,
+  "clicks": [
+   "Cloud Registries",
+   {
+    "text": "Browse",
+    "exact": false,
+    "role": "button",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "ctr-quick-scan",
+  "url": "/dashboard?section=container-security",
+  "delay": 2500,
+  "clicks": [
+   "Quick Scan"
+  ]
+ },
+ {
+  "name": "ctr-scan-results",
+  "url": "/dashboard?section=container-security",
+  "delay": 2500,
+  "clicks": [
+   "Scan Results"
+  ]
+ },
+ {
+  "name": "ctr-scan-detail",
+  "url": "/dashboard?section=container-security",
+  "delay": 3500,
+  "clicks": [
+   "Scan Results",
+   {
+    "text": "View Details",
+    "role": "button",
+    "nth": 0
+   }
+  ],
+  "scrollY": 300
+ },
+ {
+  "name": "ctr-dockerfile-scan",
+  "url": "/dashboard?section=container-security",
+  "delay": 9000,
+  "clicks": [
+   "Dockerfile Scan"
+  ],
+  "actions": [
+   {
+    "fillSelector": {
+     "selector": "textarea",
+     "value": "FROM python:3.9\nCOPY . /app\nWORKDIR /app\nRUN pip install -r requirements.txt\nENV DB_PASSWORD=P@ssw0rd-prod-2024\nEXPOSE 5000\nCMD [\"python\", \"app/main.py\"]"
+    }
+   },
+   {
+    "click": {
+     "text": "Scan Dockerfile",
+     "role": "button"
+    }
+   }
+  ]
+ },
+ {
+  "name": "ctr-image-policies",
+  "url": "/dashboard?section=container-security",
+  "delay": 2500,
+  "clicks": [
+   "Image Policies"
+  ]
+ },
+ {
+  "name": "ctr-webhooks",
+  "url": "/dashboard?section=container-security",
+  "delay": 2500,
+  "clicks": [
+   "Webhooks"
+  ]
+ },
+ {
+  "name": "ctr-sbom",
+  "url": "/dashboard?section=container-security",
+  "delay": 2500,
+  "clicks": [
+   "SBOM"
+  ]
+ },
+ {
+  "name": "ctr-compliance",
+  "url": "/dashboard?section=container-security",
+  "delay": 4000,
+  "clicks": [
+   "Compliance"
+  ],
+  "actions": [
+   {
+    "fillSelector": {
+     "selector": "input[placeholder*='Target']",
+     "value": "nginx:1.25.3"
+    }
+   },
+   {
+    "selectSelector": {
+     "selector": "select",
+     "index": 0,
+     "value": "image"
+    }
+   },
+   {
+    "click": {
+     "text": "Latest",
+     "role": "button"
+    }
+   }
+  ]
+ },
+ {
+  "name": "code-overview",
+  "url": "/dashboard?section=code-command-center",
+  "delay": 3500
+ },
+ {
+  "name": "code-new-scan",
+  "url": "/dashboard?section=code-command-center",
+  "delay": 2500,
+  "clicks": [
+   "New Scan"
+  ]
+ },
+ {
+  "name": "code-findings",
+  "url": "/dashboard?section=code-command-center",
+  "delay": 3500,
+  "clicks": [
+   "Findings"
+  ]
+ },
+ {
+  "name": "code-reports",
+  "url": "/dashboard?section=code-command-center",
+  "delay": 3000,
+  "clicks": [
+   "Reports"
+  ]
+ },
+ {
+  "name": "code-report-detail",
+  "url": "/dashboard?section=code-command-center",
+  "delay": 4000,
+  "clicks": [
+   "Reports",
+   {
+    "text": "payments-api.zip",
+    "exact": false,
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "code-sbom-licenses",
+  "url": "/dashboard?section=code-command-center",
+  "delay": 2500,
+  "clicks": [
+   "SBOM & Licenses"
+  ]
+ },
+ {
+  "name": "code-automation",
+  "url": "/dashboard?section=code-command-center",
+  "delay": 2500,
+  "clicks": [
+   "Automation"
+  ]
+ },
+ {
+  "name": "code-cicd-pipeline",
+  "url": "/dashboard?section=code-command-center",
+  "delay": 2500,
+  "clicks": [
+   "Automation",
+   {
+    "text": "CI/CD Pipeline",
+    "exact": false
+   }
+  ]
+ },
+ {
+  "name": "infra-overview",
+  "url": "/dashboard?section=infra-command-center",
+  "delay": 2500
+ },
+ {
+  "name": "infra-waf-testing",
+  "url": "/dashboard?section=infra-command-center",
+  "delay": 2500,
+  "clicks": [
+   "WAF Testing"
+  ]
+ },
+ {
+  "name": "infra-load-test",
+  "url": "/dashboard?section=infra-command-center",
+  "delay": 2500,
+  "clicks": [
+   "API Load Test"
+  ]
+ },
+ {
+  "name": "infra-github-actions",
+  "url": "/dashboard?section=infra-command-center",
+  "delay": 2500,
+  "clicks": [
+   "GitHub Actions"
+  ]
+ },
+ {
+  "name": "infra-jenkins",
+  "url": "/dashboard?section=infra-command-center",
+  "delay": 2500,
+  "clicks": [
+   "Jenkins"
+  ]
+ },
+ {
+  "name": "k8s-rbac-script",
+  "url": "/dashboard?section=kubernetes-security",
+  "clicks": [
+   "RBAC Profiles",
+   {
+    "selector": "button:has-text(\"Generate Deployment Script\")"
+   }
+  ],
+  "delay": 3000
+ }
+]
