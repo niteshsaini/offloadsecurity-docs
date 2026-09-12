@@ -52,6 +52,8 @@ const user = {"user_id":"b54cf4e7-3434-4ab4-aa74-632f23b92a2b","email":"admin@of
       for (const c of step.clicks || []) { await clickText(c); await settle(step.delay || 1200); }
       for (const a of step.actions || []) {
         if (a.click) { await clickText(a.click); await settle(step.delay || 1200); }
+        else if (a.selectSelector) { await page.locator(a.selectSelector.selector).nth(a.selectSelector.index || 0).selectOption(a.selectSelector.value); await page.waitForTimeout(300); }
+        else if (a.fillSelector) { await page.locator(a.fillSelector.selector).first().fill(a.fillSelector.value); await page.waitForTimeout(300); }
         else if (a.fill) { await page.getByPlaceholder(a.fill.placeholder).first().fill(a.fill.value); await page.waitForTimeout(300); }
         else if (a.check) { await page.getByLabel(a.check, { exact: false }).first().check().catch(async () => { await page.getByText(a.check, { exact: false }).first().click(); }); await page.waitForTimeout(300); }
         else if (a.scrollTop) { await page.evaluate(() => { window.scrollTo(0, 0); document.querySelectorAll('*').forEach(el => { if (el.scrollTop > 0) el.scrollTop = 0; }); }); await page.waitForTimeout(300); }

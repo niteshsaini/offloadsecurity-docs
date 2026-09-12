@@ -56,3 +56,19 @@ Clicks resolve visible `tab` → `button` → `link` roles by accessible name fi
   collection before adding a fixture field.
 - Never capture against production or customer data.
 - Keep filenames stable; docs pages reference them by name.
+
+## Section 2 — App & Infrastructure Scanning (2026-09-12)
+
+`plan-security-scanning.json` captures the Scanning hub, Kubernetes, Container Security, Code Command Center and
+Infra Command Center tabs. Unlike Cloud Security, this section used **real scans** rather than fixtures:
+
+- Current backend source run *inside* the released image (all scanner binaries + `/data` volumes), with the
+  Docker socket group added and a Celery worker for the `container_scans` queue — see the memory note
+  `docs-section-rebuild-program` in the maintainer's Claude memory for the exact `docker run`.
+- Native scans (ZAP quick, Nmap service detection, testssl, security headers), WAF test and load test against
+  `offloadsecurity.com`; container full-analysis of `nginx:1.25.3`, `python:3.9-slim`, `node:18-alpine`, `alpine:3.17`;
+  a code upload-scan of a deliberately vulnerable sample (`payments-api.zip`: SQLi, secrets, old deps, bad Terraform);
+  SBOMs, an image policy from the *Production – Strict* template, and K8s compliance reports per cluster.
+- Existing K8s/registry fixtures had their timestamps shifted to "recent" and registry sync errors cleared.
+
+Steps in the plan use `actions` (fill/select/click) for the Dockerfile scan and the compliance form.

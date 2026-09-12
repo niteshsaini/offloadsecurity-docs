@@ -1,7 +1,8 @@
 ---
 title: "Scan Management & Scheduling"
 sidebar_label: "Scan Management"
-sidebar_position: 6
+sidebar_position: 7
+description: "Schedule recurring scans of every type from templates or custom cron, manage and pause schedules, review scan history, and control result retention."
 ---
 
 # Scan Management & Scheduling
@@ -136,7 +137,7 @@ Once data passes the **Delete** threshold it is removed for good. If you have a 
 ## Related
 
 - **[Native Security Scans (Web, Network, SSL)](./native-scans.md)** — run web, network, and SSL/TLS scans on demand.
-- **[API & Code Security Scanning](./api-code-scanning.md)** — API discovery and source-code analysis.
-- **[Container & Registry Security](./container-security.md)** — scan container images across your registries.
-- **[Kubernetes Security](./kubernetes-security.md)** — cluster posture and CIS benchmark scanning.
+- **[API & Code Security Scanning](./code/index.md)** — API discovery and source-code analysis.
+- **[Container & Registry Security](./containers/index.md)** — scan container images across your registries.
+- **[Kubernetes Security](./kubernetes/index.md)** — cluster posture and CIS benchmark scanning.
 - **[Quickstart](../getting-started.md)** — sign in, tour the dashboard, and learn the Scan → Finding → Risk → Report flow.
