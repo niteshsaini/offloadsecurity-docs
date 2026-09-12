@@ -24,7 +24,7 @@ The platform needs a Kubernetes identity that can **read** the resources it asse
 
 ![RBAC Profiles tab: Minimal (recommended) vs Extended profile cards with security level, and the Minimal profile's permission grant list](/img/screenshots/security-scanning/k8s-rbac-profiles.webp)
 
-Select **Generate Deployment Script**, choose the profile, the **namespace** and the **service account name**, and copy or download the script. Run it with a `kubectl` context that has cluster-admin: it creates the namespace if needed, applies the service account, `ClusterRole` and binding, mints a one-year token (`kubectl create token`, with a token-secret fallback for Kubernetes < 1.24) and prints the **API server URL and token** to paste into *Add Cluster → Service Account Token*. The same `ClusterRole` is listed in [Required Permissions — Bucket B](../../cloud-security/permissions.md#bucket-b--kubernetes-in-cluster-rbac).
+Select **Generate Deployment Script**, choose the profile, the **namespace** and the **service account name**, and copy or download the script. Run it with a `kubectl` context that has cluster-admin: it creates the namespace if needed, applies the service account, `ClusterRole` and binding, creates a long-lived service-account token Secret (falling back to a bound token only if the token controller is disabled) and prints the **API server URL and token** to paste into *Add Cluster → Service Account Token*. The same `ClusterRole` is listed in [Required Permissions — Bucket B](../../cloud-security/permissions.md#bucket-b--kubernetes-in-cluster-rbac).
 
 ![Deployment Script dialog: profile, namespace and service account, the generated bash script, and usage instructions with copy/download](/img/screenshots/security-scanning/k8s-rbac-script.webp)
 
