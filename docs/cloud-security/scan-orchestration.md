@@ -44,7 +44,7 @@ Region precedence is always: **regions you pass explicitly → the account's con
 | **GCP** | Project | One discovery + one compliance job (`global`) | Cloud Asset Inventory and the checks read the whole project; per-region fan-out would repeat identical work. |
 | **Azure** | Subscription | One discovery + one compliance job (`global`) | Resource Graph / ARM enumerate the whole subscription at once. |
 
-Every scan additionally runs two account-wide jobs once: **Kubernetes cluster discovery** (EKS / GKE / AKS) and **container registry discovery** (ECR / Artifact Registry / ACR). Discovered clusters and registries appear in [Kubernetes Security](../security-scanning/kubernetes-security.md) and [Container Security](../security-scanning/container-security.md).
+Every scan additionally runs two account-wide jobs once: **Kubernetes cluster discovery** (EKS / GKE / AKS) and **container registry discovery** (ECR / Artifact Registry / ACR). Discovered clusters and registries appear in [Kubernetes Security](../security-scanning/kubernetes/index.md) and [Container Security](../security-scanning/containers/index.md).
 
 For GCP and Azure, breadth comes from onboarding **more projects or subscriptions** — each scans in parallel with the others. Organization onboarding does that for you ([Connecting Cloud Accounts](./connecting-accounts.md#onboarding-a-gcp-organization)).
 

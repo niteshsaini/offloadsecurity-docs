@@ -59,8 +59,8 @@ Open a report for the detail view:
 
 ## Where code findings go next
 
-- **Vulnerability Management** — SCA and image CVEs appear in the unified view with SLAs and ownership ([Vulnerability Management](../../vulnerability-risk/vulnerability-management.mdx)).
-- **Risk Register** — promote an accepted critical into a tracked risk ([Risk Register](../../vulnerability-risk/risk-register.md)).
+- **Vulnerability Management** — SCA and image CVEs appear in the unified view with SLAs and ownership ([Vulnerability Management](../../vulnerability-risk/vulnerability-management/index.mdx)).
+- **Risk Register** — promote an accepted critical into a tracked risk ([Risk Register](../../vulnerability-risk/risk-management/index.md)).
 - **Release gates** — the same findings drive the pass/fail decision in CI ([CI/CD & Automation](./ci-cd-and-automation.md)).
 
 ## Related

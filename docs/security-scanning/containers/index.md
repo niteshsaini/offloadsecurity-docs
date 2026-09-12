@@ -66,4 +66,4 @@ flowchart LR
 
 - [Kubernetes Security](../kubernetes/index.md) — the clusters those images run in.
 - [Code Command Center](../code/index.md) — scan the image you just built in CI with **Compiled Image Scan**.
-- [Vulnerability Management](../../vulnerability-risk/vulnerability-management.mdx) — SLA tracking for image CVEs.
+- [Vulnerability Management](../../vulnerability-risk/vulnerability-management/index.mdx) — SLA tracking for image CVEs.

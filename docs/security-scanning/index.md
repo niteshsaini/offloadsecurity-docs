@@ -42,7 +42,7 @@ flowchart LR
 
 1. **Scan** — from the UI, on a schedule, or from CI (`scan.sh`, the CLI, or the API).
 2. **Finding** — every engine's output is normalised, deduplicated across runs, and kept with its history; your triage decisions (resolved, false positive, suppressed) survive re-scans.
-3. **Risk** — findings roll into [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) for SLA tracking and into the [Risk Register](../vulnerability-risk/risk-register.md) when they need an owner.
+3. **Risk** — findings roll into [Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx) for SLA tracking and into the [Risk Register](../vulnerability-risk/risk-management/index.md) when they need an owner.
 4. **Report** — per-scan HTML / PDF / Word reports, consolidated reports across scans, and compliance mappings (OWASP, CIS, NIST, PCI DSS, SOC 2).
 
 ## Start here

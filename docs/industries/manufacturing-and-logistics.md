@@ -25,10 +25,10 @@ IT/OT convergence is where much of the new risk sits. Offload Security treats th
 The **[Wazuh integration](../on-premises/wazuh-integration.md)** adds endpoint security events, file-integrity monitoring, and configuration-compliance checks on the servers and workstations that keep operations running — turning silent hosts into monitored ones and feeding detections into centralized alerting.
 
 ### Software and supply-chain security
-Modern manufacturing and logistics run on software — from warehouse-management systems to the containers behind customer portals and EDI. **[Container Security](../security-scanning/container-security.md)** and software bill-of-materials (SBOM) scanning surface vulnerable and improperly licensed components in that software supply chain before they ship.
+Modern manufacturing and logistics run on software — from warehouse-management systems to the containers behind customer portals and EDI. **[Container Security](../security-scanning/containers/index.md)** and software bill-of-materials (SBOM) scanning surface vulnerable and improperly licensed components in that software supply chain before they ship.
 
 ### One view across many locations
-The point of all of this is central governance. **[Centralized Ingestion](../on-premises/centralized-ingestion.md)** unifies every site's findings — internal hosts, endpoints, cloud, and applications — into one inventory, one **[Risk Register](../vulnerability-risk/risk-register.md)**, and one dashboard, so a small team can run security for a large, physically distributed organization.
+The point of all of this is central governance. **[Centralized Ingestion](../on-premises/centralized-ingestion.md)** unifies every site's findings — internal hosts, endpoints, cloud, and applications — into one inventory, one **[Risk Register](../vulnerability-risk/risk-management/index.md)**, and one dashboard, so a small team can run security for a large, physically distributed organization.
 
 ## Mapping needs to capabilities
 
@@ -38,7 +38,7 @@ The point of all of this is central governance. **[Centralized Ingestion](../on-
 | **Internal vulnerability scanning** | [OpenVAS](../on-premises/openvas-scanning.md) authenticated/unauthenticated scans of internal hosts |
 | **OT / IoT risk** | Discovery, monitoring, and careful assessment as first-class inventory |
 | **Endpoint monitoring** | [Wazuh](../on-premises/wazuh-integration.md) events, FIM, and configuration compliance |
-| **Software supply chain** | [Container Security](../security-scanning/container-security.md) + SBOM/license scanning |
+| **Software supply chain** | [Container Security](../security-scanning/containers/index.md) + SBOM/license scanning |
 | **Business continuity** | Prioritized, SLA-tracked remediation to reduce the exposure that causes downtime |
 | **Central governance** | [Centralized ingestion](../on-premises/centralized-ingestion.md) across every location |
 

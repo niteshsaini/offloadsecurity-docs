@@ -107,5 +107,5 @@ curl -s -X POST "$OFFLOAD_HOST/api/k8s/clusters/clus_9f2a/test" \
 
 ## Related
 
-- [Kubernetes Security](../security-scanning/kubernetes-security.md) — what the scans cover
+- [Kubernetes Security](../security-scanning/kubernetes/index.md) — what the scans cover
 - [Required Permissions (GCP)](../cloud-security/permissions.md)

@@ -37,7 +37,7 @@ Typical role: **Compliance Officer**, with **Auditor** accounts for external rev
 
 1. [Evidence Hub](../compliance/evidence-hub.md) — auto-collected evidence with quality scores and validity windows (cloud and scan evidence stays valid 90 days; assessment answers and policy documents, 365), plus manual upload for policies and screenshots.
 2. Run **Collect All**, then work the review queue: approve what's right, reject what isn't, replace what's expired.
-3. Turn material gaps into governed risks in the [Risk Register](../vulnerability-risk/risk-register.md) so they get owners, treatment plans, and SLAs instead of living in a spreadsheet.
+3. Turn material gaps into governed risks in the [Risk Register](../vulnerability-risk/risk-management/index.md) so they get owners, treatment plans, and SLAs instead of living in a spreadsheet.
 
 **You can now:** show, for any control, *why* it has its status — with dated evidence behind it.
 

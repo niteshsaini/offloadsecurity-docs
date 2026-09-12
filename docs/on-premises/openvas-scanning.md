@@ -40,7 +40,7 @@ Scans can be **unauthenticated** (an outside-in view of what's exposed on the ne
 Offload Security connects to your Greenbone/OpenVAS deployment and **verifies connectivity** to it, so OpenVAS becomes part of your overall program rather than a wholly separate tool. You run and review the network scans in OpenVAS/Greenbone, which is where the scan configuration and results live.
 
 :::note[Scope of the integration today]
-This integration establishes and validates the connection to your OpenVAS/Greenbone instance. Automated import of OpenVAS scan results into Offload Security's unified [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) is **not** part of the integration today — OpenVAS remains the system of record for these scans. Wazuh, by contrast, does stream telemetry into the platform (see [Wazuh Integration](./wazuh-integration.md)).
+This integration establishes and validates the connection to your OpenVAS/Greenbone instance. Automated import of OpenVAS scan results into Offload Security's unified [Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx) is **not** part of the integration today — OpenVAS remains the system of record for these scans. Wazuh, by contrast, does stream telemetry into the platform (see [Wazuh Integration](./wazuh-integration.md)).
 :::
 
 ## Setting it up

@@ -30,7 +30,7 @@ Regardless of sector, the same building blocks are recombined to fit:
 - **Cloud + on-premises coverage** — for regulated and enterprise sectors, the ability to govern private infrastructure and endpoints alongside cloud is decisive. See **[On-Premises](../on-premises/index.mdx)**.
 - **Compliance frameworks** — SOC 2, ISO 27001, NIST CSF, PCI-DSS, and sector-specific mappings are tracked with control status and drift detection. See **[Compliance](../compliance/index.md)**.
 - **Continuous audit evidence** — captured as work happens and mapped to controls, so audits stop being fire drills. See **[Evidence Hub](../compliance/evidence-hub.md)**.
-- **Unified risk governance** — findings from every source promote into one **[Risk Register](../vulnerability-risk/risk-register.md)** with treatment plans and SLAs.
+- **Unified risk governance** — findings from every source promote into one **[Risk Register](../vulnerability-risk/risk-management/index.md)** with treatment plans and SLAs.
 - **SIEM and endpoint visibility** — **[Wazuh](../on-premises/wazuh-integration.md)** and **[SIEM integrations](../integrations/third-party.md)** bring security-operations data into the same picture.
 
 :::tip[Start with your regulator, then your estate]

@@ -63,4 +63,4 @@ Findings are **fingerprinted** (rule + file + code context, or package + CVE), s
 
 - [CLI & CI/CD](../../cli-and-cicd.md) — the `scan.sh` script, the CLI and release gates.
 - [Container Security](../containers/index.md) — the images your code becomes.
-- [Vulnerability Management](../../vulnerability-risk/vulnerability-management.mdx) — code findings in the unified view with SLAs.
+- [Vulnerability Management](../../vulnerability-risk/vulnerability-management/index.mdx) — code findings in the unified view with SLAs.
