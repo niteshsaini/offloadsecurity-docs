@@ -1,137 +1,142 @@
 ---
 title: "Notifications"
 sidebar_label: "Notifications"
-sidebar_position: 1
+sidebar_position: 2
+description: "Where alerts go — the in-app notification center, Slack, Microsoft Teams, email (SMTP) and PagerDuty — how each channel is configured, which events fire out of the box, Slack routing rules, and the per-team preferences that decide channels, muted categories and the minimum severity that leaves the platform."
 ---
 
 # Notifications
 
-Notifications keep your team informed the moment something important happens — a new critical finding, a scan that failed, an SLA about to breach, or a change in your compliance posture. Offload Security can deliver these alerts to **Slack**, **email**, **Microsoft Teams**, and your own **webhook endpoints**, and you choose exactly which events trigger an alert on each channel.
+A finding nobody hears about is a finding nobody fixes. Offload Security raises notifications for the events that need a human — new critical and high findings, SLA warnings and breaches, compliance drift, scan and integration failures — and delivers them to the **in-app notification center** always, and to **Slack, Microsoft Teams, email and PagerDuty** when a team connects them. What leaves the platform, and where, is decided per team.
 
-## What it does
+## Channels at a glance
 
-- **Sends alerts to the channels your team already uses** — Slack, email (SMTP), Microsoft Teams, and outbound webhooks for your own automation or SIEM.
-- **Lets you choose what triggers an alert** — by event type (for example, new findings, scan failures, SLA warnings), by severity (critical/high/medium/low/info), and by the part of the platform the event came from (cloud, Kubernetes, registry, code scanning, and more).
-- **Routes the right alert to the right place** — send critical security alerts to one Slack channel and routine scan completions to another.
-- **Shows in-app alerts** in real time in the platform's notification center, so signed-in users see updates without leaving the screen.
-- **Verifies delivery before you rely on it** — every channel has a **test** action, and webhooks keep a delivery log.
+| Channel | Configured where | Receives |
+| --- | --- | --- |
+| **In-app** (bell) | Nothing to configure | Every notification for the team; per-user read / dismiss state |
+| **Slack** | Integrations → **Slack** (incoming webhook) · optional routing rules over the API | Security alerts, scan failures and platform events; per-rule channels by category, severity and source |
+| **Microsoft Teams** | Integrations → **Microsoft Teams** (incoming webhook) | Security alerts as cards |
+| **Email (SMTP)** | Integrations → **Email (SMTP)**, or the deployment's `SMTP_*` environment | Alerts to team members' addresses, scheduled reports, invitations, assessment reminders |
+| **PagerDuty** | Integrations → **PagerDuty** (Events API v2 integration key) | Incidents for alerts, once the team has connected it |
+| **Webhooks** | API — see [Webhooks](./webhooks.md) | Signed JSON for every platform event you subscribe to |
 
-Notifications are **team-scoped**: each team configures its own channels and rules, and only sees its own alerts. Connection details and secrets are stored **encrypted**.
+All channels are **team-scoped**: a webhook or mail server connected by one team is never used for another team's notifications, and a notification without a team context (platform housekeeping) can only use the deployment's environment-level channels.
 
 :::note[Who can configure this]
-Setting up channels and rules requires the **Manage Integrations** permission (Admins have it by default). See **[Roles & Team Management](../authentication/rbac-team-management.md)**.
+Connecting channels and changing team preferences require **Manage Integrations**. Every member can read their notifications and set their own opt-out.
 :::
 
-## Notification channels
+## What fires out of the box
 
-| Channel | How alerts arrive | Best for |
-|---|---|---|
-| **Slack** | Posts a message to a Slack channel via an incoming webhook | Team-wide, real-time alerting |
-| **Email (SMTP)** | Sends email through your mail server | Digests, audit trails, recipients without Slack |
-| **Microsoft Teams** | Posts an Adaptive Card to a Teams channel via a webhook | Teams-based organizations |
-| **Webhooks** | Sends a signed JSON payload to a URL you control | SIEM/SOAR, ticketing, and custom automation |
-| **In-app** | Appears in the notification center inside the platform | Signed-in users working in the UI |
+Without any rule or preference, a team receives:
 
-## How to set up Slack
+| Event | Condition | Channels |
+| --- | --- | --- |
+| **Security alert** (new or reopened) | Severity **high or above** — the threshold is `alerts.min_severity` in the team's preferences, `ALERT_NOTIFY_MIN_SEVERITY` for the deployment | In-app, Slack, Teams — and PagerDuty / webhook when the team has enabled them |
+| **New critical / high finding** | From cloud scans and real-time cloud events | In-app and email to the team's members; a Slack `security_alert`; for **critical**, a Jira ticket when Jira is connected |
+| **SLA warning / breach** | From [SLA Management](../vulnerability-risk/sla-management.md) | In-app, email |
+| **Compliance drift / threshold breached** | From [Drift Detection](../compliance/drift-detection.md) | In-app, email |
+| **Scan failed** | Failure classified (connectivity, credentials, tool error, timeout, permission) with a remediation hint | In-app, email, Slack |
+| **Platform event** — integration unhealthy, certificate expiring, worker down | Raised by the health checks and monitors | In-app always; Slack as `system_error` (critical / high) or `system_notification`; email to `ADMIN_EMAIL` for critical / high |
 
-1. In Slack, create an **Incoming Webhook** for the channel you want alerts in, and copy its webhook URL.
-2. In the platform, open **Integrations**, find **Slack**, and select **Connect**.
-3. Paste the **webhook URL**, then choose **Test Connection** to send a test message to the channel.
-4. Select **Save Configuration**.
+Two things follow from the table. **Teams receives the alert stream** (findings, SLA, drift all surface as alerts), not the platform-event stream — use Slack or a webhook for operational noise. And email respects each member's opt-out; the bell is the place everyone sees everything.
 
-### Route specific alerts to specific channels
+## The in-app notification center
 
-For finer control, you can add **routing rules** so different kinds of alerts land in different Slack channels. Each rule maps a combination of category, severity, and source to a channel's webhook:
+**Where:** the bell in the top bar; the badge is the unread count.
 
-- **Category** — choose one:
-  - **Security Alerts** — findings from cloud, Kubernetes, registry, and code scanning.
-  - **System Notifications** — scan completions, scheduled-job results, and configuration changes.
-  - **System Errors** — service issues, task failures, and connectivity problems.
-- **Severities** *(optional)* — limit the rule to specific severities (`critical`, `high`, `medium`, `low`, `info`). Leave empty to match all.
-- **Sources** *(optional)* — limit the rule to specific modules (for example, `cspm`, `kubernetes`, `registry`, `code_scan`, `compliance`). Leave empty to match all.
-- **Channel** — the Slack webhook URL and a display name (for example, `#security-critical`).
+Every notification for the team is listed newest first with its priority, title, message and — when there is somewhere to go — an action link. **Mark read**, **mark all read** and **dismiss** are per user, so one analyst clearing the list does not clear it for the team. Notifications expire after their retention window; the API (`GET /api/notifications?unread_only=true`) returns the same list for scripts and dashboards.
 
-**Example:** send only critical and high security alerts to `#security-critical` by creating a rule with category **Security Alerts**, severities `critical, high`, and that channel's webhook.
+## Slack
 
-:::tip[Default channel]
-If no rule matches an alert, it goes to your default Slack channel (configured during setup). Use rules to peel off high-priority alerts, and let everything else fall through to the default.
+**Connect:** Integrations → **Slack** → **Connect** → paste the **incoming webhook URL** (from Slack's *Incoming Webhooks* app) and optionally a default channel name. The connection test **posts a message to the channel** — if it does not arrive, the webhook is wrong, and the test says so (`Webhook returned HTTP 404: no_service`). Webhook URLs must be `https://hooks.slack.com/…` (or a host you allow with `SLACK_WEBHOOK_ALLOWED_HOSTS`).
+
+That webhook is the **default channel**: every Slack-bound notification for the team goes there unless a routing rule claims it.
+
+### Routing rules
+
+Routing rules send different classes of notification to different Slack channels. They are managed over the API today (`/api/notifications/slack/routing`); the fields:
+
+| Field | Values |
+| --- | --- |
+| `name` | Label for the rule |
+| `category` | `security_alert` (findings from cloud, Kubernetes, registry and code scanning) · `system_notification` (scan completions, scheduled-job results, configuration changes) · `system_error` (service degradation, task failures, connectivity) |
+| `severities` | Optional list — `critical`, `high`, `medium`, `low`, `info`; empty matches all |
+| `sources` | Optional list of modules — `cspm`, `kubernetes`, `container_security`, `registry`, `code_scan`, `iac_scan`, `compliance`, `sla`, `threat_intelligence`, `vulnerability`, `integration`, `system`, … (`GET /api/notifications/slack/categories` lists them) |
+| `webhook_url` · `channel_name` | The target channel's incoming webhook and display name |
+
+```bash
+curl -X POST "$OFFLOAD_HOST/api/notifications/slack/routing" \
+  -H "X-API-Key: $OFFLOAD_API_KEY" -H "Content-Type: application/json" \
+  -d '{"name":"Critical security","category":"security_alert",
+       "severities":["critical","high"],
+       "webhook_url":"https://hooks.slack.com/services/T000/B000/XXXX",
+       "channel_name":"#security-critical"}'
+```
+
+A notification is matched against the team's enabled rules — the most specific rule wins (category + severity + source over category + severity over category + source over category alone) — and anything unmatched falls back to the default channel. `POST …/slack/test` `{webhook_url, channel_name}` posts a test message; `GET …/slack/status` reports whether a default webhook is configured, the rule count and the channels in use. Rules show the webhook **masked**.
+
+:::tip[A three-channel starting point]
+`security_alert` + `critical, high` → `#security-critical`; `system_error` → `#ops-alerts`; everything else falls through to the default `#security-alerts`. Add a `sources: ["kubernetes"]` rule when the platform team wants its own feed.
 :::
 
-## How to set up email (SMTP)
+## Microsoft Teams
 
-1. In **Integrations**, find the **SMTP / Email** option and select **Connect**.
-2. Enter your mail-server details:
+**Connect:** Integrations → **Microsoft Teams** → **Connect** → paste the channel's **incoming webhook URL**. The test posts a message to the channel. Alerts arrive as cards with a *View Details* link back to the platform. There is one Teams channel per team; use Slack routing rules or webhooks when you need fan-out.
 
-   | Field | What to enter |
-   |---|---|
-   | **SMTP Server** | Your mail host, e.g. `smtp.gmail.com` |
-   | **SMTP Port** | Usually `587` for STARTTLS |
-   | **Username / Email** | The account that sends the mail |
-   | **Password / App Password** | The account password, or an app-specific password |
-   | **From Email Address** | The sender shown to recipients (defaults to the username if left blank) |
-   | **Use TLS (STARTTLS)** | Enable for an encrypted connection (recommended) |
+## Email (SMTP)
 
-3. Select **Test Connection** to confirm the platform can reach your mail server and authenticate.
-4. Select **Save Configuration**.
+The platform sends mail through **your** SMTP server. Settings are resolved in this order for each send: the deployment's environment (`SMTP_HOST`/`SMTP_SERVER`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM`), then the **team's** SMTP connection, then the platform setup wizard's.
 
-:::tip[Use an app password]
-Many providers (such as Gmail and Microsoft 365) block plain account passwords for SMTP. Generate an **app password** in your provider's security settings and use that instead.
+**Connect per team:** Integrations → **Email (SMTP)** → **Connect**:
+
+| Field | What to enter |
+| --- | --- |
+| `smtp_host` · `smtp_port` | Your mail host and port (`587` for STARTTLS) |
+| `smtp_username` · `smtp_password` | The sending account — an **app password** for Gmail / Microsoft 365, which refuse plain account passwords |
+| `from_email` | Sender shown to recipients (defaults to the username) |
+| `use_tls` | STARTTLS on the connection (`true` by default; `false` only for an internal relay that has none) |
+
+The connection test connects, negotiates STARTTLS and authenticates; nothing is sent. Recipients are the team's members (per-user opt-out respected); scheduled-report recipients are set on the schedule.
+
+:::warning[Environment wins]
+If the deployment sets `SMTP_HOST`, that server is used for every team and a team's own SMTP connection is ignored — the log says so when it happens. Single-tenant installs usually set the environment; multi-team installs should leave it unset and let each team connect its own.
 :::
 
-## How to set up Microsoft Teams
+## PagerDuty
 
-1. In Teams, add an **Incoming Webhook** connector to the target channel and copy its URL.
-2. In **Integrations**, connect **Microsoft Teams** and paste the **webhook URL**.
-3. Use the **test** action to confirm a card arrives in the channel, then save.
+**Connect:** Integrations → **PagerDuty** → **Connect** → the service's **Events API v2 integration key** and an optional service name. Connecting is the opt-in: from then on the team's alerts are raised as PagerDuty incidents (`critical` → critical, `high` → error, `medium` → warning, `low` → info; de-duplicated per notification). Turn the channel off without removing the connection by setting `channels.pagerduty=false` in the preferences below. The key is not probed on connect — validating an Events API key means triggering an incident — so the first real alert is the first delivery.
 
-## How to set up webhook subscriptions
+## Preferences
 
-Webhooks let you forward platform events as JSON to any HTTPS endpoint — your SIEM, a serverless function, or an internal service.
+Preferences are per team and per user, managed over the API (`/api/notifications/preferences`, **Manage Integrations** for the team scope):
 
-1. In **Integrations**, open **Webhooks** and create a subscription.
-2. Provide:
-   - **Name** — a label for the subscription.
-   - **URL** — the HTTPS endpoint that receives the payload.
-   - **Events** — one or more event types to subscribe to (see below). You can use wildcards such as `finding.*` to match a whole group, or `*` for all events.
-   - **Signing secret** *(optional)* — used to sign each payload (HMAC) so your endpoint can verify it came from Offload Security.
-   - **Custom headers** *(optional)* — extra HTTP headers to include with each delivery.
-3. Use **Test delivery** to send a sample event, and check the **delivery log** to confirm it was received.
+```json
+{
+  "channels": {"email": true, "slack": true, "teams": true, "in_app": true,
+               "webhook": false, "pagerduty": true},
+  "muted_categories": ["scan_failure"],
+  "alerts": {"enabled": true, "min_severity": "high",
+             "channels": {"in_app": true, "slack": true, "teams": true}}
+}
+```
 
-:::warning[Use a reachable, public HTTPS endpoint]
-Webhook URLs must point to a routable address. Private, internal, or cloud-metadata addresses are rejected for security reasons. Make sure the endpoint is reachable from the platform before relying on it.
-:::
+- **`channels`** — switches a delivery channel on or off for the whole team. Email, Slack, Teams and in-app default on (they simply skip when unconfigured); webhook and PagerDuty default off unless connected.
+- **`muted_categories`** — notification categories the team does not want at all (the `category` of the notification, e.g. `scan_failure`, `sync_health`, `sla_warning`).
+- **`alerts`** — the security-alert stream: `enabled`, `min_severity` (`critical` · `high` · `medium` · `low` · `info`) and which of in-app / Slack / Teams it uses.
+- **Per user** — `PUT /api/notifications/preferences/me` `{opted_out, muted_categories}` lets an individual stop receiving email and in-app notifications, or mute categories, without affecting the team.
 
-## Choosing what events trigger alerts
+Absent preferences mean *deliver everywhere that is configured*, so nothing changes until someone writes them.
 
-These are the event types you can subscribe to (for webhooks) and that drive Slack, email, and Teams alerts:
+## Verify a channel
 
-| Event | Fires when |
-|---|---|
-| `finding.created` | A new finding is detected |
-| `finding.resolved` | A finding is marked resolved |
-| `finding.excepted` | A finding exception is approved |
-| `scan.started` / `scan.completed` / `scan.failed` | A scan starts, finishes, or fails |
-| `sla.warning` | An SLA is approaching its deadline |
-| `sla.breached` | An SLA deadline is missed |
-| `compliance.drift_detected` | Your compliance posture changes |
-| `exception.requested` / `exception.approved` / `exception.rejected` | A risk exception moves through review |
-| `user.login` / `user.mfa_enabled` | A user signs in or enables MFA |
-
-Out of the box, the platform automatically alerts on the events that matter most — **critical and high-severity findings**, **SLA warnings and breaches**, **compliance drift**, and **scan failures** — so you get useful alerts even before you add any custom rules. Use Slack routing rules and webhook subscriptions to broaden, narrow, or redirect these as your team prefers.
-
-## Verify your setup
-
-- Use **Test Connection** (Slack, email, Teams) or **Test delivery** (webhooks) on each channel and confirm the message arrives.
-- Check the notification channel status in **Integrations** to see which channels are configured.
-- For webhooks, review the **delivery log** to confirm events are reaching your endpoint and to troubleshoot failures.
-
-:::tip[Start narrow, then expand]
-Begin with one channel and the default alerts, confirm they land correctly, then add routing rules and webhook subscriptions for additional teams, severities, or destinations.
-:::
+- **Slack / Teams** — the wizard's connection test posts a real message; `POST /api/notifications/slack/test` re-sends one to any webhook.
+- **Email** — `POST /api/integration-config/notifications/test` `{channel: "email" | "slack" | "teams" | "all"}` sends a test notification through the configured channels; `GET …/notifications/status` shows which are configured.
+- **Everything** — the bell always receives; if a notification is in the bell but not in Slack, the channel, a routing rule, a preference or the severity threshold is the reason, in that order.
 
 ## Related
 
-- **[Third-party integrations](./third-party.md)** — connect ticketing, SIEM, and other external tools.
-- **[Integrations overview](./index.md)** — all of the platform's connectivity options.
-- **[Roles & Team Management](../authentication/rbac-team-management.md)** — who can configure integrations and notifications.
-- **[CLI & CI/CD integration](../cli-and-cicd.md)** — gate pipelines on scan results.
+- [Webhooks](./webhooks.md) — signed event delivery to your own endpoints.
+- [Alerts](../vulnerability-risk/alerts.md) — the alert stream these notifications announce.
+- [Scheduled Reports](../reports-and-ai/scheduled-reports.md) — the other big consumer of SMTP.
+- [Integrations API](./api.md#notifications) — every endpoint on this page.

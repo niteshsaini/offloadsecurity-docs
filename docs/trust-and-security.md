@@ -22,7 +22,7 @@ For scanning, the platform asks only for **read-only roles** wherever the provid
 
 - **Authentication** — short-lived user sessions, plus scoped **API keys** for automation (including a CI/CD-scoped preset). See [API & Automation](./api-automation/index.md).
 - **Rate limiting** — the public API enforces per-client rate limits and returns standard `X-RateLimit-*` headers with `429` responses when exceeded.
-- **Signed webhooks** — outbound [webhook deliveries](./integrations/notifications.md#how-to-set-up-webhook-subscriptions) are signed with **HMAC-SHA256** so your receivers can verify authenticity, with retries and a delivery log. Webhook destinations are validated to block private, internal, and cloud-metadata addresses.
+- **Signed webhooks** — outbound [webhook deliveries](./integrations/webhooks.md) are signed with **HMAC-SHA256** so your receivers can verify authenticity, with retries and a delivery log. Webhook destinations are validated to block private, internal, and cloud-metadata addresses.
 
 ## How AI features handle your data
 

@@ -1,7 +1,7 @@
 ---
 title: "Wazuh + OpenVAS: Complete On-Premises Coverage"
 sidebar_label: "Wazuh + OpenVAS"
-sidebar_position: 5
+sidebar_position: 8
 ---
 
 # Wazuh + OpenVAS: Complete On-Premises Coverage

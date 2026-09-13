@@ -1,7 +1,8 @@
 ---
 title: "OpenVAS Integration"
 sidebar_label: "OpenVAS"
-sidebar_position: 4
+sidebar_position: 7
+description: "Connect a Greenbone / OpenVAS instance so the platform verifies and monitors the connection — and be clear that scan results stay in Greenbone; they are not imported today."
 ---
 
 # OpenVAS Integration
@@ -32,11 +33,15 @@ Scans can be **unauthenticated** (an outside-in view of what's exposed) or **aut
 
 ## Connect OpenVAS
 
-1. Deploy or identify your OpenVAS / Greenbone instance inside the network where your assets live.
-2. In the platform, open **Integrations** and choose **Add Integration → OpenVAS**.
-3. Enter your OpenVAS endpoint and credentials, and define the target scope (hosts / ranges) to scan.
-4. **Test the connection**, then **Save**. Credentials are stored **encrypted at rest** and isolated to your **active team**.
-5. Run and review your network scans from the OpenVAS / Greenbone console.
+**Integrations → Greenbone OpenVAS → Connect.** The wizard asks for:
+
+| Field | Value |
+| --- | --- |
+| `gmp_host` · `gmp_port` | The Greenbone Management Protocol endpoint (`9390` by default) |
+| `username` · `password` | A GMP user |
+| `verify_ssl` · `ca_cert` *(optional)* | TLS verification and a private CA certificate |
+
+The connection test authenticates over GMP before anything is saved; the health check repeats it on the cadence you choose. Targets, scan configurations and schedules are defined in the Greenbone console — the platform does not push them.
 
 ## Scope of the integration
 
