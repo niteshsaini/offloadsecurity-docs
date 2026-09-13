@@ -117,3 +117,7 @@ env (user decision), so AI is shown in its setup state. Two scheduled reports we
 by hand (`docker exec cspm-backend-src python /tmp/run_sched.py` after setting `next_run` in the past) so history and
 "latest" have content. The Executive Dashboard fixes (offload-cspm #1599) had to be copied into the shared dev tree's
 `ExecutiveComplianceDashboard.js` for the capture and were reverted afterwards.
+
+## Integrations (section 6)
+
+`plan-integrations.json` — hub, catalog cards (scrollY 860), Collaboration category filter, the connected GitHub Actions card (search "GitHub"), and the five wizard steps. Steps 1–2 use Wazuh (richest form); steps 3–5 use the already-connected GitHub Actions via **Reconfigure** because its test passes without network. Step 3 auto-advances 1.5 s after a passing test, so that step runs with `delay: 600`. Fixture: connect `github-actions` through `/api/integrations/wizard/*` first (any `github_token` value works).

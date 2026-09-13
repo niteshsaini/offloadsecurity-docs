@@ -2,89 +2,75 @@
 title: "Integrations & Notifications"
 sidebar_label: "Overview"
 sidebar_position: 0
+description: "Connect the tools around your security program — chat and email for alerts, Jira for tickets, Wazuh and SonarQube for data, CI/CD for pipeline gates — from one catalog with a five-step wizard, and know exactly what each connection does once it is green."
 ---
 
 # Integrations & Notifications
 
-Integrations connect Offload Security to the tools your team already uses — so findings, alerts, and evidence flow into your existing workflows instead of staying locked in one more dashboard. From here you can send security alerts to Slack, Microsoft Teams, or email, open tickets in Jira or ServiceNow, forward events to your SIEM, gate your CI/CD pipeline on scan results, and monitor the health of every connection in one place.
+Offload Security is the system of record for posture, findings, risk and compliance; integrations are how that record reaches the tools your team already lives in — and how a few outside tools feed data back in. Every connection is made from one place, follows the same five-step wizard, and is labelled with what actually happens after it turns green.
 
-![Offload Security external tool integrations — connecting SIEM, scanners, ticketing and CI/CD into one operational view](/img/screenshots/integrations.png)
+**Where:** left navigation → *Management* → **Integrations**.
 
-## What it does
+![Integrations hub: available integrations, connected tools, open-source and category counts; the eight integration categories; search](/img/screenshots/integrations/integrations-hub.webp)
 
-Integrations fall into a few groups:
+## What an integration does
 
-- **Notifications** — push real-time alerts to **Slack**, **Microsoft Teams**, **email (SMTP)**, and in-app toasts. Alerts cover security findings, scan failures, and platform events.
-- **Ticketing** — create and sync issues in **Jira** and **ServiceNow** so findings become tracked work items.
-- **SIEM & SOAR** — forward events and findings to tools like **Splunk** and **Wazuh** for correlation and long-term retention.
-- **Security tooling** — connect external scanners and analysis tools (for example **OWASP ZAP** and **SonarQube**) into the platform.
-- **CI/CD** — run scans from your pipeline and fail builds on policy violations using the CLI and the official GitHub Action.
+Not every connection means the same thing. Each card in the catalog carries a **capability badge**, and it is worth reading before you connect:
 
-:::note[Team-scoped and encrypted]
-Every integration belongs to a **team**. Credentials you enter are **encrypted at rest** and isolated by team, so connecting a tool in one team never exposes it to another. Make sure your **active team** is correct before adding a connection.
+| Badge | Meaning | Tools |
+| --- | --- | --- |
+| **pulls data in** | The platform syncs data *from* the tool into its own views | Wazuh (agents → assets, host CVEs → vulnerability occurrences, alerts → Alerts), SonarQube (project and open-issue snapshot), Jenkins (job summary) |
+| **two-way** | Data flows both directions | Jira — tickets are created from findings, and ticket status closes or reopens the finding |
+| **sends out** | The platform pushes alerts, emails or documents *to* the tool | Slack, Microsoft Teams, Email (SMTP), PagerDuty, Confluence, GitHub Actions (pipeline configuration) |
+| **connection test only** | The connection is verified and recorded; no data flows yet | OWASP ZAP, Burp Suite, Nuclei, Snyk, CloudMapper, Greenbone / OpenVAS, AWS Security Hub, Prowler |
+| **catalog only** *(shown as Planned)* | Listed for roadmap visibility; no Connect | PentestGPT, CodeQL, Datadog, Grafana, ServiceNow, Splunk |
+
+Scanners in the *connection test only* group are the ones the platform already **runs natively** — ZAP, Nuclei and Prowler are built-in scan engines; the catalog entry only verifies a remote instance you may run elsewhere. Snyk, Security Hub and OpenVAS are verified but their findings are not imported.
+
+![Catalog cards with capability badges: OWASP ZAP and Nuclei "connection test only", Wazuh "pulls data in", PentestGPT "catalog only · Planned"](/img/screenshots/integrations/integrations-catalog.webp)
+
+## Categories
+
+The category cards filter the catalog; the count on each is the number of tools it holds.
+
+| Category | Tools |
+| --- | --- |
+| Security Testing | OWASP ZAP, Burp Suite, Nuclei, PentestGPT, Wazuh, Greenbone OpenVAS |
+| Code Security | SonarQube, Snyk, CodeQL |
+| Cloud Security | AWS Security Hub, Prowler, CloudMapper |
+| DevOps & CI/CD | Jenkins, GitHub Actions |
+| Monitoring & Analytics | Datadog, Grafana, PagerDuty |
+| Ticketing & ITSM | Jira, ServiceNow |
+| Collaboration & Notifications | Slack, Microsoft Teams, Email (SMTP), Confluence |
+| SIEM & SOAR | Splunk |
+
+## Connect, then verify
+
+1. **Connect** on a card opens the five-step wizard — overview, credentials, a **real** connection test, health-check frequency, review. The test contacts the tool: a Slack webhook receives a test message, a Jira token is checked against `/myself`, an SMTP server is authenticated to. See [Connecting Tools](./connecting-tools.md).
+2. A connected card shows **Configured**, its sync status and last sync, and three actions: **Sync now**, **Reconfigure**, **Remove**.
+3. **Health checks** re-run the connection test on the cadence you chose in the wizard (hourly by default); a rotated token turns the card from *Connected & healthy* to *disconnected* with the error, and raises an in-app notification.
+4. For *pulls data in* tools a **global sync** runs every 30 minutes; **Sync now** starts one immediately as a background job.
+
+![A connected GitHub Actions card: "sends out", Configured, "Connected & healthy — last sync", Sync now / Reconfigure / Remove](/img/screenshots/integrations/integrations-connected-card.webp)
+
+:::note[Team-scoped, encrypted, permissioned]
+A connection belongs to the **active team**; another team never sees it and must connect its own. Credentials are encrypted at rest with a key that never leaves the backend, and are not shown back after setup. Connecting, testing, reconfiguring and removing need the **Manage Integrations** permission (Admin and Security Manager by default); any team member can see the catalog and the connected state. See [Roles, Teams & API Keys](../authentication/rbac-team-management.md).
 :::
 
-## How to use it
+## Where notifications come from
 
-### 1. Connect a tool
+Alerts do not need a connected tool to exist — they land in the **in-app notification center** (the bell) for every team member. Connecting Slack, Teams, Email or PagerDuty adds a delivery channel; per-team **preferences** decide which channels are on, which categories are muted and the minimum alert severity that leaves the platform (high, by default). Slack additionally supports **routing rules** — critical security alerts to one channel, operational errors to another. All of this is on [Notifications](./notifications.md); outbound **webhook subscriptions** for your SIEM or automation are on [Webhooks](./webhooks.md).
 
-1. Go to **Integrations** in the left navigation.
-2. Browse the catalog and select the tool you want to connect.
-3. Enter the required credentials or configuration for that tool (for example an API token, webhook URL, or service account).
-4. Save. The platform validates the connection and the integration's status updates to **Connected**.
+## In this section
 
-### 2. Set up notifications
+| Page | Read it for |
+| --- | --- |
+| [Connecting Tools](./connecting-tools.md) | The wizard step by step, what each step verifies, managing a connected tool |
+| [Notifications](./notifications.md) | Slack, Teams, Email, PagerDuty, the in-app center, routing rules and preferences |
+| [Webhooks](./webhooks.md) | Event subscriptions, signature verification, delivery log |
+| [Jira](./jira.md) | Tickets from findings, two-way status sync, the Jira tab |
+| [Wazuh](./wazuh.md) · [SonarQube](./sonarqube.md) · [OpenVAS](./openvas.md) · [Wazuh + OpenVAS](./wazuh-openvas.md) | The data integrations and what each one brings in |
+| [Integration Catalog](./third-party.md) | Every tool, its capability, and the credentials it asks for |
+| [API](./api.md) · [Troubleshooting & FAQ](./troubleshooting.md) | Endpoints and permissions; common problems |
 
-Notification channels are configured under **Integrations → Notifications**.
-
-- **Email** — provide SMTP settings to send alerts to your team's inboxes.
-- **Microsoft Teams** — add an incoming webhook URL for the channel you want alerts in.
-- **Slack** — add one or more Slack webhook URLs and route alerts intelligently (see below).
-
-When a scan fails, the platform classifies the failure (for example a connectivity issue, bad credentials, a tool error, a timeout, or a permission problem) and includes a plain-language remediation hint in the alert, so the on-call engineer knows what to check first.
-
-### 3. Route Slack alerts to the right channels
-
-Slack support goes beyond a single firehose channel. You can create **routing rules** that send each alert to a specific Slack channel based on:
-
-- **Category** — system error, system notification, or security alert.
-- **Source module** — for example Cloud Security, Kubernetes, container/registry scanning, code scanning, threat intelligence, or SLA breaches.
-- **Severity** — critical, high, medium, low, or info.
-
-A typical setup might route critical security alerts to `#security-critical`, lower-severity findings to `#security-findings`, and operational errors to `#ops-alerts`. If no rule matches an alert, it falls back to your default Slack channel.
-
-:::tip[Send a test message]
-After adding a Slack channel, use **Send test message** to confirm the webhook works and the alert lands in the right place before you rely on it. A status view shows which channels are configured.
-:::
-
-### 4. Wire scans into CI/CD
-
-Run security scans as part of your build and gate merges on the results:
-
-- Use the **CLI** to trigger scans and pull findings from your pipeline.
-- Use the official **GitHub Action** to scan on pull requests and fail the build when new high-severity findings or policy violations appear.
-
-See **[CLI & CI/CD integration](../security-scanning/scan-management.md)** for setup steps and examples.
-
-## Monitor integration health
-
-The platform continuously watches your connections so you find out about a broken integration before it silently drops alerts or stops syncing tickets.
-
-- A background **health monitor** runs scheduled checks against each active integration and records the result.
-- Each integration shows a **connection status** and the time of its **last sync** so you can spot a stale or failing connection at a glance.
-- If a sync fails, the integration is flagged and an error message explains what went wrong.
-
-:::tip[Keep an eye on last-sync times]
-A connection that shows **Connected** but hasn't synced recently usually points to expired credentials or a rotated token. Re-open the integration and re-enter its credentials to restore syncing.
-:::
-
-:::warning[Rotate credentials before they expire]
-API tokens, webhook URLs, and service-account keys can be revoked or expire on the provider side. When that happens the integration's status turns to an error state. Rotate credentials proactively and update them here to avoid missed alerts.
-:::
-
-## Related
-
-- **[Notifications & Event Bus](./notifications.md)** — channels, routing, and alert delivery in detail.
-- **[Third-Party Integrations](./third-party.md)** — the full catalog of connectable tools.
-- **[CLI & CI/CD integration](../security-scanning/scan-management.md)** — automate scans in your pipeline.
-- **[Team Management](../authentication/rbac-team-management.md)** — set your active team and manage roles and API keys.
+CI/CD is not an integration card: pipeline gates use the CLI and the GitHub Action — see [CLI & CI/CD](../cli-and-cicd.md). Cloud accounts and Kubernetes clusters are connected in their own modules — [Connecting Cloud Accounts](../cloud-security/connecting-accounts.md), [Kubernetes onboarding](../security-scanning/kubernetes/onboarding-clusters.md).
