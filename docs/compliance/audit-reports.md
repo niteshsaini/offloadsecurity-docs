@@ -50,5 +50,5 @@ For evidence rather than status — the artifacts behind each control — use th
 ## Related
 
 - [Compliance Engine](./autonomous-compliance.md) — the syncs, drift and remediation actions these reports export.
-- [Reports & AI](../reports-and-ai.md) — executive and scheduled reports across the whole platform.
+- [Reports & AI](../reports-and-ai/index.md) — executive and scheduled reports across the whole platform.
 - [Compliance & GRC API](./api.md#audit-reports) — generate, list and download over REST.

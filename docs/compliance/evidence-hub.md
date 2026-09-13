@@ -20,7 +20,7 @@ Posture says *what* you claim; evidence is *why an auditor should believe you*. 
 | **Scan evidence** — cloud posture (Prowler), Kubernetes, container, vulnerability and web scans | Written automatically as scans correlate to controls, and by **Collect All Evidence** | 85–95 |
 | **API evidence** — raw, read-only cloud API responses (S3 encryption / logging / versioning / public-access block, IAM summary and password policy, CloudTrail, Config, GuardDuty, Security Hub, Access Analyzer, KMS, RDS, security groups, VPC flow logs; GCP buckets, clusters, firewalls, IAM policy, log sinks; Azure storage accounts, NSGs, Key Vaults, SQL servers, AKS, Defender plans) | **Collect API Evidence** for all connected accounts, or per account | scan-grade |
 | **Assessment answers** | Each answered assessment question is evidence for the controls it maps to | 75 |
-| **Knowledge-base documents** | Policies and procedures uploaded to the [Knowledge Base](../reports-and-ai.md) and mapped to controls | 70 |
+| **Knowledge-base documents** | Policies and procedures uploaded to the [Knowledge Base](../reports-and-ai/index.md) and mapped to controls | 70 |
 | **Manual uploads** — documents, screenshots, configs, policies | **Quick Upload** or the **Evidence Wizard** | 60–70 |
 
 Evidence is **deduplicated** by content: one artifact is stored once and linked to every control it satisfies (the *dedup ratio* on the posture page). Sensitive values in API captures are **masked** before storage.

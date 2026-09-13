@@ -45,7 +45,7 @@ Tick several runs — for example the ZAP, Nuclei, testssl and Nmap scans of one
 
 - **Vulnerability Management** — findings feed the unified view for SLA tracking, ownership and trends ([Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx)).
 - **Risk Register** — promote a significant finding into a managed risk ([Risk Register](../vulnerability-risk/risk-management/index.md)).
-- **Compliance** — web and API findings map to OWASP categories and NIST SSDF for the compliance and executive reports ([Reports & AI](../reports-and-ai.md)).
+- **Compliance** — web and API findings map to OWASP categories and NIST SSDF for the compliance and executive reports ([Reports & AI](../reports-and-ai/index.md)).
 
 ## Related
 

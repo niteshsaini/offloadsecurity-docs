@@ -53,7 +53,7 @@ Typical role: **Compliance Officer**, with **Auditor** accounts for external rev
 ## Stage 6 — Face the audit
 
 1. Export the audit package for your framework from the [Evidence Hub](../compliance/evidence-hub.md) — up to four layers of proof per control: policy, procedure, technical proof, attestation.
-2. Generate executive and audit reports in PDF/HTML — [Reports & AI Assistance](../reports-and-ai.md).
+2. Generate executive and audit reports in PDF/HTML — [Reports & AI Assistance](../reports-and-ai/index.md).
 3. Give your external auditor an **Auditor** account: read-only access to evidence and reports, with export rights — [Roles, Teams & API Keys](../authentication/rbac-team-management.md).
 
 **You can now:** hand an auditor a package and an account instead of a shared drive of screenshots.
