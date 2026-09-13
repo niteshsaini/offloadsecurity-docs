@@ -87,7 +87,7 @@ Days 1–4 need the **Admin** or **Security Manager** role (connecting accounts 
 
 1. Review the Dashboard trends: security score, findings by severity, and recent activity.
 2. Check the SLA **Breach Dashboard** — this is your operational health metric from now on — [SLA Management](../vulnerability-risk/sla-management.md).
-3. Generate reports for your stakeholders — executive and audit outputs in PDF and HTML — [Reports & AI Assistance](../reports-and-ai.md). AI summaries turn scan results into narrative for non-specialist readers.
+3. Generate reports for your stakeholders — executive and audit outputs in PDF and HTML — [Reports & AI Assistance](../reports-and-ai/index.md). AI summaries turn scan results into narrative for non-specialist readers.
 4. Give leadership their own access: a **Viewer** role for dashboards, or **Auditor** for read-only evidence and report export — [Roles, Teams & API Keys](../authentication/rbac-team-management.md).
 
 **Done when:** a stakeholder outside the security team has viewed a dashboard or received a report without you exporting it by hand.

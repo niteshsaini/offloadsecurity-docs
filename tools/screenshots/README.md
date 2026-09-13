@@ -107,3 +107,13 @@ first — see the docs PR description.
 Harness notes: the framework rows on the posture page are matched with `{"text": ..., "nth": 0}` because the same
 label also appears in the evidence-per-framework list; the Override button uses `{"role": "button", "text":
 "Override", "nth": 0}`; gap analysis needs `scrollY: 1300`.
+
+## Section 5 — Reports & AI (2026-09-13)
+
+`plan-reports-and-ai.json` captures the Executive Dashboard (overview, readiness, generated gap analysis and roadmap,
+executive reports + scheduled reports), the Consolidated Security Report dialog on Scan Results, the AI Configuration
+panel (Knowledge Base → AI Assistant) and the AI Security Assistant widget. No LLM provider is configured in the docs
+env (user decision), so AI is shown in its setup state. Two scheduled reports were created over the API and run once
+by hand (`docker exec cspm-backend-src python /tmp/run_sched.py` after setting `next_run` in the past) so history and
+"latest" have content. The Executive Dashboard fixes (offload-cspm #1599) had to be copied into the shared dev tree's
+`ExecutiveComplianceDashboard.js` for the capture and were reverted afterwards.
