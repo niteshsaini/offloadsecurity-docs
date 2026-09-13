@@ -1,0 +1,382 @@
+[
+ {
+  "name": "compliance-posture",
+  "url": "/dashboard?section=compliance-posture",
+  "delay": 8000
+ },
+ {
+  "name": "compliance-posture-frameworks",
+  "url": "/dashboard?section=compliance-posture",
+  "delay": 8000,
+  "scrollY": 520
+ },
+ {
+  "name": "compliance-gap-analysis",
+  "url": "/dashboard?section=compliance-posture",
+  "delay": 5000,
+  "clicks": [
+   {
+    "text": "PCI DSS 4.0.1",
+    "exact": false
+   }
+  ],
+  "scrollY": 1300
+ },
+ {
+  "name": "compliance-override",
+  "url": "/dashboard?section=compliance-posture",
+  "delay": 5000,
+  "clicks": [
+   {
+    "text": "PCI DSS 4.0.1",
+    "exact": false
+   },
+   {
+    "selector": "[data-testid=\"gap-analysis\"] button:has-text(\"Override\")"
+   }
+  ]
+ },
+ {
+  "name": "compliance-frameworks-panel",
+  "url": "/dashboard?section=compliance-posture",
+  "delay": 3000,
+  "clicks": [
+   {
+    "text": "Custom selection",
+    "exact": false
+   }
+  ]
+ },
+ {
+  "name": "compliance-engine",
+  "url": "/dashboard?section=compliance-posture",
+  "delay": 5000,
+  "clicks": [
+   {
+    "selector": "[role=\"tab\"]:has-text(\"Compliance Engine\")"
+   }
+  ]
+ },
+ {
+  "name": "compliance-engine-trends",
+  "url": "/dashboard?section=compliance-posture",
+  "delay": 4000,
+  "clicks": [
+   {
+    "selector": "[role=\"tab\"]:has-text(\"Compliance Engine\")"
+   },
+   {
+    "selector": "button:has-text(\"Compliance Trends\")"
+   }
+  ],
+  "scrollY": 300
+ },
+ {
+  "name": "compliance-engine-breaches",
+  "url": "/dashboard?section=compliance-posture",
+  "delay": 4000,
+  "clicks": [
+   {
+    "selector": "[role=\"tab\"]:has-text(\"Compliance Engine\")"
+   },
+   {
+    "selector": "button:has-text(\"Breaches\")"
+   }
+  ],
+  "scrollY": 300
+ },
+ {
+  "name": "compliance-engine-timeline",
+  "url": "/dashboard?section=compliance-posture",
+  "delay": 4000,
+  "clicks": [
+   {
+    "selector": "[role=\"tab\"]:has-text(\"Compliance Engine\")"
+   },
+   {
+    "selector": "button:has-text(\"Timeline\")"
+   }
+  ],
+  "scrollY": 300
+ },
+ {
+  "name": "compliance-engine-overrides",
+  "url": "/dashboard?section=compliance-posture",
+  "delay": 4000,
+  "clicks": [
+   {
+    "selector": "[role=\"tab\"]:has-text(\"Compliance Engine\")"
+   },
+   {
+    "selector": "button:has-text(\"Manual Overrides\")"
+   }
+  ],
+  "scrollY": 300
+ },
+ {
+  "name": "compliance-engine-remediation",
+  "url": "/dashboard?section=compliance-posture",
+  "delay": 4000,
+  "clicks": [
+   {
+    "selector": "[role=\"tab\"]:has-text(\"Compliance Engine\")"
+   },
+   {
+    "selector": "button:has-text(\"Remediation\")"
+   }
+  ],
+  "scrollY": 300
+ },
+ {
+  "name": "compliance-engine-thresholds",
+  "url": "/dashboard?section=compliance-posture",
+  "delay": 4000,
+  "clicks": [
+   {
+    "selector": "[role=\"tab\"]:has-text(\"Compliance Engine\")"
+   },
+   {
+    "selector": "button:has-text(\"Thresholds\")"
+   }
+  ],
+  "scrollY": 300
+ },
+ {
+  "name": "compliance-drift",
+  "url": "/dashboard?section=compliance-posture",
+  "delay": 5000,
+  "clicks": [
+   {
+    "selector": "[role=\"tab\"]:has-text(\"Drift Detection\")"
+   }
+  ]
+ },
+ {
+  "name": "compliance-drift-policies",
+  "url": "/dashboard?section=compliance-posture",
+  "delay": 3000,
+  "clicks": [
+   {
+    "selector": "[role=\"tab\"]:has-text(\"Drift Detection\")"
+   },
+   {
+    "selector": "button:has-text(\"Alert Policies\")"
+   }
+  ],
+  "scrollY": 300
+ },
+ {
+  "name": "evidence-hub",
+  "url": "/dashboard?section=compliance-posture",
+  "delay": 6000,
+  "clicks": [
+   {
+    "selector": "[role=\"tab\"]:has-text(\"Evidence Hub\")"
+   }
+  ]
+ },
+ {
+  "name": "evidence-hub-domains",
+  "url": "/dashboard?section=compliance-posture",
+  "delay": 6000,
+  "clicks": [
+   {
+    "selector": "[role=\"tab\"]:has-text(\"Evidence Hub\")"
+   }
+  ],
+  "scrollY": 700
+ },
+ {
+  "name": "evidence-hub-freshness",
+  "url": "/dashboard?section=compliance-posture",
+  "delay": 5000,
+  "clicks": [
+   {
+    "selector": "[role=\"tab\"]:has-text(\"Evidence Hub\")"
+   },
+   {
+    "selector": "button:has-text(\"Freshness\")"
+   }
+  ],
+  "scrollY": 250
+ },
+ {
+  "name": "evidence-hub-smart",
+  "url": "/dashboard?section=compliance-posture",
+  "delay": 5000,
+  "clicks": [
+   {
+    "selector": "[role=\"tab\"]:has-text(\"Evidence Hub\")"
+   },
+   {
+    "selector": "button:has-text(\"Smart Breakdown\")"
+   }
+  ],
+  "scrollY": 250
+ },
+ {
+  "name": "evidence-hub-review",
+  "url": "/dashboard?section=compliance-posture",
+  "delay": 5000,
+  "clicks": [
+   {
+    "selector": "[role=\"tab\"]:has-text(\"Evidence Hub\")"
+   },
+   {
+    "selector": "button:has-text(\"Review Queue\")"
+   }
+  ],
+  "scrollY": 250
+ },
+ {
+  "name": "evidence-hub-api",
+  "url": "/dashboard?section=compliance-posture",
+  "delay": 5000,
+  "clicks": [
+   {
+    "selector": "[role=\"tab\"]:has-text(\"Evidence Hub\")"
+   },
+   {
+    "selector": "button:has-text(\"API Evidence\")"
+   }
+  ],
+  "scrollY": 250
+ },
+ {
+  "name": "evidence-hub-renewals",
+  "url": "/dashboard?section=compliance-posture",
+  "delay": 5000,
+  "clicks": [
+   {
+    "selector": "[role=\"tab\"]:has-text(\"Evidence Hub\")"
+   },
+   {
+    "selector": "button:has-text(\"Renewals\")"
+   }
+  ],
+  "scrollY": 250
+ },
+ {
+  "name": "evidence-hub-upload",
+  "url": "/dashboard?section=compliance-posture",
+  "delay": 3000,
+  "clicks": [
+   {
+    "selector": "[role=\"tab\"]:has-text(\"Evidence Hub\")"
+   },
+   {
+    "selector": "button:has-text(\"Quick Upload\")"
+   }
+  ]
+ },
+ {
+  "name": "evidence-hub-wizard",
+  "url": "/dashboard?section=compliance-posture",
+  "delay": 3000,
+  "clicks": [
+   {
+    "selector": "[role=\"tab\"]:has-text(\"Evidence Hub\")"
+   },
+   {
+    "selector": "button:has-text(\"Evidence Wizard\")"
+   }
+  ]
+ },
+ {
+  "name": "assessments-hub",
+  "url": "/dashboard?section=assessments",
+  "delay": 7000
+ },
+ {
+  "name": "assessments-create",
+  "url": "/dashboard?section=assessments&action=create&type=iso-27001",
+  "delay": 7000
+ },
+ {
+  "name": "assessments-history",
+  "url": "/dashboard?section=assessments-history",
+  "delay": 7000
+ },
+ {
+  "name": "assessments-checklist",
+  "url": "/dashboard?section=assessment-checklist&assessmentId=3b0cb30d-60d1-4f23-b560-4b15e5eb6b24",
+  "delay": 8000,
+  "scrollY": 420
+ },
+ {
+  "name": "assessments-completed",
+  "url": "/dashboard?section=assessment-checklist&assessmentId=a42c2ec7-85b7-44f3-91a6-55100c10dda5",
+  "delay": 8000
+ },
+ {
+  "name": "audit-reports",
+  "url": "/dashboard?section=audit-reports",
+  "delay": 7000
+ },
+ {
+  "name": "dpdp-overview",
+  "url": "/dashboard?section=dpdp-compliance",
+  "delay": 8000
+ },
+ {
+  "name": "dpdp-controls",
+  "url": "/dashboard?section=dpdp-compliance",
+  "delay": 4000,
+  "clicks": [
+   {
+    "selector": "button:has-text(\"Controls\")"
+   }
+  ],
+  "scrollY": 250
+ },
+ {
+  "name": "dpdp-dpia",
+  "url": "/dashboard?section=dpdp-compliance",
+  "delay": 4000,
+  "clicks": [
+   {
+    "selector": "button:has-text(\"DPIA\")"
+   }
+  ]
+ },
+ {
+  "name": "dpdp-sdf",
+  "url": "/dashboard?section=dpdp-compliance",
+  "delay": 4000,
+  "clicks": [
+   {
+    "selector": "button:has-text(\"SDF Classification\")"
+   }
+  ]
+ },
+ {
+  "name": "dpdp-vendors",
+  "url": "/dashboard?section=dpdp-compliance",
+  "delay": 4000,
+  "clicks": [
+   {
+    "selector": "button:has-text(\"Vendor Assessment\")"
+   }
+  ]
+ },
+ {
+  "name": "dpdp-breach",
+  "url": "/dashboard?section=dpdp-compliance",
+  "delay": 4000,
+  "clicks": [
+   {
+    "selector": "button:has-text(\"Breach Management\")"
+   }
+  ]
+ },
+ {
+  "name": "dpdp-audit",
+  "url": "/dashboard?section=dpdp-compliance",
+  "delay": 4000,
+  "clicks": [
+   {
+    "selector": "button:has-text(\"Audit & Export\")"
+   }
+  ]
+ }
+]
