@@ -25,7 +25,7 @@ Send the key as `X-API-Key`; calls are scoped to the key's team.
 | Wizard template | `GET /api/integrations/templates/{tool_id}` · `GET /api/integrations/templates` | Required and optional fields per tool |
 | Wizard | `POST /api/integrations/wizard/start?tool_id=` → `POST …/wizard/step` `{session_id, step, step_data}` (step 2 `step_data.credentials`, step 4 `step_data.monitoring.frequency_hours`) → `POST …/wizard/test-connection` `{session_id}` → `POST …/wizard/complete` `{session_id}` | **Manage Integrations**. Complete re-tests server-side and returns `connection_verified` |
 | Test without saving | `POST /api/integrations/test-connection` `{tool_id, configuration}` | **Manage Integrations** |
-| Connected tools | `GET /api/integrations/user-integrations` | The wizard store: `tool_id`, `status`, `sync_status`, `last_sync`, `health_status`, `error_message` |
+| Connected tools | `GET /api/integrations/user-integrations` | The wizard store: `tool_id`, `status`, `sync_status`, `last_sync`, `health_status`, `error_message`. Any member |
 | Sync now | `POST /api/integrations/sync/{tool_id}` | Returns a `job_id`; poll `GET /api/jobs/{job_id}`. **Manage Integrations** |
 | Remove | `DELETE /api/integrations/user-integrations/{integration_id}` | **Manage Integrations** |
 | Ingested data | `GET /api/integrations/data/{tool_id}` (`wazuh` · `sonarqube` · `jenkins`) · `GET /api/integrations/wazuh/browse/{agents\|alerts\|vulnerabilities}?limit=&offset=` | Latest snapshot with `counts`, `data`, `synced_at`; Wazuh browse queries the live instance. **View Integrations** |
@@ -65,7 +65,8 @@ Send the key as `X-API-Key`; calls are scoped to the key's team.
 
 | Action | Permission |
 | --- | --- |
-| Read the catalog, templates, connected tools, health, ingested data, Jira tickets | **View Integrations** (`view_integrations`) — Security Manager, Security Analyst, Compliance Officer, Auditor; the catalog itself needs only a login |
+| Read the catalog, templates, connected tools, health status | any authenticated team member |
+| Read ingested data (`/data/{tool_id}`, Wazuh browse) and the platform's Jira tickets | **View Integrations** (`view_integrations`) — Security Manager, Security Analyst, Compliance Officer, Auditor |
 | Connect, test, sync, reconfigure, remove; Slack routing rules; team notification preferences; webhook subscriptions; SMTP / Jira / Confluence config routes | **Manage Integrations** (`manage_integrations`) — Admin, Security Manager |
 | Read notifications, mark read / dismiss, personal preferences | any authenticated team member |
 | Create Jira tickets for selected findings | **Vulnerability Management** |
