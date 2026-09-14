@@ -48,7 +48,7 @@ Then open `http://<host>:3000` (or `https://<DOMAIN_NAME>`) and sign in as `admi
 
 ### First-run setup wizard
 
-The **Platform Setup** wizard walks through *Service Connectivity* (MongoDB, Redis) → *Security Keys* → *Storage* → *Platform Settings* (name, public URL, environment) → *Email / SMTP* → *Admin Account* → *Complete*. It generates the encryption keys that protect stored credentials (`CLOUD_ENCRYPTION_KEY`, `INTEGRATION_ENCRYPTION_KEY`, `SECRET_KEY`, `WEBHOOK_SECRET`) and stores them in the platform's own configuration; the wizard's output tells you how to copy them into `.env` so they survive a database restore. Any Admin can relaunch it later from the account menu; `PLATFORM_SETUP_COMPLETE=true` in `.env` locks it against reopening.
+The **Platform Setup** wizard walks through *Service Connectivity* (MongoDB, Redis) → *Security Keys* → *Storage* → *Platform Settings* (name, public URL, environment) → *Email / SMTP* → *Admin Account* → *Complete*. It generates the encryption keys that protect stored credentials (`CLOUD_ENCRYPTION_KEY`, `INTEGRATION_ENCRYPTION_KEY`, `SECRET_KEY`, `WEBHOOK_SECRET`) and stores them in the platform's own configuration (`platform_config.generated_secrets`). Copy them into `.env` afterwards — `.env.example` carries the one-line extraction command — so a restore onto a fresh host can still read stored credentials. Any Admin can relaunch it later from the account menu; `PLATFORM_SETUP_COMPLETE=true` in `.env` locks it against reopening.
 
 ### The `.env` values that matter on-premises
 
@@ -81,7 +81,7 @@ docker compose -f docker-compose.client.yml pull
 docker compose -f docker-compose.client.yml up -d
 ```
 
-Schema changes are applied by the backend on start; sessions survive (Redis); running scans are re-queued or reaped by the fleet-health sweeps. Take a backup first.
+Take a backup first. Expect users to sign in again after the restart; scans that were running are re-queued or reaped by the fleet-health sweeps. Release notes for the tag list anything that needs an operator's hand.
 
 ## Backups
 
