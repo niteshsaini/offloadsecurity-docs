@@ -125,3 +125,7 @@ by hand (`docker exec cspm-backend-src python /tmp/run_sched.py` after setting `
 ## Threat Intel & AI (section 7)
 
 `plan-threat-intel-ai.json` — every tab of Threat Intelligence, Security Command Center, AI Governance and Knowledge Base (tab clicks by label). Fixtures: `seed_threat_intel_ai.py` registers four AI systems, a risk assessment, bias test, incident, oversight log and training record, uploads three policy PDFs to the Knowledge Base (needs `section_id`s from `/knowledge-base/sections`), reconciles the AIBOM and runs triage + auto-fix. Before capture: add AI-service assets (SageMaker / Bedrock / Vertex) to `cspm_cloud_assets.assets` and AI packages to a `code_sbom_reports` document so discovery and the AIBOM have something to show; the Discovery shot clicks **Run Discovery** live (`delay: 9000`). Threat feeds are real — the docs backend fetched them hourly.
+
+## Platform Security (section 8)
+
+`plan-platform-security.json` — login page (a `noAuth: true` step uses a second, anonymous browser context — added to capture.js), account menu (click "Admin User"), Team Management + Invite modal, Change Password, MFA status + setup (the QR code and manual key in `mfa-setup` were pixelated after capture — never publish a live TOTP secret), API Keys list + Create modal, Platform Setup, Client Menu Settings, User Activity (Users, Live sessions). Fixtures: `seed_platform_security.py` creates three API keys (values discarded), a second team and two invitations.

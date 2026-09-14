@@ -23,7 +23,8 @@ const user = {"user_id":"b54cf4e7-3434-4ab4-aa74-632f23b92a2b","email":"admin@of
       localStorage.setItem('theme', 'light');
     }
   }, { sid: process.env.SESSION_ID, user });
-  const page = await ctx.newPage();
+  const authPage = await ctx.newPage();
+  let page = authPage;
   page.on('pageerror', e => console.log('  pageerror:', e.message.slice(0, 120)));
   page.on('response', r => { if (r.status() >= 400 && r.url().includes('/api/')) console.log('  HTTP', r.status(), r.url().replace(BASE, '')); });
 
@@ -44,7 +45,10 @@ const user = {"user_id":"b54cf4e7-3434-4ab4-aa74-632f23b92a2b","email":"admin@of
     await loc.scrollIntoViewIfNeeded(); await loc.click();
   };
 
+  const anonCtx = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2, colorScheme: 'light' });
+  const anonPage = await anonCtx.newPage();
   for (const step of plan) {
+    page = step.noAuth ? anonPage : authPage;
     try {
       console.log('•', step.name);
       await page.goto(BASE + step.url, { waitUntil: 'domcontentloaded' });

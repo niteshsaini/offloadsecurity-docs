@@ -1,109 +1,73 @@
 ---
-title: "Audit Trail & Webhook Events"
-sidebar_position: 4
+title: "Audit Trail & User Activity"
+sidebar_label: "Audit Trail & User Activity"
+sidebar_position: 3
+description: "What the platform records about every action — actor, team, action, outcome, timing, redacted context — who can read it and how to export it; the authentication event log; API-key and remediation audit logs; and the platform administrator's User Activity view of accounts, live sessions and login history."
 ---
 
-This section documents the platform's observability and event-driven architecture. It covers the append-only audit trail for user actions, the platform event bus for internal reactivity, the webhook subsystem for external integrations, and the automation of evidence collection and risk management.
+# Audit Trail & User Activity
 
-## Platform Audit Trail
+An auditor's first question about a security tool is who did what in it. The platform answers from three records: the **audit trail** written for every authenticated request, the **authentication event log** written by the sign-in system itself, and the per-feature logs that some modules keep (API keys, Auto-Fix actions, DPDP). The platform administrator additionally gets a live **User Activity** view.
 
-The platform implements a unified audit trail via the `AuditTrailMiddleware`. This middleware captures every authenticated API request and persists it to an append-only MongoDB collection named `platform_audit_trail`. This system provides compliance-ready logs that answer who did what, when, and with what outcome.
+## The audit trail
 
-### AuditTrailMiddleware Implementation
-The middleware operates as a `BaseHTTPMiddleware` within the FastAPI pipeline. It classifies actions, redacts sensitive data, and performs asynchronous background writes to minimize latency.
+Every authenticated API request — which is every action in the UI — is written to the audit trail as one event:
 
-*   **Action Classification**: Uses the `_classify_action` function to map HTTP methods and path patterns to human-readable strings (e.g., `POST /api/auth/login` becomes `user.login`).
-*   **Recursive Body Redaction**: The `_redact_body` function recursively traverses request bodies to scrub fields like `password`, `secret`, `token`, `api_key`, and `mfa_token`. This prevents sensitive credentials buried in nested objects (e.g., within configuration payloads) from leaking into the audit store.
-*   **Performance**: To prevent blocking the response, the database write is scheduled as an `asyncio.create_task` after the response has been generated.
-*   **Exclusion Rules**: Noisy paths (e.g., `/api/health`, `/api/sse/`) and standard `GET` requests (except for reports/exports) are excluded to reduce log volume.
+| Field | Content |
+| --- | --- |
+| **Who** | User id, email, role, active team; or the API key's owner |
+| **What** | HTTP method and path, and a classified **action** — `user.login`, `user.logout`, `user.sso_login`, `mfa.setup` / `enable` / `disable` / `verify`, `scan.start` / `scan.view`, `report.generate` / `report.download`, `assessment.create` / `update`, `team.modify`, `user.modify`, `integration.*`, `api_key.*`, and a generic `<resource>.<verb>` for the rest |
+| **When** | Timestamp and how long the request took |
+| **Outcome** | HTTP status and success / failure |
+| **Context** | A summary of the request body for writes (first 500 characters) with sensitive fields — `password`, `secret`, `token`, `mfa_token`, `session_id`, API keys — replaced by `***REDACTED***`; sign-in, registration, MFA and SSO exchanges log no body at all |
 
-**Audit Logging Data Flow**
-```mermaid
-sequenceDiagram
-    participant C as "Client"
-    participant M as "AuditTrailMiddleware"
-    participant A as "AuthService"
-    participant R as "Route Handler"
-    participant DB as "MongoDB (platform_audit_trail)"
+Health checks, live-event streams and documentation endpoints are not recorded. Events are retained **365 days** by default (`AUDIT_TRAIL_RETENTION_DAYS`).
 
-    C->>M: "HTTP Request (POST /api/risks)"
-    M->>A: "get_user_from_session()"
-    A-->>M: "User (request.state.user)"
-    M->>M: "_classify_action() -> 'risk.post'"
-    M->>M: "_redact_body(request_payload)"
-    M->>R: "call_next(request)"
-    R-->>M: "Response (201 Created)"
-    Note over M,DB: "Async background task"
-    M->>DB: "insert_one(audit_doc)"
-    M-->>C: "HTTP Response"
-```
+### Who can read what
 
-## Platform Event Bus (Internal)
+| Reader | Sees |
+| --- | --- |
+| Any member | Their **own** events in the active team |
+| Team **Admin** | Every event in the active team, filterable by user |
+| **Platform administrator** | Every event on the deployment, across teams |
 
-The `EventBus` is the central nervous system for cross-module reactivity, utilizing Redis Pub/Sub for real-time delivery and MongoDB for persistence.
+`GET /api/audit-trail?user_id=&action=&start_date=&end_date=&success_only=&limit=&skip=` queries it (wildcards such as `user.*` work on `action`); `GET /api/audit-trail/user/{user_id}` narrows to a person; `GET /api/audit-trail/actions` lists the action vocabulary; `GET /api/audit-trail/export` streams **CSV** (up to 10,000 events — team Admin or platform administrator). There is no dedicated audit screen in the UI yet; the API and the CSV export are the way in.
 
-### Event Architecture
-*   **Event Types**: Canonical constants are defined in `EventTypes`, covering `SCAN_COMPLETED`, `FINDING_CREATED`, `SLA_BREACHED`, and `COMPLIANCE_DRIFT_DETECTED`.
-*   **Subscribers**: The event subscribers module registers handlers that route events to notifications (Email/Slack/Teams), integration tickets (Jira), and real-time SSE streams.
-*   **SSE Real-time Stream**: The `stream_platform_events` route allows frontend clients to subscribe to specific channels (e.g., `?channels=scan,finding`) for live updates.
+## Authentication events
 
-## Webhook Security & Inbound Ingestion
+Independently of the request trail, the sign-in system records `login_success`, `login_failed`, `login_blocked` (lockout), `account_auto_unlocked`, `session_created`, `session_destroyed`, `session_expired` and `user_registered`, with the IP address and user agent. These feed the platform administrator's **login history** below and `GET /api/auth/audit-log` (platform administrator).
 
-The platform accepts scan results from external tools via secure webhook endpoints.
+## Per-feature logs
 
-### Webhook Security Schemes
-The `WebhookSecurityService` supports two versions of HMAC authentication to ensure integrity and prevent replay attacks:
+- **API keys** — `GET /api/api-keys/audit-log`: creation, rotation, revocation and requests blocked by scope, IP allowlist, expiry or rate limit; `GET /api/api-keys/analytics` for usage over 30 days.
+- **Auto-Fix actions** — approve / deny / execute / rollback with approver and reason, on each action — see [Security Command Center](../ai-threat-intelligence/ai-soc-agents.md#auto-fix-engine).
+- **Compliance overrides and remediation** — the remediation audit trail exported by [Audit Reports](../compliance/audit-reports.md).
+- **DPDP** — the sealed audit pack in [DPDP Compliance](../compliance/dpdp-privacy.md#audit--export).
+- **AI agent decisions** — the Command Center's [Activity Log](../ai-threat-intelligence/ai-soc-agents.md#activity-log).
 
-| Feature | v1 (Legacy) | v2 (Current) |
-| :--- | :--- | :--- |
-| **Location** | Query Parameters (`sig`, `ts`) | Headers (`X-Webhook-Signature`, `X-Webhook-Timestamp`) |
-| **Body Binding** | No (Vulnerable to substitution) | Yes (HMAC includes SHA256 of body) |
-| **Replay Protection** | `WebhookReplayCache` (5 min TTL) | `WebhookReplayCache` (5 min TTL) |
+## User Activity (platform administrator)
 
-*   **v2 Signature Logic**: The signature is computed as `HMAC(secret, "v1:timestamp:scan_id:tool_name:body_hash")` where the body hash is a SHA256 hexdigest of the raw bytes.
-*   **Replay Protection**: The `WebhookReplayCache` stores `(timestamp, signature)` pairs to prevent the same signature from being used twice within the TTL window.
-*   **Ingestion**: Validated payloads are passed to the `external_scanner.receive_scan_result` for processing.
+**Where:** left navigation → *Management* → **User Activity** (visible to the platform administrator only).
 
-## Evidence Automation & Risk Exceptions
+![User Activity: users, online now, live sessions, signed in 24 h, logins 24 h, failed logins; Users tab with role, status, presence, sessions, last login, from, via, teams, password actions](/img/screenshots/platform-security/user-activity.webp)
 
-The platform automates the GRC lifecycle by wiring evidence collection to platform events and providing formal risk exception workflows.
+Every account on the deployment in one place — who is signed in right now, from where, and every login attempt:
 
-### Evidence Auto-Trigger Service
-The `EvidenceAutoTriggerService` eliminates manual evidence collection by reacting to `EventTypes`.
-*   **Scan Completion**: Triggers `on_scan_completed`, which delegates to specific collectors (CSPM, K8s, Container, etc.) based on the `scan_type`.
-*   **Freshness Monitoring**: A weekly Celery task `check_evidence_freshness` uses `_is_evidence_fresh` to identify expiring evidence and alert users.
+| Tab | Shows |
+| --- | --- |
+| **Users** | Each account: role, status, presence (online = active in the last 15 minutes), open sessions, last login, source IP, sign-in method (password or SSO), teams, and the password actions below |
+| **Live sessions** | Every open session — user, presence, IP, client, method, signed in, expires — with **Sign out** per session |
+| **Login history** | Successful, failed and blocked sign-ins with IP and reason |
 
-### Risk Exception & KRI Monitoring
-*   **Risk Exceptions**: The `RiskExceptionService` manages the lifecycle of suppressed findings, including creation, admin approval, and expiration tracking.
-*   **KRI Monitoring**: The `KRIMonitoringService` evaluates Key Risk Indicators (e.g., `critical_vuln_count`, `sla_breach_rate`) against thresholds and emits `RISK_THRESHOLD_BREACHED` events when limits are crossed.
+![Live sessions: user, presence, IP, client, via, signed in, expires; Sign out](/img/screenshots/platform-security/user-activity-sessions.webp)
 
-**Entity Space Mapping**
-```mermaid
-graph TD
-    subgraph "Core Security (Audit/Webhook)"
-        ATM["AuditTrailMiddleware"]
-        WSS["WebhookSecurityService"]
-        WRC["WebhookReplayCache"]
-    end
+Two account actions live here because they are the administrator's answer when email is not configured: **Reset password** issues a reset link (valid 24 hours) to hand to the user directly, and **Require change** forces a new password at the next sign-in. The page says so itself when SMTP is missing.
 
-    subgraph "Event-Driven Automation"
-        EB["EventBus"]
-        EATS["EvidenceAutoTriggerService"]
-        KRIS["KRIMonitoringService"]
-    end
+Listing sessions here is read-only by design: opening the page does not refresh anyone's session or make them look active.
 
-    subgraph "Data Store (MongoDB)"
-        EBAL["platform_audit_trail"]
-        KS["kri_snapshots"]
-        RES["risk_exceptions"]
-    end
+## Related
 
-    ATM --> EBAL
-    EB -- "persists" --> EBAL
-    WSS --> WRC
-    EATS -- "subscribes" --> EB
-    KRIS -- "snapshots" --> KS
-    KRIS -- "publishes" --> EB
-```
-
----
+- [Signing In & Sessions](./session-management.md) — the events that produce the login history.
+- [Roles, Teams & API Keys](./rbac-team-management.md) — who is a team Admin.
+- [Platform Administration](./platform-administration.md) — the account that sees across teams.
+- [Platform Security API](./api.md#audit-trail-and-user-activity) — the endpoints on this page.

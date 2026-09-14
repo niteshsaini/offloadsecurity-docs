@@ -128,7 +128,7 @@ If a private scan won't run, try a known public image (like `nginx:latest`) in *
 4. **Check IP allowlisting.** If the key is restricted to specific IP addresses, calls from any other address are blocked. Confirm your CI runner's egress IP is on the list.
 
 :::note[Where to manage keys]
-Create, scope, rotate, and IP-restrict API keys under **Team Management**. For setup and pipeline examples, see [RBAC, API Keys & Team Management](./authentication/rbac-team-management.md).
+Create, scope, rotate, and IP-restrict API keys under the account menu → **API Keys**. For setup and pipeline examples, see [Roles, Teams & API Keys](./authentication/rbac-team-management.md).
 :::
 
 ### My pipeline gets a 403 (authenticated but forbidden)
