@@ -44,7 +44,8 @@ Agents run on their own after a **cloud scan** completes: the trigger service tr
 | **Investigate** | High and KEV or internet-facing · high on production · any other high |
 | **Auto-resolved** | Medium or low that was previously resolved — same issue recurring, likely already addressed (higher confidence in non-production) |
 | **Monitor** | A remediation workflow already exists · medium with EPSS < 0.1, not internet-facing, non-production · medium in dev / test |
-| **False positive** | Only from an evidence-based assessment (below), never from severity alone |
+| **False positive** | Low / informational severity in a non-production environment — the rule set's one severity-based FP call (0.7). Anything else needs the evidence-based assessment below |
+| *(Low elsewhere)* | Low severity outside dev / test → **Monitor**; a finding no rule recognises → **Investigate** at 0.5 |
 
 Signals come from the finding and its enrichment: severity, KEV flag, EPSS, whether the asset is public-facing, environment tags, first-seen date, and whether a similar finding was resolved before. Confidence is a property of the rule (0.97 for KEV-critical, 0.65 for medium-in-dev); a low number is a cue to look.
 

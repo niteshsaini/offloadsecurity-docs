@@ -26,9 +26,9 @@ Nine feeds ship with the platform, enabled per team. Every enabled feed is fetch
 | **CISA Known Exploited Vulnerabilities** | CVEs confirmed exploited in the wild — the strongest single prioritisation signal | — |
 | **Abuse.ch URLhaus** | Malware distribution URLs | Auth-Key required |
 | **AlienVault OTX Community** | Community pulses: IPs, domains, hashes with context | API key required |
-| **Feodo Tracker** (abuse.ch) | Botnet C2 servers (Emotet, Dridex, QakBot…) | — |
-| **SSL Blacklist** (abuse.ch) | Certificates and IPs used by malware C2 | — |
-| **PhishTank** | Verified phishing URLs | optional |
+| **Feodo Tracker** (abuse.ch) | Botnet C2 servers (Emotet, Dridex, QakBot…) | optional |
+| **SSL Blacklist** (abuse.ch) | Certificates and IPs used by malware C2 | optional |
+| **PhishTank** | Verified phishing URLs | — |
 | **Blocklist.de** | IPs reported for attacks on SSH, mail, web | — |
 | **Spamhaus DROP** | Hijacked / criminal netblocks (CIDR) | — |
 | **OpenPhish** | Phishing URLs | — |

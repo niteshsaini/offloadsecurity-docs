@@ -34,7 +34,7 @@ On upload the text is extracted, split into chunks and **embedded** for semantic
 
 ![AI Assistant: AI Configuration cards (Anthropic Claude, OpenAI Direct, Google Gemini — Add Key); quick-start templates for compliance, incident response, risk and control questions](/img/screenshots/ai-threat-intelligence/kb-chat.webp)
 
-Ask in plain language and the assistant retrieves the most relevant chunks across your documents, answers from them, and returns the **sources** it used with a **confidence** level — *high* (85–100 %), *medium* (60–84 %) or *low*. Quick-start templates cover the common shapes: a compliance requirement check, an incident-response procedure, risk-assessment guidance, how a control is implemented. Thumbs up / down on an answer is recorded and feeds the accuracy figure in analytics.
+Ask in plain language and the assistant retrieves the most relevant chunks across your documents, answers from them, and returns the **sources** it used with a **confidence** level — *high* (85–100 %), *medium* (60–84 %) or *low*. Quick-start templates cover the common shapes: a compliance requirement check, an incident-response procedure, risk-assessment guidance, how a control is implemented. Thumbs up / down on an answer is recorded with the question for review.
 
 The same tab hosts **AI Configuration** — the team's providers for every AI feature on the platform (Anthropic, OpenAI, Google: Add Key → Test → Activate). See [AI Assistant](../reports-and-ai/ai-assistant.md) for the full picture.
 
@@ -67,7 +67,7 @@ Approved and edited answers are written to the team's **question bank**; the nex
 
 ![Knowledge Base Analytics: total documents, questions asked, AI accuracy, user satisfaction; popular questions; most referenced documents](/img/screenshots/ai-threat-intelligence/kb-analytics.webp)
 
-Documents, questions asked (today / week / month), **AI accuracy** (from the feedback given on answers), **user satisfaction** (1–5), the most-asked questions and the most-referenced documents — a plain view of whether the library is answering what people actually ask, and which document to write next.
+Documents, questions asked (today / week / month), **AI accuracy** (the average confidence of the answers given), **user satisfaction** (1–5, from answer feedback), the most-asked questions and the most-referenced documents — a plain view of whether the library is answering what people actually ask, and which document to write next.
 
 :::note[Permissions]
 Uploading and deleting documents, asking questions, filling questionnaires and working the review queue need **Manage Assessments**. The library, analytics and templates are readable by any team member.

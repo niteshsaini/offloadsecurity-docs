@@ -10,7 +10,7 @@ description: "Fix the common problems — a feed that shows API key required, Ru
 ## Threat Intelligence
 
 **A feed shows "API key required" and no indicators.**
-URLhaus (Auth-Key) and AlienVault OTX need a key from the vendor; PhishTank's is optional. **Add API Key** on the card, then **Process Feed Now**. Keys are per team and encrypted.
+URLhaus (Auth-Key) and AlienVault OTX need a key from the vendor; Feodo Tracker and SSL Blacklist accept an optional one; the rest need none. **Add API Key** on the card, then **Process Feed Now**. Keys are per team and encrypted.
 
 **A feed is *degraded* or *critical*.**
 Health is the success rate of recent fetches, recalculated every six hours. Open the card: the last error is classified — *auth* (rotate the key), *rate_limited* / *quota* (wait; the next hourly fetch retries), *timeout* / *unreachable* (egress from the platform to the feed URL), *parse* (the vendor changed format — report it), *discontinued*. Transient classes retry on their own.
