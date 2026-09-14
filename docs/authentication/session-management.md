@@ -33,7 +33,7 @@ Two ways in — a password (with MFA on top) or your identity provider — and o
 
 ![Step 1: scan QR code; Step 2: enter verification code](/img/screenshots/platform-security/mfa-setup.webp)
 
-With MFA on, a correct password returns an MFA challenge rather than a session; the code (or a backup code) completes the sign-in. **Disable** needs a current code.
+With MFA on, a correct password returns an MFA challenge rather than a session; the code (or a backup code) completes the sign-in within five minutes. **Disable** asks for your password, not a code.
 
 :::note[Enforcing MFA for everyone]
 A team admin can turn on **MFA enforcement** for the deployment (`POST /api/auth/mfa/enforce`). Sign-in then flags accounts without MFA (`mfa_setup_required`) and the MFA page shows the policy; it is a prompt, not a hard block on the password sign-in itself. When SSO is used and the identity provider already performs MFA, the operator can set `OIDC_TRUST_IDP_MFA=true` so SSO users are not asked twice.

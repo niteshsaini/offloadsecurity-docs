@@ -13,7 +13,7 @@ description: "Locked accounts, lost authenticators, SSO that refuses sign-in, in
 Five failures lock the account for 15 minutes and every attempt during the lock gets the same message. Wait, or ask the platform administrator to check *Login history* for `login_blocked`. If SSO is enforced on the deployment, passwords are refused for everyone but the platform administrator — use **Sign in with …**.
 
 **I lost my authenticator.**
-Use one of your backup codes at the MFA prompt, then **Regenerate** codes and re-enrol from **Multi-Factor Auth**. With no codes left there is no self-service or admin bypass in the UI — MFA is only disabled by the account holder with a valid code — so the operator has to clear the enrolment on the account record; keep the backup codes somewhere you can reach without the phone.
+Use one of your backup codes at the MFA prompt, then **Regenerate** codes and re-enrol from **Multi-Factor Auth**. With no codes left you cannot sign in, and there is no admin bypass in the UI (disabling MFA needs a signed-in session plus your password), so the operator has to clear the enrolment on the account record. Keep the backup codes somewhere you can reach without the phone.
 
 **"Forgot your password?" says a link was sent, but nothing arrives.**
 The message is the same whether or not the email exists, and sending needs the platform's SMTP (Platform Setup). Without SMTP the platform administrator can issue the link directly from User Activity → **Reset password** (valid 24 hours).

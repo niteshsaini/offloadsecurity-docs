@@ -38,7 +38,7 @@ SMTP set here is the **platform** mail server: it sends invitations, password-re
 
 ![Client Menu Settings: per-section checkboxes grouped by Core Security, Cloud & Infrastructure, …; applies to every user except the platform administrator](/img/screenshots/platform-security/menu-settings.webp)
 
-Choose which sections of the left navigation the deployment's users see. Untick a module a customer has not licensed or a team is not ready for and it disappears from the menu for everyone — except the platform administrator, who always sees the full menu. This is a **presentation** control: it does not change permissions, and the API behind a hidden section still enforces roles as usual. Settings are stored per deployment (`PUT /api/admin/menu-config`).
+Choose which sections of the left navigation the deployment's users see. Untick a module a customer has not licensed or a team is not ready for and it disappears from the menu for everyone — except the platform administrator, who always sees the full menu. This is a **presentation** control: it does not change permissions, and the API behind a hidden section still enforces roles as usual. Settings are stored per deployment (`PUT /api/admin/menu-config`; the sidebar reads `GET /api/menu-config`).
 
 ## User Activity
 

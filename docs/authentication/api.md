@@ -16,7 +16,7 @@ description: "Sign-in, MFA and SSO; teams, members and invitations; API key life
 | Sign in | `POST /api/auth/login` `{email, password}` → `{session_id, user}` or `{mfa_required: true, mfa_token}` | 5 failures → 15-minute lock; SSO-enforced deployments refuse non-platform-admin passwords |
 | Complete MFA | `POST /api/auth/mfa/verify` `{mfa_token, code}` | TOTP or backup code; challenge valid 5 minutes |
 | Who am I · sign out | `GET /api/auth/me` · `POST /api/auth/logout` | |
-| MFA management | `POST /api/auth/mfa/setup` → QR + secret · `POST …/mfa/enable` `{code}` → backup codes · `POST …/mfa/disable` `{code}` · `POST …/mfa/backup-codes` `{code}` (regenerate) · `GET …/mfa/status` | The signed-in user |
+| MFA management | `POST /api/auth/mfa/setup` → QR + secret · `POST …/mfa/enable` `{secret, code}` → backup codes · `POST …/mfa/disable` `{password}` · `POST …/mfa/backup-codes` (regenerate; no body) · `GET …/mfa/status` | The signed-in user |
 | MFA enforcement | `GET` · `POST /api/auth/mfa/enforce` `{enforce}` | **Manage Team** |
 | Passwords | `POST /api/auth/change-password` `{current_password, new_password}` · `POST /api/auth/forgot-password` `{email}` · `POST /api/auth/reset-password` `{token, new_password}` | Reset link valid 30 min |
 | SSO | `GET /api/auth/sso/status` → `{enabled, enforced, provider_name}` · `GET /api/auth/sso/login` (redirects to the IdP) · `GET /api/auth/sso/callback` · `POST /api/auth/sso/exchange` `{code}` → session | Configured by environment |
@@ -51,7 +51,7 @@ description: "Sign-in, MFA and SSO; teams, members and invitations; API key life
 | Export | `GET /api/audit-trail/export` (CSV, ≤ 10,000 events) | Team Admin or platform administrator |
 | Authentication log | `GET /api/auth/audit-log?limit=` | Platform administrator |
 | User activity | `GET /api/platform-admin/activity/summary` · `…/users` · `…/sessions` · `DELETE …/sessions/{session_id}` · `GET …/login-history` · `POST …/users/{user_id}/reset-password` · `POST …/users/{user_id}/require-password-change` | Platform administrator |
-| Menu configuration | `GET` · `PUT /api/admin/menu-config` `{menu_visibility: {section_id: bool}}` | Platform administrator |
+| Menu configuration | `GET /api/menu-config` (any signed-in user — drives the sidebar) · `PUT /api/admin/menu-config` `{menu_visibility: {section_id: bool}}` | PUT: platform administrator |
 | Platform setup | `GET /api/platform-setup/status` · `POST /api/platform-setup/reopen` · `…/validate-service` · `…/validate-smtp` · `…/validate-storage` · `…/save-config` · `…/complete` | Admin |
 
 ## Permissions
