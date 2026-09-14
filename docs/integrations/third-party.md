@@ -38,7 +38,7 @@ The connection is tested for real and re-checked on the health schedule; **no da
 | **OWASP ZAP** | Security Testing | ZAP API version call with the API key | `api_key`\* `zap_host`\* · `zap_port` (8080) `target_url` `verify_ssl` `ca_cert` |
 | **Burp Suite** | Security Testing | Burp REST API call with the API key | `api_key`\* `burp_host`\* · `burp_port` (1337) `license_key` `verify_ssl` `ca_cert` |
 | **Nuclei** | Security Testing | Confirms the Nuclei engine is available to the platform (Docker image or binary) | `target_url`\* · `template_path` `severity` |
-| **Greenbone OpenVAS** | Security Testing | GMP authentication. Results stay in Greenbone. [Details](./openvas.md) | `username`\* `password`\* `gmp_host`\* · `gmp_port` (9390) `verify_ssl` `ca_cert` |
+| **Greenbone OpenVAS** | Security Testing | Signs in to the Greenbone Security Assistant web API. Results stay in Greenbone. [Details](./openvas.md) | `username`\* `password`\* `gmp_host`\* · `gmp_port` (9392, the GSA web port) `verify_ssl` `ca_cert` |
 | **Snyk** | Code Security | Snyk REST API `/self` with the token | `api_token`\* · `organization_id` |
 | **AWS Security Hub** | Cloud Security | `securityhub:DescribeHub` with the keys | `aws_access_key_id`\* `aws_secret_access_key`\* `region`\* · `aws_session_token` |
 | **Prowler** | Cloud Security | `sts:GetCallerIdentity` with the keys — the built-in cloud scanner does not need this; connect real accounts in [Cloud Security](../cloud-security/connecting-accounts.md) | `aws_access_key_id`\* `aws_secret_access_key`\* · `aws_region` `aws_session_token` |
