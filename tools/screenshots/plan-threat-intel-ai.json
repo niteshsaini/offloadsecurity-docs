@@ -1,0 +1,310 @@
+[
+ {
+  "name": "ti-dashboard",
+  "url": "/dashboard?section=threat-intelligence",
+  "delay": 4500
+ },
+ {
+  "name": "ti-indicators",
+  "url": "/dashboard?section=threat-intelligence",
+  "delay": 4500,
+  "clicks": [
+   {
+    "text": "IOC Analysis",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "ti-feeds",
+  "url": "/dashboard?section=threat-intelligence",
+  "delay": 4500,
+  "clicks": [
+   {
+    "text": "Threat Feeds",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "ti-prioritization",
+  "url": "/dashboard?section=threat-intelligence",
+  "delay": 4500,
+  "clicks": [
+   {
+    "text": "Vuln Prioritization",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "ti-mitre",
+  "url": "/dashboard?section=threat-intelligence",
+  "delay": 4500,
+  "clicks": [
+   {
+    "text": "MITRE ATT&CK",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "ti-reporting",
+  "url": "/dashboard?section=threat-intelligence",
+  "delay": 4500,
+  "clicks": [
+   {
+    "text": "Reports",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "ti-import-export",
+  "url": "/dashboard?section=threat-intelligence",
+  "delay": 4500,
+  "clicks": [
+   {
+    "text": "Import/Export",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "soc-overview",
+  "url": "/dashboard?section=ai-soc",
+  "delay": 4500
+ },
+ {
+  "name": "soc-triage",
+  "url": "/dashboard?section=ai-soc",
+  "delay": 4500,
+  "clicks": [
+   {
+    "text": "Triage Center",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "soc-remediation",
+  "url": "/dashboard?section=ai-soc",
+  "delay": 4500,
+  "clicks": [
+   {
+    "text": "AI Remediation",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "soc-auto-fix",
+  "url": "/dashboard?section=ai-soc",
+  "delay": 4500,
+  "clicks": [
+   {
+    "text": "Auto-Fix Engine",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "soc-advisor",
+  "url": "/dashboard?section=ai-soc",
+  "delay": 4500,
+  "clicks": [
+   {
+    "text": "Security Advisor",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "soc-activity",
+  "url": "/dashboard?section=ai-soc",
+  "delay": 4500,
+  "clicks": [
+   {
+    "text": "Activity Log",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "aig-overview",
+  "url": "/dashboard?section=ai-governance",
+  "delay": 4500
+ },
+ {
+  "name": "aig-coverage",
+  "url": "/dashboard?section=ai-governance",
+  "delay": 4500,
+  "clicks": [
+   {
+    "text": "Coverage",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "aig-discovery",
+  "url": "/dashboard?section=ai-governance",
+  "delay": 9000,
+  "clicks": [
+   {
+    "text": "Discovery",
+    "nth": 0
+   },
+   {
+    "role": "button",
+    "text": "Run Discovery",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "aig-model-registry",
+  "url": "/dashboard?section=ai-governance",
+  "delay": 4500,
+  "clicks": [
+   {
+    "text": "Model Registry",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "aig-testing",
+  "url": "/dashboard?section=ai-governance",
+  "delay": 4500,
+  "clicks": [
+   {
+    "text": "Testing",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "aig-risk-assessment",
+  "url": "/dashboard?section=ai-governance",
+  "delay": 4500,
+  "clicks": [
+   {
+    "text": "Risk Assessment",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "aig-operational-controls",
+  "url": "/dashboard?section=ai-governance",
+  "delay": 4500,
+  "clicks": [
+   {
+    "text": "Operations",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "aig-compliance",
+  "url": "/dashboard?section=ai-governance",
+  "delay": 4500,
+  "clicks": [
+   {
+    "text": "Compliance",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "kb-chat",
+  "url": "/dashboard?section=knowledge-base",
+  "delay": 4500
+ },
+ {
+  "name": "kb-upload",
+  "url": "/dashboard?section=knowledge-base",
+  "delay": 4500,
+  "clicks": [
+   {
+    "text": "Document Management",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "kb-documents",
+  "url": "/dashboard?section=knowledge-base",
+  "delay": 4500,
+  "clicks": [
+   {
+    "text": "Document Library",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "kb-questionnaire",
+  "url": "/dashboard?section=knowledge-base",
+  "delay": 4500,
+  "clicks": [
+   {
+    "text": "Questionnaire Auto-Fill",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "kb-answer-review",
+  "url": "/dashboard?section=knowledge-base",
+  "delay": 4500,
+  "clicks": [
+   {
+    "text": "Answer Review",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "kb-analytics",
+  "url": "/dashboard?section=knowledge-base",
+  "delay": 4500,
+  "clicks": [
+   {
+    "text": "Usage Analytics",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "aig-discovery-aibom",
+  "url": "/dashboard?section=ai-governance",
+  "delay": 4500,
+  "clicks": [
+   {
+    "text": "Discovery",
+    "nth": 0
+   }
+  ],
+  "scrollY": 700
+ },
+ {
+  "name": "ti-dashboard-feeds",
+  "url": "/dashboard?section=threat-intelligence",
+  "delay": 4500,
+  "scrollY": 650
+ },
+ {
+  "name": "aig-overview-more",
+  "url": "/dashboard?section=ai-governance",
+  "delay": 4500,
+  "scrollY": 600
+ },
+ {
+  "name": "soc-overview-more",
+  "url": "/dashboard?section=ai-soc",
+  "delay": 4500,
+  "scrollY": 500
+ }
+]

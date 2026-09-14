@@ -1,87 +1,80 @@
 ---
 title: "Knowledge Base & AI Assistant"
 sidebar_label: "Knowledge Base"
-sidebar_position: 4
+sidebar_position: 5
+description: "Upload your policies, procedures and standards into a sectioned, sensitivity-labelled library; ask questions and get answers with citations and a confidence score; auto-fill security questionnaires from those documents with an answer bank and a review queue; and see who asks what."
 ---
 
 # Knowledge Base & AI Assistant
 
-The **Knowledge Base** turns your own security documents — policies, standards, runbooks, prior questionnaires — into a searchable library that an AI assistant can answer questions from. Instead of digging through files to find "what's our MFA policy?" or "how do we handle a data breach?", you ask in plain language and get an answer grounded in **your** documents, with the sources cited.
+Every security team answers the same questions over and over — *what is our password policy*, *how fast do we patch criticals*, *do you encrypt backups* — from the same handful of documents. The Knowledge Base holds those documents once, answers questions from them with a citation and a confidence score, and fills whole security questionnaires the same way. Approved answers go into a bank, so the next questionnaire starts mostly done.
 
-It also helps with two recurring chores: auto-filling security questionnaires from your existing material, and searching across everything you've uploaded.
+**Where:** left navigation → *Management* → **Knowledge Base**.
 
-## What it does
+## Documents
 
-- **Document Q&A (RAG)** — ask questions in natural language and get answers drawn from the documents you've uploaded, not the open internet. Each answer shows a **confidence score**, the **source documents** it used, and suggested **follow-up questions**.
-- **Document library** — upload, organize, search, and manage your security documents. Files are grouped into **sections** (for example, Security Policies, Compliance Frameworks, Technical Documentation, Incident Response, Risk Assessment), and you can create your own sections too.
-- **Questionnaire auto-fill** — upload a security questionnaire as an Excel (`.xlsx`) file and the assistant fills in answers from your knowledge base, complete with confidence scores and source citations, then hands you the completed file to download and review.
-- **Usage analytics** — see how the knowledge base is being used: total documents, questions asked, popular questions, and the most-referenced documents.
+![Document Management: single or bulk upload; title, section, document type, sensitivity level, description, tags, file (PDF, Word, text)](/img/screenshots/ai-threat-intelligence/kb-upload.webp)
 
-:::note[Bring your own AI provider]
-The assistant works with major model providers, including OpenAI, Anthropic (Claude), and Google Gemini, plus a built-in default. Your administrator chooses and configures the provider; you select which one to use from the **AI Assistant** tab.
+**Document Management** uploads one document with metadata, or several at once:
+
+| Field | Values |
+| --- | --- |
+| **Section** | Security Policies · Compliance Frameworks · Technical Documentation · Incident Response · Risk Assessment — plus any section you add |
+| **Document type** | policy · SOP · compliance framework · audit report · technical documentation · security playbook · incident response · risk assessment · training material · vendor documentation · regulatory guidance · best practices |
+| **Sensitivity** | public · internal · confidential · restricted |
+| **File** | PDF, Word (`.docx`) or plain text |
+
+On upload the text is extracted, split into chunks and **embedded** for semantic retrieval; the status goes *processing* → *ready*. If extraction produced nothing useful (a scanned PDF, an image-only page) the document is flagged and **Re-process documents** on the Questionnaire tab re-extracts and re-embeds it.
+
+![Document Library: search, section filter, document cards with type, status, tags, questions asked and views; Ask AI About This](/img/screenshots/ai-threat-intelligence/kb-documents.webp)
+
+**Document Library** searches by title, content or topic, filters by section, and shows per document how many questions it has answered and how often it was viewed. **Ask AI About This** opens the assistant scoped to that document. Documents are team-scoped and sensitivity is metadata for your own handling rules — every member of the team can read the library.
+
+## AI Assistant
+
+![AI Assistant: AI Configuration cards (Anthropic Claude, OpenAI Direct, Google Gemini — Add Key); quick-start templates for compliance, incident response, risk and control questions](/img/screenshots/ai-threat-intelligence/kb-chat.webp)
+
+Ask in plain language and the assistant retrieves the most relevant chunks across your documents, answers from them, and returns the **sources** it used with a **confidence** level — *high* (85–100 %), *medium* (60–84 %) or *low*. Quick-start templates cover the common shapes: a compliance requirement check, an incident-response procedure, risk-assessment guidance, how a control is implemented. Thumbs up / down on an answer is recorded and feeds the accuracy figure in analytics.
+
+The same tab hosts **AI Configuration** — the team's providers for every AI feature on the platform (Anthropic, OpenAI, Google: Add Key → Test → Activate). See [AI Assistant](../reports-and-ai/ai-assistant.md) for the full picture.
+
+:::warning[Retrieval needs an OpenAI key]
+Document retrieval uses OpenAI embeddings (`text-embedding-3-small`). With only an Anthropic or Google key configured, uploads still index and the library works, but questions and questionnaire fills report that retrieval is unavailable rather than guessing — an honest error, not a low-confidence answer. Configure an OpenAI key alongside your preferred answering model.
 :::
 
-## How to use it
+## Questionnaire auto-fill
 
-Open **Knowledge Base** from the left navigation. The page has five tabs across the top: **AI Assistant**, **Document Management**, **Document Library**, **Questionnaire Auto-Fill**, and **Usage Analytics**.
+![Questionnaire Auto-Fill: how it works; choose an .xlsx; answer detail level short / standard / detailed; Auto-Fill Questionnaire; re-process documents](/img/screenshots/ai-threat-intelligence/kb-questionnaire.webp)
 
-### 1. Upload your documents
+Upload the security questionnaire you received as **Excel (`.xlsx`)**. The platform detects the question column, answers each question from your documents (and from the **answer bank**, below), writes the answers, confidence and source citations back into the sheet, and returns the filled file. **Answer detail level** — short (1–2 sentences), standard (2–5), detailed (full paragraphs) — sets the length; answers are consolidated and rewritten in a customer-facing tone at that length (refinement is on by default; the per-team word limits are adjustable over the API).
 
-The assistant can only answer from what you've given it, so start by adding documents.
+## Answer review and the answer bank
 
-1. Go to the **Document Management** tab.
-2. Choose **Single Upload** (one file with full details) or **Bulk Upload** (many files at once, sharing the same settings).
-3. Select a **file**, give it a **title**, pick a **section**, and optionally set a document type, sensitivity level, tags, and description.
-4. Select **Upload**. The document is processed in the background and becomes available for Q&A shortly — its status changes to **Ready** when it's searchable.
+![Answer Review: pending review counts by priority — urgent, high, normal, spot-check; pending and history](/img/screenshots/ai-threat-intelligence/kb-answer-review.webp)
 
-:::tip[Supported files]
-You can upload **PDF, Word (`.doc` / `.docx`), text (`.txt`), and Markdown (`.md`)** files, up to **50 MB each**. Bulk upload accepts up to **50 files** at a time.
-:::
+Every filled answer is queued for a person to **approve**, **edit** or **reject**, prioritised so the queue is worked in the right order:
 
-### 2. Ask the AI assistant
+| Priority | When |
+| --- | --- |
+| **Urgent** | The filler flagged the answer as needing review |
+| **High** | Confidence below 50 %, or the answer came from the platform's knowledge rather than your documents |
+| **Normal** | Everything else answered from your documents |
+| **Spot-check** (low) | The answer was auto-filled from the bank — approved once already |
 
-1. Open the **AI Assistant** tab.
-2. (Optional) Narrow the scope with the **question type** (General, Compliance, Technical, Policy, Procedure, Risk, Incident) and a specific **section** — leave both as-is to search everything.
-3. Type your question (for example, *"What is our password rotation policy?"*) and select **Ask**.
-4. Read the answer, check its **confidence level** and **Sources**, and select a **Related Question** to dig deeper. The assistant remembers the conversation, so follow-ups build on what you've already asked.
-5. Give a quick 👍 / 👎 on each answer to help improve future results, or select **Start New Conversation** to reset the context.
+Approved and edited answers are written to the team's **question bank**; the next questionnaire that asks a semantically matching question is filled from the bank first. That loop is what turns the third questionnaire of the quarter into a review job rather than a writing job.
 
-Need a starting point? The **Quick Start Templates** on the same tab pre-fill common questions about compliance, incidents, risk, and controls.
+## Usage analytics
 
-### 3. Find a specific document
+![Knowledge Base Analytics: total documents, questions asked, AI accuracy, user satisfaction; popular questions; most referenced documents](/img/screenshots/ai-threat-intelligence/kb-analytics.webp)
 
-1. Go to the **Document Library** tab.
-2. Search by title, content, or topic, or filter by **section**.
-3. Open a document's actions to **Ask AI About This** (jumps to the assistant with the document pre-loaded) or **Delete** it.
+Documents, questions asked (today / week / month), **AI accuracy** (from the feedback given on answers), **user satisfaction** (1–5), the most-asked questions and the most-referenced documents — a plain view of whether the library is answering what people actually ask, and which document to write next.
 
-### 4. Auto-fill a security questionnaire
-
-1. Open the **Questionnaire Auto-Fill** tab.
-2. Upload an Excel (`.xlsx`) file that has a column of questions.
-3. Select **Auto-Fill Questionnaire**. The assistant searches your documents for relevant answers (this can take a few minutes for large files).
-4. The completed Excel downloads automatically, with AI answers, confidence scores, and source citations. A summary shows how many questions were filled, skipped, and the average confidence.
-
-:::warning[Always review AI answers]
-Auto-fill is a drafting aid, not a final submission. Review every answer — especially low-confidence ones — before you send a questionnaire to a customer or auditor.
-:::
-
-## Tips & prerequisites
-
-:::tip[Better answers from cleaner documents]
-If the assistant returns low-confidence answers, or a document is flagged as unreadable, use **Re-extract & Re-embed** (on the Questionnaire Auto-Fill tab) to redo text extraction, or **Regenerate AI Summaries** if only the summaries are missing. Both run in the background.
-:::
-
-:::note[Everything stays in your team]
-Your documents, questions, and answers are scoped to your **active team**. You only see — and the assistant only answers from — material that belongs to the team you're currently in. Check the team selector in the top-right before uploading or asking.
-:::
-
-:::warning[Mind document sensitivity]
-Anything you upload can be used to answer questions for your team. Only add material your team is permitted to see, set an appropriate **sensitivity level**, and review your team membership before adding confidential policies.
+:::note[Permissions]
+Uploading and deleting documents, asking questions, filling questionnaires and working the review queue need **Manage Assessments**. The library, analytics and templates are readable by any team member.
 :::
 
 ## Related
 
-- [AI & Threat Intelligence Overview](./index.md) — how AI and threat context fit together across the platform.
-- [AI SOC Agents](./ai-soc-agents.md) — automated triage, remediation, and threat hunting on your findings.
-- [AI Governance & Privacy Compliance](./ai-governance.md) — govern your own AI systems against the EU AI Act and other regulations.
-- [Threat Intelligence & Feeds](./threat-intelligence.md) — live feed ingestion and indicator correlation.
+- [AI Assistant](../reports-and-ai/ai-assistant.md) — provider configuration and the assistant that lives on every page.
+- [Assessments](../compliance/interactive-assessments.md) — the SCF-based auto-fill for framework assessments is a different mechanism and works without a provider.
+- [AI Data & Privacy](./ai-data-privacy.md) — what leaves the platform when a question is asked.
