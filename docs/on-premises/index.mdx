@@ -2,39 +2,38 @@
 title: "On-Premises & Private Infrastructure"
 sidebar_label: "Overview"
 sidebar_position: 0
-description: "How Offload Security delivers CNAPP, vulnerability management and compliance on-premises — internal-network discovery, OpenVAS scanning and Wazuh telemetry — fully self-hosted, with data never leaving your environment."
+description: "Run the whole platform inside your own network — a Docker Compose stack of prebuilt images with MongoDB and Redis, nothing leaving your boundary — and use it to scan private applications, hosts and internal networks, ingest Wazuh endpoint telemetry, and connect Greenbone / OpenVAS, all in the same dashboard as your cloud posture."
 ---
-
 import DocFaq from '@site/src/components/DocFaq';
 
 # On-Premises & Private Infrastructure
 
-Cloud-native security tools stop at the cloud's edge. But most enterprises — and nearly every regulated one — still run business-critical systems on **private infrastructure**: internal applications, databases, file servers, OT and IoT devices, and employee endpoints that never touch a public IP. That footprint is where a great deal of real risk lives, and it is exactly what pure-SaaS scanners cannot see.
+Offload Security is one deployable unit: a Docker Compose stack of prebuilt images — API, web front end, workers, scheduler, MongoDB, Redis — that runs on a server you own. Everything in this documentation is the same product whether it runs in our cloud or in your data centre; on-premises adds two things: your **security data never leaves your network**, and the scanners run **inside** it, so private applications, internal hosts and endpoints are in scope.
 
-Offload Security closes that gap. The same platform that assesses your cloud reaches **inside your network** to discover internal assets, scan private applications and APIs, run vulnerability scans against internal hosts, and ingest endpoint and SIEM telemetry — and it lands all of it in the **same unified dashboard** as your cloud, code, and container posture.
+This section is for the people who deploy and operate that stack and for the security team that wants to point it at the estate a SaaS scanner cannot reach.
 
-![Offload Security internal infrastructure and endpoint visibility — private hosts, internal apps and Wazuh-monitored endpoints in one view](/img/screenshots/infra-endpoints.png)
+## What "on-premises" changes
 
-:::tip[One platform, both worlds]
-You don't run a separate on-prem product with its own console. Internal-network findings and Wazuh security events are correlated alongside cloud and application posture in one place — one inventory, one risk register, one compliance view — and a Greenbone/OpenVAS deployment connects in for internal vulnerability scanning.
-:::
+| | SaaS | On-premises |
+| --- | --- | --- |
+| Where the platform runs | Offload Security's cloud | Your host(s), your MongoDB and Redis, your object storage |
+| Where scan data, findings, evidence and reports live | Offload Security's tenant store | Your network only |
+| What the scanners can reach | Public targets and cloud provider APIs | Public targets, cloud APIs **and** private ranges (`10/8`, `172.16/12`, `192.168/16`) once the operator opts in |
+| Endpoint and host telemetry | Via a Wazuh you expose to us | Wazuh on your LAN, connected directly |
+| Identity | Offload-hosted sign-in, or your IdP over OIDC | Your IdP over OIDC, your SMTP, your certificates |
+| Outbound traffic needed | — | Image registry for installs and upgrades; threat feeds; the cloud provider APIs you scan; optionally an LLM provider |
 
-## What the on-premises model covers
+## In this section
 
-| Capability | What it gives you | Read more |
-|---|---|---|
-| **Internal network visibility** | Discovery and continuous monitoring of assets living behind the firewall — hosts, services, and internal apps that cloud tools never see. | [Internal Network Visibility](./internal-network-visibility.md) |
-| **Private infrastructure & internal URL/API scanning** | Security testing of internal web apps, private APIs, and services that are only reachable inside your network. | [Private Infrastructure Scanning](./private-infrastructure-scanning.md) |
-| **OpenVAS vulnerability scanning** | A supported integration for authenticated and unauthenticated vulnerability scanning of internal hosts and private environments; Offload connects to your Greenbone/OpenVAS deployment and OpenVAS performs the scanning. | [OpenVAS Scanning](./openvas-scanning.md) |
-| **Wazuh endpoint & SIEM visibility** | Endpoint (agent) security data, security events, alerts, vulnerability state, file-integrity monitoring, and compliance checks — in a customized in-platform dashboard. | [Wazuh Integration](./wazuh-integration.md) |
-| **Centralized ingestion** | All of the above, plus cloud and application data, unified into one correlated source of truth and one dashboard. | [Centralized Ingestion](./centralized-ingestion.md) |
-
-## Why organizations need it
-
-- **Data residency and sovereignty.** Regulated sectors often cannot send security telemetry to a third-party SaaS. On-prem scanning and ingestion keep sensitive data inside your boundary while still giving leadership a unified view.
-- **Coverage that matches reality.** A posture picture that omits the internal network is, by definition, incomplete — and it's usually the part auditors and attackers care about most.
-- **No second silo.** Running separate on-prem tools re-creates the very fragmentation you're trying to escape. Bringing internal and cloud data into one platform is what makes the picture trustworthy.
-- **Governance across the whole estate.** Internal-asset vulnerabilities, endpoint events, and compliance checks feed the same risk register and evidence vault as everything else, so governance spans cloud *and* on-prem.
+| Page | Read it for |
+| --- | --- |
+| [Deployment & Operations](./deployment.md) | Prerequisites, the stack, install with prebuilt images, first-run setup, TLS, upgrades, backups, what needs outbound access |
+| [Internal Network Visibility](./internal-network-visibility.md) | How internal hosts and endpoints get into the inventory — network scans of private ranges and Wazuh agents |
+| [Private Infrastructure Scanning](./private-infrastructure-scanning.md) | Web, API, TLS and network scans against targets that only resolve inside your network |
+| [Wazuh Integration](./wazuh-integration.md) | Agents, alerts and host CVEs synced into the platform; the Endpoint Security dashboard |
+| [OpenVAS Scanning](./openvas-scanning.md) | Connecting a Greenbone / OpenVAS instance — and what the connection does and does not do |
+| [Centralized Ingestion](./centralized-ingestion.md) | What is actually unified across cloud, code, container, Kubernetes, DAST and Wazuh sources |
+| [Troubleshooting & FAQ](./troubleshooting.md) | Blocked private targets, workers without Docker, feeds without egress, TLS and SMTP |
 
 ## How it fits together
 
@@ -44,37 +43,32 @@ flowchart LR
         HOSTS["Internal hosts<br/>& services"]
         APPS["Internal apps<br/>& private APIs"]
         EP["Endpoints<br/>(Wazuh agents)"]
+        GV["Greenbone /<br/>OpenVAS"]
     end
-
-    subgraph Engines["On-prem scanning & telemetry"]
-        NET["Internal discovery<br/>& network scanning"]
-        URL["Private URL/API<br/>scanning"]
-        OV["OpenVAS<br/>vulnerability scanning"]
-        WZ["Wazuh<br/>(Manager + Indexer)"]
+    subgraph Stack["Offload Security stack (your host)"]
+        WK["Scan workers<br/>(nmap, ZAP, Nuclei, testssl, Trivy, Syft/Grype, Prowler)"]
+        API["API + workers<br/>+ scheduler"]
+        DB[("MongoDB · Redis")]
     end
-
-    subgraph Platform["Offload Security — one dashboard"]
-        VM["Vulnerability<br/>Management"]
+    subgraph Views["One dashboard"]
+        INV["Asset Inventory"]
+        VM["Vulnerability Management"]
         AL["Alerts"]
-        CMP["Compliance<br/>& Evidence"]
-        RR["Risk Register"]
+        CMP["Compliance & Evidence"]
     end
-
-    HOSTS --> NET & OV
-    APPS --> URL
-    EP --> WZ
-    NET & URL & OV --> VM
-    WZ --> AL & VM & CMP
-    VM --> RR --> CMP
+    HOSTS --> WK
+    APPS --> WK
+    EP --> |Manager + Indexer sync| API
+    GV --> |connection verified| API
+    WK --> API --> DB
+    API --> INV & VM & AL & CMP
 ```
 
-The internal scanning engines and Wazuh run **where your assets are** — inside your network — while the platform correlates their output with cloud and application posture. The result is a single dashboard that finally reflects your *whole* environment.
+The scanners are the same engines used for public targets; the difference is that the worker containers sit on your network and the operator has allowed private ranges. Wazuh data is pulled every 30 minutes and browsed live from an in-platform dashboard. Greenbone / OpenVAS is connected and health-checked; its scan results stay in Greenbone today.
 
-## Deployment shapes
-
-The on-premises model supports common enterprise topologies — hybrid (cloud posture in the platform, internal scanning inside your network), fully self-hosted, and restricted/segmented networks. Deployment mechanics, prerequisites, and network placement are scoped with your implementation team during onboarding.
-
-Continue to **[Internal Network Visibility](./internal-network-visibility.md)** to see how discovery and monitoring work behind the firewall.
+:::note[Same product, same limits]
+On-premises does not add modules. What runs on your host is the platform documented in every other section — with the caveats that threat feeds, container-tool databases and any LLM provider still need outbound HTTPS, and that the AI features send prompts to the provider you configured (see [AI Data & Privacy](../ai-threat-intelligence/ai-data-privacy.md)).
+:::
 
 <DocFaq items={[
   {

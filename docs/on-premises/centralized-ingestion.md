@@ -1,56 +1,48 @@
 ---
 title: "Centralized Security Data Ingestion"
 sidebar_label: "Centralized Ingestion"
-sidebar_position: 5
+sidebar_position: 6
+description: "What is actually unified when cloud, code, container, Kubernetes, DAST, network and Wazuh data land on one platform — the shared asset inventory, the unified findings lake behind triage, one alert stream, one risk register and one evidence store — and where correlation happens automatically versus where it is still a person's job."
 ---
 
 # Centralized Security Data Ingestion
 
-The point of on-premises support is not to add another dashboard — it's to remove one. Every internal capability the platform provides feeds the same **[unified data layer](../introduction/unified-data-layer.mdx)** — the data lake — that also holds your cloud, application, and container posture, and that the Vulnerability Dashboard renders as a single pane of glass. This page explains what "centralized ingestion" actually means and why it's the difference between coverage and clarity.
+The reason to run one platform instead of six tools is not the dashboard; it is that the tools' outputs become **one model** — assets, findings, alerts, risks, controls, evidence — with identity carried across sources. This page says, source by source, what actually converges, so that "single pane of glass" is a description and not a slogan.
 
-## One dashboard, every source
+## What each source contributes
 
-Offload Security ingests and correlates:
+| Source | Assets | Findings | Alerts | Evidence |
+| --- | --- | --- | --- | --- |
+| **Cloud scans** (AWS, Azure, GCP) | Every discovered resource, with identity and network context | Misconfigurations as cloud findings → unified findings | New / reopened critical and high findings | Control evidence auto-collected per framework |
+| **Kubernetes** and **container** scans | Clusters, workloads, images, registries | Cluster misconfigurations, image CVEs → unified findings | Critical / high | Container and K8s compliance reports |
+| **Code scans** (SAST, secrets, SCA, IaC) | Repositories | Code findings → unified findings; SBOMs → AIBOM | Critical / high | SBOMs, licence notices |
+| **Web / API / TLS / network scans** (public or [private](./private-infrastructure-scanning.md)) | — | Scan findings → unified findings | Critical / high | Per-scan reports |
+| **Wazuh** | Endpoints, correlated with their cloud VM | Host CVEs → vulnerability occurrences | Rule-level ≥ 7 detections | SCA / FIM browsed (not stored) |
+| **Threat feeds** | — | Enrich findings (KEV, EPSS, indicators) | — | — |
+| **Greenbone / OpenVAS**, catalog-only tools | — | Not imported today | — | — |
 
-- **Cloud posture** — AWS, Azure, GCP misconfigurations and native findings.
-- **Application, API, code, and container** findings.
-- **Internal-network discovery** and private URL/API scan results.
-- **Wazuh** endpoint events, alerts, vulnerability state, SCA, and FIM.
-- **Threat intelligence** and third-party scanner data via integrations.
+## What "unified" means, concretely
 
-All of it resolves against **one model** of assets, findings, controls, and evidence — so the internal database server, its vulnerability state, the Wazuh events from it, and the compliance control it supports are all connected.
+- **One inventory.** [Asset Inventory](../cloud-security/asset-inventory.md) holds cloud resources, Kubernetes clusters, repositories and Wazuh endpoints under one identity scheme; a Wazuh agent on an EC2 instance is the same asset the cloud scan discovered, not a duplicate. The security graph behind [Attack Paths](../cloud-security/attack-paths.md) is built from the same records.
+- **One findings lake.** Every scanner writes into the unified findings store with a **fingerprint** (source, check, resource), so a re-scan updates a finding instead of creating another, a finding that disappears is reconciled as resolved, and the same CVE on an image and on a host are two occurrences of one vulnerability. [Triage](../vulnerability-risk/vulnerability-management/triage.md) scores across all of them with one formula — severity, KEV, EPSS, exposure, environment, age.
+- **One alert stream.** Cloud, container, code, DAST and Wazuh events all pass through the same `record_alert` chokepoint into [Alerts](../vulnerability-risk/alerts.md), de-duplicated with occurrence counts, routed by the same [notification](../integrations/notifications.md) rules and SLAs.
+- **One risk register and one evidence store.** Findings from any source promote into the [Risk Register](../vulnerability-risk/risk-management/index.md); compliance evidence from cloud, container and Kubernetes scans lands in the [Evidence Hub](../compliance/evidence-hub.md) against SCF controls, so a framework score reflects the whole estate the platform can see.
 
-## What unification changes
+## Where correlation happens automatically — and where it does not
 
-### One inventory
-Cloud resources and internal assets live in the same **[Asset Inventory](../cloud-security/asset-inventory.md)**. An asset has one identity, whether it was discovered in a cloud account or on an internal subnet.
+| Automatic today | Still a person's job |
+| --- | --- |
+| Wazuh endpoint ↔ cloud VM (hostname, then IP) | Wazuh host CVE ↔ OpenVAS result for the same host (OpenVAS is not imported) |
+| Same finding across scans (fingerprint), same CVE across images and hosts (occurrences) | Same *application* across a code repository, its container image and its running workload — linked where names match, not asserted |
+| KEV / EPSS / indicator enrichment on every finding | Reading a Wazuh SCA failure as evidence for a specific control (browse, then attach) |
+| Finding ↔ alert ↔ SLA ↔ ticket lifecycle | Business context (owner, criticality) — set on assets by you, then used by SLAs and risk multipliers |
 
-### One triage queue
-Internal-host CVEs, cloud misconfigurations, application bugs, and Wazuh detections are deduplicated and prioritized together in **[Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx)** and **[Alerts](../integrations/notifications.md)** — so analysts work one list, not six.
+## Data residency
 
-### One risk and compliance view
-Findings from every source — cloud and on-prem alike — promote into the same **[Risk Register](../vulnerability-risk/risk-management/index.md)** and map to the same **[compliance controls](../compliance/index.md)**, producing one **[evidence vault](../compliance/evidence-hub.md)** and one set of **[reports](../vulnerability-risk/index.md)**.
+On an on-premises install every store above is yours: MongoDB and Redis on your host, evidence and reports in your object storage, scanners on your network. Nothing about your findings leaves unless you configure an outbound destination — a Slack channel, a Jira project, a webhook, an LLM provider — and those are per-team choices you can see in [Integrations](../integrations/index.md). The feeds and vulnerability databases the platform *pulls* carry nothing about you.
 
-## Correlation is the value
+## Related
 
-Separate tools can each be excellent and still leave you blind, because the risk that matters most often only appears when sources are combined:
-
-- An **internal host** (Asset Inventory) with a **critical vulnerability** *and* **anomalous Wazuh activity** is a very different priority than any one of those signals alone.
-- A **failed SCA compliance check** (Wazuh) on a host that also has an **open vulnerability** ties an operational finding directly to a control gap and its evidence.
-
-Centralized ingestion is what makes those connections visible automatically, instead of requiring an analyst to notice them across three consoles.
-
-## Data residency and control
-
-Because the internal scanning and telemetry engines run **inside your network**, centralized ingestion does not mean shipping raw internal data to a third party by default. On-prem and hybrid deployments keep sensitive telemetry within your boundary while still delivering a unified view — a requirement for many banks, healthcare providers, and regulated enterprises. Deployment topologies and data-flow options are scoped with your implementation team during onboarding.
-
-## The outcome
-
-One place to answer the questions that matter:
-
-- *What do we have?* — a complete inventory, cloud and internal.
-- *What's wrong with it?* — every finding, deduplicated and prioritized.
-- *How bad is it?* — risk, trended over time, across the whole estate.
-- *Can we prove we're managing it?* — continuous, mapped evidence.
-
-That is the promise of centralized ingestion: not more data, but one trustworthy picture of all of it.
+- [Unified data layer](../introduction/unified-data-layer.mdx) — the design behind the findings lake.
+- [Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx) — where the unified queue is worked.
+- [Deployment & Operations](./deployment.md) — where the stores live on-premises.

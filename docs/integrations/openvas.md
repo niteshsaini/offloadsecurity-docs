@@ -37,11 +37,11 @@ Scans can be **unauthenticated** (an outside-in view of what's exposed) or **aut
 
 | Field | Value |
 | --- | --- |
-| `gmp_host` · `gmp_port` | The Greenbone Management Protocol endpoint (`9390` by default) |
-| `username` · `password` | A GMP user |
+| `gmp_host` · `gmp_port` | The host and **web (Greenbone Security Assistant) port** of your Greenbone instance — `9392` by default. The field is named for GMP, but the platform signs in to GSA's web API, not the raw GMP socket on 9390 |
+| `username` · `password` | A Greenbone user |
 | `verify_ssl` · `ca_cert` *(optional)* | TLS verification and a private CA certificate |
 
-The connection test authenticates over GMP before anything is saved; the health check repeats it on the cadence you choose. Targets, scan configurations and schedules are defined in the Greenbone console — the platform does not push them.
+The connection test signs in to the Greenbone web API (and reads its version) before anything is saved; the health check repeats it on the cadence you choose. Targets, scan configurations and schedules are defined in the Greenbone console — the platform does not push them.
 
 ## Scope of the integration
 
