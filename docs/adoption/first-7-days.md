@@ -52,7 +52,7 @@ Days 1–4 need the **Admin** or **Security Manager** role (connecting accounts 
 **Goal: the platform chases the work, not you.**
 
 1. Create SLA policies — the **Create Default Policies** button gives you documented starting points per severity and environment — [SLA Management](../vulnerability-risk/sla-management.md).
-2. Connect Jira or ServiceNow so findings become tickets with two-way status sync — [Third-Party Integrations](../integrations/third-party.md).
+2. Connect [Jira](../integrations/jira.md) so critical findings become tickets automatically and status flows both ways.
 3. Set up Slack, Microsoft Teams, or email notifications; on Slack, add routing rules so critical findings reach the right channel — [Notifications](../integrations/notifications.md).
 4. Schedule recurring scans in **Management → Unified Scheduler** — a daily incremental plus weekly full scan for cloud accounts, and schedules for web, container, Kubernetes, and code scans. Turn on schedule **failure notifications** so a silently broken scan can't hide — [Scan Management & Scheduling](../security-scanning/scan-management.md).
 

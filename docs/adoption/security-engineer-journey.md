@@ -40,7 +40,7 @@ Typical role: **Security Manager** — Stages 1 and 5 involve connecting account
 ## Stage 4 — Make remediation accountable
 
 1. [SLA Management](../vulnerability-risk/sla-management.md) — policies by severity and environment, breach dashboard, escalation. Use **Create Default Policies** to start.
-2. [Third-Party Integrations](../integrations/third-party.md) — Jira/ServiceNow with two-way status sync.
+2. [Jira](../integrations/jira.md) — tickets from findings with two-way status sync; the [Integration Catalog](../integrations/third-party.md) for what every other tool does once connected.
 3. [Notifications](../integrations/notifications.md) — Slack/Teams/email routing rules so critical findings interrupt someone.
 4. **Verify fixes with scans, not tickets:** a finding only reaches **Verified** when a follow-up scan no longer detects it — and a finding that comes back is automatically **Reopened**. This behavior is documented in [Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx).
 

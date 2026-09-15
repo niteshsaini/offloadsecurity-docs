@@ -40,7 +40,7 @@ Every scan uses **read-only** credentials and only ever *reads* your environment
 ## 1. Sign in
 
 1. Open the platform URL in your browser — e.g. `https://yourdomain.com` (the address your administrator gave you).
-2. Enter your **email** and **password** on the login screen and select **Sign in**.
+2. Enter your **email** and **password** on the login screen and select **Sign in** — or **Sign in with …** if your organisation uses single sign-on. If MFA is enabled on your account, enter the code from your authenticator app.
 3. On success you land on the **Dashboard**.
 
 :::info[First administrator]
@@ -51,14 +51,15 @@ The first administrator account is created during platform setup. If you're the 
 
 The Dashboard is your security command center — a real-time summary of posture, recent activity, and quick actions into the most-used modules.
 
-![Offload Security dashboard overview](/img/screenshots/dashboard.png)
+![Dashboard: quick-action cards; overall risk score, active alerts, vulnerabilities, compliance score, assets monitored; risk posture by domain; top risk findings](/img/screenshots/dashboard.webp)
 
 | Area | What it shows |
 |---|---|
 | **Left navigation** | Every module, grouped into Core Security, Cloud & Infrastructure, Compliance & Risk, Threat & Intelligence, and Management. |
-| **Quick-action cards** | One-click entry into AI Governance, Assessments, Container Security, Cloud Security, and Web Application Security. |
-| **Security metrics** | Headline numbers — total scans, security score, and vulnerability counts by severity. |
-| **Recent Security Activity** | Your latest scans and their status, so you can pick up where you left off. |
+| **Quick-action cards** | One-click entry into AI Governance, Assessments, Container Security, Cloud Security and Web Application Security. |
+| **Headline tiles** | Overall risk score, active alerts, vulnerabilities (with occurrence count), compliance score, assets monitored. |
+| **Risk posture by domain** · **Top risk findings** | Where the risk sits — cloud, vulnerabilities, infrastructure, code, compliance — and the findings to open first. |
+| **Executive Dashboard** tab | The leadership view: framework readiness, gaps, roadmap and executive reports — see [Executive Dashboard](./reports-and-ai/executive-dashboard.md). |
 
 ## 3. Understand the core concepts
 
@@ -72,12 +73,14 @@ Access within a team is governed by role:
 
 | Role | Typical use |
 |---|---|
-| **Admin** | Full access — manage teams, users, integrations, and all data. |
-| **Security Manager** | Manage scans, risks, and remediation across the team. |
-| **Security Analyst** | Run scans and work findings day to day. |
-| **Compliance Officer** | Drive assessments, compliance, and evidence. |
-| **Auditor** | Read-only access to evidence and reports. |
-| **Viewer** | Read-only dashboards. |
+| **Admin** | Everything in the team — members, integrations, cloud accounts, all data. |
+| **Security Manager** | Manage cloud accounts, scans, integrations, threat intelligence, remediations; invite members. |
+| **Security Analyst** | Run scans, work findings and triage, create risks, work assessments. |
+| **Compliance Officer** | Assessments, executive dashboard, reports, AI helpers. |
+| **Auditor** | Read-only across security data, with report export. |
+| **Viewer** | Read-only dashboards, scans, risks, reports, alerts. |
+
+The full permission matrix is in [Roles, Teams & API Keys](./authentication/rbac-team-management.md).
 
 ### The data flow: Scan → Finding → Risk → Report
 This is the backbone of how work moves through the platform:
@@ -107,14 +110,14 @@ Open **[Vulnerability Management](./vulnerability-risk/vulnerability-management/
 - **Verify:** you can see the affected asset and a concrete remediation step — and the same issue found by two scanners appears as **one** deduplicated record.
 
 ### Step 4 — Create a remediation ticket
-With **[Jira connected](./integrations/third-party.md)**, push a finding to your tracker.
+With **[Jira connected](./integrations/jira.md)**, critical findings get a ticket automatically; for a high finding, select it under Vulnerability Management → *Raw Findings* and choose **Create Jira Ticket**.
 - **Expected result:** a Jira issue is created and linked to the finding.
-- **Verify:** the finding shows a linked ticket, and its status stays in sync as the ticket moves.
+- **Verify:** the finding shows its ticket key, and the **Jira** tab in Vulnerability Management lists it; when the ticket is closed in Jira the finding resolves within 15 minutes.
 
 ### Step 5 — Configure an alert
-Set up **[notifications](./integrations/notifications.md)** to Slack, Microsoft Teams, email, or a webhook.
-- **Expected result:** new or reopened high-severity findings notify your channel.
-- **Verify:** send a test (or trigger a finding) and confirm the message arrives — the alert also appears in **Alerts**.
+Connect **Slack** or **Microsoft Teams** under Integrations — the connection test posts a message to the channel — or set up a [webhook subscription](./integrations/webhooks.md) for your SIEM. See [Notifications](./integrations/notifications.md).
+- **Expected result:** new or reopened alerts of high severity and above reach the channel; every alert appears in the bell and in **Alerts** regardless.
+- **Verify:** the wizard's test message arrived; the next high or critical finding produces a channel post.
 
 ### Then automate it
 Once the manual path works, **[gate your CI/CD pipelines](./cli-and-cicd.md)** on scan results so this runs on every build.
