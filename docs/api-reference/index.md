@@ -9,8 +9,9 @@ description: "Integrate with Offload Security programmatically — authenticatio
 
 Everything you can do in the Offload Security UI, you can do over its REST API —
 onboard cloud accounts and Kubernetes clusters, trigger scans, pull findings and
-vulnerabilities, and read or act on alerts. This section gets you from zero to a
-working integration.
+vulnerabilities, read or act on alerts, manage compliance evidence, drive
+integrations and administer teams. This section gets you from zero to a working
+integration and points you to the per-module endpoint pages.
 
 ## Base URL
 
@@ -56,16 +57,31 @@ curl -s "$OFFLOAD_HOST/api/vulnerabilities/occurrences?limit=5" \
 
 ## What you can do
 
-| Guide | Onboard / read |
+This section holds the **cross-cutting** material — keys, conventions, end-to-end workflows — and deep dives on the most-automated surfaces. Every product section also has its own **API page** listing that module's endpoints with the permission each needs; those are the exhaustive per-area references.
+
+### Cross-cutting
+
+| Guide | Covers |
 | --- | --- |
-| **[Authentication](./authentication.md)** | Create & manage API keys, scopes, rotation |
-| **[Conventions](./conventions.md)** | Response shapes, pagination, errors, rate limits |
-| **[Cloud Accounts](./cloud-accounts.md)** | Add AWS/GCP/Azure accounts, test connection, trigger a scan |
-| **[Kubernetes](./kubernetes.md)** | Onboard a cluster with a kubeconfig, list, connectivity test |
-| **[Scans & Results](./scans-and-results.md)** | Trigger scans, poll status, fetch results |
-| **[Alerts](./alerts.md)** | List, read, acknowledge, assign, resolve |
-| **[Vulnerabilities](./vulnerabilities.md)** | List occurrences, group by CVE, filter & triage |
-| **[Workflows](./workflows.md)** | End‑to‑end recipes stitching the above together |
+| **[Authentication](./authentication.md)** | Create & manage API keys, scopes, presets, rotation, IP allowlists |
+| **[Conventions](./conventions.md)** | Response shapes, pagination, errors, rate limits, IDs and timestamps |
+| **[Workflows](./workflows.md)** | End-to-end recipes: onboard an account and pull findings, onboard a cluster, triage alerts, export to a SIEM, gate CI |
+
+### By product area
+
+| Area | API page | Also in this section |
+| --- | --- | --- |
+| Cloud Security — accounts, scans, findings, assets, identity & network, events, remediation | [Cloud Security API](../cloud-security/api.md) | [Cloud Accounts](./cloud-accounts.md) |
+| App & Infrastructure Scanning — web / API / network scans, code, containers, Kubernetes, CI/CD | [Scanning API](../security-scanning/api.md) | [Scans & Results](./scans-and-results.md) · [Kubernetes](./kubernetes.md) |
+| Vulnerabilities & Risk — occurrences, triage, SLAs, alerts, risk register | [Vulnerabilities & Risk API](../vulnerability-risk/api.md) | [Vulnerabilities](./vulnerabilities.md) · [Alerts](./alerts.md) |
+| Compliance & GRC — frameworks, scores, evidence, assessments, audit reports, DPDP | [Compliance & GRC API](../compliance/api.md) | |
+| Reports & AI — executive dashboard, scheduled reports, exports, assistant, LLM providers | [Reports & AI API](../reports-and-ai/api.md) | |
+| Integrations — catalog and wizard, notifications, Slack routing, webhooks, Jira | [Integrations API](../integrations/api.md) | |
+| AI & Threat Intelligence — feeds, indicators, Command Center agents, AI governance, AIBOM, Knowledge Base | [AI & Threat Intelligence API](../ai-threat-intelligence/api.md) | |
+| Platform Security — sign-in, MFA, SSO, teams, API keys, audit trail, platform admin | [Platform Security API](../authentication/api.md) | [Authentication](./authentication.md) |
+| CI/CD — trigger scans and gate builds | [CLI & CI/CD](../cli-and-cicd.md) | [Workflows § 5](./workflows.md) |
+
+For anything not on those pages, the live [Swagger UI](#interactive-reference-swagger) is generated from the running server and is always complete.
 
 ## Conventions at a glance
 

@@ -34,7 +34,7 @@ flowchart TB
         CD["Code / SAST / SBOM"]
         CK["Container / Kubernetes"]
         WZ["On-Prem: Wazuh"]
-        TP["Integrated products<br/>(Qualys, Tenable, Snyk,<br/>Security Hub, CodeQL…)"]
+        TP["Connected tools<br/>(Wazuh · SonarQube · Jenkins<br/>snapshots · Jira two-way)"]
         TI["Threat Intelligence"]
     end
 
@@ -72,9 +72,9 @@ The **[Vulnerability Dashboard](../vulnerability-risk/vulnerability-management/i
 
 - **Native modules** — Cloud Security, application/API/network scanning, SAST and code, SBOM/license, and container and Kubernetes all land here.
 - **On-prem telemetry** — host and endpoint findings from Wazuh contribute to the same view.
-- **Integrated third-party products** — this is a crucial point: **when you connect an external scanner or security product, its findings are captured into the Vulnerability Dashboard too.** Results from tools like Qualys, Tenable, Rapid7, Snyk, SonarQube, Checkmarx, Veracode, GitHub CodeQL, AWS Security Hub, and others don't stay stranded in their own consoles — they flow into the lake and appear alongside everything else, deduplicated against native findings.
+- **Connected tools** — [Wazuh](../on-premises/wazuh-integration.md) host CVEs, alerts and endpoints are synced into the same stores; SonarQube and Jenkins contribute snapshots; Jira carries findings out as tickets and brings status back. Other catalog integrations verify a connection today rather than import findings — the [Integration Catalog](../integrations/third-party.md) says which is which, tool by tool.
 
-The result is a genuine single pane of glass: one place where a team can see **all** of its vulnerability exposure — from the platform's own scanners *and* from the tools it already runs — instead of logging into each product to assemble the picture by hand.
+The result is one place where a team can see its vulnerability exposure from every scanner the platform runs — cloud, code, container, Kubernetes, web, API, network — plus the host layer from Wazuh, instead of logging into each product to assemble the picture by hand.
 
 :::tip[Why "single pane of glass" is more than a slogan here]
 Many tools claim a single pane by *linking out* to other consoles. Offload Security is different: the data itself is ingested into a shared lake and normalized, so the Vulnerability Dashboard shows a unified, deduplicated, comparable list — not a directory of other dashboards. One severity scale, one asset identity, one queue.
@@ -101,7 +101,7 @@ In short: the data lake is the foundation, the interlinked modules are the struc
     a: "Aggregation simply collects outputs side by side. Unified vulnerability management normalizes findings into one model, deduplicates them, correlates each to its asset, control and evidence, and updates risk and compliance state automatically as findings open and close.",
   },
   {
-    q: "Can Offload ingest findings from tools like Qualys, Tenable, Snyk or Wazuh?",
-    a: "Yes. Third-party scanner findings are streamed into the same vendor-neutral data lake and surface in the single deduplicated, risk-scored Vulnerability Dashboard alongside Offload's own findings.",
+    q: "Can Offload ingest findings from tools like Wazuh, SonarQube or Snyk?",
+    a: "Wazuh, yes: agents, alerts and host CVEs are synced into the same data lake and appear in the deduplicated, risk-scored queue alongside Offload's own findings. SonarQube and Jenkins contribute snapshots; Snyk, Security Hub, OpenVAS and similar catalog entries verify a connection today and do not import findings. Indicators can be imported via STIX.",
   },
 ]} />
