@@ -129,3 +129,7 @@ by hand (`docker exec cspm-backend-src python /tmp/run_sched.py` after setting `
 ## Platform Security (section 8)
 
 `plan-platform-security.json` — login page (a `noAuth: true` step uses a second, anonymous browser context — added to capture.js), account menu (click "Admin User"), Team Management + Invite modal, Change Password, MFA status + setup (the QR code and manual key in `mfa-setup` were pixelated after capture — never publish a live TOTP secret), API Keys list + Create modal, Platform Setup, Client Menu Settings, User Activity (Users, Live sessions). Fixtures: `seed_platform_security.py` creates three API keys (values discarded), a second team and two invitations.
+
+## On-Premises (section 9)
+
+No new captures: the section reuses the Integrations wizard shots (Wazuh step 2) and describes the deployment from `docker-compose.client.yml`, `.env.example`, `scripts/backup.sh` / `restore.sh` and `deployment/nginx-entrypoint.sh`. The Endpoint Security dashboard needs a live Wazuh connection, which the docs environment does not have.
