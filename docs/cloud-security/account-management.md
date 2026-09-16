@@ -1,117 +1,94 @@
 ---
-title: "Cloud Account Management"
+title: "Managing Connected Accounts"
+sidebar_label: "Managing Accounts"
 sidebar_position: 2
+description: "Review connected AWS, GCP and Azure accounts, test connections, adjust scan regions, launch quick or full scans, act in bulk, and remove accounts cleanly."
 ---
 
-The Cloud Account Management subsystem provides enterprise-grade onboarding and lifecycle management for AWS, Azure, and GCP environments. It centralizes credential handling with high-security encryption, performs real-time connection validation using provider SDKs, and automates initial security posture discovery.
+# Managing Connected Accounts
 
-## CloudAccountService Lifecycle
+Once accounts are connected you manage them from two places that show the same accounts through different lenses:
 
-The `CloudAccountService` is the primary orchestrator for managing cloud identities and their associated metadata. It manages the transition from raw credentials to an active, monitored cloud account.
+| View | Where | Best for |
+| --- | --- | --- |
+| **Accounts tab** | Cloud Security → **Accounts** | A card per account with last-scan time, live scan progress and one-click *Quick* / *Full Scan*. |
+| **Manage Accounts** | Account Setup → **Manage Accounts** | The full table: search, filter by provider, edit regions, test connections, bulk actions, export. |
 
-### Implementation Details
-*   **Duplicate Prevention**: Before adding an account, the service checks for existing provider/account ID pairs for the current user via `check_account_exists` to prevent redundant scanning and data fragmentation.
-*   **Credential Centralization**: Credentials are not stored directly within the cloud account record. Instead, they are offloaded to a central store using `CloudCredentialCreate` models and the `CloudCredentialService`.
-*   **Fernet Encryption**: All sensitive keys (AWS Access Keys, GCP Service Account JSONs, Azure Client Secrets) are encrypted using `CredentialEncryptionService`. This service utilizes Fernet symmetric encryption, with keys initialized during the platform setup.
-*   **Database Isolation**: The service uses a dedicated `cloud_security` MongoDB database, accessible via the `CSPMDatabaseManager` or a direct fallback for Celery workers.
+## The Accounts tab
 
-### Connection Testing
-Connection testing is performed via provider-specific SDKs to ensure the platform has the necessary permissions (typically SecurityAudit or ReadOnly Access):
-*   **AWS**: Uses `boto3` and `botocore` to verify IAM credentials and account identifiers via `AWSValidationService`.
-*   **Azure**: Utilizes `SubscriptionClient` and `ResourceManagementClient` to validate Service Principal access.
-*   **GCP**: Uses `resourcemanager_v3` and `asset_v1` to verify project access and API enablement.
+![Cloud Security → Accounts: one card per connected account with provider, account ID, region, last scan and Quick / Full Scan buttons; the staging account shows a scan in progress](/img/screenshots/cloud-security/accounts-tab.webp)
 
-**Cloud Account Registration and Validation Flow**
+Each card shows the account's **display name**, provider, provider account ID, primary region, **Last Scan** date and a **status badge** (`active`, or `error` when the last connection check failed). While a scan is running the card shows *Scanning…* or *Queued* with a progress bar, and both scan buttons are disabled until it finishes — one scan per account at a time.
 
-Title: "Cloud Account Registration and Validation Flow"
-```mermaid
-sequenceDiagram
-    participant UI as "EnhancedCloudAccountWizard"
-    participant API as "Cloud Account Routes"
-    participant Svc as "CloudAccountService"
-    participant Wiz as "CloudAccountWizardService"
-    participant Enc as "CredentialEncryptionService"
-    participant Cloud as "Cloud Provider SDKs"
+- **Quick** — a fast posture check of the primary region (AWS) or the whole project/subscription (GCP/Azure). Typically 5–10 minutes.
+- **Full Scan** — the comprehensive run across all configured regions, all checks and all framework mappings. Typically 15–25 minutes on a large AWS account.
+- The **trash icon** removes the account after a confirmation.
 
-    UI->>API: "POST /cloud-accounts/"
-    API->>Svc: "add_cloud_account()"
-    Svc->>Wiz: "validate_cloud_account()"
-    Wiz->>Cloud: "STS/Subscription/Project Check"
-    Cloud-->>Wiz: "Identity Verified"
-    Wiz-->>Svc: "CloudValidationResult"
-    Svc->>Enc: "encrypt(credentials)"
-    Svc->>Svc: "Save to enhanced_cloud_accounts"
-    Svc-->>API: "CloudAccount + scan_run_id"
-    API-->>UI: "201 Created + auto_scan_initiated"
-```
+What each scan type covers is explained in [Running Cloud Scans](./scan-orchestration.md#scan-types-and-regions).
 
-## Enhanced Wizard Multi-Step Onboarding
+## Manage Accounts
 
-The `EnhancedCloudAccountWizard` component provides a persistent, multi-step session for complex enterprise environments.
+![Account Setup → Manage Accounts: provider totals, search and provider filter, and a row per account with Regions, Test Connection, Quick Scan, Full Scan and Remove](/img/screenshots/cloud-security/manage-accounts.webp)
 
-### Wizard Steps
-The onboarding process is divided into logical phases to ensure data integrity:
-1.  **Provider Selection**: Selection between AWS, GCP, or Azure.
-2.  **Environment Setup**: Defining environment (Production, Staging, Dev) and primary regions.
-3.  **Authentication Method**: Choosing between Access Keys, Cross-Account Roles, or Service Accounts.
-4.  **Validation**: Real-time verification of permissions and API discovery via `validate_cloud_account`.
+The header tiles count accounts per provider. Use the search box to match on **name, account ID, region, environment, status or provider**, narrow with the **All / AWS / GCP / Azure** filter, and sort by name or created date.
 
-### Session Persistence
-Wizard sessions are stored in the `cloud_asset_discovery` database via `wizard_db.create_wizard_session`, allowing users to resume onboarding if interrupted.
+Per account row:
 
-## Credential Monitoring & Rotation
+| Action | What it does |
+| --- | --- |
+| **Regions** | Opens the region picker so you can change which regions future scans cover. You can add a region ID that is not in the list. Applies to AWS; GCP and Azure always scan the whole project/subscription. |
+| **Test Connection** | Re-runs the provider validation (the same check as onboarding step 6) and updates the account's status. Use it after rotating a key or changing the role's trust policy. |
+| **Quick Scan** / **Full Scan** | Same as the Accounts tab buttons. |
+| **Remove** | Deletes the account after confirmation — see [Removing an account](#removing-an-account). |
 
-The platform tracks the health and age of cloud credentials to maintain a strong security posture.
+### Bulk actions
 
-| Metric | Warning Threshold | Critical Threshold |
-| :--- | :--- | :--- |
-| **Credential Age** | 60 Days | 90 Days |
-| **Rotation Status** | Warning at 60 days | Critical at 90 days |
+Tick the checkbox on several rows (or **Select all**) to act on them together:
 
-*   **Rotation Tracking**: Both `CloudAccountService` and `CloudAccountWizardService` monitor the `CREDENTIAL_ROTATION_WARNING_DAYS` threshold to flag accounts requiring updates.
-*   **Health Monitoring**: Accounts are assigned a `CloudAccountStatus` (Active, Pending, Failed, or Suspended) based on the success of connection heartbeats.
+- **Test connections** for every selected account — handy after an IAM change that touched many accounts.
+- **Scan** every selected account (a full scan per account). Each still obeys the one-scan-per-account rule: the result reports which accounts were queued, which were already running, and which were skipped.
+- **Delete** the selected accounts after a single confirmation.
 
-## Account Group Management
+Selections are limited to rows currently visible, so a filter change can never widen a bulk action beyond what you can see.
 
-For large-scale deployments, the platform supports grouping accounts and managing organization-level connections.
+### Export
 
-*   **Cloud Console Deep Linking**: The findings routes include a utility `_build_console_link` that maps resource UIDs to specific cloud console URLs (e.g., mapping `arn:aws:s3` to the S3 console path), facilitating rapid remediation.
-*   **Account Lookup**: The frontend implements `accountLookup` maps to resolve internal provider IDs to human-readable names across findings and asset dashboards.
-*   **Revalidation**: Users can manually trigger a connection check via the `handleRevalidate` function, which calls the `/revalidate` endpoint to confirm Service Principal or IAM role health.
+**Export CSV** downloads the account list — useful as onboarding evidence for auditors ("these are the in-scope accounts").
 
-**Data Model Entity Relationship**
+## Account status and health
 
-Title: "Cloud Account Management Entity Relationships"
-```mermaid
-erDiagram
-    "User" ||--o{ "EnhancedCloudAccount" : "owns"
-    "EnhancedCloudAccount" ||--|| "CloudCredential" : "references (encrypted)"
-    "EnhancedCloudAccount" ||--o{ "ScanRun" : "triggers"
-    "EnhancedCloudAccount" {
-        string id PK
-        string account_id "Provider-native ID"
-        string provider "aws|azure|gcp"
-        string status "active|failed"
-        datetime created_at
-    }
-    "CloudCredential" {
-        string id PK
-        string credential_type "access_key|service_account"
-        string encrypted_credentials
-    }
-    "ScanRun" {
-        string run_id PK
-        string status "queued|running|completed"
-        string scan_type "full|incremental"
-    }
-```
+| Status | Meaning | What to do |
+| --- | --- | --- |
+| **active** | Last validation succeeded; scans can run. | Nothing. |
+| **pending** / **validating** | Onboarding in progress. | Wait, or finish the wizard. |
+| **error** | The last connection test or scan failed to authenticate. | Fix the role, key or API enablement, then **Test Connection**. |
+| **inactive** | Deliberately disabled (for example a retired GCP project). | Re-enable from the GCP organization hierarchy or reconnect. |
+| **discovered** | Found by organization discovery but not yet onboarded. | Toggle it on in the organization view. |
 
-## Auto-Trigger Mechanism
+**Credential age.** The platform records when an account's credential was created and when it was last rotated. Credentials older than **60 days** are flagged for rotation and **90 days** as critical. After you rotate a key or secret in the cloud, supply the new value to the platform (update the account over the [API](./api.md#accounts), or remove and reconnect it) and run **Test Connection**.
 
-Upon successful creation of a cloud account, the platform initiates an initial security scan to ensure the security posture is captured immediately.
+**Automatic pause after repeated failures.** If a recurring scan fails **three times in a row** (for example the role was deleted), the platform pauses further scheduled scans for that account and records the reason, so a dead credential cannot generate a failing scan every night. A successful manual scan, or updating the credentials, clears the pause. Operators can change the threshold with `CLOUD_SCAN_MAX_CONSECUTIVE_FAILURES`.
 
-1.  **Task Initiation**: The `add_cloud_account` route returns a `scan_run_id` indicating that a scan has been successfully queued.
-2.  **Scan Initiation UI**: The `ScanInitiationForm` allows manual triggers and selection of specific regions for AWS, GCP, or Azure.
-3.  **Frontend Feedback**: The `add_cloud_account` response includes `auto_scan_initiated` to inform the user that discovery has started.
+## Duplicate prevention
 
----
+An account is identified by **provider + provider account ID**. Adding the same AWS account or GCP project twice under the same owner is rejected, so you cannot accidentally double-scan or split findings across two records. If two teams need the same account, connect it in each team — dashboards stay isolated per team.
+
+## Removing an account
+
+Removing an account is a clean-up, not just a hide. The platform deletes the account record and then cascades:
+
+- the account's **findings**, **compliance scores** and **scan history**,
+- the matching entries in **Vulnerability Management** are closed,
+- the account's **recurring schedules** are removed so nothing keeps firing.
+
+If another team has the same provider account connected, the shared, provider-scoped data is kept for that team and only your account record and schedules go — the last team to remove it triggers the full cascade.
+
+:::warning[Removal is permanent]
+There is no undo for the deleted findings and scan history. If you only want to stop scanning for a while, pause the account's schedules in **Unified Scheduler** instead.
+:::
+
+## Related
+
+- [Connecting Cloud Accounts](./connecting-accounts.md) — the wizard and provider setup.
+- [Running Cloud Scans](./scan-orchestration.md) — quick vs full, regions, progress and status.
+- [Troubleshooting](./troubleshooting.md) — connection errors and scans that will not start.
