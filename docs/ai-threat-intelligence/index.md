@@ -2,56 +2,47 @@
 title: "AI & Threat Intelligence"
 sidebar_label: "Overview"
 sidebar_position: 0
+description: "Outside-in context and AI assistance for the whole program — nine threat feeds correlated against your findings, a Security Command Center that triages and prepares fixes, an AI governance registry with ISO 42001 posture, AI discovery and an AI bill of materials, and a knowledge base that answers from your own policies."
 ---
 
 # AI & Threat Intelligence
 
-The **AI & Threat Intelligence** area adds real-world context and AI assistance to your security program. It pulls in live threat feeds, uses AI agents to triage and explain findings, helps you govern your own AI systems, and gives you a searchable knowledge base for your security documents — so your team spends less time on manual analysis and more time fixing what matters.
+This area does two different jobs that share one idea — bring context to a finding so a person spends less time deciding and more time fixing. **Threat Intelligence** brings the outside world in (what is being exploited, by whom, where it maps on ATT&CK) and pushes it into prioritisation. The **AI** pages turn the platform's own data into decisions: triage verdicts, prepared fixes, an executive briefing, answers from your policies — and, because you run AI too, a registry and posture for *your* AI systems.
 
-![AI & Threat Intelligence dashboard showing active threat feeds and indicator correlation](/img/screenshots/threat-intelligence.png)
+**Where:** left navigation → *Threat & Intelligence* → **Threat Intelligence** and **AI Governance**; *Core Security* → **Security Command Center**; *Management* → **Knowledge Base**.
 
-## What it does
+## What is in this section
 
-This area brings together four capabilities, each with its own page:
+| Page | What it is | Read it for |
+| --- | --- | --- |
+| [Threat Intelligence](./threat-intelligence.md) | Nine curated feeds (CISA KEV, URLhaus, OTX, Feodo Tracker, SSL Blacklist, PhishTank, Blocklist.de, Spamhaus DROP, OpenPhish) normalised into indicators, hourly; IOC correlation; CVE prioritisation; MITRE ATT&CK coverage; landscape reports; STIX / CSV import-export | Which of your exposures are tied to *active* exploitation |
+| [Security Command Center](./ai-soc-agents.md) | Triage agent, remediation queue, Auto-Fix Engine with approvals, Security Advisor, activity log — rule-based out of the box, LLM-assisted when a provider is configured | What to fix first and why, with an audit trail |
+| [AI Governance](./ai-governance.md) | Model registry, risk assessments and bias tests, incidents and human-oversight logs, training records, ISO 42001 control posture and auditor exports | Governing the AI systems your organisation builds and buys |
+| [AI Discovery, AIBOM & Testing](./ai-spm.md) | Discovery of AI services in your cloud inventory and LLM configuration; the AI bill of materials folded from your SBOMs; OWASP LLM01 prompt-injection tests | Knowing what AI you actually run, in code and in cloud |
+| [Knowledge Base & AI Assistant](./knowledge-base.md) | Policy library with sections and sensitivity, question answering with citations, questionnaire auto-fill with an answer bank, usage analytics | Answering "what is our policy on…" and security questionnaires from your own documents |
+| [AI Data & Privacy](./ai-data-privacy.md) | Which features call a model, which never do, what leaves the platform, caching and tenant isolation | The commitments behind every AI feature |
+| [API](./api.md) · [Troubleshooting & FAQ](./troubleshooting.md) | Endpoints and permissions; common problems | |
 
-- **Threat Intelligence & Feeds** — continuously ingests indicators of compromise (IOCs) from industry feeds such as **CISA KEV**, **AlienVault OTX**, **Abuse.ch URLhaus**, and **Spamhaus**, then correlates them against your findings and assets. Vulnerabilities listed in the **CISA Known Exploited Vulnerabilities (KEV)** catalog, or with high **EPSS** (Exploit Prediction Scoring System) scores, are flagged as higher priority so you focus on what is actively being exploited.
-- **AI SOC Agents** — a set of AI assistants that automate routine SOC work: triaging findings by severity and exploitability, generating remediation steps, mapping findings to compliance controls, hunting for threats, and answering plain-language questions about your posture.
-- **AI Governance** — a place to register and govern your organization's own AI systems, classify them by risk tier against regulations like the **EU AI Act**, and track the controls that keep them compliant.
-- **Knowledge Base** — upload your security policies and documents (PDF or DOCX) and ask questions in natural language. Answers are drawn from your own documents, with an AI assistant for security analysis and pentest planning.
+## How the pieces connect
 
-## How to use it
+1. **Feeds → indicators → priority.** Every hour the enabled feeds are fetched and normalised into indicators (IPs, domains, URLs, hashes, CVEs, certificates). A CVE that appears in CISA KEV, or is tied to active indicators, actors or campaigns, scores higher in [Vuln Prioritization](./threat-intelligence.md#vulnerability-prioritisation) and in the [Triage](../vulnerability-risk/vulnerability-management/triage.md) engine's exploitability signal.
+2. **Findings → triage → fixes.** The Command Center's triage agent classifies open findings into *Critical / Investigate / Monitor / False positive / Auto-resolved* using severity, KEV, EPSS, exposure, environment and age. Findings that match a remediation playbook become Auto-Fix actions that wait for approval; code findings with a *fix* disposition can be handed to the agentic fix pipeline.
+3. **Your AI → registry → posture.** Discovery finds AI services in the asset inventory and LLM configuration; the AIBOM finds AI libraries in your SBOMs; both feed the model registry, whose assessments, tests, incidents and training records roll up into the ISO 42001 control posture.
+4. **Your documents → answers.** Knowledge Base documents are chunked and embedded; the assistant and the questionnaire filler answer from them with citations and a confidence score, and approved answers build an answer bank.
 
-1. From the left navigation, open **AI & Threat Intelligence** and choose the page you need.
-2. Start with **Threat Intelligence** to see active threats and how they correlate to your environment. Feeds refresh automatically, so the dashboard stays current without any manual import.
-3. Use the **AI SOC Agents** to triage and explain findings. After a scan completes, agents can run automatically and attach their analysis to the relevant findings — open a finding to see the suggested priority and remediation.
-4. If your organization builds or uses AI systems, register them under **AI Governance** to get a risk-tier classification and a checklist of governance controls.
-5. Upload your policies to the **Knowledge Base**, then ask questions like *"What is our MFA policy?"* to get answers grounded in your own documents.
-
-## Why findings get prioritized
-
-The AI SOC agents combine fast, rule-based checks with AI reasoning for the trickier cases. When ranking a finding they weigh:
-
-- **Severity** — how serious the issue is.
-- **CISA KEV status** — whether the vulnerability is in the Known Exploited Vulnerabilities catalog.
-- **EPSS score** — the predicted likelihood that it will be exploited.
-
-The result is a prioritized list that puts actively exploited and high-likelihood issues at the top, instead of treating every finding the same.
-
-:::tip[Everything stays in your team]
-All AI and threat-intelligence work is scoped to your **active team**. You only see — and the agents only act on — data that belongs to the team you're currently in. Check the team selector in the top-right before reviewing results.
+:::note[With and without an AI provider]
+Threat intelligence, rule-based triage, the Auto-Fix Engine, the Security Advisor's data-driven answers, discovery, the AIBOM and the governance registry all work with **no model provider configured**. An LLM (Anthropic, OpenAI or Google — configured per team under Knowledge Base → AI Assistant → *AI Configuration*) adds reasoning to triage, FP/TP assessment, remediation drafting, the briefing, and document Q&A; Knowledge Base retrieval specifically needs an **OpenAI** key for embeddings. Each page says which mode it is describing. See [AI Assistant](../reports-and-ai/ai-assistant.md) for provider setup.
 :::
 
-:::note[Bring your own AI provider]
-The AI features work with major model providers, including OpenAI, Anthropic, and Google Gemini. Your administrator configures the provider and API key in platform settings. Every AI decision is recorded — including its reasoning and confidence — so you have an audit trail.
-:::
+## Permissions at a glance
 
-:::warning[Sensitive documents]
-Documents you add to the Knowledge Base are used to answer questions for your team. Only upload material your team is permitted to see, and review your team membership before sharing sensitive policies.
-:::
+| Action | Permission |
+| --- | --- |
+| Read the threat dashboard, indicators, feeds, heatmap and reports | any authenticated member |
+| Correlate, prioritise, generate a landscape report, configure or refresh feeds, add indicators, actors, campaigns, rules, aging, import / export | **Manage Threat Intelligence** (`manage_threat_intelligence`) |
+| Run agents, triage, FP/TP assessment, ask the advisor | **Run AI Agent** (`run_ai_agent`) |
+| Approve / deny / execute / roll back Auto-Fix actions | **Execute Remediations** |
+| AI governance registry, assessments, incidents, oversight, discovery, prompt tests | **Manage Assessments** |
+| Knowledge Base uploads, questions, questionnaire fill | **Manage Assessments**; reading the library and analytics needs only a login |
 
-## Related
-
-- [AI SOC Agents](./ai-soc-agents.md) — automated triage, remediation, compliance mapping, and threat hunting.
-- [Threat Intelligence & Feeds](./threat-intelligence.md) — feed ingestion and IOC correlation in detail.
-- [Knowledge Base & AI Security Testing](./knowledge-base.md) — document Q&A and the AI security assistant.
-- [AI Governance & Privacy Compliance](./ai-governance.md) — govern your own AI systems against the EU AI Act and other regulations.
+Everything is scoped to the **active team**: feeds, indicators, agents, registry entries and documents belong to the team that created them.

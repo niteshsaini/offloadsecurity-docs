@@ -1,68 +1,73 @@
 ---
-title: "AI-SPM (AI Security Posture)"
-sidebar_label: "AI-SPM"
-sidebar_position: 3.5
+title: "AI Discovery, AIBOM & Testing"
+sidebar_label: "AI Discovery, AIBOM & Testing"
+sidebar_position: 4
+description: "Know what AI you actually run — discovery of AI services in your cloud inventory and LLM configuration, an AI bill of materials folded from the SBOMs the platform already generates, EU AI Act / NIST AI RMF risk-tier classification, and an OWASP LLM01 prompt-injection test suite."
 ---
 
-# AI Security Posture Management (AI-SPM)
+# AI Discovery, AIBOM & Testing
 
-AI-SPM finds the AI models and services running in your environment, classifies how risky each one is, and tests them for prompt-injection weaknesses — so the AI you build and use is covered by the same security program as the rest of your stack.
+A registry is only as good as what is in it. The **Discovery** and **Testing** tabs of AI Governance find AI systems you did not register — in your cloud accounts, in your LLM configuration, and in the dependencies of your own code — classify their risk against the EU AI Act and NIST AI RMF, and let you probe an endpoint with a prompt-injection suite before it reaches users.
 
-It complements **[AI Governance](./ai-governance.md)**, which handles the policy, structured assessment, and evidence side. AI-SPM is the technical posture layer: *what AI do we run, how risky is it, and does it hold up under attack?* Significant findings feed the same **[Risk Register](../vulnerability-risk/risk-management/index.md)** as everything else.
+**Where:** left navigation → *Threat & Intelligence* → **AI Governance** → **Discovery** and **Testing**.
 
-## What it does
+## Discovery
 
-- **Discover AI models** — builds an inventory of the AI/ML services already found in your connected cloud accounts, plus the LLM providers you've configured in the platform.
-- **Classify risk** — scores each model against the **EU AI Act** risk tiers and the **NIST AI RMF** functions.
-- **Test for prompt injection** — runs a battery of prompt-injection payloads against a model's endpoint and judges whether it was compromised.
+![AI Discovery: discovered 3, newly registered 0, already known 3; discovered AI services table — SageMaker endpoint, Bedrock model access, Vertex AI endpoint — with Classify](/img/screenshots/ai-threat-intelligence/aig-discovery.webp)
 
-All three are surfaced under **AI Governance** in the platform, and everything is scoped to your active team.
+**Run Discovery** looks in two places the platform already has:
 
-## Discovering AI models
+| Source | What is recognised |
+| --- | --- |
+| **Cloud asset inventory** — the assets discovered by your [cloud scans](../cloud-security/asset-inventory.md) | AWS SageMaker, Bedrock, Comprehend, Rekognition, Textract, Translate, Polly, Lex, Kendra, Personalize, Forecast · GCP Vertex AI / AI Platform, AutoML, Dialogflow, Generative Language · Azure Cognitive Services, Azure ML, Azure OpenAI · hosted providers referenced by resource names (OpenAI, Anthropic, Cohere, Mistral, Hugging Face, Replicate) |
+| **LLM configuration** — the providers the team configured for the platform's own AI features | Anthropic, OpenAI, Google |
 
-Discovery draws on two sources that already live inside the platform:
+Each hit becomes a **discovered** entry in the [model registry](./ai-governance.md#model-registry) (provider, name, service, region, source) — once; a rerun reports it as *already known*. Discovery runs as a background job and needs no cloud calls beyond what the scan already made.
 
-- **Cloud asset inventory** — AI/ML services that your [cloud scans](../cloud-security/index.md) have already discovered are matched by service name. Recognized services include AWS SageMaker, Bedrock, Comprehend, Rekognition, Textract, Translate, Polly, Lex, Kendra, Personalize, and Forecast; GCP Vertex AI, AutoML, and Dialogflow; Azure Cognitive Services, Azure ML, and Azure OpenAI; and hosted providers such as OpenAI, Anthropic, Cohere, Mistral, Hugging Face, and Replicate.
-- **Configured LLM providers** — the LLM connections you've set up in the platform.
+**Classify** on a row assigns an **EU AI Act tier** and the matching NIST AI RMF posture from the system's use case, sector, data types and decision impact:
 
-Discovered models are saved to your model registry, deduplicated, and scoped to your team, so teammates work from the same inventory.
+| Tier | Rule of thumb applied |
+| --- | --- |
+| **Unacceptable** (Prohibited) | Social scoring, manipulation, subliminal techniques, real-time biometric identification |
+| **High-Risk** | High-risk sectors (healthcare, finance, employment, education, law enforcement, critical infrastructure…) and uses (credit, hiring, biometric identification…), or sensitive data (PII, PHI, biometric, health, financial, criminal) with high decision impact |
+| **Limited Risk** | Chatbots and conversational systems, emotion recognition, deepfake / synthetic content — transparency obligations |
+| **Minimal Risk** | Everything else |
 
-:::note[Discovery reads your existing inventory — it doesn't call the cloud AI APIs directly]
-AI-SPM matches AI services from the assets your **cloud scans have already inventoried**; it does not enumerate the cloud AI APIs itself. If an account hasn't been scanned, or its AI services aren't yet in [Asset Inventory](../cloud-security/asset-inventory.md), they won't appear here yet — run a cloud scan first for the fullest picture.
+The tier is a starting point for the owner's own risk assessment, not a legal determination.
+
+## AI bill of materials
+
+Below Discovery, the **AI Bill of Materials** is the code-level half of "what AI do we run": every AI SDK, framework, agent library, model runtime and vector store your repositories ship, **folded from the SBOMs the platform already generates** for [code scans](../security-scanning/code/sbom-and-licenses.md) — nothing new to install, nothing to scan twice.
+
+| Tile | Meaning |
+| --- | --- |
+| **AI components** | Distinct AI packages across all SBOMs (and how many are *stale* — not seen in the latest SBOM of a repository) |
+| **Applications** | Repositories shipping at least one AI component |
+| **Models declared** | Model identifiers named in source (a `model=` string, a Hugging Face id) |
+| **Provider SDKs** | Hosted-model clients — `openai`, `anthropic`, `cohere`, `boto3` Bedrock use… |
+| **Agents / MCP** | Agent frameworks and Model Context Protocol tooling, and vector databases |
+| **Needs confirmation** | Matches made heuristically rather than by exact package identity; confirm or dismiss them |
+| **Ownership** | Components with an owner assigned |
+
+The inventory table lists each component with type (provider SDK, orchestration, agent framework, model runtime, inference server, vector retrieval, embedding, MLOps, guardrail, MCP), provider, category, owner, environment, source SBOMs, confidence and last seen. New SBOM scans fold in automatically; **Reconcile now** re-reads every SBOM immediately, and a daily job reconciles on its own.
+
+## Testing — prompt injection
+
+![Prompt Injection Testing: choose a registered model, optional API endpoint and key, Run Tests; dry run when no endpoint is set](/img/screenshots/ai-threat-intelligence/aig-testing.webp)
+
+An **OWASP LLM01** red-team suite of eight probes — direct instruction override, role-play jailbreak, encoding bypass, context manipulation, data-exfiltration probe, indirect injection via data, multi-turn manipulation, output-format injection — run against a registered model.
+
+- Give an **OpenAI-compatible chat endpoint** (and, optionally, a key used only for this run and never stored) and the suite is sent live; each probe is scored on whether the response shows the injected behaviour, and the result is recorded against the model with pass / fail per category.
+- Leave the endpoint blank for a **dry run**: the payloads are recorded for manual execution against a system the platform cannot reach (an internal assistant, a vendor console).
+
+Results are evidence for the model's risk assessment; a production LLM system with no test is one of the ISO 42001 [certification blockers](./ai-governance.md#compliance--iso-42001).
+
+:::note[Permissions and scope]
+Discovery, classification, the AIBOM and prompt tests need **Manage Assessments**. The AIBOM reads only your team's SBOMs; discovery reads only your team's inventory and configuration.
 :::
-
-**To run it:** open **AI Governance → Discovery** and select **Run Discovery**. You'll see counts of models discovered, newly registered, and already known, and you can classify any model inline.
-
-## Classifying risk
-
-Each model is classified against two frameworks:
-
-- **EU AI Act risk tiers** — Unacceptable, High, Limited, or Minimal — derived from the model's use case, sector, data types, and decision impact.
-- **NIST AI RMF** — scored across the Govern, Map, Measure, and Manage functions, based on the metadata recorded for the model.
-
-Classification is automated and rule-based. Treat it as a fast first-pass triage that points you at the models worth a closer look — not a legal determination. For structured EU AI Act assessments, conformity work, and audit evidence, use **[AI Governance](./ai-governance.md)**.
-
-## Testing for prompt injection
-
-AI-SPM ships a set of prompt-injection test payloads spanning direct instruction-override, jailbreak, encoding, context-manipulation, data-exfiltration, indirect-injection, multi-turn, and output-manipulation techniques. You can also supply your own payloads.
-
-**How it runs:**
-
-1. Open **AI Governance → Testing**, choose the model, and provide its **API endpoint** (and an API key if the endpoint requires one). The endpoint must speak the OpenAI-compatible chat-completions format.
-2. AI-SPM sends each payload to that endpoint and evaluates the response. Where a platform LLM key is configured, an **LLM judge** decides whether each payload compromised the model; otherwise it falls back to keyword heuristics.
-3. Results record which payloads succeeded, with reasoning and remediation, plus an overall risk level for the model.
-
-:::note[What testing actually requires]
-Live testing only happens when you supply a **reachable model endpoint**. Without one, the payloads are recorded as a **dry run** for you to execute manually — no model is contacted. Outbound test requests are SSRF-guarded: private and cloud-metadata addresses are blocked and redirects are disabled.
-:::
-
-## Permissions
-
-Running discovery, classification, and prompt tests requires the **assessments management** permission. Viewing the AI-SPM dashboard is available to any authenticated team member. All data is scoped to your active team.
 
 ## Related
 
-- **[AI Governance](./ai-governance.md)** — EU AI Act classification, structured assessments, and audit evidence for your AI systems.
-- **[Threat Intelligence & Feeds](./threat-intelligence.md)** — external threat context for the rest of your estate.
-- **[Risk Register](../vulnerability-risk/risk-management/index.md)** — where significant AI risks are tracked to treatment.
-- **[Cloud Asset Inventory](../cloud-security/asset-inventory.md)** — the inventory AI-SPM discovers models from.
+- [AI Governance](./ai-governance.md) — the registry these feed and the posture they improve.
+- [SBOM & Licences](../security-scanning/code/sbom-and-licenses.md) — where the SBOMs come from.
+- [AI Data & Privacy](./ai-data-privacy.md) — what the platform's own AI features do with your data.

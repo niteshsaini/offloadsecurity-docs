@@ -121,3 +121,7 @@ by hand (`docker exec cspm-backend-src python /tmp/run_sched.py` after setting `
 ## Integrations (section 6)
 
 `plan-integrations.json` — hub, catalog cards (scrollY 860), Collaboration category filter, the connected GitHub Actions card (search "GitHub"), and the five wizard steps. Steps 1–2 use Wazuh (richest form); steps 3–5 use the already-connected GitHub Actions via **Reconfigure** because its test passes without network. Step 3 auto-advances 1.5 s after a passing test, so that step runs with `delay: 600`. Fixture: connect `github-actions` through `/api/integrations/wizard/*` first (any `github_token` value works).
+
+## Threat Intel & AI (section 7)
+
+`plan-threat-intel-ai.json` — every tab of Threat Intelligence, Security Command Center, AI Governance and Knowledge Base (tab clicks by label). Fixtures: `seed_threat_intel_ai.py` registers four AI systems, a risk assessment, bias test, incident, oversight log and training record, uploads three policy PDFs to the Knowledge Base (needs `section_id`s from `/knowledge-base/sections`), reconciles the AIBOM and runs triage + auto-fix. Before capture: add AI-service assets (SageMaker / Bedrock / Vertex) to `cspm_cloud_assets.assets` and AI packages to a `code_sbom_reports` document so discovery and the AIBOM have something to show; the Discovery shot clicks **Run Discovery** live (`delay: 9000`). Threat feeds are real — the docs backend fetched them hourly.
