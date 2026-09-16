@@ -18,7 +18,7 @@ Enterprise and bank customers gate onboarding on SOC 2 and PCI-DSS. Offload Secu
 
 ### API and application security, where fintech risk actually lives
 
-A fintech is, functionally, a set of APIs. [API & Code Scanning](../security-scanning/api-code-scanning.md) covers SAST for your codebase, API surface testing, and SBOM/license checks on your dependencies — so a vulnerable transitive package or an unauthenticated endpoint surfaces before it becomes a breach or a failed pen test.
+A fintech is, functionally, a set of APIs. [API & Code Scanning](../security-scanning/code/index.md) covers SAST for your codebase, API surface testing, and SBOM/license checks on your dependencies — so a vulnerable transitive package or an unauthenticated endpoint surfaces before it becomes a breach or a failed pen test.
 
 ### Cloud-native posture across AWS, Azure, and GCP
 
@@ -26,11 +26,11 @@ Misconfigured storage, over-permissive IAM, and exposed data stores are the most
 
 ### Containers and Kubernetes covered by default
 
-Most fintech workloads run in containers. [Container Security](../security-scanning/container-security.md) scans images and Kubernetes clusters for vulnerabilities and misconfigurations, so your deploy pipeline stays fast without shipping known-bad images to production.
+Most fintech workloads run in containers. [Container Security](../security-scanning/containers/index.md) scans images and Kubernetes clusters for vulnerabilities and misconfigurations, so your deploy pipeline stays fast without shipping known-bad images to production.
 
 ### Prioritized vulnerabilities, tracked as real risk
 
-Raw findings are noise; decisions need context. [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) deduplicates and prioritizes across every source, and the [Risk Register](../vulnerability-risk/risk-register.md) turns material exposure into tracked, owned, board-reportable items — the language your investors and auditors expect.
+Raw findings are noise; decisions need context. [Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx) deduplicates and prioritizes across every source, and the [Risk Register](../vulnerability-risk/risk-management/index.md) turns material exposure into tracked, owned, board-reportable items — the language your investors and auditors expect.
 
 ### Security questionnaires answered in hours, not weeks
 
@@ -45,10 +45,10 @@ The same evidence that satisfies a SOC 2 auditor usually satisfies a partner que
 | Fintech need | How Offload Security delivers it |
 | --- | --- |
 | Win enterprise and bank customers | Live SOC 2 / PCI-DSS readiness via [Compliance](../compliance/index.md), backed by the [Evidence Hub](../compliance/evidence-hub.md) |
-| Secure the APIs that move money | SAST, API testing, and SBOM/license checks in [API & Code Scanning](../security-scanning/api-code-scanning.md) |
+| Secure the APIs that move money | SAST, API testing, and SBOM/license checks in [API & Code Scanning](../security-scanning/code/index.md) |
 | Prove a strong cloud posture | Continuous CSPM across AWS/Azure/GCP in [Cloud Security](../cloud-security/index.md) |
-| Ship containers safely | Image and cluster scanning in [Container Security](../security-scanning/container-security.md) |
-| Turn findings into board-level risk | [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) feeding the [Risk Register](../vulnerability-risk/risk-register.md) |
+| Ship containers safely | Image and cluster scanning in [Container Security](../security-scanning/containers/index.md) |
+| Turn findings into board-level risk | [Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx) feeding the [Risk Register](../vulnerability-risk/risk-management/index.md) |
 | Answer diligence and partner questionnaires fast | Auto-fill from the [Knowledge Base](../ai-threat-intelligence/knowledge-base.md) |
 | Cover internal networks and legacy systems | Internal scanning, OpenVAS, and Wazuh SIEM in [On-Premises](../on-premises/index.mdx) |
 

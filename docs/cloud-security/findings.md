@@ -74,7 +74,7 @@ Resolving does not change your cloud. If the misconfiguration is still there on 
 
 - **Compliance tab and Compliance Posture** — pass/fail per framework are computed from these findings ([Compliance & Benchmark Checks](./prowler-integration.md)).
 - **Network Posture** and **IAM Analysis** — network- and identity-category findings are re-cut by exposure and identity ([Identity & Network Posture](./identity-and-network.md)).
-- **Vulnerability Management and Risk Register** — cloud findings feed the unified views used for SLAs, risk scoring and reporting ([Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)).
+- **Vulnerability Management and Risk Register** — cloud findings feed the unified views used for SLAs, risk scoring and reporting ([Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx)).
 - **Reports** — executive and compliance reports draw from the same data ([Reports & AI](../reports-and-ai.md)).
 
 ## Related

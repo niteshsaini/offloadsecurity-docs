@@ -26,10 +26,10 @@ All of it resolves against **one model** of assets, findings, controls, and evid
 Cloud resources and internal assets live in the same **[Asset Inventory](../cloud-security/asset-inventory.md)**. An asset has one identity, whether it was discovered in a cloud account or on an internal subnet.
 
 ### One triage queue
-Internal-host CVEs, cloud misconfigurations, application bugs, and Wazuh detections are deduplicated and prioritized together in **[Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)** and **[Alerts](../integrations/notifications.md)** — so analysts work one list, not six.
+Internal-host CVEs, cloud misconfigurations, application bugs, and Wazuh detections are deduplicated and prioritized together in **[Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx)** and **[Alerts](../integrations/notifications.md)** — so analysts work one list, not six.
 
 ### One risk and compliance view
-Findings from every source — cloud and on-prem alike — promote into the same **[Risk Register](../vulnerability-risk/risk-register.md)** and map to the same **[compliance controls](../compliance/index.md)**, producing one **[evidence vault](../compliance/evidence-hub.md)** and one set of **[reports](../vulnerability-risk/index.md)**.
+Findings from every source — cloud and on-prem alike — promote into the same **[Risk Register](../vulnerability-risk/risk-management/index.md)** and map to the same **[compliance controls](../compliance/index.md)**, producing one **[evidence vault](../compliance/evidence-hub.md)** and one set of **[reports](../vulnerability-risk/index.md)**.
 
 ## Correlation is the value
 

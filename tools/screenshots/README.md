@@ -72,3 +72,20 @@ Infra Command Center tabs. Unlike Cloud Security, this section used **real scans
 - Existing K8s/registry fixtures had their timestamps shifted to "recent" and registry sync errors cleared.
 
 Steps in the plan use `actions` (fill/select/click) for the Dockerfile scan and the compliance form.
+
+## Section 3 — Vulnerabilities & Risk (2026-09-13)
+
+`plan-vulnerability-risk.json` captures Vulnerability Management (Triage queue, work item, How to fix, Accept Risk,
+Raw findings by source, occurrence detail, dashboard), SLA Management (policies, breach dashboard, create-policy form),
+Alerts (list + detail) and Risk Management (dashboard, register by category / all risks, new-risk form, import from
+findings, treatment plans, controls, heat map, bulk import, appetite, KRIs, scenarios). Same environment as section 2.
+
+Data prep that was needed:
+- The Triage queue is only populated after `POST /api/vulnerabilities/sync?force_resync=true` followed by
+  `POST /api/triage/score` (the lake and the scores are otherwise built on the 2-hourly / daily schedule).
+- 671 noise alerts (scan/tool failures from the scanner work in section 2) were resolved so the list shows
+  security alerts; KRIs, an appetite statement, scenarios, controls and treatment plans were created through the UI.
+- `capture.js` gained two things this section relied on: `scrollY` now scrolls the tallest scrollable pane as well
+  as the window (tab bodies scroll internally), and dropdown tabs are reached with
+  `{"selector": "button:has-text('More')"}` followed by a text click.
+- `risk-import` captures the auto-import preview, which takes several seconds — its step uses `delay: 9000`.

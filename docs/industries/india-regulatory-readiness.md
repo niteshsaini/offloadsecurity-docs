@@ -17,7 +17,7 @@ RBI's directions on outsourcing of IT services shape what regulated entities mus
 | **Data localization** — regulated data stored in India per applicable directions | [On-premises / private deployment](../on-premises/index.mdx): the platform runs entirely inside your environment, so scan data, findings, evidence, and reports never leave your network or the country |
 | **Incident reporting on tight clocks** — REs report incidents to RBI within hours, which means vendors and internal teams must surface incidents immediately | Real-time [alerts](../integrations/notifications.md) to Slack/Teams/email/webhooks, plus the [DPDP breach workflow](../compliance/dpdp-privacy.md) with deadline watchdogs for CERT-In-style reporting windows |
 | **Vendor oversight without audit fatigue** — RBI permits reliance on recognized third-party certifications and structured due diligence | [Vendor due-diligence questionnaires](../compliance/dpdp-privacy.md), continuous [evidence collection](../compliance/evidence-hub.md), and audit-ready [reports](../vulnerability-risk/index.md) for your own supervisory examinations |
-| **IT & cyber risk governance** — a board-visible risk process | The [Risk Register](../vulnerability-risk/risk-register.md) with ownership, treatment, and executive reporting |
+| **IT & cyber risk governance** — a board-visible risk process | The [Risk Register](../vulnerability-risk/risk-management/index.md) with ownership, treatment, and executive reporting |
 
 ## SEBI CSCRF (securities-market entities)
 
@@ -26,7 +26,7 @@ CSCRF tiers regulated entities — from Market Infrastructure Institutions down 
 How the platform fits:
 
 - **Continuous compliance between audits.** CSCRF's control expectations (asset inventory, vulnerability management, logging, access control) map onto the platform's [compliance engine](../compliance/index.md) and [supported frameworks](../compliance/supported-frameworks.md), so the annual audit confirms a posture you maintain continuously rather than assembling annually.
-- **VAPT evidence in one place.** Findings from your VAPT providers and scanners are ingested alongside the platform's own scans via [third-party integrations](../integrations/third-party.md), tracked to closure in the [Risk Register](../vulnerability-risk/risk-register.md) — closure evidence auditors ask for. Internal hosts are covered by the [OpenVAS integration](../on-premises/openvas-scanning.md).
+- **VAPT evidence in one place.** Findings from your VAPT providers and scanners are ingested alongside the platform's own scans via [third-party integrations](../integrations/third-party.md), tracked to closure in the [Risk Register](../vulnerability-risk/risk-management/index.md) — closure evidence auditors ask for. Internal hosts are covered by the [OpenVAS integration](../on-premises/openvas-scanning.md).
 - **Smaller REs.** For mid-size, small, and self-certification REs, the platform's compliance automation and reporting does the heavy lifting of demonstrating conformance without a large internal team.
 
 :::note[Audits stay with empanelled firms]

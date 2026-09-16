@@ -8,7 +8,7 @@ sidebar_position: 3.5
 
 AI-SPM finds the AI models and services running in your environment, classifies how risky each one is, and tests them for prompt-injection weaknesses — so the AI you build and use is covered by the same security program as the rest of your stack.
 
-It complements **[AI Governance](./ai-governance.md)**, which handles the policy, structured assessment, and evidence side. AI-SPM is the technical posture layer: *what AI do we run, how risky is it, and does it hold up under attack?* Significant findings feed the same **[Risk Register](../vulnerability-risk/risk-register.md)** as everything else.
+It complements **[AI Governance](./ai-governance.md)**, which handles the policy, structured assessment, and evidence side. AI-SPM is the technical posture layer: *what AI do we run, how risky is it, and does it hold up under attack?* Significant findings feed the same **[Risk Register](../vulnerability-risk/risk-management/index.md)** as everything else.
 
 ## What it does
 
@@ -64,5 +64,5 @@ Running discovery, classification, and prompt tests requires the **assessments m
 
 - **[AI Governance](./ai-governance.md)** — EU AI Act classification, structured assessments, and audit evidence for your AI systems.
 - **[Threat Intelligence & Feeds](./threat-intelligence.md)** — external threat context for the rest of your estate.
-- **[Risk Register](../vulnerability-risk/risk-register.md)** — where significant AI risks are tracked to treatment.
+- **[Risk Register](../vulnerability-risk/risk-management/index.md)** — where significant AI risks are tracked to treatment.
 - **[Cloud Asset Inventory](../cloud-security/asset-inventory.md)** — the inventory AI-SPM discovers models from.

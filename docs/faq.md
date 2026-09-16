@@ -21,7 +21,7 @@ AWS, Google Cloud, and Azure — with read-only access wherever the provider sup
 Yes — that's the point of the unified model. Findings from tools like Trivy, Prowler, ZAP, Grype, Syft, and kube-bench can be ingested via API, and [Wazuh](./on-premises/wazuh-integration.md) streams SIEM/endpoint telemetry into the same dashboards. [OpenVAS](./on-premises/openvas-scanning.md) connects as a network-scanning integration (OpenVAS performs the scanning). See [Integrations](./integrations/index.md).
 
 **How are findings prioritized?**
-Severity is normalized across sources, then enriched with exploit intelligence — findings on the **CISA KEV** list or with high **EPSS** scores are flagged so actively-exploited issues rise to the top. Critical findings can auto-promote into the [Risk Register](./vulnerability-risk/risk-register.md).
+Severity is normalized across sources, then enriched with exploit intelligence — findings on the **CISA KEV** list or with high **EPSS** scores are flagged so actively-exploited issues rise to the top. Critical findings can auto-promote into the [Risk Register](./vulnerability-risk/risk-management/index.md).
 
 **Does the platform change our systems?**
 Scanning is read-only. Remediation guidance — including AI suggestions — is advisory; people make the changes.
@@ -52,7 +52,7 @@ Yes — evidence is collected continuously and mapped to controls as work happen
 There's a dedicated module: readiness assessment, DPIAs, SDF obligations, vendor due diligence, and a breach workflow with DPB and CERT-In deadline tracking. See [DPDP Act (India)](./compliance/dpdp-privacy.md).
 
 **Can it replace our spreadsheet risk register?**
-Yes — risks are created manually or promoted automatically from critical findings, with ownership, treatment, review dates, and executive reporting. See [Risk Register](./vulnerability-risk/risk-register.md).
+Yes — risks are created manually or promoted automatically from critical findings, with ownership, treatment, review dates, and executive reporting. See [Risk Register](./vulnerability-risk/risk-management/index.md).
 
 ## Still have a question?
 

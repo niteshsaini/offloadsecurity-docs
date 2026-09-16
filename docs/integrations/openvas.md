@@ -41,7 +41,7 @@ Scans can be **unauthenticated** (an outside-in view of what's exposed) or **aut
 ## Scope of the integration
 
 :::note[Connectivity integration]
-This integration establishes and validates the connection to your OpenVAS/Greenbone instance so it fits into your overall program. **Automated import of OpenVAS scan results into the platform's unified [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) is not part of the integration today** — OpenVAS remains the system of record for these scans, and it's where the scan configuration and results live. (Wazuh, by contrast, does stream telemetry into the platform — see **[Wazuh](./wazuh.md)**.)
+This integration establishes and validates the connection to your OpenVAS/Greenbone instance so it fits into your overall program. **Automated import of OpenVAS scan results into the platform's unified [Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx) is not part of the integration today** — OpenVAS remains the system of record for these scans, and it's where the scan configuration and results live. (Wazuh, by contrast, does stream telemetry into the platform — see **[Wazuh](./wazuh.md)**.)
 :::
 
 ## Related

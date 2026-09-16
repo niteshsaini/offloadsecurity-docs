@@ -42,7 +42,7 @@ Wazuh exposes its data through two services, and the platform connects to both:
 ## Where the data goes
 
 - **Alerts** — host detections are triaged alongside cloud, application, and compliance alerts, deduplicated rather than multiplied. See **[Notifications & Alerts](./notifications.md)**.
-- **Vulnerability Management** — host vulnerability state joins the unified **[Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)** view.
+- **Vulnerability Management** — host vulnerability state joins the unified **[Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx)** view.
 - **Compliance & Evidence** — SCA and FIM results become audit evidence.
 
 ## Related

@@ -26,7 +26,7 @@ Wazuh and OpenVAS answer two different questions about your internal estate. Run
 
 The two integrations sit at different depths in the platform:
 
-- **Wazuh telemetry streams into the platform** — detections, alerts, FIM, SCA compliance, and host CVE state flow into **[Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)** and the centralized **[Alerts](./notifications.md)**, deduplicated against native scans.
+- **Wazuh telemetry streams into the platform** — detections, alerts, FIM, SCA compliance, and host CVE state flow into **[Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx)** and the centralized **[Alerts](./notifications.md)**, deduplicated against native scans.
 - **OpenVAS is a connectivity integration** — Offload connects to and verifies your Greenbone/OpenVAS deployment; you run and review the network scans there. Its results are not imported into the platform today, so OpenVAS remains the system of record for internal scan findings.
 
 Together they give you continuous host visibility in-platform *and* deep network vulnerability assessment on your own infrastructure — covering the endpoint-hardening and internal-scanning controls that regulated environments require.
@@ -35,6 +35,6 @@ Together they give you continuous host visibility in-platform *and* deep network
 
 1. Connect **[Wazuh](./wazuh.md)** (Manager API + Indexer).
 2. Connect **[OpenVAS](./openvas.md)** and define your internal scan scope.
-3. Review Wazuh's host activity in **[Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)** and **[Alerts](./notifications.md)**, and run your network scans in the OpenVAS / Greenbone console.
+3. Review Wazuh's host activity in **[Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx)** and **[Alerts](./notifications.md)**, and run your network scans in the OpenVAS / Greenbone console.
 
 For the full architecture of internal coverage, see the **[On-Premises](../on-premises/index.mdx)** section.
