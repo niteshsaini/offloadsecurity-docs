@@ -38,6 +38,24 @@ Enable **licence enrichment via deps.dev** on the SBOM & Licenses tab (opt-in); 
 **Fix PR fails.**
 The token needs pull-request write scope and the user needs the **Execute Remediations** permission. Branch protection that forbids bot pushes also blocks it — allow the bot identity or open the PR manually with **Copy PR body**.
 
+**A secret shows *verified live* although we rotated it.**
+Validation happens during the scan; re-run the scan after rotating. If the badge persists, the credential is still accepted by the provider — check that the rotation actually revoked the old key (some providers keep the previous key valid for a grace period).
+
+**Datadog / regional keys always come back *not validated*.**
+Datadog keys are bound to a site and the platform validates against `datadoghq.com` unless `DATADOG_SITE` names yours (`datadoghq.eu`, `us3.datadoghq.com`, …). A wrong-site answer is deliberately reported as *not validated*, never as *inactive*.
+
+**Custom rules are not applied.**
+`GET /api/code/scan-rules/custom` says whether the directory is mounted and lists rejected files with the reason. A file that fails validation is skipped, the rest still run. The directory is read on the next scan — no restart needed — but a file the scanner cannot parse never becomes active.
+
+**GitLab / Bitbucket merge requests are not reviewed.**
+Check `GET /api/scm/webhooks/<provider>` says *configured*, that the webhook URL on the project ends in the `hook_id` you were given, and that the secret matches — a mismatch is rejected with 401 and logged. The provider's webhook delivery log shows the response.
+
+**A fix pull request merged but the finding says *verification inconclusive*.**
+The verification scan could not prove the fix: it ran on a different commit, its findings were truncated, or the scanner that produced the original finding did not complete. Re-run a scan of the merged branch; a completed run of that scanner records the verdict.
+
+**Fix with agent is disabled / runs stay queued.**
+The button's tooltip names the reason. The deployment switch is `AGENTIC_FIX_ENABLED=true` **and** the fix worker must be running under the `agentic-fix` compose profile; then a team admin switches agentic fixes on in the Findings tab banner. A run also needs a model provider configured for the team.
+
 **A CI pipeline fails the gate but I see no critical findings.**
 Check the gate that fired: the severity threshold (`fail_on_severity`), the **SCA policy pack** (an AGPL or malicious-package rule blocks regardless of severity), or the **image admission policy**. The pipeline log names the rule and the pack version.
 

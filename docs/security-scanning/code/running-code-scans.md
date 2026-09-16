@@ -27,7 +27,7 @@ description: "Scan a repository branch, an uploaded ZIP, a build artifact or a c
 | **Full Code Security** (default) | SAST + SCA + Secrets + IaC + SBOM & Licences | Baseline scan of a repository; the scheduled weekly run. |
 | **SAST Only** | OpenGrep + Bandit (and SonarQube when configured) | Fast feedback on code changes. |
 | **Dependency / SCA** | OSV.dev CVE scan of every lockfile, enriched with KEV and EPSS | Daily; after a dependency bump. |
-| **Secrets Scan** | Gitleaks over the source tree | Before publishing a repository; after an incident. |
+| **Secrets Scan** | Gitleaks over the source tree and the last 200 commits of history, each secret validated live against its provider | Before publishing a repository; after an incident. See [Secret Detection](./secret-detection.md). |
 | **IaC Scan** | Checkov on Terraform, CloudFormation, Kubernetes manifests, Dockerfiles | Infrastructure repositories; before `apply`. |
 | **SBOM Generation** | Syft CycloneDX + licence enrichment | Inventory and licence review — see [SBOM & Licences](./sbom-and-licenses.md). |
 | **Compiled Image Scan** | Trivy + Grype on the built Docker image | After the pipeline builds; pairs with the [container CI gate](../containers/governance.md#gate-a-pipeline). |
@@ -42,7 +42,8 @@ Repository scans use the team's Git connection; SonarQube results are attached w
 
 ## What a scan produces
 
-- **Findings** — one per issue, fingerprinted so re-scans update rather than duplicate: SAST findings carry file, line and code context; SCA findings carry package, installed and fixed versions, CVE, CVSS, EPSS and KEV; secrets carry the detector and location (values are masked); IaC findings carry the resource and the Checkov check. See [Findings & Reports](./findings-and-reports.md).
+- **Findings** — one per issue, fingerprinted so re-scans update rather than duplicate: SAST findings carry file, line and code context; SCA findings carry package, installed and fixed versions, CVE, CVSS, EPSS and KEV; secrets carry the detector, location (values are masked), a live-validation badge and, for history-only leaks, the introducing commit; IaC findings carry the resource and the Checkov check. See [Findings & Reports](./findings-and-reports.md).
+- **Custom-rule results** when a [custom rules](./custom-rules.md) directory is mounted — the report records which rules were in force.
 - **A scan report** with the per-tool breakdown, exportable as PDF.
 - **An SBOM** (Full or SBOM scans) with licence data, listed under SBOM & Licences.
 - **Coverage** — the repository is now *scanned* on the Overview; put it on a schedule so it does not turn *stale*.
