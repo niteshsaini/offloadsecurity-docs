@@ -73,4 +73,4 @@ The denominator is every in-scope control — *not assessed* controls do count a
 
 - [Supported Frameworks](./supported-frameworks.md) — the 27-framework catalog and how SCF mappings work.
 - [Risk Management](../vulnerability-risk/risk-management/index.md) — a control that stays *not implemented* or *partial* for more than 24 hours is minted as a system risk (hourly sweep, one risk per control).
-- [Reports & AI](../reports-and-ai.md) — executive and scheduled reporting.
+- [Reports & AI](../reports-and-ai/index.md) — executive and scheduled reporting.
