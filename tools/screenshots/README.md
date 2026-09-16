@@ -89,3 +89,21 @@ Data prep that was needed:
   as the window (tab bodies scroll internally), and dropdown tabs are reached with
   `{"selector": "button:has-text('More')"}` followed by a text click.
 - `risk-import` captures the auto-import preview, which takes several seconds — its step uses `delay: 9000`.
+
+## Section 4 — Compliance & GRC (2026-09-13)
+
+`plan-compliance.json` captures Compliance Posture (posture, frameworks, gap analysis, override dialog, framework
+panel), the Compliance Engine sub-tabs, Drift Detection + alert policies, the Evidence Hub sub-tabs and dialogs, the
+Assessments hub / create form / checklist / completed view / history, Audit Reports and the seven DPDP tabs.
+
+Data prep: three interactive assessments were created and answered over the API (ISO 27001 + ASVS L2 completed,
+SOC 2 left at 59%); `POST /common-controls/correlate-all` + `map/sync-all`; thresholds for ISO/SOC 2/PCI; five
+manual overrides and five manual evidence items; the seeded test schedules were pruned to 15 with staggered due dates
+(1,534 "0d overdue" rows made the posture hero unreadable); an alert policy; two daily snapshots taken around a
+deliberate regression so Drift Detection shows two control regressions; the DPDP module got an SDF assessment, a
+KYC DPIA, a vendor assessment and two breach incidents worked through the workflow. Several product bugs were fixed
+first — see the docs PR description.
+
+Harness notes: the framework rows on the posture page are matched with `{"text": ..., "nth": 0}` because the same
+label also appears in the evidence-per-framework list; the Override button uses `{"role": "button", "text":
+"Override", "nth": 0}`; gap analysis needs `scrollY: 1300`.
