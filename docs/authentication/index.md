@@ -1,91 +1,59 @@
 ---
-title: "Security & Access Control"
+title: "Platform Security"
 sidebar_label: "Overview"
 sidebar_position: 0
+description: "Who can sign in, what they can do, and how each team's data stays apart — password and MFA sign-in or OIDC single sign-on, six team roles, team-scoped tenancy, scoped API keys, an audit trail of every action, and the platform-admin account that runs the deployment."
 ---
 
-# Security & Access Control
+# Platform Security
 
-Offload Security is built for teams that handle sensitive security data, so controlling **who can sign in**, **what they can do**, and **keeping each team's data separate** is core to the platform. This page is your overview of how access works and how your data is protected. Deeper, task-focused guides are linked at the bottom.
+A security platform holds the map of your weaknesses, so the controls around it matter as much as the findings inside it. This section covers the platform's own access controls: how people sign in, how roles decide what they can do, how teams keep data apart, how automation authenticates, what is written to the audit trail, and what the deployment's administrator can see and change. For how the platform protects *data* — encryption, isolation, AI handling, retention — see [Trust & Security](../trust-and-security.md).
 
-## What it does
+**Where:** account menu (top-right) → **Team Management**, **Change Password**, **Multi-Factor Auth**, **API Keys**, **Platform Setup**; left navigation → *Management* → **Client Menu Settings**, **User Activity** (platform administrator only).
 
-- **Sign-in and sessions** — email-and-password sign-in with optional multi-factor authentication (MFA), plus sessions that keep you signed in securely and end cleanly when you log out.
-- **Role-based access control (RBAC)** — six built-in roles that decide what each member can see and do, from full administration down to read-only viewing.
-- **Team-based multi-tenancy** — every scan, finding, asset, risk, and report belongs to a **team**, and you only ever see data for your **active team**, so environments (clients, business units, regions) stay cleanly isolated.
-- **API keys** — scoped, revocable keys for CI/CD pipelines and integrations, so automation never needs a person's password.
-- **Audit logging** — an immutable record of who did what, when, and with what result, ready for compliance and investigations.
+![Account menu: Team Management, Change Password, Multi-Factor Auth, API Keys, Platform Setup, Sign Out; platform status](/img/screenshots/platform-security/account-menu.webp)
 
-## Signing in
+## The model in one table
 
-1. Open your platform URL and enter your **email** and **password**.
-2. If your account has **MFA** enabled, you'll be prompted for a 6-digit code from your authenticator app to complete sign-in.
-3. On success you land on the **Dashboard**, and your session keeps you signed in across the app.
-4. Selecting **Log out** ends your session immediately so the token can't be reused.
+| Layer | What it is | Where it is managed |
+| --- | --- | --- |
+| **Identity** | Email + password (12+ characters, mixed case, digit, symbol), optional **TOTP MFA** with backup codes, or **OIDC single sign-on** (Okta, Entra ID, Google Workspace, Keycloak, Auth0…) — [Signing In & Sessions](./session-management.md) | Login page, account menu, deployment environment |
+| **Session** | Opaque token, 24 hours, at most 5 concurrent sessions per user, revocable | Sign out; User Activity (platform admin) |
+| **Team** | The tenancy boundary — every scan, finding, asset, risk, report and integration belongs to exactly one team; you work in one *active* team at a time and can belong to several | Team Management |
+| **Role** | One of six per team — Admin, Security Manager, Security Analyst, Compliance Officer, Auditor, Viewer — mapped to ~40 named permissions checked on every request — [Roles, Teams & API Keys](./rbac-team-management.md) | Team Management |
+| **API key** | `osk_…` key with a scope set, expiry, optional IP allowlist and rate limit, shown once, stored hashed, rotated with a grace period | API Keys |
+| **Audit trail** | Every authenticated request classified into an action with actor, team, outcome and timing; sensitive fields redacted; 365-day retention by default — [Audit Trail & User Activity](./audit-trail.md) | API; User Activity |
+| **Platform administrator** | The first account created on a deployment; owns Client Menu Settings and User Activity, sees across teams, and keeps password sign-in when SSO is enforced (Platform Setup is open to any Admin) — [Platform Administration](./platform-administration.md) | Account menu · *Management* |
 
-:::tip[Turn on MFA]
-For an extra layer of protection, enable MFA from your account settings. You scan a QR code with an authenticator app and are issued one-time backup codes to store safely.
-:::
+## Signing in, briefly
 
-## Roles and what they can do
+1. Enter your email and password. Five failed attempts lock the account for 15 minutes; the response never reveals whether an email exists.
+2. If MFA is enabled on your account (or enforced for the deployment) enter the 6-digit code from your authenticator app, or a backup code.
+3. Where the deployment has SSO configured, **Sign in with &lt;provider&gt;** starts the OIDC flow instead; if SSO is *enforced*, the password form is hidden behind a fallback link for the platform administrator.
+4. You land on the Dashboard in your last active team. **Sign Out** ends the session server-side; a stolen token cannot be replayed.
 
-Access within a team is governed by role. Every member is assigned one of these six roles:
+Registration is **invitation-only** after the first account: a link from a team admin, tied to the invited email, expiring after 7 days. Deployments can additionally restrict registration and SSO provisioning to one email domain.
 
-| Role | Typical use |
-|---|---|
-| **Admin** | Full access — manage teams, members, integrations, and all data. |
-| **Security Manager** | Manage scans, risks, remediation, and team membership. |
-| **Security Analyst** | Run scans and work findings and risks day to day. |
-| **Compliance Officer** | Drive assessments and compliance, view executive dashboards, and export reports. |
-| **Auditor** | Read-only access to scans, reports, and evidence. |
-| **Viewer** | Read-only dashboards and basic visibility. |
+## What each role can do, briefly
 
-Permissions are enforced consistently across the platform — both in what appears in the interface and on every action you take — so a member can't reach data or controls outside their role.
+| | Admin | Security Manager | Security Analyst | Compliance Officer | Auditor | Viewer |
+| --- | :-: | :-: | :-: | :-: | :-: | :-: |
+| View dashboards, scans, findings, risks, assessments, reports, alerts | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Export reports | ✓ | ✓ | ✓ | ✓ | ✓ | |
+| Run scans, create risks, work assessments, triage, run AI agents | ✓ | ✓ | ✓ | assessments · AI agents | | |
+| Manage cloud accounts, scans, integrations, threat intelligence, container security; approve and execute remediations | ✓ | ✓ | | | | |
+| Manage team members and settings | ✓ | ✓ | | | | |
+| Everything, including promoting Admins and viewing the team's full audit trail | ✓ | | | | | |
 
-## Teams and data isolation
+The exact permission list per role is on [Roles, Teams & API Keys](./rbac-team-management.md#the-role-catalog).
 
-The platform is **multi-tenant**: each team's data is fully separated from every other team's.
+## In this section
 
-- You can belong to **multiple teams** and switch your **active team** from the account menu in the top-right.
-- You only ever see data for your active team — scans, findings, assets, risks, and reports are all scoped to it.
-- New members join a team by **invitation**. Admins send an invite to a specific email address, and the invitee must register with that address. Only team admins can invite someone as an admin, and invitations can be rate-limited.
-- When access is revoked, it takes effect immediately.
-
-:::note[Pick the right team first]
-Before you run scans or review data, confirm your active team in the top-right account menu. Everything you create is recorded under that team.
-:::
-
-## API keys for automation
-
-API keys give your pipelines and integrations programmatic access without using a person's credentials.
-
-- Keys are easy to spot by their **`osk_`** prefix.
-- You assign each key a **scope** (for example, the ability to trigger scans or read vulnerabilities) so it can do only what you intend.
-- You can restrict a key to specific **IP addresses** and **rotate** it with a short grace period, so automation keeps working while the old key retires.
-- Send the key in the **`X-API-Key`** request header. The full key value is shown only once when you create it, so copy it somewhere safe.
-
-For setup details and CI/CD examples, see **[RBAC, API Keys & Team Management](./rbac-team-management.md)**.
-
-## Audit logging
-
-Significant actions are captured in an **immutable audit trail** that records who performed an action, what it was, when it happened, and the outcome — useful for compliance reviews and investigations.
-
-- Sensitive values such as passwords, secrets, tokens, and API keys are **automatically redacted** before anything is stored, so credentials never land in the log.
-- Routine, high-volume requests (like health checks) are excluded to keep the record focused and readable.
-
-## How your data is protected
-
-:::tip[Your credentials and data are protected]
-- **Encrypted credentials at rest** — cloud account credentials (AWS, Azure, GCP keys and service principals) are **encrypted before they're stored**, and the platform uses **read-only** access to your environments.
-- **Passwords are never stored in plain text** — they're protected with strong, industry-standard hashing.
-- **Tokens and keys are never stored in the clear** — session identifiers, API keys, and invitation tokens are stored only as one-way hashes, so a database copy can't be used to impersonate you.
-- **Team isolation** — your data is scoped to your team and never visible to other tenants.
-:::
-
-## Related
-
-- **[Authentication & Session Management](./session-management.md)** — sign-in, MFA, and how sessions work.
-- **[RBAC, API Keys & Team Management](./rbac-team-management.md)** — roles, permissions, API keys, and team setup.
-- **[Audit Trail & Webhook Events](./audit-trail.md)** — the audit log and event notifications.
-- **[Quickstart](../getting-started.md)** — sign in and learn the core concepts.
-- **[Connecting Cloud Accounts](../cloud-security/connecting-accounts.md)** — how read-only, encrypted cloud credentials are set up.
+| Page | Read it for |
+| --- | --- |
+| [Signing In & Sessions](./session-management.md) | Passwords, lockout, MFA setup and enforcement, SSO configuration, sessions, password reset and change |
+| [Roles, Teams & API Keys](./rbac-team-management.md) | The role catalog with permissions, inviting and switching teams, creating / rotating / revoking API keys |
+| [Audit Trail & User Activity](./audit-trail.md) | What the audit trail records and who can read it; the platform administrator's User Activity view |
+| [Platform Administration](./platform-administration.md) | The platform-admin account, Platform Setup, Client Menu Settings |
+| [API](./api.md) · [Troubleshooting & FAQ](./troubleshooting.md) | Endpoints and permissions; sign-in and key problems |
+| [Trust & Security](../trust-and-security.md) | Encryption, tenant isolation, AI data handling, retention, disclosure |

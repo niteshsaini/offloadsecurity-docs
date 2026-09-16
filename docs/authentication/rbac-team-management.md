@@ -1,113 +1,104 @@
 ---
 title: "Roles, Teams & API Keys"
 sidebar_label: "Roles, Teams & API Keys"
-sidebar_position: 1
+sidebar_position: 2
+description: "The six team roles and the permissions behind them, how teams isolate data and how to invite, promote and switch, and API keys for automation — scopes and presets, expiry, IP allowlists, rate limits, rotation with a grace period, revocation and usage."
 ---
 
 # Roles, Teams & API Keys
 
-Offload Security is multi-tenant: every scan, finding, asset, risk, and report belongs to a **team**, and what each person can do inside a team is governed by their **role**. This page explains the role catalog, how to invite teammates and assign roles, how to switch your active team, and how to create and manage API keys for automation.
+Everything in the platform belongs to a **team**, and what a person may do inside a team is decided by one **role**. Automation gets the same treatment through **API keys** that act as the person who created them, narrowed to a set of scopes. This page is the reference for all three.
 
-You manage all of this from **Team Management** (under the **Management** section of the left navigation). API keys are managed alongside it.
+**Where:** account menu → **Team Management** and **API Keys**.
 
-## What it does
-
-- **Isolates data by team.** You only ever see data for your **active team**, so separate clients, environments, or business units stay cleanly separated.
-- **Controls access by role.** Each member holds one role per team, and that role determines which modules and actions they can use.
-- **Lets people belong to multiple teams.** You can switch your active team at any time without signing out.
-- **Secures automation with scoped API keys.** Keys let CI/CD pipelines and integrations call the platform with only the permissions they need.
+![Team Management: current team, members, your role; your teams with Current marker and Invite Members; members list with role selector](/img/screenshots/platform-security/team-management.webp)
 
 ## The role catalog
 
-Each team member is assigned exactly one of six roles. Roles are additive — higher roles include the abilities of the ones below them.
+Every member holds exactly one of six roles per team. **Admin** holds every permission; the others are fixed sets (roles are not editable):
 
-| Role | What they can do |
-|---|---|
-| **Admin** | Full control of the team: manage members and their roles, integrations, cloud accounts, and every other module and its data. |
-| **Security Manager** | Run and manage scans, cloud accounts, risks, assessments, threat intelligence, container security, and remediations; approve remediations; use AI assistants. Can also invite and manage members. |
-| **Security Analyst** | The day-to-day operator: run scans, create and manage risks, work assessments, view findings and reports, and use AI assistants. |
-| **Compliance Officer** | GRC-focused: manage assessments, view the executive dashboard, export reports, and use the compliance copilot. |
-| **Auditor** | Read-only across security data and reports, with the ability to **export** reports for evidence. |
-| **Viewer** | Basic read-only visibility into dashboards, scans, risks, and reports. |
+| Permission | Security Manager | Security Analyst | Compliance Officer | Auditor | Viewer |
+| --- | :-: | :-: | :-: | :-: | :-: |
+| View dashboard · scans · IaC scans · risks · assessments · reports · alerts · cloud accounts | ✓ | ✓ | ✓ | ✓ | ✓ |
+| View triage | | ✓ | | | ✓ |
+| Export reports | ✓ | ✓ | ✓ | ✓ | |
+| View executive dashboard | ✓ | | ✓ | | |
+| View integrations · remediations | ✓ | ✓ | ✓ | ✓ | |
+| View threat intelligence · container security | ✓ | ✓ | | ✓ | |
+| View cloud credentials | ✓ | ✓ | | | |
+| Create cloud scans · run scans · run IaC scans | ✓ | ✓ | | | |
+| Create and manage risks | ✓ | ✓ | | | |
+| Manage assessments | ✓ | ✓ | ✓ | | |
+| Manage triage | | ✓ | | | |
+| Acknowledge alerts | ✓ | ✓ | | | |
+| Run AI agents | ✓ | ✓ | ✓ | | |
+| Manage cloud accounts · scans · integrations · threat intelligence · container security · alerts | ✓ | | | | |
+| Approve and execute remediations · execute AI remediation | ✓ | | | | |
+| Manage team · manage users | ✓ | | | | |
 
-:::note[Inviting and managing members]
-The ability to invite teammates and change their roles belongs to **Admins** and **Security Managers** (both hold the "manage users" permission). As a safeguard, only an **Admin** can invite or promote someone to the **Admin** role.
+Two things only an **Admin** can do: invite or promote someone *to Admin*, and read the whole team's [audit trail](./audit-trail.md) (others see their own entries). A seventh role, **Integration**, is not assignable — it is the permission set an [API key](#api-keys-for-automation) falls back to.
+
+Permissions are checked on every request, in the API as well as the UI; a role that lacks a permission does not see the button and cannot call the endpoint.
+
+## Teams
+
+A team is the tenancy boundary: scans, findings, assets, risks, evidence, reports, integrations and API keys are stamped with the team that created them and read back only within it. A person can belong to several teams and works in one **active team** at a time.
+
+- **Create Team** (Admin or Security Manager of your current team) makes a new team with you as its Admin. Name, description and organisation; a risk-appetite threshold and default compliance frameworks can be set on creation.
+- **Switch** by selecting a team card. The session is re-issued for the new team, so every subsequent request — and every API key created afterwards — is scoped to it.
+- **Remove** a member (Admin or Security Manager) revokes their access at once; their past actions stay in the audit trail.
+
+:::tip[Confirm the team before you act]
+Everything you create — a scan, a cloud account, an API key — belongs to the team that is active when you create it. The current team is shown at the top of Team Management and in the account menu.
 :::
 
-## Invite a teammate and assign a role
+### Invite a teammate and assign a role
 
-1. Open **Team Management**. Your active team and your role are shown at the top.
-2. Find the team you want to add someone to and select **Invite Member** (or **Invite Members**). This option appears only if you're an Admin (or Security Manager) of that team.
-3. In the **Invite Member** dialog, enter the person's **email address**, choose a **role**, and optionally add a personal message.
-4. Select **Send Invitation**. The invitee receives an email with a link to accept and set up their account; once they accept, they join the team with the role you chose.
+![Invite Team Member: email, role (Viewer — read-only access by default), optional message; Send Invitation](/img/screenshots/platform-security/team-invite.webp)
 
-:::tip[Prerequisites and limits]
-- If your organization has restricted invitations to a specific email domain, you can only invite addresses on that domain — others are rejected.
-- Invitations are rate-limited per inviter (by default, up to 20 in a rolling hour) to prevent accidental floods.
-- Invitation links expire after a set window (7 days by default). If a link expires, simply send a new invitation.
-:::
+1. **Invite Member** on the team card (Admin or Security Manager).
+2. Enter the email and choose a role. Only an Admin can choose **Admin**.
+3. **Send Invitation.** An existing user is added immediately; a new user receives a registration link bound to that email, valid for 7 days. Invitations are rate-limited to 20 per inviter per hour, and refused for addresses outside the deployment's allowed domain when one is set.
 
-### Change someone's role
-
-In the member list for your active team, Admins can change a member's role from the role dropdown next to their name. The change takes effect immediately the next time that member's access is checked.
-
-## Switch your active team
-
-If you belong to more than one team, you can switch which one is active:
-
-1. Open **Team Management**.
-2. In the list of your teams, select the team you want to work in. Your current team is marked as the active one.
-3. The platform switches your context and refreshes so that scans, findings, and reports all reflect the team you just selected.
-
-:::tip[Always confirm your active team first]
-Before you run a scan, connect an account, or review data, make sure the correct team is active — the action and its results are scoped to whatever team you're currently in. You can also switch teams from the account menu in the top-right.
-:::
+Change a role from the dropdown next to a member; it applies on their next request. Security Managers cannot promote anyone (including themselves) to Admin.
 
 ## API keys for automation
 
-API keys give CI/CD pipelines, scripts, and integrations programmatic access to the platform — for example, to trigger scans from a pipeline or pull findings into another tool. Each key carries its own **scopes** (a focused set of permissions), so you can grant automation exactly what it needs and nothing more.
+**Where:** account menu → **API Keys**.
+
+![API Key Management: active keys, total requests (30 d), keys expiring soon; key list with prefix, environment, status, usage, last used; Rotate / Revoke](/img/screenshots/platform-security/api-keys.webp)
+
+An API key is `osk_` followed by 48 random characters. It authenticates as **the user who created it, in the team that was active when it was created**, and is further limited to its **scopes** — a session user implicitly has every scope, an API key only the ones it was given.
 
 ### Create a key
 
-1. Open the **API Keys** screen and select **Create API Key**.
-2. Give the key a **name** (and an optional description of what it's for).
-3. Choose a **scope preset** that matches the job:
+![Create API Key: name, description, scope preset, expires in days, environment, rate limit (req/min)](/img/screenshots/platform-security/api-keys-create.webp)
 
-   | Preset | Grants |
-   |---|---|
-   | **CI/CD Pipeline (Basic)** | Trigger scans and read results. |
-   | **CI/CD Pipeline (Full)** | Trigger, read, and manage scans, plus read vulnerabilities. |
-   | **Read Only** | Read scans, vulnerabilities, assessments, cloud posture, risks, and reports. |
-   | **Security Automation** | Trigger/read/manage scans, read and update vulnerabilities, read cloud posture, and read/generate reports. |
-   | **Full Access** | All available scopes. |
+| Field | Options |
+| --- | --- |
+| **Scope preset** | **CI/CD Pipeline (Basic)** `scans:trigger scans:read` · **CI/CD Pipeline (Full)** + `scans:manage vulnerabilities:read` · **Read Only** `scans vulnerabilities assessments cloud risks reports :read` · **Security Automation** scans trigger/read/manage, vulnerabilities read/manage, `cloud:read`, reports read/generate · **Full Access** every scope — or pick scopes individually over the API |
+| **Scopes available** | `scans:trigger` `scans:read` `scans:manage` · `vulnerabilities:read` `vulnerabilities:manage` · `assessments:read` `assessments:manage` · `cloud:read` `cloud:manage` · `risks:read` `risks:manage` · `reports:read` `reports:generate` · `admin:keys` `admin:audit` |
+| **Expires in** | 90 days by default; 0 = never; 365 maximum |
+| **Environment** | `production` · `staging` · `development` · `ci` — a label for your own tracking, and a bulk-revoke selector |
+| **Rate limit** | Requests per minute for this key, 60 by default (1–600) |
+| **IP allowlist** *(API)* | Up to 50 addresses or CIDRs; requests from elsewhere are refused |
 
-4. Optionally set an **expiry** (default 90 days, up to 365), an **environment** label, and a per-minute rate limit.
-5. Select **Create Key**.
+The full key is shown **once**. Only a SHA-256 hash is stored; the list shows the prefix so you can tell keys apart.
 
-:::warning[Copy your key immediately]
-The full key is shown **only once**, right after you create it — use the **Copy** button and store it somewhere secure (a secrets manager or your CI/CD secret store). The platform keeps only a hashed version and can never show you the full key again. Keys begin with the `osk_` prefix so they're easy to recognize.
+:::warning[Copy it now]
+There is no way to display a key again. Put it straight into your CI secret store; if it is lost, **Rotate**.
 :::
 
-### Use a key
+### Use, rotate, revoke
 
-Send the key in the `X-API-Key` request header. Endpoints accept either a signed-in session **or** a valid API key, and each request is allowed only if the key's scopes cover the action.
-
-### Rotate, revoke, and monitor keys
-
-From the key list you can:
-
-- **Rotate** a key when you want to replace it. The old key keeps working for a **48-hour grace period** so you can update your pipelines without downtime.
-- **Revoke** a key to disable it immediately. This can't be undone — issue a new key if you need one again.
-- **Monitor** each key's usage count, last-used time, and environment to spot keys that are unused or behaving unexpectedly.
-
-:::note[Key limits and hardening]
-- Each user can hold up to **25** active keys at a time; revoke unused keys before creating more.
-- For extra protection you can restrict a key to a set of allowed IP addresses (up to 50), so it can only be used from your pipeline's network.
-:::
+- Send the key as `X-API-Key: osk_…`. Endpoints accept a session or a key; a key is refused for any endpoint outside its scopes, its team, or its IP allowlist, and after its expiry.
+- **Rotate** issues a new key with the same scopes and keeps the old one working for a **grace period — 48 hours by default, 0–168 over the API** — so pipelines can be updated without downtime.
+- **Revoke** disables a key immediately and permanently; a team admin can revoke several at once, and can see and revoke any key in the team (`/api/api-keys/admin/team-keys`).
+- **Usage** — request count, last used, and a 30-day analytics view per key; the key **audit log** records creation, rotation, revocation and blocked requests.
+- Each user may hold **25** active keys.
 
 ## Related
 
-- **[Quickstart](../getting-started.md)** — sign in and learn the core concepts, including teams and roles.
-- **[Authentication & Session Management](./session-management.md)** — how sign-in, sessions, and MFA work.
-- **[Audit Trail & Webhook Events](./audit-trail.md)** — see who did what across your team.
-- **[Connecting Cloud Accounts](../cloud-security/connecting-accounts.md)** — add the accounts your team will scan.
+- [Signing In & Sessions](./session-management.md) — how users and SSO accounts get their role.
+- [Audit Trail & User Activity](./audit-trail.md) — who invited whom, who changed a role, which key called what.
+- [API & Automation](../api-automation/index.md) · [Authentication](../api-reference/authentication.md) — using keys from pipelines.

@@ -1,0 +1,16 @@
+[
+ {"name":"login","url":"/login","noAuth":true,"delay":3000},
+ {"name":"account-menu","url":"/dashboard?section=overview","delay":3000,"clicks":[{"text":"Admin User","nth":0}]},
+ {"name":"team-management","url":"/dashboard?section=team-management","delay":4500},
+ {"name":"team-members","url":"/dashboard?section=team-management","delay":4500,"scrollY":520},
+ {"name":"team-invite","url":"/dashboard?section=team-management","delay":3000,"clicks":[{"role":"button","text":"Invite Member","nth":0}]},
+ {"name":"change-password","url":"/dashboard?section=change-password","delay":3000},
+ {"name":"mfa-settings","url":"/dashboard?section=mfa-settings","delay":3500},
+ {"name":"mfa-setup","url":"/dashboard?section=mfa-settings","delay":4000,"clicks":[{"role":"button","text":"Enable MFA","nth":0}]},
+ {"name":"api-keys","url":"/dashboard?section=api-key-management","delay":4000},
+ {"name":"api-keys-create","url":"/dashboard?section=api-key-management","delay":3000,"clicks":[{"role":"button","text":"+ Create API Key","nth":0}]},
+ {"name":"platform-setup","url":"/dashboard?section=platform-setup","delay":3500},
+ {"name":"menu-settings","url":"/dashboard?section=platform-admin-menu-settings","delay":4000},
+ {"name":"user-activity","url":"/dashboard?section=platform-admin-user-activity","delay":4500},
+ {"name":"user-activity-sessions","url":"/dashboard?section=platform-admin-user-activity","delay":4500,"clicks":[{"text":"Live sessions","exact":false,"nth":0}],"scrollY":380}
+]
