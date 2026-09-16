@@ -1,0 +1,213 @@
+[
+ {
+  "name": "integrations-hub",
+  "url": "/dashboard?section=integration",
+  "delay": 5000
+ },
+ {
+  "name": "integrations-catalog",
+  "url": "/dashboard?section=integration",
+  "delay": 5000,
+  "scrollY": 860
+ },
+ {
+  "name": "integrations-category-filter",
+  "url": "/dashboard?section=integration",
+  "delay": 4000,
+  "clicks": [
+   {
+    "text": "Collaboration & Notifications",
+    "nth": 0
+   }
+  ],
+  "scrollY": 860
+ },
+ {
+  "name": "integrations-connected-card",
+  "url": "/dashboard?section=integration",
+  "delay": 4000,
+  "actions": [
+   {
+    "fill": {
+     "placeholder": "Search integrations...",
+     "value": "GitHub"
+    }
+   }
+  ],
+  "scrollY": 860
+ },
+ {
+  "name": "wizard-step1-overview",
+  "url": "/dashboard?section=integration",
+  "delay": 4000,
+  "actions": [
+   {
+    "fill": {
+     "placeholder": "Search integrations...",
+     "value": "Wazuh"
+    }
+   },
+   {
+    "click": {
+     "role": "button",
+     "text": "\ud83d\udd17 Connect",
+     "nth": 0
+    }
+   }
+  ]
+ },
+ {
+  "name": "wizard-step2-auth",
+  "url": "/dashboard?section=integration",
+  "delay": 4000,
+  "actions": [
+   {
+    "fill": {
+     "placeholder": "Search integrations...",
+     "value": "Wazuh"
+    }
+   },
+   {
+    "click": {
+     "role": "button",
+     "text": "\ud83d\udd17 Connect",
+     "nth": 0
+    }
+   },
+   {
+    "click": {
+     "role": "button",
+     "text": "Next",
+     "nth": 0
+    }
+   }
+  ]
+ },
+ {
+  "name": "wizard-step3-test",
+  "url": "/dashboard?section=integration",
+  "delay": 600,
+  "actions": [
+   {
+    "fill": {
+     "placeholder": "Search integrations...",
+     "value": "GitHub"
+    }
+   },
+   {
+    "click": {
+     "role": "button",
+     "text": "\u2699\ufe0f Reconfigure",
+     "nth": 0
+    }
+   },
+   {
+    "click": {
+     "role": "button",
+     "text": "Next",
+     "nth": 0
+    }
+   },
+   {
+    "fillSelector": {
+     "selector": "input[placeholder='Enter github_token']",
+     "value": "ghp_\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
+    }
+   },
+   {
+    "click": {
+     "role": "button",
+     "text": "Next",
+     "nth": 0
+    }
+   }
+  ]
+ },
+ {
+  "name": "wizard-step4-health",
+  "url": "/dashboard?section=integration",
+  "delay": 5000,
+  "actions": [
+   {
+    "fill": {
+     "placeholder": "Search integrations...",
+     "value": "GitHub"
+    }
+   },
+   {
+    "click": {
+     "role": "button",
+     "text": "\u2699\ufe0f Reconfigure",
+     "nth": 0
+    }
+   },
+   {
+    "click": {
+     "role": "button",
+     "text": "Next",
+     "nth": 0
+    }
+   },
+   {
+    "fillSelector": {
+     "selector": "input[placeholder='Enter github_token']",
+     "value": "ghp_\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
+    }
+   },
+   {
+    "click": {
+     "role": "button",
+     "text": "Next",
+     "nth": 0
+    }
+   }
+  ]
+ },
+ {
+  "name": "wizard-step5-review",
+  "url": "/dashboard?section=integration",
+  "delay": 5000,
+  "actions": [
+   {
+    "fill": {
+     "placeholder": "Search integrations...",
+     "value": "GitHub"
+    }
+   },
+   {
+    "click": {
+     "role": "button",
+     "text": "\u2699\ufe0f Reconfigure",
+     "nth": 0
+    }
+   },
+   {
+    "click": {
+     "role": "button",
+     "text": "Next",
+     "nth": 0
+    }
+   },
+   {
+    "fillSelector": {
+     "selector": "input[placeholder='Enter github_token']",
+     "value": "ghp_\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
+    }
+   },
+   {
+    "click": {
+     "role": "button",
+     "text": "Next",
+     "nth": 0
+    }
+   },
+   {
+    "click": {
+     "role": "button",
+     "text": "Next",
+     "nth": 0
+    }
+   }
+  ]
+ }
+]

@@ -22,13 +22,13 @@ flowchart TB
   API["Application API<br/>(FastAPI · REST + OpenAPI)"]
   Q[("Queue and cache<br/>(Redis)")]
   W["Scan workers<br/>(Celery)"]
-  SC["Isolated scanner containers<br/>ZAP · Nuclei · Nmap · Trivy · Grype · Syft · Prowler · kube-bench …"]
+  SC["Scanner engines<br/>ZAP · Nuclei · Prowler · testssl (containers)<br/>nmap · Trivy · Syft · Grype (in-image)"]
 
   DB[("Application data<br/>(MongoDB — team-scoped)")]
   OBJ[("Object storage<br/>(large artifacts and evidence)")]
 
   EXT["Your cloud provider APIs<br/>(read-only)"]
-  INT["Integrations<br/>Wazuh · SonarQube · Jira · Slack/Teams"]
+  INT["Integrations<br/>Wazuh · SonarQube · Jenkins (in) · Jira (two-way)<br/>Slack · Teams · email · PagerDuty · webhooks (out)"]
   LLM["LLM provider API<br/>(optional — see AI Data and Privacy)"]
 
   UI --> API
@@ -45,7 +45,7 @@ flowchart TB
 
 - **Application API (FastAPI).** Serves the web app and the documented REST API, enforces authentication, RBAC and per-team tenancy, and dispatches work.
 - **Scan workers (Celery).** Long-running scans run on background workers, not in the request path, so the UI stays responsive. Work is queued through Redis.
-- **Isolated scanner containers.** Each scanner runs in a **single-use, resource-capped container** — never installed into the platform runtime — and is torn down when the scan completes.
+- **Scanner tools.** Some engines ship in the worker image (nmap, Trivy, Syft, Grype); the heavier ones — OWASP ZAP, Nuclei, Prowler, testssl.sh — run as **single-use, resource-capped sibling containers** started through the Docker socket and torn down when the scan completes.
 - **Data stores.** Application data lives in MongoDB, partitioned into purpose-specific databases (platform, orchestration, vulnerability, native scans, knowledge base) and always scoped to a team. Large artifacts (reports, evidence) go to object storage.
 - **External systems.** Cloud provider APIs are accessed with **read-only** credentials; integrations ingest or push data; the LLM provider is called only when AI features are enabled.
 
@@ -76,16 +76,16 @@ The same platform runs either as a managed service or entirely inside your envir
 
 | | **SaaS (managed)** | **On-premises / self-hosted** |
 |---|---|---|
-| **Where it runs** | Offload-operated cloud | Your infrastructure or air-gapped network |
+| **Where it runs** | Offload-operated cloud | A Docker Compose stack of prebuilt images on your host — see [Deployment & Operations](./on-premises/deployment.md) |
 | **Where your data lives** | Offload-managed stores, team-isolated | **Entirely within your environment** |
 | **Cloud scanning** | Read-only, over the provider APIs | Same |
-| **Internal network reach** | — | Internal hosts, private apps/APIs, [Wazuh](./on-premises/wazuh-integration.md) |
+| **Internal network reach** | — | Internal hosts, private apps / APIs (once `ALLOW_PRIVATE_SCAN_TARGETS` is set), [Wazuh](./on-premises/wazuh-integration.md), Greenbone / OpenVAS |
 | **AI features** | Call the external LLM provider (optional) | Call the external LLM provider (optional) — or **disable** them; see [AI Data & Privacy](./ai-threat-intelligence/ai-data-privacy.md) |
 
 For internal-network coverage, ingestion and the on-prem architecture, see **[On-Premises](./on-premises/index.mdx)**.
 
-:::note[Read-only by design]
-Across both models, scans only ever **read** your environment using the read-only credentials you provide. Offload never changes your cloud, code, or clusters.
+:::note[Read-only by default]
+Across both models, scans only ever **read** your environment using the read-only credentials you provide. The two places the platform can write are explicit and opt-in: the Auto-Fix Engine (approved actions, simulated until an operator enables live execution) and fix pull requests to your repositories (a branch and a PR, never a merge).
 :::
 
 ## Related

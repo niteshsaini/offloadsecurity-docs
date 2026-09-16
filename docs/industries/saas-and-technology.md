@@ -18,11 +18,11 @@ Your attack surface is your cloud accounts. [Cloud Security](../cloud-security/i
 
 ### Shift-left security in the CI/CD pipeline
 
-Engineering-led teams want security to meet code where it's written. Offload Security folds static analysis, secrets detection, and infrastructure-as-code checks into the pipeline with [API & Code Scanning](../security-scanning/api-code-scanning.md), then extends that coverage to dependencies. SBOM generation and license compliance surface risky or non-permissive packages early, and vulnerable dependencies flow straight into [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) with severity, exploitability, and fix guidance already attached.
+Engineering-led teams want security to meet code where it's written. Offload Security folds static analysis, secrets detection, and infrastructure-as-code checks into the pipeline with [API & Code Scanning](../security-scanning/code/index.md), then extends that coverage to dependencies. SBOM generation and license compliance surface risky or non-permissive packages early, and vulnerable dependencies flow straight into [Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx) with severity, exploitability, and fix guidance already attached.
 
 ### Containers and Kubernetes, covered end to end
 
-Most SaaS runs on containers orchestrated by Kubernetes. [Container Security](../security-scanning/container-security.md) scans images for OS and library vulnerabilities before they reach production, while [Kubernetes Security](../security-scanning/kubernetes-security.md) inspects cluster configuration, RBAC, and workload posture. Because both feed the same risk model as everything else, a CVE in a base image and a misconfigured cluster role show up in one queue, ranked against each other.
+Most SaaS runs on containers orchestrated by Kubernetes. [Container Security](../security-scanning/containers/index.md) scans images for OS and library vulnerabilities before they reach production, while [Kubernetes Security](../security-scanning/kubernetes/index.md) inspects cluster configuration, RBAC, and workload posture. Because both feed the same risk model as everything else, a CVE in a base image and a misconfigured cluster role show up in one queue, ranked against each other.
 
 ### SOC 2 and ISO 27001 that customers demand
 
@@ -45,10 +45,10 @@ Correlation is what makes speed safe. A finding from a code scan, a cloud miscon
 | SaaS/tech need | How Offload Security delivers it |
 | --- | --- |
 | Cloud-native posture across AWS/Azure/GCP | [Cloud Security](../cloud-security/index.md) with continuous config assessment and drift detection |
-| Shift-left in CI/CD (SAST, secrets, IaC) | [API & Code Scanning](../security-scanning/api-code-scanning.md) integrated into the pipeline |
-| SBOM and open-source license compliance | Dependency and license scanning feeding [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) |
-| Container image security | [Container Security](../security-scanning/container-security.md) pre-deployment image scanning |
-| Kubernetes cluster and workload posture | [Kubernetes Security](../security-scanning/kubernetes-security.md) config, RBAC, and workload checks |
+| Shift-left in CI/CD (SAST, secrets, IaC) | [API & Code Scanning](../security-scanning/code/index.md) integrated into the pipeline |
+| SBOM and open-source license compliance | Dependency and license scanning feeding [Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx) |
+| Container image security | [Container Security](../security-scanning/containers/index.md) pre-deployment image scanning |
+| Kubernetes cluster and workload posture | [Kubernetes Security](../security-scanning/kubernetes/index.md) config, RBAC, and workload checks |
 | SOC 2 Type II / ISO 27001 attestations | [Compliance](../compliance/index.md) mapping plus the [Evidence Hub](../compliance/evidence-hub.md) |
 | Fast inbound questionnaire responses | [Knowledge Base](../ai-threat-intelligence/knowledge-base.md) questionnaire auto-fill |
 | One prioritized view of total risk | Unified risk register correlating every source |

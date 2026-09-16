@@ -1,0 +1,134 @@
+[
+ {
+  "name": "exec-dashboard",
+  "url": "/dashboard?section=overview",
+  "delay": 6000,
+  "clicks": [
+   {
+    "role": "button",
+    "text": "Executive Dashboard",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "exec-dashboard-readiness",
+  "url": "/dashboard?section=overview",
+  "delay": 6000,
+  "clicks": [
+   {
+    "role": "button",
+    "text": "Executive Dashboard",
+    "nth": 0
+   }
+  ],
+  "scrollY": 900
+ },
+ {
+  "name": "exec-gap-analysis",
+  "url": "/dashboard?section=overview",
+  "delay": 7000,
+  "clicks": [
+   {
+    "role": "button",
+    "text": "Executive Dashboard",
+    "nth": 0
+   },
+   {
+    "text": "Gap Analysis",
+    "nth": 0
+   },
+   {
+    "text": "Generate Gap Analysis",
+    "nth": 0
+   }
+  ],
+  "scrollY": 300
+ },
+ {
+  "name": "exec-roadmap",
+  "url": "/dashboard?section=overview",
+  "delay": 7000,
+  "clicks": [
+   {
+    "role": "button",
+    "text": "Executive Dashboard",
+    "nth": 0
+   },
+   {
+    "text": "Remediation Roadmap",
+    "nth": 0
+   },
+   {
+    "text": "Generate Roadmap",
+    "nth": 0
+   }
+  ],
+  "scrollY": 300
+ },
+ {
+  "name": "exec-reports",
+  "url": "/dashboard?section=overview",
+  "delay": 6000,
+  "clicks": [
+   {
+    "role": "button",
+    "text": "Executive Dashboard",
+    "nth": 0
+   },
+   {
+    "text": "Executive Reports",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "exec-reports-scheduled",
+  "url": "/dashboard?section=overview",
+  "delay": 6000,
+  "clicks": [
+   {
+    "role": "button",
+    "text": "Executive Dashboard",
+    "nth": 0
+   },
+   {
+    "text": "Executive Reports",
+    "nth": 0
+   }
+  ],
+  "scrollY": 760
+ },
+ {
+  "name": "scan-results-report",
+  "url": "/dashboard?section=scans",
+  "delay": 7000,
+  "clicks": [
+   {
+    "selector": "[role=\"tab\"]:has-text(\"Scan Results\")"
+   },
+   {
+    "role": "button",
+    "text": "Consolidated Security Report",
+    "nth": 0
+   }
+  ]
+ },
+ {
+  "name": "ai-configuration",
+  "url": "/dashboard?section=knowledge-base",
+  "delay": 6000
+ },
+ {
+  "name": "ai-assistant-widget",
+  "url": "/dashboard?section=compliance-posture",
+  "delay": 6000,
+  "clicks": [
+   {
+    "role": "button",
+    "text": "AI Security Assistant",
+    "nth": 0
+   }
+  ]
+ }
+]

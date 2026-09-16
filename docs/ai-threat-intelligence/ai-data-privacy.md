@@ -1,7 +1,8 @@
 ---
 title: "AI Data & Privacy"
 sidebar_label: "AI Data & Privacy"
-sidebar_position: 4.5
+sidebar_position: 6
+description: "What the platform's own AI features see, where it goes, how it is cached and isolated per tenant, which features never call a model, and how to run with AI off — including the on-premises caveat that prompts still reach the provider you chose."
 ---
 
 # AI Data & Privacy
@@ -67,4 +68,5 @@ Even in an on-premises deployment, AI features send prompts to the **external** 
 
 - **[Trust & Security](../trust-and-security.md)** — encryption, tenant isolation, and credential handling across the platform.
 - **[Knowledge Base](./knowledge-base.md)** — how uploaded documents are used for Q&A.
-- **[AI Governance](./ai-governance.md)** and **[AI-SPM](./ai-spm.md)** — governing and testing the AI *you* build and run.
+- **[AI Governance](./ai-governance.md)** and **[AI Discovery, AIBOM & Testing](./ai-spm.md)** — governing and testing the AI *you* build and run.
+- **[AI Assistant](../reports-and-ai/ai-assistant.md)** — the page-level assistant and provider setup.

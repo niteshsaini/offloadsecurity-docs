@@ -20,12 +20,12 @@ It is built for teams that need to **prove** security, not just perform it — w
 | A **CISO or security leader** | A live, defensible picture of risk and compliance posture across the whole estate, trending over time. |
 | A **compliance officer or auditor** | A control library, assessment engine, and evidence vault that produces audit-ready packages continuously — not the week before the audit. |
 | A **DevSecOps team** | Security that runs in the pipeline and reports back to the same platform the rest of the org uses. |
-| A **regulated enterprise** | A governance system of record that spans cloud *and* private infrastructure, with on-premises scanning and SIEM ingestion for the assets that never leave your network. |
+| A **regulated enterprise** | A governance system of record that spans cloud *and* private infrastructure, with on-premises scanning and Wazuh endpoint telemetry for the assets that never leave your network. |
 
 ## What makes it different
 
 - **One source of truth.** Cloud posture, vulnerabilities, application and code findings, container and Kubernetes risk, threat intelligence, compliance state, and on-prem/SIEM data are correlated in one data model — not stitched together in a report at quarter-end.
-- **Cloud *and* on-premises.** The same platform that assesses AWS, Azure, and GCP also reaches inside your network — internal asset discovery, private URL/API scanning, OpenVAS-based vulnerability scanning, and Wazuh-powered endpoint and SIEM visibility — and lands all of it in the same dashboard. See **[On-Premises & Private Infrastructure](../on-premises/index.mdx)**.
+- **Cloud *and* on-premises.** The same platform that assesses AWS, Azure, and GCP also reaches inside your network — network discovery of private ranges, private URL/API scanning, OpenVAS-based vulnerability scanning, and Wazuh-powered endpoint and SIEM visibility — and lands all of it in the same dashboard. See **[On-Premises & Private Infrastructure](../on-premises/index.mdx)**.
 - **Findings become governance.** A finding doesn't stop at "detected." It flows into risk registers, SLAs, compliance controls, and audit evidence automatically, so operational security and governance stay in lockstep.
 - **AI where it saves time.** AI assists with triage, remediation guidance, control mapping, questionnaire responses, and incident correlation — accelerating the work, not replacing the operator's judgment.
 - **Built on proven, open foundations.** The platform orchestrates trusted, industry-standard engines (for cloud, code, container, and network scanning) under one roof, and integrates with the SIEM, ticketing, and evidence systems you already run.

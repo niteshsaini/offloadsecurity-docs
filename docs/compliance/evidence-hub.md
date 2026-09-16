@@ -2,113 +2,81 @@
 title: "Evidence Hub"
 sidebar_label: "Evidence Hub"
 sidebar_position: 4
+description: "Every artifact behind every control in one place — auto-collected scan evidence, raw cloud-API captures, documents and screenshots — with coverage by SCF domain, freshness and expiry, a review queue, quality scores, renewal prompts and per-framework auditor packages."
 ---
 
 # Evidence Hub
 
-The Evidence Hub is where Offload Security gathers, stores, and exports the audit artifacts that prove your controls are in place. Instead of chasing screenshots and spreadsheets before every audit, the platform continuously collects evidence from your scans and assessments, attaches it to the right controls, and packages it up when an auditor asks.
+Posture says *what* you claim; evidence is *why an auditor should believe you*. The Evidence Hub collects that proof from everything the platform already does, lets you add what it cannot see, and tells you which controls still have nothing behind them.
 
-Every piece of evidence is mapped to a control in the **Secure Controls Framework (SCF)** — a common control set that satisfies many frameworks at once (SOC 2, ISO 27001/27002, NIST CSF 2.0, NIST 800-53, PCI DSS 4.0, HIPAA, GDPR, and more). Collect a control's evidence once, and it counts toward every framework that maps to it.
+**Where:** left navigation → **Compliance Posture** → *Evidence Hub* tab.
 
-## What it does
+![Evidence Hub: framework-aware mode with 10 active frameworks; tiles for total controls, with evidence (46.7% coverage), auto-collected, manual evidence, no evidence; evidence coverage by SCF domain](/img/screenshots/compliance/evidence-hub.webp)
 
-- **Collects evidence automatically.** Results from your cloud (CSPM), vulnerability, container, and Kubernetes scans, plus your completed assessments, are turned into evidence and linked to the controls they support.
-- **Pulls verifiable cloud evidence.** For connected AWS, GCP, and Azure accounts, the platform can capture raw read-only API responses (for example, an S3 public-access block or an IAM password policy) so an auditor sees direct proof of configuration, not just a scanner's interpretation.
-- **Lets you upload your own artifacts.** Add policies, procedures, certificates, configuration exports, and screenshots by hand and map them to controls.
-- **Tracks coverage and gaps.** See, per framework and per control, what evidence exists, where it's missing, and how strong each piece is.
-- **Scores and ages evidence.** Each artifact gets a quality score and a validity period, so stale evidence is flagged for refresh before it expires.
-- **Protects sensitive data.** Secrets, keys, tokens, and other PII are automatically masked so evidence is safe to share with auditors.
-- **Exports an audit-ready package.** Generate a downloadable evidence package per framework, organized control by control.
+## Where evidence comes from
 
-## Evidence sources
+| Source | How it gets here | Typical quality score |
+| --- | --- | --- |
+| **Scan evidence** — cloud posture (Prowler), Kubernetes, container, vulnerability and web scans | Written automatically as scans correlate to controls, and by **Collect All Evidence** | 85–95 |
+| **API evidence** — raw, read-only cloud API responses (S3 encryption / logging / versioning / public-access block, IAM summary and password policy, CloudTrail, Config, GuardDuty, Security Hub, Access Analyzer, KMS, RDS, security groups, VPC flow logs; GCP buckets, clusters, firewalls, IAM policy, log sinks; Azure storage accounts, NSGs, Key Vaults, SQL servers, AKS, Defender plans) | **Collect API Evidence** for all connected accounts, or per account | scan-grade |
+| **Assessment answers** | Each answered assessment question is evidence for the controls it maps to | 75 |
+| **Knowledge-base documents** | Policies and procedures uploaded to the [Knowledge Base](../reports-and-ai/index.md) and mapped to controls | 70 |
+| **Manual uploads** — documents, screenshots, configs, policies | **Quick Upload** or the **Evidence Wizard** | 60–70 |
 
-Evidence is labeled by where it came from, so reviewers always know its origin:
+Evidence is **deduplicated** by content: one artifact is stored once and linked to every control it satisfies (the *dedup ratio* on the posture page). Sensitive values in API captures are **masked** before storage.
 
-| Source | What it captures |
-|---|---|
-| **CSPM scan** | Cloud misconfiguration findings from posture scans. |
-| **Cloud API (AWS / GCP / Azure)** | Raw read-only API responses that directly verify a setting. |
-| **Vulnerability scan** | Vulnerability and remediation evidence. |
-| **Container scan** | Image and registry scan results. |
-| **Kubernetes scan** | Cluster configuration findings. |
-| **Assessment** | Answers and attestations from completed [assessments](./interactive-assessments.md). |
-| **Manual upload** | Policies, procedures, certificates, configs, and screenshots you add yourself. |
+## Coverage
 
-## How evidence is scored and aged
+The **Coverage** view is the honest number: of the controls in scope for your active frameworks, how many have at least one evidence item — overall and **by SCF domain**, with *with gaps only* / *fully covered* filters. Click a tile to list the controls behind it; click a control to see its evidence and add a comment.
 
-Not all evidence is equally strong, so each artifact carries a **quality score** and a **validity period**. Automated, machine-collected evidence scores highest and is trusted longest within a scan cycle; manual screenshots score lowest because they're point-in-time. When an artifact passes its validity window, it's marked **expired** and surfaced for refresh.
+![Evidence coverage by domain with per-domain percentages and counts](/img/screenshots/compliance/evidence-hub-domains.webp)
 
-| Evidence type | Validity | Relative strength |
-|---|---|---|
-| Cloud / CSPM scan result | 90 days | Highest |
-| Vulnerability scan result | 90 days | High |
-| Assessment answer | 365 days | Medium |
-| Policy / procedure document | 365 days | Medium |
-| Manual screenshot or log | 365 days | Lowest |
+**Framework-aware mode** (the strip of active frameworks at the top) restricts everything on this tab to controls those frameworks reference.
 
-:::note[Why validity matters]
-Auditors expect evidence to be current. The Evidence Hub re-collects automated evidence on each scan, so as long as your scans run on a schedule, your technical evidence stays fresh on its own.
-:::
+## Freshness
 
-## How to use it
+![Evidence Freshness: fresh, expiring within 14 days, stale and expired counts](/img/screenshots/compliance/evidence-hub-freshness.webp)
 
-### 1. Open the Evidence Hub
+Evidence ages. Manual evidence carries a **valid-until** date; assessments carry a validity window; scan evidence is superseded by the next scan. Freshness shows what is **fresh**, **expiring within 14 days**, **stale** and **expired**. Expired evidence stops supporting its controls and appears as an `evidence_expired` [drift](./drift-detection.md).
 
-Go to **Compliance → Evidence Hub**. The page shows your frameworks with their coverage, a list of collected evidence, and per-control detail.
+## Smart breakdown
 
-### 2. Collect evidence automatically
+![Smart Breakdown: evidence by source, type and quality band](/img/screenshots/compliance/evidence-hub-smart.webp)
 
-Select **Collect All** to run a full collection across every connected source — cloud, vulnerabilities, containers, Kubernetes, and assessments. The platform links each result to its controls and refreshes your compliance posture when it finishes. You can re-run this any time; it's also kicked off automatically after scans complete.
+Each evidence item carries a **quality score** — the source's base score (CSPM scan 95, vulnerability scan 90, container / Kubernetes / security scan 85, assessment 75, knowledge base or policy 70, manual 60) adjusted by type (scan result 1.0, assessment 0.9, policy 0.85, config 0.8, document 0.75, attestation 0.65, screenshot 0.5, email 0.4). The breakdown shows where your evidence is strong and where a framework leans on screenshots.
 
-:::tip[Connect first, then collect]
-The more you've connected and scanned, the more evidence appears automatically. Before your first collection, [connect your cloud accounts](../cloud-security/connecting-accounts.md) and run a posture scan, and complete any relevant [assessments](./interactive-assessments.md).
-:::
+## Review queue
 
-### 3. Review a control's evidence
+![Review Queue: pending evidence reviews with Approve and Reject](/img/screenshots/compliance/evidence-hub-review.webp)
 
-Select any control to open its evidence bundle — every artifact attached to it, with its source, quality score, validity, and review status. This is the view you'll walk an auditor through.
+Auto-collected evidence enters as **auto_collected**; before an audit you move it to **pending_review** and a reviewer marks it **approved** (audit-ready) or **rejected** (needs replacement). The queue lists what is waiting, with the controls each item supports.
 
-Evidence moves through a simple review workflow:
+## API evidence
 
-| Status | Meaning |
-|---|---|
-| **Auto-collected** | Gathered automatically; awaiting review. |
-| **Pending review** | Submitted and waiting on a reviewer. |
-| **Approved** | Verified and audit-ready. |
-| **Rejected** | Not acceptable; needs to be replaced. |
-| **Expired** | Past its validity window; needs a refresh. |
+![API Evidence: capture status per connected cloud account and Collect API Evidence](/img/screenshots/compliance/evidence-hub-api.webp)
 
-### 4. Upload evidence manually
+This is the evidence auditors like most: the raw API response, not a scanner's interpretation. **Collect API Evidence** walks every connected account (read-only calls, per-resource where it matters), masks secrets, deduplicates and links each capture to the SCF controls it proves. "Resource not found" is stored too — it is evidence of *non*-compliance. Capture status per account is shown on the tab.
 
-For artifacts the platform can't collect on its own — signed policies, third-party certificates, board minutes — add them yourself. Choose **Manual Upload**, paste text or attach a file (such as a PDF or image), pick the evidence type, and map it to one or more controls. Manually uploaded evidence is masked and tracked just like automated evidence.
+## Renewals
 
-### 5. Check coverage and close gaps
+![Renewals: evidence from the previous audit cycle due for renewal](/img/screenshots/compliance/evidence-hub-renewals.webp)
 
-Use the framework view to see which controls have evidence and which don't. Controls show a clear status — implemented, partial, planned, not applicable, or not assessed — so you can prioritize the gaps that block certification.
+Manual evidence from the last cycle — the access-review export, the pen-test report, the tabletop minutes — is remembered and surfaced when it is a year old (configurable 30–730 days), with a one-click renewal prompt so the second audit is not a rediscovery of the first.
 
-### 6. Export the audit package
+## Adding evidence yourself
 
-When you're ready for an audit, generate the evidence package for a framework. The package is organized control by control and assembles up to four layers of proof for each:
+![Upload Manual Evidence: SCF control IDs, title, evidence type, description, file](/img/screenshots/compliance/evidence-hub-upload.webp)
 
-1. **Policy** — the governing document.
-2. **Procedure** — how the control is operated.
-3. **Technical proof** — scan results or direct cloud-API evidence.
-4. **Attestation** — assessment answers and sign-off.
+**Quick Upload** takes a title, an evidence type (document, screenshot, config, policy), one or more **SCF control IDs** and the file. The **Evidence Wizard** starts from the other end — pick a framework, see its controls without evidence, and upload against each.
 
-Hand the package to your auditor as your starting evidence set.
+![Interactive Evidence Upload wizard: choose a framework, then controls needing evidence](/img/screenshots/compliance/evidence-hub-wizard.webp)
 
-## Sensitive data is masked automatically
+## Auditor package
 
-Before evidence is stored or exported, the platform redacts sensitive values — passwords, secret keys, API keys, tokens, and identifiers like account IDs embedded in resource names — while keeping the rest of the artifact intact and useful. You get evidence that proves the control without leaking secrets.
-
-:::warning[Always review before sharing]
-Masking is automatic, but you remain the final reviewer. Spot-check exported packages and approve evidence before sending anything to an external auditor.
-:::
+**Download audit package** (per framework, at the bottom of the tab) produces a ZIP organised **by control**: a `README.txt` and `executive_summary.json`, then one folder per SCF control with `control_info.json` and the evidence grouped in four layers — **L1 governance** (policies), **L2 technical** (scan results and API captures), **L3 operational** (assessment answers) and **L4 monitoring** (alerts and logs). It is the thing you hand to the auditor instead of a shared drive.
 
 ## Related
 
-- **[Compliance & Risk overview](./index.md)** — how compliance fits together across the platform.
-- **[Interactive Assessments](./interactive-assessments.md)** — guided questionnaires that feed attestation evidence.
-- **[Autonomous Compliance](./autonomous-compliance.md)** — the common control registry and continuous scoring.
-- **[Compliance Dashboard & Reporting](./compliance-dashboard.md)** — framework scores and executive reporting.
-- **[Connecting Cloud Accounts](../cloud-security/connecting-accounts.md)** — connect AWS, Azure, or GCP so cloud evidence flows in.
+- [Compliance Posture](./compliance-dashboard.md) — the scores this evidence supports.
+- [Audit Reports](./audit-reports.md) — CSV packs for controls, findings, drift and remediation.
+- [Compliance & GRC API](./api.md#evidence) — evidence, collection, capture, review and renewals over REST.

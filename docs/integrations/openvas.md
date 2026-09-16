@@ -1,7 +1,8 @@
 ---
 title: "OpenVAS Integration"
 sidebar_label: "OpenVAS"
-sidebar_position: 4
+sidebar_position: 7
+description: "Connect a Greenbone / OpenVAS instance so the platform verifies and monitors the connection — and be clear that scan results stay in Greenbone; they are not imported today."
 ---
 
 # OpenVAS Integration
@@ -32,16 +33,20 @@ Scans can be **unauthenticated** (an outside-in view of what's exposed) or **aut
 
 ## Connect OpenVAS
 
-1. Deploy or identify your OpenVAS / Greenbone instance inside the network where your assets live.
-2. In the platform, open **Integrations** and choose **Add Integration → OpenVAS**.
-3. Enter your OpenVAS endpoint and credentials, and define the target scope (hosts / ranges) to scan.
-4. **Test the connection**, then **Save**. Credentials are stored **encrypted at rest** and isolated to your **active team**.
-5. Run and review your network scans from the OpenVAS / Greenbone console.
+**Integrations → Greenbone OpenVAS → Connect.** The wizard asks for:
+
+| Field | Value |
+| --- | --- |
+| `gmp_host` · `gmp_port` | The host and **web (Greenbone Security Assistant) port** of your Greenbone instance — `9392` by default. The field is named for GMP, but the platform signs in to GSA's web API, not the raw GMP socket on 9390 |
+| `username` · `password` | A Greenbone user |
+| `verify_ssl` · `ca_cert` *(optional)* | TLS verification and a private CA certificate |
+
+The connection test signs in to the Greenbone web API (and reads its version) before anything is saved; the health check repeats it on the cadence you choose. Targets, scan configurations and schedules are defined in the Greenbone console — the platform does not push them.
 
 ## Scope of the integration
 
 :::note[Connectivity integration]
-This integration establishes and validates the connection to your OpenVAS/Greenbone instance so it fits into your overall program. **Automated import of OpenVAS scan results into the platform's unified [Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx) is not part of the integration today** — OpenVAS remains the system of record for these scans, and it's where the scan configuration and results live. (Wazuh, by contrast, does stream telemetry into the platform — see **[Wazuh](./wazuh.md)**.)
+This integration establishes and validates the connection to your OpenVAS/Greenbone instance so it fits into your overall program. **Automated import of OpenVAS scan results into the platform's unified [Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx) is not part of the integration today** — OpenVAS remains the system of record for these scans, and it's where the scan configuration and results live. (Wazuh, by contrast, does stream telemetry into the platform — see **[Wazuh](./wazuh.md)**.)
 :::
 
 ## Related

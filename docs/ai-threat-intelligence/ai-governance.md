@@ -2,90 +2,98 @@
 title: "AI Governance"
 sidebar_label: "AI Governance"
 sidebar_position: 3
+description: "Govern the AI systems your organisation builds and buys — a model registry, risk assessments and bias tests, incident and human-oversight logs, training records, and an ISO 42001 control posture with certification blockers, a Statement of Applicability and an auditor package."
 ---
 
 # AI Governance
 
-AI Governance gives you one place to inventory the AI systems your organization builds or uses, classify them against the **EU AI Act** risk tiers, run structured risk assessments, and keep the controls and evidence that regulators expect. Significant AI risks feed into the same **Risk Register** you use for the rest of your security program, so AI doesn't sit in a silo.
+Regulators now ask the same questions about your AI systems that auditors have long asked about your infrastructure: what do you run, who owns it, how risky is it, how do you know it behaves, and what happened when it did not. AI Governance is the register that answers them — and, because ISO 42001 is the framework auditors reach for, it keeps an **AI Management System (AIMS)** posture against ISO 42001:2023 from the same SCF control set the rest of [Compliance](../compliance/index.md) uses.
 
-![AI Governance dashboard](/img/screenshots/ai-governance.png)
+**Where:** left navigation → *Threat & Intelligence* → **AI Governance**.
 
-## What it does
+![AI Governance overview: ISO 42001 control posture 46 %, total AI models, high-risk models, active assessments, controls implemented; quick actions](/img/screenshots/ai-threat-intelligence/aig-overview.webp)
 
-- **AI system registry** — a living catalog of your models and AI systems, each with an owner, use case, data sources, deployment stage, and lifecycle status.
-- **EU AI Act risk-tier classification** — answer a few questions about a system and the platform places it in the correct tier (**prohibited**, **high-risk**, **limited-risk**, or **minimal-risk**) and tells you what that means.
-- **Guided risk assessments** — a step-by-step wizard for assessing a system against a framework (such as **NIST AI RMF** or the EU AI Act), scoring risk, and attaching evidence.
-- **Fundamental Rights Impact Assessment (FRIA)** — for high-risk systems, a structured assessment covering human dignity, privacy and data protection, non-discrimination, and the rights of children.
-- **Operational monitoring** — fairness/bias testing, privacy (PII) scanning, data-quality checks, AI incident logging, and human-oversight records.
-- **Risk Register integration** — AI systems and their assessments surface alongside your other risks, with treatment and review built in.
+## Overview
 
-Supported regulatory frameworks include the **EU AI Act**, **NIST AI RMF**, US AI regulations, and India's **DPDP Act 2023**.
+The **ISO 42001 control posture** is the headline: the share of applicable SCF controls implemented (49 of 145 in the screenshot) and the readiness level it implies. Beside it: total AI systems in the registry, how many are high risk, active assessments and controls implemented, then quick actions to register a model, run a risk assessment or open the compliance check.
 
-## How to use it
+## Model registry
 
-### 1. Register an AI system
+![AI Model Registry: cards for each registered AI system with risk level, deployment status, type, owner, business unit and use case; View Details, Start Assessment](/img/screenshots/ai-threat-intelligence/aig-model-registry.webp)
 
-1. Open **AI Governance** from the left navigation (or the AI Governance quick-action card on the Dashboard).
-2. Select **Register** (or **Add AI System / Model**) and fill in the details:
-   - **Name**, **description**, and **owner** (required).
-   - **Type** — for example machine learning or generative AI.
-   - **Use case**, **data sources**, **business unit**, and **deployment status** (development, staging, production, and so on).
-   - Optional **last assessment** and **next review** dates.
-3. Save. The system is added to your registry with a lifecycle stage of *registered* and a compliance status of *pending assessment*.
+Every AI system your organisation operates or depends on, registered once:
 
-:::tip[Start with what's in production]
-Register customer-facing and decision-making systems first — these are the ones most likely to fall into a higher EU AI Act tier and to need governance controls soonest.
-:::
+| Field | Purpose |
+| --- | --- |
+| Name, description, use case | What it is and what decision it informs |
+| **Type** | Machine learning · Deep learning · NLP · Computer vision · Generative AI |
+| **Risk level** | Low · Medium · High — your classification, refined by assessments |
+| **Deployment status** | Development · Testing · Production · Retired |
+| Owner, business unit | Who answers for it |
+| Data sources | What it is trained on or reads |
+| Assessment dates | Last and next review |
 
-### 2. Classify it under the EU AI Act
+**Register New Model** adds one by hand; [AI Discovery](./ai-spm.md#discovery) adds systems it finds in your cloud inventory and LLM configuration as *discovered* entries for you to classify. **Start Assessment** on a card opens a risk assessment pre-linked to the system.
 
-Run the EU AI Act classification to find out where a system sits. The platform looks at the **use case**, **sector**, **whether it makes or supports decisions**, and **whether it interacts directly with people**, then assigns one of four tiers:
+## Risk assessments and bias tests
 
-| Tier | What it means | Enforcement date |
-|---|---|---|
-| **Prohibited** | Uses banned under the Act (for example social scoring, mass surveillance, subliminal manipulation). | 2 Feb 2025 |
-| **High-risk** | Systems in sensitive sectors (critical infrastructure, education, employment, healthcare, law enforcement) or making high-stakes decisions (hiring, loan approval, medical diagnosis). | 2 Aug 2026 |
-| **Limited-risk** | Systems that interact with people and require transparency (for example chatbots). | 2 Aug 2025 |
-| **Minimal-risk** | Everything else; voluntary best practices apply. | No specific timeline |
+![Risk Assessment & Bias Testing: assessments with score, type and status; bias tests with score and test type](/img/screenshots/ai-threat-intelligence/aig-risk-assessment.webp)
 
-For each result you also get the **compliance requirements** for that tier (such as conformity assessment, CE marking, FRIA, quality-management system, and post-market monitoring for high-risk systems), the **immediate next steps**, an **effort and timeline estimate**, and a short **rationale** explaining the classification.
+- **Risk assessment** — per system: assessment type (comprehensive, bias-focused, privacy-focused, safety-focused), the **risk categories** considered (fairness, privacy, safety, transparency, robustness…), impact and likelihood, an overall score, mitigation measures, who conducted it and the next review date. Scores and mitigations are yours; the AI assessment helper (when an LLM is configured) can suggest scores, mitigations and a summary from the description.
+- **Bias test** — per system: test type (demographic parity, equal opportunity, individual fairness, calibration), protected attributes, data source, baseline metrics, results and a bias score with recommendations. A production system without a bias test is a certification blocker (below).
 
-:::note[High-risk systems need a FRIA]
-If a system lands in the high-risk tier, complete a **Fundamental Rights Impact Assessment** from the same module. It walks you through human dignity, privacy and data protection, non-discrimination, and the rights of children.
-:::
+Both are records with evidence, not automated scans: the platform does not run your model. Automated fairness / privacy / data-quality checks exist over the API for teams that can provide the data (`/api/ai-governance/automated-tests/*`).
 
-### 3. Run a risk assessment
+## Coverage
 
-Use the assessment wizard to produce a documented, scored assessment:
+**Coverage** is the module's [coverage dashboard](../cloud-security/index.md): registered systems that are scanned, scheduled or **not covered** by any assessment or test, findings by severity, top systems by severity, stale coverage (no assessment in 30 days) and inactive systems. It is the fastest way to see which registered systems are governance-only entries.
 
-1. **Scope & setup** — choose the assessment type and framework (for example NIST AI RMF) and record the assessor.
-2. **Risk categories** — pick the categories that apply (such as transparency or robustness); each comes with guidance on how to assess it and what evidence to collect.
-3. **Evidence** — attach supporting documents or link automated test results.
-4. **Risk scoring** — for each category, set **likelihood** and **impact** on a 1–5 scale with a rationale. The platform computes an **inherent risk score** (likelihood × impact) and, after you factor in control effectiveness, a **residual risk score**.
-5. **Review & submit** — review the results and submit. The assessment generates structured findings and remediation tasks you can track to completion.
+![AI Governance Coverage & Risk: total models, scanned, scheduled, not covered; findings and models coverage donuts](/img/screenshots/ai-threat-intelligence/aig-coverage.webp)
 
-Scores roll up into familiar risk levels: **Critical**, **High**, **Medium**, and **Low**.
+## Operations
 
-### 4. Track governance controls and operations
+![Operational Controls & Human Oversight: AI incident management with a resolved incident; human oversight and decision logs with an override](/img/screenshots/ai-threat-intelligence/aig-operational-controls.webp)
 
-For production systems, use the operational tools to keep evidence current:
+- **Report Incident** — an AI incident record: system, type (bias detected, privacy violation, security breach, performance degradation, ethical violation, safety concern), severity, description, detection method, impact, affected users, immediate actions, root cause, lessons learned, reporter, assignee, status.
+- **Log Decision** — a human-oversight record for a decision where a person confirmed or overrode the system: context, AI recommendation, human decision, override reason, rationale, confidence, escalation and stakeholders. It is the evidence ISO 42001 asks for under human oversight.
+- **Training records** (Compliance → *Add Training*) — who completed which responsible-AI training, when, with what score and certification.
 
-- **Fairness / bias testing** — checks such as the 80% (disparate-impact) rule, demographic parity, and equal opportunity across protected groups.
-- **Privacy (PII) scanning** — detects personal data (emails, phone numbers, and similar) in datasets.
-- **Data-quality checks** — completeness, accuracy, consistency, and uniqueness.
-- **AI incident tracking** — log AI-specific issues such as performance degradation, security incidents, or ethical concerns.
-- **Human oversight** — record where a human reviewed or overrode an AI recommendation, with the reason, to evidence "human-in-the-loop" controls.
+## Compliance — ISO 42001
 
-### 5. See AI risk in the Risk Register
+![ISO 42001 Compliance Dashboard: 46 % Not Ready; certification blockers by clause; Add Training, Generate Report, Statement of Applicability, Auditor Package](/img/screenshots/ai-threat-intelligence/aig-compliance.webp)
 
-You don't manage AI risk separately from everything else. Registered AI systems and their assessments surface as governance items scoped to your active team and, like other findings on the platform, can be promoted into the **Risk Register** for treatment, ownership, and review. This follows the platform's **Scan → Finding → Risk → Report** flow, so an AI risk is tracked, reported on, and closed out the same way a cloud misconfiguration or vulnerability is.
+The AIMS posture is computed from two things: the SCF controls mapped to ISO 42001 clauses 4–10 and Annex A (their implementation status comes from [Compliance Posture](../compliance/compliance-dashboard.md)), and the **records in this module**. The readiness level:
 
-:::tip[Team scoping]
-AI systems, assessments, and evidence belong to your **active team**. Switch to the correct team before registering systems or running assessments so the records — and any risks they raise — land in the right place.
+| Level | Condition |
+| --- | --- |
+| Not Started / Not Assessed | Nothing registered / ISO 42001 not assessed yet |
+| **Not Ready** | Score below 50 %, or any high-severity blocker |
+| **In Progress** | 50–69 % |
+| **Nearly Ready** | 70–84 %, or blockers remain |
+| **Audit-Ready** | ≥ 85 % and no blockers |
+
+**Certification blockers** name the clause and the fix:
+
+| Blocker | Clause | Severity |
+| --- | --- | --- |
+| ISO 42001 not activated as a framework for the team | 4.4 | high |
+| No AI systems registered | 4.3 | high |
+| A system has no risk assessment / no impact assessment | 6.1.2 / 6.1.4 | high |
+| A system has no owner | A.3.2 | medium |
+| A production system has no bias / fairness test | A.6.2.4 | medium |
+| Requirements marked not applicable without a justification | 6.1.3 | medium |
+| Controls implemented without evidence | 7.5 | medium |
+| Clauses with no assessed requirement | (listed) | medium |
+| No training records | 7.2 | low |
+
+Exports for the audit: **Statement of Applicability** (XLSX — one row per ISO 42001 requirement with the mapped controls, status and the justification for anything excluded), **Auditor Package** (evidence ZIP by control, the same [auditor package](../compliance/evidence-hub.md#auditor-package) the Evidence Hub produces for other frameworks) and **Generate Report** (executive summary, compliance summary, gap analysis or audit-readiness report as PDF, Word or Excel).
+
+:::note[Who can use this]
+Everything on this page — registry, assessments, tests, incidents, oversight, training, exports — needs the **Manage Assessments** permission. Records are team-scoped.
 :::
 
 ## Related
 
-- [AI & Threat Intelligence overview](./index.md)
-- [Security Command Center (AI-SOC)](./ai-soc-agents.md)
-- [Threat Intelligence & Feeds](./threat-intelligence.md)
+- [AI Discovery, AIBOM & Testing](./ai-spm.md) — how systems get into the registry without typing, and prompt-injection testing.
+- [Compliance Posture](../compliance/compliance-dashboard.md) · [Evidence Hub](../compliance/evidence-hub.md) — where the control implementation and evidence behind the posture live.
+- [AI Data & Privacy](./ai-data-privacy.md) — how the platform's own AI features handle your data.

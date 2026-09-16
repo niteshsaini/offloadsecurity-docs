@@ -1,86 +1,69 @@
 ---
-title: "Third-Party Integrations"
-sidebar_label: "Third-Party Integrations"
-sidebar_position: 2
+title: "Integration Catalog"
+sidebar_label: "Integration Catalog"
+sidebar_position: 9
+description: "Every tool in the Integrations catalog — its category, what actually happens once it is connected (pulls data in, two-way, sends out, connection test only, or catalog only), and the exact fields its wizard asks for."
 ---
 
-# Third-Party Integrations
+# Integration Catalog
 
-Offload Security connects to the tools your team already uses, so security findings turn into tracked work, alerts reach the right people, and your audit evidence lands where reviewers can see it. You connect each tool once from the **Integrations** area; credentials are stored **encrypted at rest** and isolated to your **active team**.
+Twenty-four tools, eight categories, five kinds of connection. This page is the catalog as the platform ships it, with the one thing a card cannot fit: the exact fields each wizard asks for. For how the wizard works, see [Connecting Tools](./connecting-tools.md); for what the capability words mean, see the [Overview](./index.md#what-an-integration-does).
 
-This page focuses on the integrations that close the loop on a finding: **ticketing**, **SIEM**, **incident response**, and **evidence/audit** systems. (For built-in Email, Slack, and Microsoft Teams alerting, see **[Notifications](./notifications.md)**.)
+## Data integrations — *pulls data in* / *two-way*
 
-## What it does
+| Tool | Category | After connecting | Fields |
+| --- | --- | --- | --- |
+| **Wazuh** | Security Testing | Agents → Asset Inventory and the security graph; alerts → Alerts; host CVEs → vulnerability occurrences; Endpoint Security dashboard. 30-minute sync. [Details](./wazuh.md) | `api_username`\* `api_password`\* `wazuh_host`\* · `wazuh_port` (55000) `verify_ssl` `ca_cert` `indexer_host` `indexer_port` (9200) `indexer_username` `indexer_password` |
+| **SonarQube** | Code Security | Snapshot of projects and open vulnerability issues (`GET /api/integrations/data/sonarqube`); issues are not imported as findings. [Details](./sonarqube.md) | `token`\* `server_url`\* · `project_key` `verify_ssl` `ca_cert` |
+| **Jenkins** | DevOps & CI/CD | Job summary snapshot on each sync (`GET /api/integrations/data/jenkins`) | `username`\* `api_token`\* `jenkins_url`\* · `verify_ssl` `ca_cert` |
+| **Jira** | Ticketing & ITSM | Tickets from critical findings automatically and from high findings on request; status synced both ways every 15 minutes; Jira tab. [Details](./jira.md) | `base_url`\* `auth_email`\* `auth_token`\* · `default_project_key` |
 
-Once connected, third-party tools let you:
+## Outbound integrations — *sends out*
 
-- **Open tickets from findings.** Push a vulnerability, misconfiguration, or compliance gap into your tracker as a ticket — with severity, affected resource, and remediation guidance attached.
-- **Keep an audit trail.** Two-way status sync records who fixed what and when, so remediation is provable, not just claimed.
-- **Forward an immutable log.** Stream audit events and findings to your SIEM as a retained, tamper-evident record for compliance.
-- **Page on what matters.** Trigger incidents on critical findings or SLA breaches and route them through your on-call escalation policy.
-- **Publish evidence for auditors.** Auto-publish policies, evidence, and audit reports to a documentation space your reviewers can access.
+| Tool | Category | After connecting | Fields |
+| --- | --- | --- | --- |
+| **Slack** | Collaboration & Notifications | Security alerts, scan failures and platform events to the default channel; [routing rules](./notifications.md#routing-rules) per category / severity / source | `webhook_url` (`https://hooks.slack.com/…`) · `default_channel` |
+| **Microsoft Teams** | Collaboration & Notifications | Security alerts as cards | `webhook_url`\* |
+| **Email (SMTP)** | Collaboration & Notifications | Alert and event email to team members, scheduled reports, invitations — unless the deployment sets `SMTP_HOST` | `smtp_host`\* `smtp_port`\* `smtp_username`\* `smtp_password`\* · `from_email` `use_tls` (true) |
+| **PagerDuty** | Monitoring & Analytics | Incidents for the team's alerts (opt-in by connecting; `channels.pagerduty=false` to pause) | `integration_key`\* · `service_name` |
+| **Confluence** | Collaboration & Notifications | Compliance summary page published to a space on request (`POST /api/integration-config/confluence/publish-compliance-summary`) | `base_url`\* `auth_email`\* `auth_token`\* · `default_space_key` |
+| **GitHub Actions** | DevOps & CI/CD | Records the connection; pipeline scanning itself is configured with the workflow in [CLI & CI/CD](../cli-and-cicd.md) | `github_token`\* · `repository` `workflow_id` |
 
-:::note[Complementary, not competing]
-Offload Security integrates with the tooling that *surrounds* a compliance program — ticketing, SIEM, incident response, team chat, and evidence docs. It is itself the audit and compliance system of record, so it does not require a separate compliance-automation platform.
-:::
+## Verified connections — *connection test only*
 
-## Available integrations
+The connection is tested for real and re-checked on the health schedule; **no data is imported**. ZAP, Nuclei and Prowler are engines the platform already runs natively — these entries verify a *separate* instance you operate.
 
-Browse the full catalog in the **Integrations** area, filtered by category. The systems most relevant to closing out findings and audits are:
+| Tool | Category | The test | Fields |
+| --- | --- | --- | --- |
+| **OWASP ZAP** | Security Testing | ZAP API version call with the API key | `api_key`\* `zap_host`\* · `zap_port` (8080) `target_url` `verify_ssl` `ca_cert` |
+| **Burp Suite** | Security Testing | Burp REST API call with the API key | `api_key`\* `burp_host`\* · `burp_port` (1337) `license_key` `verify_ssl` `ca_cert` |
+| **Nuclei** | Security Testing | Confirms the Nuclei engine is available to the platform (Docker image or binary) | `target_url`\* · `template_path` `severity` |
+| **Greenbone OpenVAS** | Security Testing | Signs in to the Greenbone Security Assistant web API. Results stay in Greenbone. [Details](./openvas.md) | `username`\* `password`\* `gmp_host`\* · `gmp_port` (9392, the GSA web port) `verify_ssl` `ca_cert` |
+| **Snyk** | Code Security | Snyk REST API `/self` with the token | `api_token`\* · `organization_id` |
+| **AWS Security Hub** | Cloud Security | `securityhub:DescribeHub` with the keys | `aws_access_key_id`\* `aws_secret_access_key`\* `region`\* · `aws_session_token` |
+| **Prowler** | Cloud Security | `sts:GetCallerIdentity` with the keys — the built-in cloud scanner does not need this; connect real accounts in [Cloud Security](../cloud-security/connecting-accounts.md) | `aws_access_key_id`\* `aws_secret_access_key`\* · `aws_region` `aws_session_token` |
+| **CloudMapper** | Cloud Security | `sts:GetCallerIdentity` with the keys | `aws_access_key_id`\* `aws_secret_access_key`\* · `account_id` |
 
-| Category | Tools | Typical use |
-|---|---|---|
-| **Ticketing** | Jira, ServiceNow | Auto-create incident/change tickets from findings; two-way status sync; custom field and project mapping. |
-| **SIEM & SOAR** | Splunk, IBM QRadar, Microsoft Sentinel, Splunk Phantom, **Wazuh** | Forward audit events and findings; correlation/alerting; compliance dashboards. |
-| **Incident response** | PagerDuty | Page on critical findings or SLA breaches with an auditable response timeline. |
-| **Collaboration & evidence** | Slack, Microsoft Teams, Confluence, SMTP Email | Channel alerts, reviewer sign-off prompts, and published evidence/audit-report pages. |
+## Catalog only — shown as *Planned*
 
-:::note[Wazuh is more than a SIEM forwarder]
-The **[Wazuh integration](../on-premises/wazuh-integration.md)** is a first-class part of Offload Security's on-premises story: it brings endpoint (agent) data, security events, alerts, vulnerability state, file-integrity monitoring, and SCA compliance checks into a customized in-platform dashboard, and correlates them with the rest of your posture. For internal vulnerability scanning of private assets, see **[OpenVAS Scanning](../on-premises/openvas-scanning.md)**.
-:::
+Listed so you can see the direction; the card has no Connect button.
 
-:::tip[There's more in the catalog]
-The Integrations area also lists vulnerability scanners (Qualys, Tenable, Rapid7), code security (Snyk, SonarQube, Checkmarx, Veracode, GitHub CodeQL), container/cloud security (Aqua, Prisma Cloud, Sysdig, Prowler, AWS Security Hub), DevOps/CI/CD (Jenkins, GitHub Actions), and monitoring (Datadog, Grafana). Each tile shows what the tool does, its setup requirements, and a link to the vendor's documentation.
-:::
+| Tool | Category |
+| --- | --- |
+| PentestGPT | Security Testing |
+| CodeQL | Code Security |
+| Datadog · Grafana | Monitoring & Analytics |
+| ServiceNow | Ticketing & ITSM |
+| Splunk | SIEM & SOAR |
 
-## How to connect a tool
+For a SIEM today, use [webhook subscriptions](./webhooks.md) — signed JSON for every platform event — rather than waiting for a vendor card. **Request Integration** at the bottom of the catalog sends your ask to the product team.
 
-Connecting any integration follows the same guided, five-step wizard.
-
-1. **Open Integrations** and select **Add Integration** (or pick a tool tile from the catalog).
-2. **Select the tool** — for example, Jira, ServiceNow, or Splunk.
-3. **Enter credentials.** Each tool asks only for the fields it needs, such as:
-   - **Jira** — site URL, account email, and an API token (plus an optional default project key).
-   - **ServiceNow** — your instance URL and an OAuth client or API user.
-   - **Splunk** — the HTTP Event Collector (HEC) URL and HEC token.
-   - **PagerDuty** — an integration (routing) key.
-   - **Confluence** — your site URL and an API token.
-4. **Test the connection.** The platform makes a live call to the tool to confirm the credentials and reachability before going further. Fix any reported error and re-test.
-5. **Configure settings**, then **Complete**. The integration is saved (credentials encrypted), marked active, and begins routing data per your settings.
-
-After setup, the platform runs **periodic health checks** on each active integration and shows its current status, so a broken token or expired credential surfaces before you rely on it.
-
-:::note[You need the right role]
-Adding, editing, or removing integrations requires the **Manage Integrations** permission — typically held by **Admin** and **Security Manager** roles. Other roles can view connected tools and their status.
-:::
-
-## Tips & prerequisites
-
-:::tip[Use least-privilege credentials]
-Create a dedicated service account or scoped API token for each tool, with only the access Offload Security needs (for example, permission to create issues in a single Jira project). Rotate tokens on your normal schedule — the integration's health status will flag a credential that has stopped working.
-:::
-
-:::warning[Integrations are team-scoped]
-An integration you connect belongs to your **active team** and is not visible to other teams. Confirm you're in the correct team (top-right account menu) before connecting a tool, and connect it again in each team that needs it.
-:::
-
-:::note[Credential security]
-All integration credentials are encrypted at rest. The connection test never stores credentials until the integration is saved, and tokens are never shown back to you in plain text after setup.
+:::note[Fields marked \* are required]
+Optional fields show their default in parentheses. `verify_ssl` / `ca_cert` appear on every tool the platform connects to over TLS that might sit behind a private CA; see [Connecting Tools](./connecting-tools.md#step-2--authentication-configuration).
 :::
 
 ## Related
 
-- **[Integrations & Notifications](./index.md)** — overview of the connectivity layer.
-- **[Notifications](./notifications.md)** — built-in Email, Slack, and Microsoft Teams alerting and routing.
-- **[Connecting Cloud Accounts](../cloud-security/connecting-accounts.md)** — connect AWS, Azure, and GCP for posture scanning.
-- **[Quickstart](../getting-started.md)** — teams, roles, and the Scan → Finding → Risk → Report flow.
+- [Overview](./index.md) — capability legend and categories.
+- [Connecting Tools](./connecting-tools.md) — the wizard and what a connected card shows.
+- [Integrations API](./api.md) — list the catalog, connect, sync and remove over the API.

@@ -12,6 +12,24 @@ Most problems in Offload Security come down to one of a few things: a credential
 Before you dig in, open the scan and check its **status** and any **warnings**. The platform deliberately surfaces a **Partial** or **Failed** status (rather than a misleadingly clean "green" run) and attaches a plain-language reason whenever it can. That note is usually the fastest path to the fix.
 :::
 
+## Where the detailed answers are
+
+Every section of these docs has its own **Troubleshooting & FAQ** page for that module's failure modes — start there when you know which module misbehaves:
+
+| Module | Page |
+| --- | --- |
+| Cloud accounts, scans, assets, attack paths | [Cloud Security troubleshooting](./cloud-security/troubleshooting.md) |
+| Web / API / network scans, code, containers, Kubernetes | [App & Infrastructure Scanning troubleshooting](./security-scanning/troubleshooting.md) |
+| Findings, triage, SLAs, alerts, risks | [Vulnerabilities & Risk troubleshooting](./vulnerability-risk/troubleshooting.md) |
+| Frameworks, scores, evidence, assessments, DPDP | [Compliance & GRC troubleshooting](./compliance/troubleshooting.md) |
+| Executive dashboard, scheduled reports, AI assistant | [Reports & AI troubleshooting](./reports-and-ai/troubleshooting.md) |
+| Connections, notifications, webhooks, Jira | [Integrations troubleshooting](./integrations/troubleshooting.md) |
+| Threat feeds, Security Command Center, AI governance, Knowledge Base | [AI & Threat Intelligence troubleshooting](./ai-threat-intelligence/troubleshooting.md) |
+| Sign-in, MFA, SSO, teams, API keys, audit trail | [Platform Security troubleshooting](./authentication/troubleshooting.md) |
+| Deployment, private targets, egress, TLS, backups | [On-Premises troubleshooting](./on-premises/troubleshooting.md) |
+
+The rest of this page keeps the cross-cutting answers.
+
 ---
 
 ## Scans
@@ -103,7 +121,7 @@ The image name or tag doesn't resolve.
 
 **2. Private registry not authenticated.**
 Quick Scan works for **public** images with no setup, but a **private** image needs access.
-- *Fix:* Connect the registry first on the **Cloud Registries** tab (or connect the underlying AWS/GCP/Azure account, which lets the platform discover and pull from ECR, Artifact Registry, and ACR automatically). For Docker Hub, provide a username and access token. See [Container Security](./security-scanning/container-security.md).
+- *Fix:* Connect the registry first on the **Cloud Registries** tab (or connect the underlying AWS/GCP/Azure account, which lets the platform discover and pull from ECR, Artifact Registry, and ACR automatically). For Docker Hub, provide a username and access token. See [Container Security](./security-scanning/containers/index.md).
 
 **3. Wrong account scope (`cloud_account_id`).**
 When scanning a registry tied to a cloud account, the scan must reference the correct connected account.
@@ -128,7 +146,7 @@ If a private scan won't run, try a known public image (like `nginx:latest`) in *
 4. **Check IP allowlisting.** If the key is restricted to specific IP addresses, calls from any other address are blocked. Confirm your CI runner's egress IP is on the list.
 
 :::note[Where to manage keys]
-Create, scope, rotate, and IP-restrict API keys under **Team Management**. For setup and pipeline examples, see [RBAC, API Keys & Team Management](./authentication/rbac-team-management.md).
+Create, scope, rotate, and IP-restrict API keys under the account menu → **API Keys**. For setup and pipeline examples, see [Roles, Teams & API Keys](./authentication/rbac-team-management.md).
 :::
 
 ### My pipeline gets a 403 (authenticated but forbidden)
@@ -151,6 +169,6 @@ Create, scope, rotate, and IP-restrict API keys under **Team Management**. For s
 
 - [Connecting Cloud Accounts](./cloud-security/connecting-accounts.md) — credentials, permissions, and the external-ID setup for AWS, GCP, and Azure.
 - [How Cloud Scans Run](./cloud-security/scan-orchestration.md) — scan statuses, the meaning of "Partial," and per-region progress.
-- [Container Security](./security-scanning/container-security.md) — scanning images from public and private registries.
+- [Container Security](./security-scanning/containers/index.md) — scanning images from public and private registries.
 - [Scan Management & Scheduling](./security-scanning/scan-management.md) — scan history, re-running, scheduling, and retention.
-- [Authentication & Access](./authentication/index.md) — API keys, teams, and how access is enforced.
+- [Platform Security](./authentication/index.md) — sign-in, teams, roles, API keys and the audit trail.

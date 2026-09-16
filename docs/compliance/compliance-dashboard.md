@@ -1,108 +1,85 @@
 ---
-title: "Compliance Posture Dashboard"
+title: "Compliance Posture"
 sidebar_label: "Compliance Posture"
-sidebar_position: 2
+sidebar_position: 1
+description: "The live compliance picture — score per active framework, gap analysis down to the control, manual overrides with justification, framework activation, control test cadence, evidence sources and SCF domain search."
 ---
 
-# Compliance Posture Dashboard
+# Compliance Posture
 
-The **Compliance Posture** dashboard gives you a single, real-time view of how well your environment meets the frameworks you care about — SOC 2, ISO 27001, NIST CSF, PCI-DSS, CIS, and more. Instead of chasing audit artifacts by hand, it maps your scan findings and assessment answers to a common control library, scores each framework, and flags where your posture has slipped.
+The **Compliance Posture** tab is the page you open when someone asks "where are we on SOC 2?". It shows every active framework's score, lets you drill from a framework to the exact controls holding it back, and lets you fix the picture where automation cannot see — with a justification that is kept for the auditor.
 
-![Compliance Posture dashboard showing framework scores and control status](/img/screenshots/compliance-posture.png)
+**Where:** left navigation → **Compliance Posture** → *Compliance Posture* tab.
 
-## What it does
+![Compliance Posture: tiles for total controls, implemented, with evidence, evidence items, dedup ratio and frameworks; control test cadence; compliance by framework; evidence sources; SCF domains](/img/screenshots/compliance/compliance-posture.webp)
 
-Open **Compliance Posture** from the **Compliance & Risk** section of the left navigation. The page is organized into four tabs:
+## The tiles
 
-| Tab | What you use it for |
-|---|---|
-| **Compliance Posture** | The main scoreboard — control totals, per-framework scores, evidence coverage, gap analysis, and control search. |
-| **Compliance Engine** | The autonomous engine that maps scan findings to controls and keeps scores current. |
-| **Drift Detection** | A timeline of posture regressions and expired evidence, with one-click remediation. |
-| **Evidence Hub** | Collect, review, and attach the audit artifacts that back each control. See **[Evidence Hub](./evidence-hub.md)**. |
+| Tile | Meaning | Click |
+| --- | --- | --- |
+| **Total Controls** | SCF controls in scope for your active frameworks (1,003 of the 1,534-control catalog with the default 10 frameworks) | — |
+| **Implemented** | Controls at *implemented* and the share of the total | Drill-down list of implemented controls |
+| **With Evidence** | Controls with at least one linked evidence item | Drill-down list |
+| **Evidence Items** | Evidence rows in the store — scan evidence, documents, API captures | Drill-down list |
+| **Dedup Ratio** | Control-evidence links ÷ evidence items — how many controls each artifact serves on average; *effort saved* = 1 − items ÷ links, the share of links you did not have to collect separately | — |
+| **Frameworks** | Active / available (e.g. 10/27) | Opens the framework activation panel |
 
-All data is scoped to your **active team**, so you only ever see the posture for the environment you're working in.
+## Compliance by framework
 
-## Reading the scoreboard
+One bar per active framework: controls counted (e.g. `226/363` — in-scope controls after *not applicable* is removed) and the percentage. The percentage is the weighted formula in the [overview](./index.md#how-a-framework-score-is-calculated): implemented 1.0, partial 0.5, evidence-only 0.25, over every in-scope control. A framework nobody has assessed yet reads *Not Assessed* instead of 0%.
 
-The row of tiles at the top of the **Compliance Posture** tab summarizes your overall standing:
+![Compliance by framework and evidence sources panel](/img/screenshots/compliance/compliance-posture-frameworks.webp)
 
-- **Total Controls** — the number of unique controls being tracked across your active frameworks.
-- **Implemented** — controls confirmed as in place, shown with the percentage of the total. Select this tile to drill into the full list.
-- **With Evidence** — controls that have at least one piece of evidence attached. Select to see them.
-- **Evidence Items** — the total count of collected evidence artifacts. Select to browse them with their source, linked controls, and frameworks.
-- **Dedup Ratio** — how much duplicate effort the platform saved by reusing one piece of evidence across multiple controls and frameworks.
-- **Frameworks** — how many frameworks are active out of those available. Select this tile to open the **Framework Activation** panel.
+**Click a framework** to open its **gap analysis**.
 
-:::tip[Choose the frameworks you report on]
-Use the **Framework Activation** panel to turn frameworks on or off. Deactivated frameworks are hidden from the dashboard and scores, but their controls stay in the database — so you can re-enable them later without losing anything. Select **Save Activation** to apply your choices.
+## Gap analysis
+
+![Gap Analysis for PCI DSS 4.0.1: 262 gaps, one row per control with SCF ID, control name, domain, priority, status and an Override action; page 1 of 14](/img/screenshots/compliance/compliance-gap-analysis.webp)
+
+Every in-scope control that is not *implemented*, with:
+
+- **SCF ID** and **control name**, its **domain** (Asset Management, Continuous Monitoring, Cryptographic Protections, …),
+- **Priority** — the SCF weighting (1–10) of the control; sort by it to work on what moves the score most,
+- **Status** — `partial`, `not_implemented`, `not_assessed`,
+- search by control name or SCF ID, filters by domain and status, 20 / 50 / 100 per page.
+
+The **Override** action on each row opens the manual override dialog.
+
+## Manual overrides
+
+![Manual Override dialog for AST-04 Network Diagrams & Data Flow Diagrams: new status (Partially Implemented) and a required justification](/img/screenshots/compliance/compliance-override.webp)
+
+Scans can prove that a bucket is encrypted; they cannot prove that the board approved the security policy. For controls satisfied by a document, a committee or a process, set the status yourself:
+
+1. Choose the **new status** — implemented, partially implemented, not implemented or not applicable.
+2. Write the **justification** (required) — where the evidence lives, who approved it, when it is reviewed.
+3. **Apply Override.**
+
+An overridden control is **locked**: the 4-hourly sync, assessment mapping and scan correlation still attach evidence to it but never change its status. The override, the justification and who set it are written to the compliance audit log, and the control appears under Compliance Engine → [Manual Overrides](./autonomous-compliance.md#manual-overrides), where it can be unlocked. Overrides require the **admin** role.
+
+:::tip[Override the whole story, not one row]
+Setting *GOV-01 Information security programme* to implemented is not a shortcut to a green ISO 27001 — but the handful of governance, HR and business-continuity controls that no scanner can observe typically account for 10–15 points of a framework score. Do them once, with justifications an auditor can follow, and keep the rest automated.
 :::
 
-## Framework scores
+## Framework activation
 
-The **Compliance by Framework** panel lists each active framework with a progress bar and a percentage score. Scores are color-coded so you can scan them at a glance:
+![Framework activation panel: 27 frameworks with toggles, activate all / deactivate all, save](/img/screenshots/compliance/compliance-frameworks-panel.webp)
 
-- **Green** — 70% or higher
-- **Amber** — 40–69%
-- **Red** — below 40%
+The **Frameworks** tile opens the activation panel. Active frameworks determine what is counted everywhere — tiles, scores, thresholds, evidence per framework, audit reports. Ten are active by default (ISO 27001, ISO 27002, SOC 2, PCI DSS 4.0.1, NIST CSF 2.0, NIST 800-53 r5, CIS v8.1, HIPAA, GDPR, OWASP Top 10); activate the rest from the [27-framework catalog](./supported-frameworks.md) as you need them. Changing activation requires a platform administrator.
 
-The number beside each bar (for example, `42/118`) shows how many controls are covered out of the framework's total. Hover over it for a breakdown of implemented, partial, evidence-only, and not-yet-assessed controls.
+## Control test cadence
 
-### Control status
+Formal control testing — *test of design*, *test of operating effectiveness* or both — on a schedule, separate from automated scans. The panel shows **scheduled tests**, **overdue**, **due in 7 days** and **never tested**, with the overdue list; it stays quiet until the team has schedules. Schedules and test results are created over the API today (seed defaults, set a cadence per control, record pass / fail / exception) — see [Control testing](./autonomous-compliance.md#control-testing).
 
-Each control rolls up into one of these states, which you'll see throughout the dashboard:
+## Evidence sources, evidence per framework, SCF domains
 
-| Status | Meaning |
-|---|---|
-| **Implemented** | The control is satisfied. |
-| **Partial** | Partially implemented; some work remains. |
-| **Planned** | Acknowledged but not yet in place. |
-| **Not Applicable** | Marked out of scope for your environment. |
-| **Not Implemented / Not Assessed** | No evidence yet, or known to be missing. |
-
-### Gap analysis
-
-Select any framework bar to open its **Gap Analysis**. This lists the controls that are failing or unaddressed, ranked by a priority weighting (out of 10) so you can tackle the most important gaps first. For each gap you'll see its control ID, name, domain, priority, and current status — plus an **Override** action (see below).
-
-### Searching for controls
-
-Use the **Search Controls** box at the bottom of the tab to find a specific requirement by keyword — for example, `encryption`, `access control`, or `MFA`. Results show each matching control's ID, name, status, and how many frameworks it maps to.
-
-## Attaching and managing evidence
-
-Evidence is what proves a control is genuinely in place. The platform collects most of it for you automatically — cloud configuration scans, vulnerability and container scans, and assessment answers are all mapped to the relevant controls. The **Evidence Sources** and **Evidence per Framework** panels on the right of the dashboard show where your evidence is coming from and how it's distributed.
-
-To collect, upload, or review evidence in detail — including manual uploads and the auditor evidence package — open the **Evidence Hub** tab. See **[Evidence Hub](./evidence-hub.md)** for the full workflow.
-
-### Overriding a control's status
-
-Sometimes a control is satisfied in a way the automated engine can't detect — for example, a compensating control such as a WAF. From **Gap Analysis**, select **Override** on the control to set its status manually:
-
-1. Choose the **New Status** (Implemented, Partially Implemented, Planned, Not Applicable, or Not Implemented).
-2. Enter a **Justification** — this field is required.
-3. Select **Apply Override**.
-
-:::note[Overrides are tracked]
-Every manual override is recorded for audit purposes, and it prevents the autonomous engine from overwriting your decision on the next scan. Always give a clear justification so auditors understand the reasoning.
-:::
-
-## Tracking drift
-
-Posture isn't static — a new misconfiguration can break a control that was passing yesterday, or a piece of evidence can age out. The **Drift Detection** tab tracks these changes over time.
-
-- **Control Regression** — a control that was implemented now fails because of a new finding.
-- **Evidence Expired** — supporting evidence has passed its validity period and needs refreshing.
-
-Select **Detect Drift** to run a check on demand, or review the history of past drift events. Where a remediation playbook matches a drift type, you can trigger it directly from the event. You can also create **alert policies** to be notified when drift of a chosen type and severity occurs.
-
-:::tip[Keep scores fresh]
-The dashboard is populated automatically as scans run and findings are mapped to controls. If a framework shows **No Compliance Data Yet**, run a cloud security scan or complete an assessment checklist, then return here — the engine maps the results to controls for you. Use **Refresh** to pull the latest at any time.
-:::
+- **Evidence sources** — where the evidence store's rows came from: `container_scan`, `prowler` (cloud), `k8s_scan`, `manual`, assessment answers.
+- **Evidence per framework** — the count of control-evidence links each framework can claim; this is the dedup ratio at work.
+- **SCF domains (34)** — the catalog's domains; the [Evidence Hub](./evidence-hub.md) breaks coverage down by these.
+- **Search controls** — text search across the SCF catalog (control name, SCF ID, description), filterable by framework and domain; each result shows its status for your team and the frameworks it maps to.
 
 ## Related
 
-- **[Compliance & Assessment Overview](./index.md)** — how the whole compliance framework fits together.
-- **[Evidence Hub](./evidence-hub.md)** — collect, review, and attach audit evidence.
-- **[Interactive Assessments](./interactive-assessments.md)** — guided, auto-scored framework questionnaires.
-- **[Autonomous Compliance](./autonomous-compliance.md)** — the engine that maps findings to controls automatically.
-- **[Connecting Cloud Accounts](../cloud-security/connecting-accounts.md)** — connect an account so scans can feed your posture.
+- [Compliance Engine](./autonomous-compliance.md) — sync, thresholds, breaches, overrides list, control testing, exceptions.
+- [Drift Detection](./drift-detection.md) — what regressed since yesterday's snapshot.
+- [Compliance & GRC API](./api.md#controls-and-posture) — posture, gap analysis and overrides over REST.

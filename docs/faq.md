@@ -18,10 +18,10 @@ Both. The managed platform is the default; regulated customers can run the full 
 AWS, Google Cloud, and Azure — with read-only access wherever the provider supports it. Depth varies by provider (AWS and GCP include organization-level onboarding). See [Cloud Security](./cloud-security/index.md) and [permissions](./cloud-security/permissions.md).
 
 **Can we keep our existing scanners and tools?**
-Yes — that's the point of the unified model. Findings from tools like Trivy, Prowler, ZAP, Grype, Syft, and kube-bench can be ingested via API, and [Wazuh](./on-premises/wazuh-integration.md) streams SIEM/endpoint telemetry into the same dashboards. [OpenVAS](./on-premises/openvas-scanning.md) connects as a network-scanning integration (OpenVAS performs the scanning). See [Integrations](./integrations/index.md).
+Mostly by not needing them: the platform runs Trivy, Prowler, ZAP, Nuclei, nmap, testssl, Syft, Grype, kube-bench and the code scanners itself, so their results are native findings. Of the tools you keep, [Wazuh](./on-premises/wazuh-integration.md) syncs agents, alerts and host CVEs in; SonarQube and Jenkins contribute snapshots; Jira works two-way; [Greenbone / OpenVAS](./on-premises/openvas-scanning.md) is connected but its results stay in Greenbone today. The [Integration Catalog](./integrations/third-party.md) says, per tool, what flows.
 
 **How are findings prioritized?**
-Severity is normalized across sources, then enriched with exploit intelligence — findings on the **CISA KEV** list or with high **EPSS** scores are flagged so actively-exploited issues rise to the top. Critical findings can auto-promote into the [Risk Register](./vulnerability-risk/risk-register.md).
+Severity is normalized across sources, then enriched with exploit intelligence — findings on the **CISA KEV** list or with high **EPSS** scores are flagged so actively-exploited issues rise to the top. Critical findings can auto-promote into the [Risk Register](./vulnerability-risk/risk-management/index.md).
 
 **Does the platform change our systems?**
 Scanning is read-only. Remediation guidance — including AI suggestions — is advisory; people make the changes.
@@ -29,16 +29,27 @@ Scanning is read-only. Remediation guidance — including AI suggestions — is 
 ## Security
 
 **How is our data protected?**
-Team-scoped tenant isolation, envelope-encrypted credentials, signed webhooks, rate-limited APIs, and audit trails. The full picture is on [Trust & Security](./trust-and-security.md).
+Team-scoped tenant isolation, credentials encrypted at rest under deployment-held keys, hashed session tokens and API keys, optional MFA and SSO, signed webhooks, rate-limited APIs, and a 365-day audit trail. The full picture is on [Trust & Security](./trust-and-security.md).
 
 **How are our cloud credentials stored?**
-Encrypted at rest with envelope encryption; decrypted only at the moment a scan runs; never returned by the API once saved. See [Trust & Security](./trust-and-security.md#credentials--secrets-handling).
+Encrypted at rest (Fernet — AES-128-CBC with HMAC) under a key the deployment holds; decrypted only at the moment a scan runs; never returned by the API once saved. See [Trust & Security](./trust-and-security.md#credentials--secrets-handling).
 
 **What do AI features see?**
-Only data your team already has access to, and nothing tenant-derived is stored in shared caches. Model providers are configurable in enterprise deployments. See [how AI handles your data](./trust-and-security.md#how-ai-features-handle-your-data).
+Only data your team already has access to, and nothing tenant-derived is stored in shared caches. Each team configures its own provider (Anthropic, OpenAI or Google) and key; with none configured the AI features are off and everything else works. See [how AI handles your data](./trust-and-security.md#how-ai-features-handle-your-data).
 
 **Can we report a vulnerability in the platform?**
 Yes — **security@offloadsecurity.com**. See the [responsible disclosure](./trust-and-security.md#responsible-disclosure) policy.
+
+## Access and operations
+
+**Can I create custom roles?**
+Not today — six fixed roles per team (Admin, Security Manager, Security Analyst, Compliance Officer, Auditor, Viewer) plus scoped API keys. See [Roles, Teams & API Keys](./authentication/rbac-team-management.md).
+
+**How do I sign in with our identity provider?**
+The deployment operator configures OIDC (Okta, Entra ID, Google Workspace, Keycloak, Auth0…) and can enforce it; see [Signing In & Sessions](./authentication/session-management.md).
+
+**What runs on our side in an on-premises install?**
+A Docker Compose stack of prebuilt images — API, web front end, workers, scheduler, MongoDB, Redis — on a host you own. See [Deployment & Operations](./on-premises/deployment.md).
 
 ## Compliance
 
@@ -52,7 +63,7 @@ Yes — evidence is collected continuously and mapped to controls as work happen
 There's a dedicated module: readiness assessment, DPIAs, SDF obligations, vendor due diligence, and a breach workflow with DPB and CERT-In deadline tracking. See [DPDP Act (India)](./compliance/dpdp-privacy.md).
 
 **Can it replace our spreadsheet risk register?**
-Yes — risks are created manually or promoted automatically from critical findings, with ownership, treatment, review dates, and executive reporting. See [Risk Register](./vulnerability-risk/risk-register.md).
+Yes — risks are created manually or promoted automatically from critical findings, with ownership, treatment, review dates, and executive reporting. See [Risk Register](./vulnerability-risk/risk-management/index.md).
 
 ## Still have a question?
 

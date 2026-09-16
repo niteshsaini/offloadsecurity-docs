@@ -1,74 +1,58 @@
 ---
 title: "Wazuh Integration"
 sidebar_label: "Wazuh Integration"
-sidebar_position: 3
+sidebar_position: 4
+description: "Wazuh is how endpoints and servers report into the platform — agents become assets (correlated with their cloud VM), rule-level ≥ 7 alerts join the unified Alerts stream, host CVEs become vulnerability occurrences, and SCA, FIM and ATT&CK are browsed live in the Endpoint Security dashboard. What syncs, how often, and what stays in Wazuh."
 ---
 
 # Wazuh Integration
 
-Wazuh is the platform's engine for **endpoint security and SIEM-style monitoring** across your on-premises and private estate. By deploying lightweight Wazuh agents on your servers, workstations, and internal hosts — and connecting Offload Security to your Wazuh deployment — you bring host-level security telemetry into the same unified dashboard as your cloud, application, and vulnerability posture.
+Wazuh gives you agents on the machines a scanner cannot log into — servers, workstations, on-premises hosts — and a SIEM's worth of detections, configuration checks and file-integrity events about them. Connecting it to Offload Security does two things: the parts that belong next to your other findings are **synced in** (agents, alerts, host CVEs), and the rest is **browsed live** from an in-platform dashboard so nobody has to keep a second console open.
 
-This is what turns Offload Security from a scanning platform into a complete view of your internal environment: not just *"what weaknesses exist"* but *"what is happening on our hosts right now."*
+**Where:** connect under **Integrations → Wazuh**; browse under **Infra Command Center → Endpoint Security** (the tab appears once Wazuh is connected for the team).
 
-## What Wazuh brings into the platform
+## What syncs, and where it lands
 
-Once connected, Offload Security ingests and presents Wazuh data in a **customized in-platform dashboard**, so your team doesn't need to live in a separate SIEM console. The integration surfaces:
+Every 30 minutes (and on **Sync now**) the platform reads the Wazuh **Manager API** and the **Indexer** (OpenSearch):
 
-| Data type | What you see |
-|---|---|
-| **Agents** | Your fleet of Wazuh agents — endpoint inventory, active/disconnected status, and health across the environment. |
-| **Security events & alerts** | The security events Wazuh generates from host logs and detections, prioritized and browsable, with the ability to drill into detail. |
-| **Vulnerability information** | Wazuh's vulnerability-detection state for monitored hosts — which endpoints are affected by which CVEs. |
-| **Compliance & configuration** | Security Configuration Assessment (SCA) results — CIS-style benchmark and policy checks per host — for compliance evidence. |
-| **File Integrity Monitoring (FIM)** | Changes to critical files and directories on monitored systems, a core control for many frameworks. |
-| **MITRE ATT&CK mapping** | Detections mapped to ATT&CK techniques, so activity is framed in terms of adversary behavior. |
-| **Active response** | Visibility into Wazuh's automated response actions on the endpoint. |
+| Wazuh data | Becomes | Notes |
+| --- | --- | --- |
+| **Agents** | Assets in [Asset Inventory](../cloud-security/asset-inventory.md) — name, IP, OS, agent status — and nodes in the security graph behind [Attack Paths](../cloud-security/attack-paths.md) | An agent on a cloud VM is **correlated with that VM** (by hostname, then IP) so it appears as the EC2 instance / Compute Engine instance / Azure VM the cloud scanner already knows, not as a second "endpoint" |
+| **Alerts** with rule level **≥ 7** | Entries in the unified [Alerts](../vulnerability-risk/alerts.md) stream, source *integration*, de-duplicated per rule and agent with an occurrence count | Severity from the rule level: 7–11 medium · 12–14 high · ≥ 15 critical; MITRE technique ids carried through |
+| **Vulnerability state** (per agent, package, CVE) | Vulnerability occurrences in [Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx), de-duplicated per (agent, package, CVE) | The same CVE on a container image and on a host is triaged side by side |
+| **Active responses** | Snapshot for the dashboard | |
 
-## The customized dashboard
+Sync needs the **Indexer**: a Manager-only connection syncs agents and nothing else, and the wizard says so as a warning you must accept.
 
-Rather than forcing analysts to context-switch into Wazuh, Offload Security renders Wazuh data inside the platform:
+## The Endpoint Security dashboard
 
-- **Agent and event summaries at a glance** — counts and status for agents, alerts, vulnerabilities, and compliance checks, so posture is visible without a query.
-- **Per-dataset visibility with honest status.** Each data section reports whether it was fetched successfully, is empty, or hit an error — so a connectivity or permission problem is *shown*, never silently hidden.
-- **Deep links to Wazuh.** Where you need the full native view, the platform links straight through to your Wazuh dashboard ("Open in Wazuh") for the underlying detail.
+Overview counts (agents, alerts, vulnerabilities, last sync), then:
 
-## SIEM-style monitoring, unified
+| Tab | Content | Source |
+| --- | --- | --- |
+| **Agents** | The fleet: name, IP, OS, version, status (active / disconnected / never connected), last keep-alive; browsable beyond the snapshot | Manager, live |
+| **Alerts** | Detections with rule, level, agent, ATT&CK technique; browsable | Indexer, live |
+| **Vulnerabilities** | Host CVEs by agent and package with severity | Indexer, live |
+| **Compliance** | Security Configuration Assessment (CIS-style) results per agent — policy, pass / fail counts, failed checks | Manager, live per agent |
+| **File Integrity** | FIM events per agent — path, change type, time | Manager, live per agent |
+| **MITRE ATT&CK** | Techniques and tactics seen in the alerts | Indexer |
 
-Wazuh data doesn't just sit in its own tab — it's **correlated with the rest of your posture:**
+A dataset the Indexer refused (wrong credentials, index missing) is flagged on the page rather than shown as empty.
 
-- **Into Alerts.** Wazuh security events feed the platform's centralized **[Alerts](../integrations/notifications.md)**, so host-level detections are triaged alongside cloud, application, and compliance alerts in one place — deduplicated, not multiplied.
-- **Into Vulnerability Management.** Host vulnerability state contributes to the unified **[Vulnerability Management](../vulnerability-risk/vulnerability-management.mdx)** view of your estate.
-- **Into Compliance & Evidence.** SCA and FIM results become **[compliance evidence](../compliance/evidence-hub.md)** — proof that endpoint hardening and integrity controls are in place and monitored.
+**Not copied into the platform:** SCA and FIM results are browsed, not imported as compliance evidence or findings; alerts below rule level 7 are not synced; Wazuh's own dashboards, rules and agent management remain in Wazuh.
 
-This is the SIEM value proposition without the SIEM silo: real-time host visibility that is part of your posture, not adjacent to it.
+## Connect Wazuh
 
-## How the integration works
+**Integrations → Wazuh → Connect** — fields, the Manager + Indexer test and the private-address rule are on [Wazuh](../integrations/wazuh.md) in the Integrations section. In short: `wazuh_host` / `wazuh_port` (55000) and a read-only API user; Indexer host, port (9200) and credentials for split deployments; `verify_ssl` with your CA certificate; and, because a Wazuh Manager is almost always on a private address, `ALLOW_PRIVATE_SCAN_TARGETS=true` on the platform host.
 
-Wazuh exposes its data through two services, and the platform connects to both:
+## Why it matters on-premises
 
-- **The Wazuh Manager API** — for agents, Security Configuration Assessment (SCA), File Integrity Monitoring, and manager status.
-- **The Wazuh Indexer (OpenSearch)** — for security alerts/events and vulnerability state.
-
-:::note[Configure both endpoints]
-The Indexer typically runs on its own host and has **separate credentials** from the Manager API. Provide both when configuring the integration so alerts, events, and vulnerability data come through — not just the agent list. The platform's connection test probes the Indexer and tells you if it's unreachable, rather than masking a partial connection.
-:::
-
-## Setting it up
-
-1. Deploy Wazuh (Manager + Indexer) and install agents on the hosts you want to monitor — inside your network, where your assets are.
-2. In Offload Security, add the **Wazuh** integration and provide the Manager API and Indexer connection details and credentials.
-3. Run a sync. The dashboard populates with agents, events, alerts, vulnerabilities, SCA, and FIM — and any dataset that couldn't be fetched is flagged with the reason.
-
-For the integrations model in general, see **[Integrations](../integrations/index.md)** and **[Third-Party Integrations](../integrations/third-party.md)**.
-
-## Why it matters
-
-- **The internal blind spot, closed.** Endpoints and internal servers are where a lot of real attack activity lands. Wazuh gives you eyes there, in the same platform as everything else.
-- **Compliance evidence from the endpoint.** SCA and FIM produce exactly the hardening and integrity evidence auditors ask for — captured continuously.
-- **One triage queue.** Host detections join cloud and app alerts in one correlated stream, cutting alert fatigue instead of adding to it.
-- **Data stays in your boundary.** Wazuh runs on your infrastructure; for regulated organizations, that keeps sensitive endpoint telemetry on-prem while still feeding a unified view.
+- **The host layer, joined up.** A public S3 bucket, a vulnerable container image and a server with a KEV-listed package look like three tools' problems; here they are three findings on one queue, with the server's exposure known because its VM is the same asset the cloud scan saw.
+- **Detections next to posture.** A Wazuh alert about a brute-force on an internal host lands in the same alert stream — with the same Slack routing and SLA rules — as a critical cloud finding.
+- **Evidence you already generate.** Agent coverage, SCA pass rates and FIM activity are the operational evidence behind endpoint-hardening controls; the dashboard is where an auditor can be shown them.
 
 ## Related
 
-- **[OpenVAS Scanning](./openvas-scanning.md)** — network vulnerability scanning to pair with Wazuh's endpoint view.
-- **[Centralized Ingestion](./centralized-ingestion.md)** — how Wazuh, cloud, and app data become one picture.
+- [Wazuh](../integrations/wazuh.md) — connection fields and troubleshooting.
+- [OpenVAS Scanning](./openvas-scanning.md) — the network-scanning counterpart.
+- [Alerts](../vulnerability-risk/alerts.md) · [Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx) — where synced data is worked.

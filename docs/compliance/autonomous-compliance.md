@@ -1,91 +1,104 @@
 ---
-title: "Autonomous Compliance"
-sidebar_label: "Autonomous Compliance"
-sidebar_position: 1
+title: "Compliance Engine"
+sidebar_label: "Compliance Engine"
+sidebar_position: 2
+description: "The part that keeps posture current without anyone clicking — 4-hourly sync of findings into controls, thresholds and breaches, score trends and timeline, locked controls, evidence-expiry alerts, remediation playbooks, formal control testing and exceptions."
 ---
 
-# Autonomous Compliance
+# Compliance Engine
 
-Autonomous Compliance keeps your framework status up to date automatically. As scans run across your cloud accounts, containers, code, and other targets, the platform maps each finding to the security controls it affects and recalculates your compliance scores — so what you see always reflects your current posture, not a point-in-time audit.
+The **Compliance Engine** tab is the operations view behind the posture: when the last sync ran and what it changed, which frameworks are below their threshold, how scores have trended, which controls are locked by a human, and what the engine is allowed to fix on its own.
 
-![Compliance posture with framework scores and control status](/img/screenshots/compliance-posture.png)
+**Where:** left navigation → **Compliance Posture** → *Compliance Engine* tab.
 
-## What it does
+![Autonomous Compliance Engine overview: 1,003 controls, 10 frameworks, total syncs, 10 active breaches; sync status, evidence collection and active breaches panels; score changes since last check and recent sync operations](/img/screenshots/compliance/compliance-engine.webp)
 
-At the center is a single **common controls registry** of over 1,500 controls (1,534 in SCF 2026.2) organized into 34 domains, built on the **Secure Controls Framework (SCF)**. Each control is pre-mapped to the requirements it satisfies across frameworks like **SOC 2, ISO 27001, NIST CSF, PCI-DSS**, and more.
+## What runs on its own
 
-Because one control can satisfy requirements in several frameworks at once, a single security check updates every framework it touches — assess once, comply many. That means you don't maintain a separate checklist per framework; you maintain one set of controls, and the platform translates their status into each framework's scoring for you.
+| Job | Cadence | What it does |
+| --- | --- | --- |
+| **Compliance refresh** | Every **4 hours** | Correlates the team's latest cloud, Kubernetes and container findings and completed assessments into SCF control status; recalculates framework scores; checks thresholds; runs drift detection |
+| **Daily snapshot** | 00:05 UTC | Freezes every control's status for the day — the baseline that [Drift Detection](./drift-detection.md) compares against and the record that answers "what was your posture on 14 March?" |
+| **Exception expiry** | Every 12 hours | Expires approved exceptions past their `expires_at` |
+| **Compliance → risk sweep** | Hourly | A control that has been *not implemented* or *partial* for more than 24 hours is minted as a system risk in the [Risk Register](../vulnerability-risk/risk-management/risk-register.md) (one per control, deduplicated) |
 
-The engine continuously:
+**Run Now** on this tab triggers the refresh immediately (needs **Manage Assessments**); **Sync** on the API does the same. Syncs are recorded in the **sync history** (controls updated, upgraded, downgraded, frameworks checked).
 
-- **Maps findings to controls.** New scan findings are matched to the specific controls they affect. When there's no exact control match, a finding is associated with the broader domain it belongs to, so nothing goes uncounted.
-- **Updates control status.** As issues appear or get remediated, control status moves automatically between implemented, partial, and not implemented.
-- **Recalculates framework scores** so dashboards and reports stay current without anyone re-running an assessment.
-- **Detects drift** — when posture slips since the last check — and flags it for review.
-
-## How control status works
-
-Every control sits in one of these states:
-
-| Status | Meaning |
-|---|---|
-| **Implemented** | The control is satisfied — no open findings indicate a gap. |
-| **Partial** | The control is partly satisfied — some evidence or coverage exists, but open findings or gaps remain. |
-| **Not implemented** | Open findings show the control is not being met. |
-| **Not applicable** | The control doesn't apply to your environment, so it's excluded from scoring (it neither helps nor hurts your score). |
-| **Not assessed** | The control hasn't been evaluated yet and counts as not yet earned. |
-
-### How status becomes a score
-
-Each framework's score is a weighted percentage of its in-scope controls:
-
-- **Implemented** counts as full credit (100%).
-- **Partial** counts as half credit (50%).
-- **Not implemented** and **not assessed** count as no credit (0%).
-- **Not applicable** controls are removed from the calculation entirely — they don't drag your score down.
-
-So a framework at, say, 82% means its in-scope controls, weighted this way, add up to 82% of the possible total. Closing findings moves controls toward **implemented** and raises the score; new findings do the opposite.
-
-:::tip[Reading pass / fail / partial at a glance]
-- **Pass (implemented)** → nothing to do; keep the supporting evidence current.
-- **Partial** → you're close. Look at the findings or missing evidence linked to the control and close the remaining gap to earn full credit.
-- **Fail (not implemented)** → start here. These have open findings actively working against your score and are usually the highest-leverage fixes.
+:::note[Two rules the engine never breaks]
+1. A **manual override** wins. Sync attaches new evidence to a locked control but never changes its status.
+2. A **failed or empty scan never improves a score.** A clean result promotes a control only when the scanner genuinely ran; a scan with tool failures, or a paused account, leaves status as it was.
 :::
 
-## How to use it
+## Thresholds and breaches
 
-1. **Connect your environment and run scans.** Compliance status is driven by findings, so the more you have connected — cloud accounts, containers, code, assessments — the more complete your picture. See **[Connecting Cloud Accounts](../cloud-security/connecting-accounts.md)**.
-2. **Open Compliance Posture.** Pick a framework to see its overall score and the breakdown of controls by status.
-3. **Drill into a control.** Open any control to see its status, the frameworks it maps to, and the findings or evidence behind that status.
-4. **Work the gaps.** Start with **not implemented**, then **partial**. Remediating the underlying findings updates the control automatically on the next sync — you don't re-grade anything by hand.
-5. **Refresh when you need the latest.** Status updates on its own as scans complete. If you want to force an immediate recalculation after making changes, trigger a refresh from the compliance view.
+![Compliance Thresholds: current default threshold 70%, set a per-framework or global threshold, custom framework thresholds list](/img/screenshots/compliance/compliance-engine-thresholds.webp)
 
-### Drift detection
+A **threshold** is the score a framework must hold. The default is **70%** for every active framework; set a stricter one per framework (ISO 27001 at 90 before the certification audit, PCI DSS at 85). After every refresh the engine compares each active framework's score with its threshold and records a **breach** when it is below — with the gap in points and the number of controls needed to close it.
 
-Between scan cycles, the platform watches for posture slipping and surfaces it as drift, including:
+![Framework Threshold Breaches: soc2, cis_v8, iso_27002, nist_800_53_r5, nist_csf_2 … each with current score, threshold and gap](/img/screenshots/compliance/compliance-engine-breaches.webp)
 
-- **Control regression** — a control that was implemented has fallen back to a lower status.
-- **Expired evidence** — supporting evidence linked to a control has aged past its freshness window (90 days).
-- **New findings in a clean domain** — a domain that was fully compliant now has open findings.
-- **Threshold crossed** — a framework's score has dropped below the target you set.
+Breaches surface on the overview ("Active Breaches"), on the Breaches sub-tab, as a **threshold_crossed** drift type, and through [alert policies](./drift-detection.md#alert-policies) to Slack / email.
 
-Use drift alerts as your early-warning signal: they tell you a previously passing area needs attention before it shows up in an audit.
+## Trends and timeline
 
-### Manual overrides
+![Compliance Score Trends: score per framework over time with a time-range selector](/img/screenshots/compliance/compliance-engine-trends.webp)
 
-When you have context the scanners can't see — for example, a compensating control or an accepted exception — you can set a control's status manually. A manually set control is **locked** so automated syncs won't change it based on new findings, until you clear the override.
+**Compliance Trends** plots each framework's score across threshold checks; **Timeline** lists every check with per-framework score, delta and direction — the audit trail for "when did SOC 2 drop below 60 and what brought it back".
 
-:::note[Keep overrides honest]
-Manual overrides are powerful but bypass the automation. Use them deliberately, attach evidence where you can, and revisit them periodically so your reported posture stays trustworthy.
+![Compliance Check History timeline entries with framework scores and deltas](/img/screenshots/compliance/compliance-engine-timeline.webp)
+
+## Manual overrides
+
+![Manual Control Overrides: lock a control by SCF ID with a reason; active overrides list with reason, locked time and an Unlock action](/img/screenshots/compliance/compliance-engine-overrides.webp)
+
+This sub-tab lists every control the team has locked — whether from the [posture gap analysis](./compliance-dashboard.md#manual-overrides) or from the **Override a Control** form here — with the reason and when it was locked. **Unlock** returns the control to automatic updates on the next sync. Locking and unlocking require the **admin** role and are written to the compliance audit log.
+
+## Evidence expiry
+
+The overview's evidence panel warns about evidence that is **expiring soon** (validity dates on manual evidence, validity windows on assessments) and lists open **expiry alerts**, which can be acknowledged. Expired evidence is dropped from the controls it supported and shows up as an `evidence_expired` drift. See [Evidence Hub → Freshness](./evidence-hub.md#freshness).
+
+## Remediation playbooks
+
+![Remediation Playbooks (20): Block S3 Public Access, Enable S3 Default Encryption, Remove Open Security Group Ingress, Enable CloudTrail Logging, Disable RDS Public Accessibility, Enable EBS Default Encryption, Strengthen IAM Password Policy, Enable GuardDuty, Restrict GCP Firewall Rules, Restrict Azure NSG Rules …](/img/screenshots/compliance/compliance-engine-remediation.webp)
+
+Twenty cloud-native fixes for the misconfigurations that most often drag a framework down — public S3, unencrypted storage, open security groups, missing CloudTrail / GuardDuty, public RDS, IMDSv1, unused access keys, and their GCP and Azure equivalents. Each playbook carries a **risk level** and **rollback parameters**.
+
+- **Process Active Findings** matches the team's current CSPM findings against the playbooks and creates **remediation actions**.
+- Actions from **low-risk playbooks** (10 of the 20) are auto-approved; the rest wait for **Approve** / **Deny**.
+- **Execute** runs the fix; **Rollback** reverts it using the stored parameters. Every step is recorded and exported in the [remediation audit report](./audit-reports.md).
+
+:::warning[Dry run by default]
+Execution is a **dry run** unless the platform is started with `REMEDIATION_LIVE_EXECUTE=true`. In dry-run mode actions are planned, approved and logged but no cloud API call is made — run one full cycle that way and read the audit trail before switching it on.
 :::
 
-:::tip[Make sure you're in the right team]
-Compliance status is scoped to your **active team**. Confirm you're in the correct team (top-right account menu) before reviewing scores or setting overrides, so you're acting on the right environment's data.
-:::
+## Control testing
+
+Auditors distinguish *automated monitoring* from *formal control tests* — a documented test of design or of operating effectiveness, on a cadence, with a recorded result. The engine keeps that record:
+
+- A **test schedule** per control: `test_type` (design · operating_effectiveness · both), `frequency_days` (90 for quarterly), a written procedure, an owner. **Seed defaults** creates a 90-day schedule for every in-scope control; the [Control test cadence](./compliance-dashboard.md#control-test-cadence) panel then shows what is overdue, due in 7 days or never tested.
+- A **test result** per run: `pass` · `fail` · `exception` · `not_tested`, with notes, linked evidence, exceptions noted and the management response; recording a result sets the next due date.
+
+Schedules and results are managed over the API today — see [API → Control testing](./api.md#control-testing).
+
+## Exceptions
+
+When a control cannot be met — a legacy system, a vendor constraint, a cost decision — file an **exception** rather than leaving a red control unexplained:
+
+| Field | Purpose |
+| --- | --- |
+| **justification** and **risk_impact** (low · medium · high · critical) | Why, and what it exposes |
+| **compensating_controls** | What reduces the risk meanwhile |
+| **remediation_plan** and **remediation_target_date** | How and when it will be closed |
+| **expires_at** | Exceptions are time-boxed; expired ones are flagged every 12 hours |
+
+An exception moves through **pending_approval → approved / denied**, then **remediated** or **expired**. The requester cannot approve their own exception. Exceptions are listed with a summary and exported with the audit reports. Managed over the API today — see [API → Exceptions](./api.md#exceptions).
+
+## Audit reports
+
+The **Audit Reports** sub-tab is the same generator as the [Audit Reports](./audit-reports.md) page — full, controls-only, findings-only, drift-history or remediation-audit CSV packs.
 
 ## Related
 
-- **[Compliance Dashboard & Reporting](./compliance-dashboard.md)** — executive views and exportable reports built on these scores.
-- **[Evidence Hub](./evidence-hub.md)** — gather and link the artifacts that back up each control.
-- **[Interactive Assessments](./interactive-assessments.md)** — guided questionnaires that also feed control status.
-- **[Connecting Cloud Accounts](../cloud-security/connecting-accounts.md)** — connect the sources that drive findings.
+- [Compliance Posture](./compliance-dashboard.md) — the scores this engine maintains.
+- [Drift Detection](./drift-detection.md) — regressions, expired evidence and threshold crossings between snapshots.
+- [Compliance & GRC API](./api.md#compliance-engine) — sync, thresholds, overrides, testing, exceptions and remediation over REST.

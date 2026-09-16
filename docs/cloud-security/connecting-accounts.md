@@ -81,7 +81,7 @@ The platform performs a live connection test using the provider SDK (an STS `Get
 - **A first scan starts** in the background. Watch it on Cloud Security → **Accounts** (the card shows *Scanning…* with a progress bar) or **Cloud Scans**.
 - **Recurring scans are registered** in the Unified Scheduler: a **daily incremental** scan (02:00 UTC) and a **weekly full** scan (Sunday 03:00 UTC). You can retime or pause them from **Unified Scheduler**. Operators can disable auto-scheduling platform-wide with `CSPM_AUTO_SCHEDULE_ON_ACCOUNT_ADD=false`.
 - **Resources appear in [Asset Inventory](./asset-inventory.md)** as discovery jobs complete.
-- **Kubernetes clusters and container registries** in the account are discovered automatically and offered in [Kubernetes Security](../security-scanning/kubernetes-security.md) and [Container Security](../security-scanning/container-security.md).
+- **Kubernetes clusters and container registries** in the account are discovered automatically and offered in [Kubernetes Security](../security-scanning/kubernetes/index.md) and [Container Security](../security-scanning/containers/index.md).
 
 ## Onboarding a GCP organization
 

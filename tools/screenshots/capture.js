@@ -1,7 +1,7 @@
 // Docs screenshot harness. Usage:
 //   SESSION_ID=... node capture.js <plan.json> <outDir>
 // plan.json = [{ name, url, clicks?: [text|{selector}|{text,nth}], waitFor?: text, scrollTo?: text, fullPage?, clip?, delay? }]
-const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'playwright');
+const { chromium } = require('/Users/nitesh.saini/offload-cspm/frontend/node_modules/playwright');
 const fs = require('fs'); const path = require('path');
 
 const BASE = process.env.BASE_URL || 'http://localhost:3001';
@@ -23,7 +23,8 @@ const user = {"user_id":"b54cf4e7-3434-4ab4-aa74-632f23b92a2b","email":"admin@of
       localStorage.setItem('theme', 'light');
     }
   }, { sid: process.env.SESSION_ID, user });
-  const page = await ctx.newPage();
+  const authPage = await ctx.newPage();
+  let page = authPage;
   page.on('pageerror', e => console.log('  pageerror:', e.message.slice(0, 120)));
   page.on('response', r => { if (r.status() >= 400 && r.url().includes('/api/')) console.log('  HTTP', r.status(), r.url().replace(BASE, '')); });
 
@@ -44,7 +45,10 @@ const user = {"user_id":"b54cf4e7-3434-4ab4-aa74-632f23b92a2b","email":"admin@of
     await loc.scrollIntoViewIfNeeded(); await loc.click();
   };
 
+  const anonCtx = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2, colorScheme: 'light' });
+  const anonPage = await anonCtx.newPage();
   for (const step of plan) {
+    page = step.noAuth ? anonPage : authPage;
     try {
       console.log('•', step.name);
       await page.goto(BASE + step.url, { waitUntil: 'domcontentloaded' });
@@ -52,13 +56,24 @@ const user = {"user_id":"b54cf4e7-3434-4ab4-aa74-632f23b92a2b","email":"admin@of
       for (const c of step.clicks || []) { await clickText(c); await settle(step.delay || 1200); }
       for (const a of step.actions || []) {
         if (a.click) { await clickText(a.click); await settle(step.delay || 1200); }
+        else if (a.selectSelector) { await page.locator(a.selectSelector.selector).nth(a.selectSelector.index || 0).selectOption(a.selectSelector.value); await page.waitForTimeout(300); }
+        else if (a.fillSelector) { await page.locator(a.fillSelector.selector).first().fill(a.fillSelector.value); await page.waitForTimeout(300); }
         else if (a.fill) { await page.getByPlaceholder(a.fill.placeholder).first().fill(a.fill.value); await page.waitForTimeout(300); }
         else if (a.check) { await page.getByLabel(a.check, { exact: false }).first().check().catch(async () => { await page.getByText(a.check, { exact: false }).first().click(); }); await page.waitForTimeout(300); }
         else if (a.scrollTop) { await page.evaluate(() => { window.scrollTo(0, 0); document.querySelectorAll('*').forEach(el => { if (el.scrollTop > 0) el.scrollTop = 0; }); }); await page.waitForTimeout(300); }
       }
       if (step.waitFor) await page.getByText(step.waitFor).first().waitFor({ timeout: 15000 }).catch(() => console.log('  (waitFor timed out:', step.waitFor, ')'));
       if (step.scrollTo) { await page.getByText(step.scrollTo).first().scrollIntoViewIfNeeded(); await page.waitForTimeout(400); }
-      if (step.scrollY) { await page.evaluate(y => window.scrollTo(0, y), step.scrollY); await page.waitForTimeout(400); }
+      if (step.scrollY) {
+        // Scroll the window AND the tallest scrollable container (app layouts often scroll an inner main pane).
+        await page.evaluate(y => {
+          window.scrollTo(0, y);
+          let best = null, span = 0;
+          document.querySelectorAll('*').forEach(el => { const s = el.scrollHeight - el.clientHeight; if (s > span && getComputedStyle(el).overflowY !== 'visible') { span = s; best = el; } });
+          if (best) best.scrollTop = y;
+        }, step.scrollY);
+        await page.waitForTimeout(500);
+      }
       if (step.hideSidebar) await page.evaluate(() => { const s = document.querySelector('aside, nav[class*="sidebar"], [class*="Sidebar"]'); if (s) s.style.display = 'none'; });
       const file = path.join(outDir, step.name + '.png');
       if (step.clipSelector) {

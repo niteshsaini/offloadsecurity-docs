@@ -2,83 +2,75 @@
 title: "Compliance & GRC"
 sidebar_label: "Overview"
 sidebar_position: 0
+description: "Continuous, evidence-backed compliance on a Secure Controls Framework spine — posture across 27 frameworks, an engine that keeps it current, drift detection, an evidence hub, guided assessments, audit reports and a dedicated India DPDP module."
 ---
 
 # Compliance & GRC
 
-Offload Security turns your live security findings into **audit-ready compliance posture**. Instead of chasing evidence at audit time, you get a continuously updated view of where you stand against the frameworks you care about — with every control backed by the scans, assessments, and documents that prove it.
+Compliance in Offload Security is not a spreadsheet you fill in before an audit. Every scanner in the platform, every assessment answer and every uploaded document lands on one control catalog — the **Secure Controls Framework (SCF)** — and each control is mapped to the requirements of **27 frameworks**. Implement a control once and every framework that references it moves; let a control slip and you see the regression the same day.
 
-![Compliance posture across frameworks with control status and scores](/img/screenshots/compliance-posture.png)
+**Where:** left navigation → **Compliance Posture**, **Assessments**, **Audit Reports** and **DPDP Compliance** (all under *Compliance & Risk*).
 
-## What it does
+![Compliance Posture: 1,003 controls across 10 active frameworks, implemented / with-evidence tiles, control test cadence, compliance by framework (ISO 27001 83%, ISO 27002 76%, NIST CSF 57%, SOC 2 53%…), evidence sources and SCF domains](/img/screenshots/compliance/compliance-posture.webp)
 
-Compliance & GRC continuously maps your technical findings to a common set of controls, scores your posture per framework, and flags when something slips.
+## The four workspaces
 
-- **Tracks the frameworks you report against.** Out of the box the platform maps your posture to:
-  - **SOC 2** (AICPA Trust Services Criteria)
-  - **ISO 27001:2022**
-  - **NIST CSF 2.0**
-  - **PCI DSS 4.0.1**
-  - **CIS Controls v8.1**
-  - **HIPAA**
-  - **EU GDPR**
-  - …and more — including **ISO 27701**, **ISO 42001**, **NIST 800-53/800-171**, and India's **DPDP Act**. See the full **[Supported Frameworks](./supported-frameworks.md)** catalog and the dedicated **[DPDP Act (India)](./dpdp-privacy.md)** module.
-- **One control, many frameworks.** Controls are built on the **Secure Controls Framework (SCF)**, so a single check — for example, "data at rest is encrypted" — can satisfy the matching requirement in SOC 2, ISO 27001, NIST CSF, and more at the same time. You evaluate a control once and see credit everywhere it applies.
-- **Scores your posture automatically.** Each control rolls up into a framework score from 0–100% so you can see readiness at a glance and track it over time.
-- **Detects drift.** When a previously satisfied control regresses — because a new scan finding appeared or supporting evidence expired — the platform flags it so you can act before your next audit, not during it.
-- **Collects evidence as you go.** Findings, assessment answers, and uploaded documents are linked to the controls they support, building your evidence trail continuously.
+| Workspace | What it is for | Pages |
+| --- | --- | --- |
+| **Compliance Posture** | The live picture: score per framework, every control's status, gap analysis, manual overrides, control test cadence. Four tabs: *Compliance Posture*, *Compliance Engine*, *Drift Detection*, *Evidence Hub*. | [Compliance Posture](./compliance-dashboard.md) · [Compliance Engine](./autonomous-compliance.md) · [Drift Detection](./drift-detection.md) · [Evidence Hub](./evidence-hub.md) |
+| **Assessments** | Guided questionnaires for ISO 27001, SOC 2, OWASP ASVS 5.0, NIST CSF 2.0, SSDF, SAMM and more; answers feed control status. | [Assessments](./interactive-assessments.md) |
+| **Audit Reports** | Audit-ready CSV packs — controls, findings, drift, remediation, scores — generated on demand and kept as history. | [Audit Reports](./audit-reports.md) |
+| **DPDP Compliance** | India's Digital Personal Data Protection Act 2023 + Rules 2025 and CERT-In directions: readiness, DPIA, SDF classification, vendor due diligence, breach clocks, audit packs. | [DPDP Act (India)](./dpdp-privacy.md) |
 
-## How control status works
+## How it fits together
 
-Every control carries a status, and that status drives your framework score:
+```mermaid
+flowchart LR
+    S[Scanners<br/>cloud · K8s · containers · code · web] -->|findings → controls| C[(SCF control catalog<br/>1,534 controls · 27 frameworks)]
+    A[Assessments<br/>ISO 27001 · SOC 2 · ASVS…] -->|answers → controls| C
+    E[Evidence Hub<br/>documents · API captures · scan evidence] -->|evidence → controls| C
+    O[Manual overrides<br/>policy & process controls] --> C
+    C --> P[Posture per framework]
+    C --> D[Drift detection<br/>daily snapshots]
+    C --> T[Thresholds & breaches]
+    C --> R[Audit reports · DPDP audit packs]
+    C -->|controls failing > 24 h| RM[Risk Register]
+```
 
-| Status | Meaning | Counts toward score as |
-|---|---|---|
-| **Implemented** | The control is fully in place and evidenced. | 100% |
-| **Partial** | Partially implemented or only partly evidenced. | 50% |
-| **Not Implemented** | Required but not yet in place. | 0% |
-| **Not Applicable** | Out of scope for your environment. | Excluded from the score |
-| **Not Assessed** | Not yet evaluated. | Excluded from the score |
+- **Scans and assessments write control status.** The compliance engine re-syncs findings into controls **every 4 hours** (and on demand), checks thresholds and runs drift detection in the same pass; a completed assessment maps its answers immediately.
+- **Every control carries a status and evidence.** Status is `implemented`, `partial`, `not_implemented`, `not_assessed` or `not_applicable`; evidence is deduplicated so one artifact counts everywhere it applies.
+- **Humans stay in control.** A **manual override** pins a status with a justification and is never overwritten by automation; an **exception** records why a control cannot be met, with compensating controls and an expiry.
 
-:::note[How the score is calculated]
-A framework score reflects only the controls that are **in scope** — controls marked *Not Applicable* or *Not Assessed* are left out of the math, so your percentage reflects real, evaluated coverage rather than being diluted by items that don't apply to you.
-:::
+## How a framework score is calculated
 
-## How findings map to controls
+Each control in scope for a framework contributes to that framework's percentage:
 
-The platform keeps your posture current by connecting day-to-day security activity to the right controls:
+| Control state | Counts as |
+| --- | --- |
+| **Implemented** | 1.0 |
+| **Partial** | 0.5 |
+| **Not implemented** or **not assessed**, but with linked evidence | 0.25 |
+| **Not implemented** / **not assessed**, no evidence | 0 |
+| **Not applicable** | Removed from the denominator |
 
-1. **A scan or check runs** — for example, a cloud posture scan reports that a database isn't encrypted.
-2. **The finding is matched to the controls it affects**, using the SCF mappings and the subject of the finding (such as encryption, access management, or logging).
-3. **Control status updates automatically.** A passing result moves the control toward *Implemented*; a failing result can move it to *Partial* or *Not Implemented*.
-4. **Scores and evidence refresh** so your framework readiness — and the evidence behind each control — always reflects your current environment.
+The denominator is every in-scope control — *not assessed* controls do count against you, which is why a fresh installation reads low and climbs as scans, assessments and overrides land. A framework with no assessed controls at all is shown as *Not Assessed* rather than 0%.
 
-## How to use it
+## Start here
 
-1. Open **Compliance** from the left navigation to land on your compliance posture.
-2. **Pick a framework** to see its overall score and the status of each control within it.
-3. **Drill into a control** to review its current status, the frameworks it maps to, and the linked evidence (findings, assessment answers, or documents).
-4. **Work the gaps.** Sort or filter to controls that are *Not Implemented* or *Partial*, and use the linked findings to drive remediation.
-5. **Override where automation can't see the full picture.** For controls satisfied by a process or document rather than a scan, set the status manually. A manual status is **locked** so the automated sync won't overwrite it.
-6. **Re-check after changes.** As scans re-run and you add evidence, statuses and scores update on their own — and any regression is surfaced as drift.
-
-:::tip[Lock controls you've judged manually]
-Use a manual override for controls that depend on policy or human review. The platform respects your decision and won't auto-change a locked control, while still tracking everything else automatically.
-:::
-
-:::warning[Watch for drift]
-A control can fall out of compliance without anyone touching it — a new misconfiguration appears, or a piece of evidence ages out. Review drift alerts regularly so your reported posture stays accurate between audits.
-:::
+1. **Pick your frameworks.** Compliance Posture → **Frameworks** tile → activate the ones you report against (10 are active by default). Scores, evidence counts and thresholds are scoped to active frameworks.
+2. **Let scans do the first pass.** Cloud, Kubernetes and container scans already map to controls; **Sync** on the Compliance Engine tab runs the correlation now instead of waiting for the 4-hour cycle.
+3. **Run one assessment end-to-end.** ISO 27001 or SOC 2 from the Assessments hub — the answers land on SCF controls the moment you complete it. See [Assessments](./interactive-assessments.md).
+4. **Override what automation cannot see.** Policies, committees, training — set them from the gap analysis with a justification. See [Compliance Posture](./compliance-dashboard.md#manual-overrides).
+5. **Set thresholds and watch drift.** A threshold per framework (default 70%) turns slippage into a breach; the daily snapshot turns a downgraded control into a regression you can act on. See [Compliance Engine](./autonomous-compliance.md) and [Drift Detection](./drift-detection.md).
+6. **Generate the audit pack.** [Audit Reports](./audit-reports.md) for the frameworks; the [DPDP module](./dpdp-privacy.md#audit--export) for the tamper-evident DPDP pack.
 
 ## Prerequisites
 
-- **Connect your environment first.** The more you scan — cloud accounts, containers, Kubernetes, code, and web apps — the more controls update automatically from real findings. See **[Connecting Cloud Accounts](../cloud-security/connecting-accounts.md)**.
-- **Compliance roles.** Driving assessments and evidence is typically done by a **Compliance Officer**, while **Auditors** and **Viewers** have read-only access. See your team's roles in **[Roles, Teams & API Keys](../authentication/rbac-team-management.md)**.
+- **View Assessments** to read compliance data; **Manage Assessments** to sync, run assessments and submit exceptions; **admin** role (or an admin-scoped API key) to set manual overrides; platform administrators activate frameworks and import the SCF catalog.
+- At least one connected scanner ([Cloud Security](../cloud-security/index.md), [App & Infrastructure Scanning](../security-scanning/index.md)) — not required, but it is what makes the posture move on its own.
 
 ## Related
 
-- **[Interactive Assessments](./interactive-assessments.md)** — guided questionnaires that feed control status and evidence.
-- **[Evidence Hub & Collection](./evidence-hub.md)** — where automated and uploaded evidence is gathered and linked to controls.
-- **[Autonomous Compliance Engine](./autonomous-compliance.md)** — how findings are continuously synced to controls.
-- **[Executive Compliance Dashboard & Reporting](./compliance-dashboard.md)** — leadership-level scores, trends, and audit reports.
-- **[Quickstart](../getting-started.md)** — sign in, teams, roles, and the Scan → Finding → Risk → Report flow.
+- [Supported Frameworks](./supported-frameworks.md) — the 27-framework catalog and how SCF mappings work.
+- [Risk Management](../vulnerability-risk/risk-management/index.md) — a control that stays *not implemented* or *partial* for more than 24 hours is minted as a system risk (hourly sweep, one risk per control).
+- [Reports & AI](../reports-and-ai/index.md) — executive and scheduled reporting.

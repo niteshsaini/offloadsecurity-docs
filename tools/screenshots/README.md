@@ -56,3 +56,80 @@ Clicks resolve visible `tab` → `button` → `link` roles by accessible name fi
   collection before adding a fixture field.
 - Never capture against production or customer data.
 - Keep filenames stable; docs pages reference them by name.
+
+## Section 2 — App & Infrastructure Scanning (2026-09-12)
+
+`plan-security-scanning.json` captures the Scanning hub, Kubernetes, Container Security, Code Command Center and
+Infra Command Center tabs. Unlike Cloud Security, this section used **real scans** rather than fixtures:
+
+- Current backend source run *inside* the released image (all scanner binaries + `/data` volumes), with the
+  Docker socket group added and a Celery worker for the `container_scans` queue — see the memory note
+  `docs-section-rebuild-program` in the maintainer's Claude memory for the exact `docker run`.
+- Native scans (ZAP quick, Nmap service detection, testssl, security headers), WAF test and load test against
+  `offloadsecurity.com`; container full-analysis of `nginx:1.25.3`, `python:3.9-slim`, `node:18-alpine`, `alpine:3.17`;
+  a code upload-scan of a deliberately vulnerable sample (`payments-api.zip`: SQLi, secrets, old deps, bad Terraform);
+  SBOMs, an image policy from the *Production – Strict* template, and K8s compliance reports per cluster.
+- Existing K8s/registry fixtures had their timestamps shifted to "recent" and registry sync errors cleared.
+
+Steps in the plan use `actions` (fill/select/click) for the Dockerfile scan and the compliance form.
+
+## Section 3 — Vulnerabilities & Risk (2026-09-13)
+
+`plan-vulnerability-risk.json` captures Vulnerability Management (Triage queue, work item, How to fix, Accept Risk,
+Raw findings by source, occurrence detail, dashboard), SLA Management (policies, breach dashboard, create-policy form),
+Alerts (list + detail) and Risk Management (dashboard, register by category / all risks, new-risk form, import from
+findings, treatment plans, controls, heat map, bulk import, appetite, KRIs, scenarios). Same environment as section 2.
+
+Data prep that was needed:
+- The Triage queue is only populated after `POST /api/vulnerabilities/sync?force_resync=true` followed by
+  `POST /api/triage/score` (the lake and the scores are otherwise built on the 2-hourly / daily schedule).
+- 671 noise alerts (scan/tool failures from the scanner work in section 2) were resolved so the list shows
+  security alerts; KRIs, an appetite statement, scenarios, controls and treatment plans were created through the UI.
+- `capture.js` gained two things this section relied on: `scrollY` now scrolls the tallest scrollable pane as well
+  as the window (tab bodies scroll internally), and dropdown tabs are reached with
+  `{"selector": "button:has-text('More')"}` followed by a text click.
+- `risk-import` captures the auto-import preview, which takes several seconds — its step uses `delay: 9000`.
+
+## Section 4 — Compliance & GRC (2026-09-13)
+
+`plan-compliance.json` captures Compliance Posture (posture, frameworks, gap analysis, override dialog, framework
+panel), the Compliance Engine sub-tabs, Drift Detection + alert policies, the Evidence Hub sub-tabs and dialogs, the
+Assessments hub / create form / checklist / completed view / history, Audit Reports and the seven DPDP tabs.
+
+Data prep: three interactive assessments were created and answered over the API (ISO 27001 + ASVS L2 completed,
+SOC 2 left at 59%); `POST /common-controls/correlate-all` + `map/sync-all`; thresholds for ISO/SOC 2/PCI; five
+manual overrides and five manual evidence items; the seeded test schedules were pruned to 15 with staggered due dates
+(1,534 "0d overdue" rows made the posture hero unreadable); an alert policy; two daily snapshots taken around a
+deliberate regression so Drift Detection shows two control regressions; the DPDP module got an SDF assessment, a
+KYC DPIA, a vendor assessment and two breach incidents worked through the workflow. Several product bugs were fixed
+first — see the docs PR description.
+
+Harness notes: the framework rows on the posture page are matched with `{"text": ..., "nth": 0}` because the same
+label also appears in the evidence-per-framework list; the Override button uses `{"role": "button", "text":
+"Override", "nth": 0}`; gap analysis needs `scrollY: 1300`.
+
+## Section 5 — Reports & AI (2026-09-13)
+
+`plan-reports-and-ai.json` captures the Executive Dashboard (overview, readiness, generated gap analysis and roadmap,
+executive reports + scheduled reports), the Consolidated Security Report dialog on Scan Results, the AI Configuration
+panel (Knowledge Base → AI Assistant) and the AI Security Assistant widget. No LLM provider is configured in the docs
+env (user decision), so AI is shown in its setup state. Two scheduled reports were created over the API and run once
+by hand (`docker exec cspm-backend-src python /tmp/run_sched.py` after setting `next_run` in the past) so history and
+"latest" have content. The Executive Dashboard fixes (offload-cspm #1599) had to be copied into the shared dev tree's
+`ExecutiveComplianceDashboard.js` for the capture and were reverted afterwards.
+
+## Integrations (section 6)
+
+`plan-integrations.json` — hub, catalog cards (scrollY 860), Collaboration category filter, the connected GitHub Actions card (search "GitHub"), and the five wizard steps. Steps 1–2 use Wazuh (richest form); steps 3–5 use the already-connected GitHub Actions via **Reconfigure** because its test passes without network. Step 3 auto-advances 1.5 s after a passing test, so that step runs with `delay: 600`. Fixture: connect `github-actions` through `/api/integrations/wizard/*` first (any `github_token` value works).
+
+## Threat Intel & AI (section 7)
+
+`plan-threat-intel-ai.json` — every tab of Threat Intelligence, Security Command Center, AI Governance and Knowledge Base (tab clicks by label). Fixtures: `seed_threat_intel_ai.py` registers four AI systems, a risk assessment, bias test, incident, oversight log and training record, uploads three policy PDFs to the Knowledge Base (needs `section_id`s from `/knowledge-base/sections`), reconciles the AIBOM and runs triage + auto-fix. Before capture: add AI-service assets (SageMaker / Bedrock / Vertex) to `cspm_cloud_assets.assets` and AI packages to a `code_sbom_reports` document so discovery and the AIBOM have something to show; the Discovery shot clicks **Run Discovery** live (`delay: 9000`). Threat feeds are real — the docs backend fetched them hourly.
+
+## Platform Security (section 8)
+
+`plan-platform-security.json` — login page (a `noAuth: true` step uses a second, anonymous browser context — added to capture.js), account menu (click "Admin User"), Team Management + Invite modal, Change Password, MFA status + setup (the QR code and manual key in `mfa-setup` were pixelated after capture — never publish a live TOTP secret), API Keys list + Create modal, Platform Setup, Client Menu Settings, User Activity (Users, Live sessions). Fixtures: `seed_platform_security.py` creates three API keys (values discarded), a second team and two invitations.
+
+## On-Premises (section 9)
+
+No new captures: the section reuses the Integrations wizard shots (Wazuh step 2) and describes the deployment from `docker-compose.client.yml`, `.env.example`, `scripts/backup.sh` / `restore.sh` and `deployment/nginx-entrypoint.sh`. The Endpoint Security dashboard needs a live Wazuh connection, which the docs environment does not have.

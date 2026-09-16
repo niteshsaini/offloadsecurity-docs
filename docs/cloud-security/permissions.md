@@ -202,7 +202,7 @@ rules:
 ```
 
 Clusters are onboarded with a **read-only kubeconfig or service-account token**
-(base64-encoded) — see [Kubernetes Security](../security-scanning/kubernetes-security.md).
+(base64-encoded) — see [Kubernetes Security](../security-scanning/kubernetes/index.md).
 
 ---
 
@@ -216,7 +216,7 @@ Registry **discovery** rides on Bucket A; **pulling images to scan** needs pull 
 | **GCP Artifact Registry / GCR** | `roles/artifactregistry.reader` (+ `roles/storage.objectViewer` for legacy `gcr.io`) |
 | **Azure ACR** (`*.azurecr.io`) | **`AcrPull`** — add this role to the service principal (it is **not** in the base Azure role set above) |
 
-See [Container Security](../security-scanning/container-security.md).
+See [Container Security](../security-scanning/containers/index.md).
 
 ---
 
@@ -263,5 +263,5 @@ create an EventBridge rule (AWS), a Logging sink + Pub/Sub topic/subscription
 ## Related
 
 - [Connecting Cloud Accounts](./connecting-accounts.md)
-- [Kubernetes Security](../security-scanning/kubernetes-security.md)
-- [Container Security](../security-scanning/container-security.md)
+- [Kubernetes Security](../security-scanning/kubernetes/index.md)
+- [Container Security](../security-scanning/containers/index.md)
