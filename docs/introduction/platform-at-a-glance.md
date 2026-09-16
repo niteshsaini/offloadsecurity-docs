@@ -59,13 +59,13 @@ Findings from every source converge in **Vulnerability Management**, resolve aga
 
 | Module | What it does | Read more |
 |---|---|---|
-| **Cloud Security (CSPM)** | Continuous misconfiguration assessment of AWS, Azure, and GCP, with native findings ingestion and drift detection. | [Cloud Security](../cloud-security/index.md) |
+| **Cloud Security (CSPM)** | Continuous misconfiguration assessment of AWS, Azure and GCP, identity and network analysis, real-time cloud events, a remediation queue. | [Cloud Security](../cloud-security/index.md) |
 | **Application Security** | Web (OWASP ZAP, Nuclei), API, network (Nmap), and SSL/TLS testing of your applications and services. | [App & Infrastructure Scanning](../security-scanning/index.md) |
 | **SAST & Code Security** | Static analysis, secrets detection, and IaC scanning of your source and pipelines. | [API & Code Scanning](../security-scanning/code/index.md) |
 | **SBOM & License Scanning** | Software bill-of-materials generation and open-source **license compliance** across code and container images. | [Container Security](../security-scanning/containers/index.md) |
-| **Container Security** | Image scanning across ECR, GCR, ACR, and Docker Hub, with SBOMs, signature verification, and layer secret detection. | [Container Security](../security-scanning/containers/index.md) |
-| **Kubernetes Security** | Cluster scanning (kube-bench, Polaris, Kubescape, Trivy) mapped to the MITRE ATT&CK Container Matrix. | [Kubernetes Security](../security-scanning/kubernetes/index.md) |
-| **On-Premises Scanning** | Internal network visibility, private URL/API scanning, OpenVAS vulnerability scanning, and Wazuh endpoint/SIEM data — for assets that never leave your network. | [On-Premises](../on-premises/index.mdx) |
+| **Container Security** | Registry discovery and image scanning across ECR, GCR / Artifact Registry, ACR, Docker Hub and private registries, with SBOMs and image policies. | [Container Security](../security-scanning/containers/index.md) |
+| **Kubernetes Security** | Cluster onboarding and scanning, a fleet heat map, grouped findings and compliance reports. | [Kubernetes Security](../security-scanning/kubernetes/index.md) |
+| **On-Premises** | The whole platform self-hosted; network and private URL/API scanning of internal targets, Wazuh endpoint telemetry synced in, Greenbone / OpenVAS connected — for assets that never leave your network. | [On-Premises](../on-premises/index.mdx) |
 
 ### Unify, prioritize & govern
 
@@ -76,17 +76,17 @@ Findings from every source converge in **Vulnerability Management**, resolve aga
 | **Risk Register** | An enterprise risk register auto-minted from findings, with treatment plans and SLAs. | [Risk Register](../vulnerability-risk/risk-management/index.md) |
 | **Compliance & GRC** | Framework tracking (SOC 2, ISO 27001, NIST CSF, PCI-DSS, and more), guided assessments, and drift detection. | [Compliance](../compliance/index.md) |
 | **Evidence Management** | An auditable evidence vault, captured as work happens and mapped to controls. | [Evidence Hub](../compliance/evidence-hub.md) |
-| **Alerts** | Centralized, deduplicated alerting across sources, routable to your notification and SIEM channels. | [Notifications](../integrations/notifications.md) |
+| **Alerts** | Centralized, deduplicated alerting across sources, routed to Slack, Teams, email, PagerDuty and webhooks. | [Alerts](../vulnerability-risk/alerts.md) |
 
 ### Act, prove & extend
 
 | Module | What it does | Read more |
 |---|---|---|
-| **Reports** | Executive, compliance, and audit reports from live data in PDF, HTML, and Excel. | [Vulnerabilities & Risk](../vulnerability-risk/index.md) |
+| **Reports** | Executive dashboard, scheduled reports and a catalog of exports (PDF, HTML, Word, CSV, XLSX) from live data. | [Reports & AI](../reports-and-ai/index.md) |
 | **Knowledge Base** | A searchable store of policies, standards, and answers that powers questionnaire auto-fill and AI guidance. | [Knowledge Base](../ai-threat-intelligence/knowledge-base.md) |
-| **AI Suggestions & AI-SOC** | AI-assisted triage, remediation guidance, control mapping, and incident correlation. | [AI-SOC Agents](../ai-threat-intelligence/ai-soc-agents.md) |
-| **Threat Intelligence** | Multi-feed ingestion (CISA KEV, NVD, OTX) with IOC correlation against your assets. | [Threat Intelligence](../ai-threat-intelligence/threat-intelligence.md) |
-| **SIEM & Integrations** | Two-way integration with SIEM/SOAR (Splunk, QRadar, Sentinel, Wazuh), ticketing, IR, and evidence systems. | [Integrations](../integrations/index.md) |
+| **Security Command Center** | Agents that triage (rule-based, LLM-assisted when configured), prepare fixes, correlate incidents and answer posture questions; an approval-gated Auto-Fix Engine. | [Security Command Center](../ai-threat-intelligence/ai-soc-agents.md) |
+| **Threat Intelligence** | Nine curated feeds (CISA KEV, URLhaus, OTX, Feodo Tracker, PhishTank and more) fetched hourly, IOC correlation against your assets, KEV-weighted CVE prioritisation, ATT&CK coverage. | [Threat Intelligence](../ai-threat-intelligence/threat-intelligence.md) |
+| **Integrations** | Slack, Teams, email and PagerDuty for alerts; Jira two-way ticketing; Wazuh, SonarQube and Jenkins pulling data in; signed webhook subscriptions for any SIEM or automation. | [Integrations](../integrations/index.md) |
 
 ## Solutions by industry
 

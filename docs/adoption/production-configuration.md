@@ -67,8 +67,8 @@ Then:
 
 - **Slack or Teams** ([Notifications](../integrations/notifications.md)): send **Critical and High** findings to your on-call/security channel. On Slack, routing rules can map category, severity, and source to different channels. Don't send Medium/Low to chat — that's how channels get muted.
 - **Email (SMTP)**: configure as the fallback channel and for people who don't live in chat.
-- **Jira or ServiceNow** ([Third-Party Integrations](../integrations/third-party.md)): connect with two-way sync so remediation happens in the tool engineers already use.
-- **Webhooks / SIEM**: if you run Splunk, Sentinel, or QRadar, forward events so the SOC sees platform activity alongside everything else.
+- **Jira** ([Jira](../integrations/jira.md)): connect it so critical findings become tickets automatically, high ones on request, and ticket status flows back — remediation happens in the tool engineers already use. (ServiceNow is a catalog entry today, not a connection.)
+- **Webhooks / SIEM**: subscribe your SIEM (Splunk, Sentinel, QRadar — anything with an HTTP collector) to signed [webhook subscriptions](../integrations/webhooks.md) so the SOC sees platform events alongside everything else.
 
 ## Compliance
 
