@@ -2,42 +2,45 @@
 title: "SonarQube Integration"
 sidebar_label: "SonarQube"
 sidebar_position: 6
+description: "Connect a SonarQube server to keep a per-team snapshot of its projects and open vulnerability issues alongside the platform's own code-security results — what is synced, how often, where to read it, and what is deliberately not imported."
 ---
 
 # SonarQube Integration
 
-Connect **SonarQube** to pull its static-analysis results into Offload Security's unified data layer. Instead of SonarQube findings staying stranded in their own console, they flow into the platform's code-security and **[Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx)** views — deduplicated against native findings and prioritized alongside cloud, container, and runtime risk.
+Connect **SonarQube** and the platform keeps a current **snapshot** of what SonarQube knows about your code — the projects it analyses and the open vulnerability issues it has raised — next to the platform's own SAST, secrets, dependency and IaC results. It is a *pulls data in* integration: the connection test and every sync talk to your SonarQube server; SonarQube itself is never changed.
 
-## What it brings in
+## What is synced
 
-SonarQube analysis surfaces issues across your codebase; the integration ingests them with their context intact:
+Every sync (the 30-minute global sync, or **Sync now** on the card) pulls, with the token you configured:
 
-| SonarQube output | In the platform |
-|---|---|
-| **Vulnerabilities** | Code-security findings with severity, rule, and file/line location. |
-| **Security hotspots** | Security-sensitive code flagged for review. |
-| **Bugs** | Reliability issues affecting the code's correctness. |
-| **Code smells** | Maintainability issues (surfaced for completeness; prioritized below security). |
+| SonarQube data | Snapshot content |
+| --- | --- |
+| **Projects** | Up to 100 projects visible to the token — key, name, last analysis |
+| **Open vulnerability issues** | Up to 100 open issues of type *Vulnerability* at severity *Critical* / *Major* — rule, severity, project, component and line, message |
 
-Each issue keeps its **rule id, severity, and file + line location**, so a finding links back to the exact code — and joins the same triage, deduplication, and risk-mapping as every other source.
+The snapshot is stored per team with counts and a `synced_at` time; the card shows *Connected & healthy* with the last sync.
 
-## Connect SonarQube
+**Where to read it:** `GET /api/integrations/data/sonarqube` returns the latest snapshot (`counts.projects`, `counts.issues`, `data.projects[]`, `data.issues[]`). It is a JSON view for dashboards and scripts; there is no dedicated SonarQube screen yet.
 
-1. In the platform, open **Integrations** and choose **Add Integration → SonarQube**.
-2. Enter your **SonarQube server URL**, a **project key**, and an **authentication token** (a user token generated in SonarQube).
-3. **Test the connection.** The platform makes a live call to confirm the URL, token, and project before saving; any error is reported so you can fix and re-test.
-4. **Save.** Credentials are stored **encrypted at rest** and isolated to your **active team**. SonarQube issues begin flowing into the code-security findings view.
-
-:::note[Self-hosted or SonarCloud]
-The integration works with a self-hosted SonarQube server reachable by the platform. For a private, network-isolated SonarQube, deploy the platform's on-premises components so the connection stays inside your boundary — see **[On-Premises](../on-premises/index.mdx)**.
+:::note[What is deliberately not done]
+SonarQube issues are **not imported as platform findings** — they do not appear in [Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx), are not deduplicated against the platform's own SAST results and do not create alerts or tickets. The platform runs its own SAST / secrets / SCA / IaC engines on your repositories (see [Code Security](../security-scanning/code/index.md)); the SonarQube snapshot is context, not a second finding source. Treat the badge literally: *pulls data in*, as a snapshot.
 :::
 
-## Where the data goes
+## Connect
 
-- **Code security & Vulnerability Management** — SonarQube vulnerabilities and hotspots are normalized into the same finding schema and **deduplicated** against native SAST/SCA results, so you don't triage the same issue twice.
-- **Risk & compliance** — findings are severity-ranked, risk-mapped, and available as evidence alongside the rest of your posture.
+**Integrations → SonarQube → Connect.**
+
+| Field | Value |
+| --- | --- |
+| `server_url` | Your SonarQube server, e.g. `https://sonar.example.com` |
+| `token` | A SonarQube **user token** (My Account → Security) with *Browse* on the projects you want in the snapshot |
+| `project_key` *(optional)* | Restrict the snapshot to one project |
+| `verify_ssl` · `ca_cert` *(optional)* | TLS verification and a private CA certificate for on-premises servers |
+
+The connection test authenticates against the server before anything is saved. SonarQube Cloud works the same way with an organisation token; a server on a private network needs the platform deployed where it can reach it, or `ALLOW_PRIVATE_SCAN_TARGETS=true` on an on-premises install — see [On-Premises](../on-premises/index.mdx).
 
 ## Related
 
-- **[Third-Party Integrations](./third-party.md)** — the full catalog, including other code-security tools (Snyk, Checkmarx, Veracode, GitHub CodeQL).
-- **[Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx)** — where connected findings are triaged and deduplicated.
+- [Code Security](../security-scanning/code/index.md) — the platform's own code scanners and where their findings go.
+- [Connecting Tools](./connecting-tools.md) — the wizard, sync and health checks.
+- [Integration Catalog](./third-party.md) — every tool and its capability.
