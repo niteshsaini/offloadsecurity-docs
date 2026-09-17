@@ -34,6 +34,7 @@ Package manifests often omit licences. **OSS licence enrichment via deps.dev** l
 | **Packages** | Every component with version, ecosystem, licence, vulnerability count, KEV/EPSS flags, a **risk** rating and **health** signals (maintenance, age) where available. |
 | **Licence families** | Components grouped into permissive / weak-copyleft / strong-copyleft / network-copyleft / unknown, with **obligations by family** spelled out (attribution, source disclosure, network-use clauses). |
 | **Vulnerabilities** | Grype results per package with fixed versions, KEV and EPSS. |
+| **AI components** | The AI SDKs, frameworks, agent libraries, model runtimes and vector stores among the packages — by role and provider — and the external model providers the repository references. A dependency proves the SDK is present, not which model is called or what data reaches it; the section says so. The same components fold into the cross-repository [AI Bill of Materials](../../ai-threat-intelligence/ai-spm.md). |
 | **Licence governance** | The **active SCA policy** and how this SBOM fares against it (below). |
 | **Auto-Fix Plan** | Fixable vs unfixable vulnerable packages and the exact upgrade commands per ecosystem, with **Copy upgrade commands** and **Copy PR body** ready for a pull request. |
 | **NOTICE file** | The third-party attribution file assembled from the licence families — download it and ship it with the product. |

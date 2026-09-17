@@ -7,7 +7,7 @@ description: "Put code and image scans on a schedule, generate a ready-to-commit
 
 # CI/CD & Automation
 
-Scans you have to remember to run are scans that stop happening. The Automation tab keeps repositories on a **schedule**, and the **CI/CD Pipeline** generator produces the job that scans every build and fails it on your terms. The full REST contract, the GitHub Action, SARIF export and release-gate policy live in [CLI & CI/CD](../../cli-and-cicd.md); this page is the Code Command Center side of it.
+Scans you have to remember to run are scans that stop happening. The Automation tab keeps repositories on a **schedule**, and the **CI/CD Pipeline** generator produces the job that scans every build and fails it on your terms. For the per-change review with comments on the diff — GitHub, GitLab and Bitbucket — see [Pull Request Review](./pull-request-review.md). The full REST contract, the GitHub Action, SARIF export and release-gate policy live in [CLI & CI/CD](../../cli-and-cicd.md); this page is the Code Command Center side of it.
 
 **Where:** Code Command Center → **Automation** (and the *Scheduled repository scans* panel under **New Scan**).
 
@@ -48,7 +48,7 @@ Pipelines authenticate with a **CI/CD API key** (`X-API-Key`). Create one under 
 | **Image admission policy** | For compiled images, `POST /api/container-security/cicd/scan-and-validate` returns `allowed` and an `exit_code` ([container gate](../containers/governance.md#gate-a-pipeline)). |
 | **Release-gate policy** | Team-wide thresholds and history under `/api/ci/gate` — see [Configure a release-gate policy](../../cli-and-cicd.md#configure-a-release-gate-policy). |
 
-Findings from pipeline scans land in the same **Findings** and **Reports** tabs as manual scans, so a developer sees the exact finding that failed the job with its code context — and triage decisions (false positive, accepted risk) apply to the next build too.
+Findings from pipeline scans land in the same **Findings** and **Reports** tabs as manual scans, so a developer sees the exact finding that failed the job with its code context — and triage decisions (false positive, accepted risk) apply to the next build too. Every gate is decided from **the scan's own findings**; a pull-request check, a pipeline job and the release-gate policy all read the same result.
 
 :::tip[Two speeds]
 Run **SAST + Secrets** on every pull request (fast, blocks obvious mistakes) and the **Full Code Security** scan on merge to main and nightly. Dependency findings rarely need to block a feature PR, but they should block a release.
@@ -56,6 +56,7 @@ Run **SAST + Secrets** on every pull request (fast, blocks obvious mistakes) and
 
 ## Related
 
+- [Pull Request Review](./pull-request-review.md) — reviews on GitHub, GitLab and Bitbucket pull/merge requests.
 - [CLI & CI/CD](../../cli-and-cicd.md) — REST trigger/poll/results, the GitHub Action, SARIF, badges, PR comments, the GitHub App.
 - [Infra Command Center](../infra-command-center.md) — the GitHub Actions and Jenkins setup guides with `scan.sh`.
 - [Scan Management & Scheduling](../scan-management.md) — schedules for every scan type in one place.
