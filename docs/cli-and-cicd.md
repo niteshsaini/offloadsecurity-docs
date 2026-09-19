@@ -330,6 +330,8 @@ The [GitHub Action](#3-the-github-action) is the simplest option and works in an
 
 Because the App creates a GitHub **check** on each pull request, you can mark that check as a **required status** so a failing scan blocks the merge. The check is pinned to the pull request's **head commit**, scans only the changed files, separates **new** findings from pre-existing ones, and passes or fails on the scan's own results. Configure per-repository auto-scan and check behavior from the platform's integration settings. GitLab and Bitbucket get the same review through a webhook — see [Pull Request Review](./security-scanning/code/pull-request-review.md).
 
+The App's PR scans are **scoped to the changed files and diffed against the base branch**, so the check fails on what the PR introduced, not on pre-existing findings. Setup, per-repository options, the GitLab/Bitbucket merge-request webhooks and troubleshooting are in **[Pull Request Scanning](./security-scanning/code/pull-request-scanning.md)**.
+
 ---
 
 ## After the scan

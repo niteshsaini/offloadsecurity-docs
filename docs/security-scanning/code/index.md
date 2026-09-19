@@ -67,6 +67,7 @@ Pull and merge requests get a review of their own: only the changed files, new f
 ## Related
 
 - [Pull Request Review](./pull-request-review.md) · [Secret Detection](./secret-detection.md) · [Custom Rules](./custom-rules.md) · [Fix with Agent](./agentic-fixes.md) — the deeper pages of this section.
+- [Pull Request Scanning](./pull-request-scanning.md) — every PR/MR scanned on its changed files, diffed against the base branch.
 - [CLI & CI/CD](../../cli-and-cicd.md) — the `scan.sh` script, the CLI and release gates.
 - [Container Security](../containers/index.md) — the images your code becomes.
 - [Vulnerability Management](../../vulnerability-risk/vulnerability-management/index.mdx) — code findings in the unified view with SLAs.
