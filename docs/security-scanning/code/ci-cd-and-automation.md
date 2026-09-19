@@ -1,7 +1,7 @@
 ---
 title: "CI/CD & Automation"
 sidebar_label: "CI/CD & Automation"
-sidebar_position: 5
+sidebar_position: 6
 description: "Put code and image scans on a schedule, generate a ready-to-commit pipeline for GitHub Actions, GitLab CI, Bitbucket, Azure DevOps or Jenkins, and gate releases on findings and policy."
 ---
 
@@ -57,6 +57,7 @@ Run **SAST + Secrets** on every pull request (fast, blocks obvious mistakes) and
 ## Related
 
 - [Pull Request Review](./pull-request-review.md) — reviews on GitHub, GitLab and Bitbucket pull/merge requests.
+- [Pull Request Scanning](./pull-request-scanning.md) — changed-files scans on every PR/MR with inline annotations and a required check.
 - [CLI & CI/CD](../../cli-and-cicd.md) — REST trigger/poll/results, the GitHub Action, SARIF, badges, PR comments, the GitHub App.
 - [Infra Command Center](../infra-command-center.md) — the GitHub Actions and Jenkins setup guides with `scan.sh`.
 - [Scan Management & Scheduling](../scan-management.md) — schedules for every scan type in one place.
