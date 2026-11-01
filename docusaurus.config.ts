@@ -133,38 +133,30 @@ const config: Config = {
     },
     navbar: {
       title: 'Offload Security',
+      // Kept short: Docs · API · Release notes on the left; version,
+      // platform and contact on the right. Glossary, FAQ, CLI and
+      // troubleshooting live in the sidebar (Resources) and the footer.
       items: [
         {
           type: 'docSidebar',
           sidebarId: 'docsSidebar',
           position: 'left',
-          label: 'Documentation',
+          label: 'Docs',
         },
         {
-          type: 'dropdown',
-          label: 'Reference',
+          to: '/api-reference',
+          label: 'API',
           position: 'left',
-          items: [
-            {to: '/api-reference', label: 'API Reference'},
-            {to: '/cli-and-cicd', label: 'CLI & CI/CD'},
-            {to: '/release-notes', label: 'Release Notes'},
-            {to: '/glossary', label: 'Glossary'},
-            {to: '/faq', label: 'FAQ'},
-            {to: '/troubleshooting', label: 'Troubleshooting'},
-          ],
+          activeBaseRegex: '^/api-(reference|automation)',
         },
         {
-          to: '/getting-started',
-          label: 'Get Started',
+          to: '/release-notes',
+          label: 'Release notes',
           position: 'left',
         },
         {
           type: 'docsVersionDropdown',
           position: 'right',
-          dropdownItemsAfter: [
-            {type: 'html', value: '<hr class="dropdown-separator">'},
-            {to: '/release-notes', label: 'Release notes'},
-          ],
           dropdownActiveClassDisabled: true,
         },
         {
