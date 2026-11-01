@@ -7,27 +7,61 @@ description: "Offload Security is a unified CNAPP, vulnerability management and 
 ---
 
 import DocFaq from '@site/src/components/DocFaq';
+import CardGrid, {Card, Path} from '@site/src/components/CardGrid';
+import SearchPrompt from '@site/src/components/SearchPrompt';
 
 # Offload Security
 
-**Offload Security is a unified CNAPP, vulnerability management and compliance platform that consolidates findings across cloud, code, containers, Kubernetes, applications, on-premises infrastructure and Wazuh-monitored endpoints into one governed risk view.** It brings cloud security, vulnerability management, container and Kubernetes security, code and supply-chain security, compliance and risk (GRC), threat intelligence, and AI-driven security operations together in a single, multi-tenant platform — so your team works from one source of truth instead of a dozen disconnected tools.
+**Offload Security is a unified CNAPP, vulnerability management and compliance platform that consolidates findings across cloud, code, containers, Kubernetes, applications, on-premises infrastructure and Wazuh-monitored endpoints into one governed risk view.** These docs help you onboard, configure and operate it, as SaaS or fully on-premises.
 
-This documentation helps you **onboard, configure, and operate** the platform end to end — whether you're connecting your first cloud account or rolling it out across a security organization.
+<SearchPrompt />
 
-:::tip[New here?]
-- **Understand the "why"** → **[Introduction](./introduction/index.md)**: what Offload Security is, the problem it solves, and why to choose it over fragmented tools.
-- **Cover your private infrastructure** → **[On-Premises & Private Infrastructure](./on-premises/index.mdx)**: internal-network visibility, OpenVAS scanning, and the Wazuh integration.
-- **See it for your sector** → **[Solutions by Industry](./industries/index.md)**, including a detailed **[Banking & Financial Services](./industries/banking-financial-services.md)** breakdown.
-- **Just get running** → jump straight to **[Quickstart](./getting-started.md)**.
-:::
+<CardGrid>
+  <Card title="Get started" to="/getting-started">Sign in, connect a cloud account and review your first finding in about 30 minutes.</Card>
+  <Card title="Security modules" to="/introduction/platform-at-a-glance">Cloud, scanning, code, containers, Kubernetes, vulnerabilities and threat intelligence: what each module does.</Card>
+  <Card title="Integrations" to="/integrations">Slack, Teams, email, PagerDuty, Jira, Wazuh, OpenVAS, SIEM forwarding and webhooks.</Card>
+  <Card title="API & automation" to="/api-automation">API keys, the REST API, CI/CD release gates and automation recipes.</Card>
+  <Card title="Compliance & GRC" to="/compliance">Frameworks on one SCF control library, evidence, assessments and audit reports.</Card>
+  <Card title="Troubleshooting" to="/troubleshooting">Symptom, likely cause and fix for scans, cloud connections, containers and CI/CD.</Card>
+</CardGrid>
 
----
+## Choose your path
+
+<CardGrid>
+  <Path
+    title="New customer"
+    audience="From first sign-in to an operating security program."
+    steps={[
+      {label: 'Quickstart (30 minutes)', to: '/getting-started'},
+      {label: 'First 7 days', to: '/adoption/first-7-days'},
+      {label: 'Connecting cloud accounts', to: '/cloud-security/connecting-accounts'},
+    ]}
+  />
+  <Path
+    title="Administrator or security engineer"
+    audience="Run, harden and automate the platform."
+    steps={[
+      {label: 'Security engineer journey', to: '/adoption/security-engineer-journey'},
+      {label: 'Recommended production configuration', to: '/adoption/production-configuration'},
+      {label: 'On-premises deployment & operations', to: '/on-premises/deployment'},
+    ]}
+  />
+  <Path
+    title="Evaluator"
+    audience="Decide whether Offload Security fits your organization."
+    steps={[
+      {label: 'What is Offload Security', to: '/introduction'},
+      {label: 'Trust & security', to: '/trust-and-security'},
+      {label: 'Solutions by industry', to: '/industries'},
+    ]}
+  />
+</CardGrid>
 
 ## What you can do with it
 
 Offload Security is organized into five areas that map directly to the product's left-hand navigation. Each line links to the section of these docs that covers it.
 
-### 🛡️ Core Security
+### Core Security
 Run and review security testing from one place.
 - **Dashboard** — security posture, metrics and top risks at a glance; the **Executive Dashboard** tab for leadership — [Reports & AI](./reports-and-ai/index.md).
 - **Scanning** — web (OWASP ZAP, Nuclei), network (nmap), SSL/TLS (testssl.sh), security headers, API security testing and domain reconnaissance — [App & Infrastructure Scanning](./security-scanning/index.md).
@@ -36,7 +70,7 @@ Run and review security testing from one place.
 - **Security Command Center** — agents that triage, prepare fixes and answer posture questions, with an approval-gated Auto-Fix Engine — [Security Command Center](./ai-threat-intelligence/ai-soc-agents.md).
 - **Alerts** — the unified alert stream from every module, with routing to Slack, Teams, email and PagerDuty — [Alerts](./vulnerability-risk/alerts.md).
 
-### ☁️ Cloud & Infrastructure
+### Cloud & Infrastructure
 Continuously assess everything you run in the cloud.
 - **Cloud Security (CSPM)** — AWS, Azure and GCP misconfiguration scanning, identity and network analysis, real-time cloud events, remediation queue — [Cloud Security](./cloud-security/index.md).
 - **Container Security** — registry discovery and image scanning (ECR, GCR / Artifact Registry, ACR, Docker Hub, private registries) with SBOMs and image policies — [Container Security](./security-scanning/containers/index.md).
@@ -44,20 +78,20 @@ Continuously assess everything you run in the cloud.
 - **Asset Inventory** — a live catalog of cloud resources, clusters, repositories and Wazuh endpoints across accounts and regions — [Asset Inventory](./cloud-security/asset-inventory.md).
 - **Attack Path Analysis** — graph-based discovery of exploitable paths to high-value assets — [Attack Paths](./cloud-security/attack-paths.md).
 
-### 📋 Compliance & Risk
+### Compliance & Risk
 Turn findings into audit-ready governance.
 - **Compliance Posture** — frameworks (SOC 2, ISO 27001, PCI DSS, NIST CSF, SEBI CSCRF, DPDP and more) on one SCF control library, with continuous scoring, evidence and drift detection — [Compliance & GRC](./compliance/index.md).
 - **Risk Management** — a risk register with treatment plans, controls, appetite and KRIs, promoted from findings or imported — [Risk Management](./vulnerability-risk/risk-management/index.md).
 - **Assessments** — guided, scored questionnaires (OWASP ASVS, NIST CSF 2.0, NIST SSDF, SOC 2, SAMM, ISO 27001 and others) with SCF-based auto-fill — [Assessments](./compliance/interactive-assessments.md).
 - **Audit Reports** & **DPDP Compliance** — controls, findings, drift and remediation exports for auditors; India's DPDP Act module with DPIAs, breach workflow and audit pack — [Audit Reports](./compliance/audit-reports.md) · [DPDP](./compliance/dpdp-privacy.md).
 
-### 🧠 Threat & Intelligence
+### Threat & Intelligence
 Add context and automation to detection.
 - **Threat Intelligence** — nine curated feeds (CISA KEV, URLhaus, OTX, Feodo Tracker, PhishTank and more) fetched hourly, IOC correlation against your assets, KEV-weighted CVE prioritisation, ATT&CK coverage — [Threat Intelligence](./ai-threat-intelligence/threat-intelligence.md).
 - **AI Governance** — a registry of your AI systems with risk assessments, incidents, discovery in your cloud and code (AIBOM), prompt-injection tests and an ISO 42001 posture — [AI Governance](./ai-threat-intelligence/ai-governance.md).
 - **Knowledge Base** — your policies as a searchable library that answers questions and fills security questionnaires — [Knowledge Base](./ai-threat-intelligence/knowledge-base.md).
 
-### ⚙️ Management
+### Management
 Configure, integrate, and administer.
 - **Account Setup** ([Connecting Cloud Accounts](./cloud-security/connecting-accounts.md)), **Integrations** (Slack, Teams, email, PagerDuty, Jira, Wazuh, webhooks — [Integrations](./integrations/index.md)), **Unified Scheduler**, and, from the account menu, **Team Management**, **API Keys** and **MFA** ([Platform Security](./authentication/index.md)). Pipelines use the CLI and GitHub Action — [CLI & CI/CD](./cli-and-cicd.md).
 
@@ -74,13 +108,6 @@ Configure, integrate, and administer.
 | **Platform operators (self-hosting)** | [On-Premises](./on-premises/index.mdx), [Platform Administration](./authentication/platform-administration.md), [Production configuration](./adoption/production-configuration.md) |
 
 ---
-
-## Start here
-
-1. **[Quickstart](./getting-started.md)** — sign in, connect your first cloud account, and reach your first reviewed finding in about 30 minutes.
-2. **[First 7 Days](./adoption/first-7-days.md)** — a day-by-day plan that turns the first scan into an operating program: baseline, prioritization, SLAs, compliance, shift-left, and executive reporting.
-3. **Follow your role** — the [Security Engineer](./adoption/security-engineer-journey.md) or [Compliance Officer](./adoption/compliance-officer-journey.md) journey walks the docs in the order that persona needs them.
-4. **Harden it** — check your setup against the [Recommended Production Configuration](./adoption/production-configuration.md), and wire scans into your pipeline with [CLI & CI/CD integration](./cli-and-cicd.md).
 
 :::note[A note on accuracy]
 This documentation describes capabilities that exist in the platform today. Where a feature requires specific configuration, prerequisites, or permissions, those are called out explicitly so you can plan accordingly.

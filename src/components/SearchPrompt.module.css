@@ -1,0 +1,41 @@
+.prompt {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  margin: 1.25rem 0 1.75rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 10px;
+  background: var(--ifm-background-surface-color);
+  color: var(--ifm-color-emphasis-700);
+  font: inherit;
+  font-size: 1rem;
+  text-align: left;
+  cursor: text;
+}
+
+.prompt:hover,
+.prompt:focus-visible {
+  border-color: var(--ifm-color-primary);
+}
+
+.icon {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.text {
+  flex: 1;
+}
+
+.kbd {
+  font-size: 0.8rem;
+}
+
+/* No keyboard shortcut on touch-size screens. */
+@media (max-width: 996px) {
+  .kbd {
+    display: none;
+  }
+}
