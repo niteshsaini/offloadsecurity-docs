@@ -1,5 +1,6 @@
 ---
 title: "Platform at a Glance"
+description: "A map of the Offload Security modules: what each one does, how they share one correlated data model, and where to read more."
 sidebar_label: "Platform at a Glance"
 sidebar_position: 4
 ---

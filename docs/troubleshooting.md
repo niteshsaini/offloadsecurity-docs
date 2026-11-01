@@ -1,5 +1,6 @@
 ---
 title: "Troubleshooting & FAQ"
+description: "Fix the most common Offload Security problems, framed as symptom, likely cause and fix: scans with no findings or stuck runs, cloud connection failures, container pulls and CI/CD 401/403 errors."
 sidebar_label: "Troubleshooting"
 sidebar_position: 11
 ---

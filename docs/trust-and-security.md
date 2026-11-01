@@ -1,5 +1,6 @@
 ---
 title: "Trust & Security"
+description: "How Offload Security protects the platform itself: tenant isolation, credential and secret handling, API security, AI data handling, data residency, retention and responsible disclosure."
 sidebar_label: "Trust & Security"
 sidebar_position: 12
 ---

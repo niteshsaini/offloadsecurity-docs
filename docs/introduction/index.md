@@ -1,5 +1,6 @@
 ---
 title: "What is Offload Security"
+description: "What Offload Security is: one platform to see, measure and act on security posture across cloud, on-premises, applications, code, containers and compliance, and what makes it different."
 sidebar_label: "What is Offload Security"
 sidebar_position: 0
 ---

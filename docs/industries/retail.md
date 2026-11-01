@@ -1,5 +1,6 @@
 ---
 title: "Retail & E-commerce"
+description: "How Offload Security supports retail and e-commerce: payment-card compliance, internet-facing storefronts, and store networks and point-of-sale endpoints."
 sidebar_label: "Retail & E-commerce"
 sidebar_position: 6
 ---

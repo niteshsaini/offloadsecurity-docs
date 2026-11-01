@@ -1,5 +1,6 @@
 ---
 title: "Platform Architecture"
+description: "How Offload Security is put together: its components, how a scan executes end to end, where data lives, and how SaaS and on-premises deployments differ."
 sidebar_label: "Architecture"
 sidebar_position: 11
 ---

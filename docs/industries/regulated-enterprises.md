@@ -1,5 +1,6 @@
 ---
 title: "Regulated Enterprises"
+description: "How Offload Security supports telecoms, energy, insurers and public-sector bodies: hybrid estates, overlapping regulators, and continuous evidence for multiple frameworks."
 sidebar_label: "Regulated Enterprises"
 sidebar_position: 7
 ---

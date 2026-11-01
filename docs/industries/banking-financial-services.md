@@ -1,5 +1,6 @@
 ---
 title: "Banking & Financial Services"
+description: "How Offload Security supports banks, NBFCs, insurers and financial institutions: governance-grade evidence, multiple regulators, and cloud plus private infrastructure that stays on-premises."
 sidebar_label: "Banking & Financial Services"
 sidebar_position: 1
 ---

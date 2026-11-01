@@ -1,5 +1,6 @@
 ---
 title: "Automation Use Cases"
+description: "Common automation workflows with the Offload Security API: gate a release on a scan, pull findings into other systems, react to webhooks, provision cloud accounts and schedule report exports."
 sidebar_label: "Automation Use Cases"
 sidebar_position: 1
 ---

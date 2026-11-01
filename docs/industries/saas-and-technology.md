@@ -1,5 +1,6 @@
 ---
 title: "SaaS & Technology"
+description: "How Offload Security supports cloud-first SaaS and technology teams: multi-cloud posture, security in the CI/CD pipeline, and evidence for customer audits."
 sidebar_label: "SaaS & Technology"
 sidebar_position: 3
 ---

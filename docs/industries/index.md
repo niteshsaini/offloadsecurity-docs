@@ -1,5 +1,6 @@
 ---
 title: "Solutions by Industry"
+description: "How the Offload Security platform maps to the priorities of each sector: banking, fintech, SaaS, healthcare, manufacturing, retail and regulated enterprises."
 sidebar_label: "Overview"
 sidebar_position: 0
 ---

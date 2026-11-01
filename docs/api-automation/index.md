@@ -1,5 +1,6 @@
 ---
 title: "API & Automation"
+description: "How the Offload Security REST API works: authentication with API keys, the API reference, and what you can automate, from scans in CI to exports into a SIEM, ticketing or BI tool."
 sidebar_label: "Overview"
 sidebar_position: 0
 ---

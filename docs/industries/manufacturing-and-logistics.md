@@ -1,5 +1,6 @@
 ---
 title: "Manufacturing & Logistics"
+description: "How Offload Security covers distributed plants, warehouses and sites: internal networks, OT/ICS and IoT alongside IT, where external scanners cannot reach."
 sidebar_label: "Manufacturing & Logistics"
 sidebar_position: 5
 ---

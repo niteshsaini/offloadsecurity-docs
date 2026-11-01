@@ -1,5 +1,6 @@
 ---
 title: "Wazuh + OpenVAS: Complete On-Premises Coverage"
+description: "Run Wazuh and OpenVAS together with Offload Security for complete on-premises coverage: endpoint telemetry and network vulnerability scanning, correlated in one place."
 sidebar_label: "Wazuh + OpenVAS"
 sidebar_position: 8
 ---
