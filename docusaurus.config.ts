@@ -2,6 +2,13 @@ import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
+// The platform release these docs describe. The working copy in `docs/` is
+// always the CURRENT release and is served at the site root, so existing
+// URLs never move. When the next release is cut, snapshot this one first
+// (`npm run docusaurus docs:version <this value>` — it then lives under
+// /<version>/) and bump this constant. See VERSIONING.md.
+const CURRENT_RELEASE = '1.4.0';
+
 const config: Config = {
   title: 'Offload Security Docs',
   // Canonical entity positioning — kept consistent with the marketing site's
@@ -23,6 +30,9 @@ const config: Config = {
   },
 
   url: 'https://docs.offloadsecurity.com',
+  customFields: {
+    currentRelease: CURRENT_RELEASE,
+  },
   baseUrl: '/',
 
   organizationName: 'niteshsaini',
@@ -47,6 +57,18 @@ const config: Config = {
           // history at build time). Helps API users and self-hosters judge
           // freshness. Author is omitted — the date is the useful signal.
           showLastUpdateTime: true,
+          // Versioned docs, Wazuh-style: a version selector in the navbar,
+          // the current release at the root, older releases under /<version>/
+          // with an "unmaintained version" banner.
+          lastVersion: 'current',
+          versions: {
+            current: {
+              label: `${CURRENT_RELEASE} (current)`,
+              path: '',
+              badge: true,
+              banner: 'none',
+            },
+          },
         },
         blog: false,
         theme: {
@@ -106,6 +128,7 @@ const config: Config = {
           items: [
             {to: '/api-reference', label: 'API Reference'},
             {to: '/cli-and-cicd', label: 'CLI & CI/CD'},
+            {to: '/release-notes', label: 'Release Notes'},
             {to: '/glossary', label: 'Glossary'},
             {to: '/faq', label: 'FAQ'},
             {to: '/troubleshooting', label: 'Troubleshooting'},
@@ -115,6 +138,15 @@ const config: Config = {
           to: '/getting-started',
           label: 'Get Started',
           position: 'left',
+        },
+        {
+          type: 'docsVersionDropdown',
+          position: 'right',
+          dropdownItemsAfter: [
+            {type: 'html', value: '<hr class="dropdown-separator">'},
+            {to: '/release-notes', label: 'Release notes'},
+          ],
+          dropdownActiveClassDisabled: true,
         },
         {
           href: 'https://offloadsecurity.com/platform',
@@ -175,6 +207,10 @@ const config: Config = {
             {
               label: 'CLI & CI/CD',
               to: '/cli-and-cicd',
+            },
+            {
+              label: 'Release Notes',
+              to: '/release-notes',
             },
             {
               label: 'Glossary',

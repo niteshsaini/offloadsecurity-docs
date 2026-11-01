@@ -54,7 +54,8 @@ The **Platform Setup** wizard walks through *Service Connectivity* (MongoDB, Red
 
 | Variable | Purpose |
 | --- | --- |
-| `GHCR_OWNER` · `IMAGE_TAG` | Which images to pull; `IMAGE_TAG` pins the release (`latest` by default) |
+| `GHCR_OWNER` · `IMAGE_TAG` | Which images to pull. Both are **required** — `IMAGE_TAG` is the release you run (e.g. `1.4.0`); there is no `latest` default, so an install never drifts onto an unreleased build |
+| `DOCKER_GID` | The host's docker group ID (`stat -c '%g' /var/run/docker.sock`), so the restricted Docker socket proxy the scan workers use can open the socket. Defaults to 996, which is wrong on many hosts |
 | `REDIS_PASSWORD` · `SECRET_KEY` | Required |
 | `DEFAULT_ADMIN_PASSWORD` | First-boot administrator password |
 | `PUBLIC_APP_URL` · `DOMAIN_NAME` | The URL users (and SSO redirects, emails) use; setting `DOMAIN_NAME` switches Nginx to HTTPS with Let's Encrypt |
@@ -73,10 +74,10 @@ Set `DOMAIN_NAME` (and `PUBLIC_APP_URL=https://…`) and the front end serves 44
 
 ## Upgrades
 
-Releases are image tags. To move:
+Releases are image tags (`1.4.0`, …). Read the [release notes](../release-notes/index.md) for the target version first — its **Upgrade notes** list any `.env` changes and new services — and use the documentation for that version (version selector, top right). To move:
 
 ```bash
-# in .env: IMAGE_TAG=<new tag>
+# in .env: IMAGE_TAG=<new version>, e.g. IMAGE_TAG=1.4.0
 docker compose -f docker-compose.client.yml pull
 docker compose -f docker-compose.client.yml up -d
 ```
@@ -86,6 +87,8 @@ Take a backup first. Expect users to sign in again after the restart; scans that
 ## Backups
 
 MongoDB is the system of record; evidence and report files live in the configured object storage (or the `data/` volumes when local).
+
+From 1.4.0 a `backup` service backs up MongoDB and the file volumes on a schedule (`BACKUP_INTERVAL_HOURS`, default 24; `BACKUP_RETENTION_DAYS`, default 14), optionally to S3-compatible storage (`BACKUP_S3_*`). Backups are encrypted to the [age](https://age-encryption.org) public key in `BACKUP_AGE_RECIPIENT` — generate the key pair off the server and keep the private key safe. With no recipient set the service refuses to back up rather than writing plaintext, unless you opt in with `BACKUP_ALLOW_UNENCRYPTED=true`. The manual scripts below still work for an on-demand dump or a restore.
 
 ```bash
 docker compose -f docker-compose.client.yml exec -T mongo /usr/local/bin/backup.sh
