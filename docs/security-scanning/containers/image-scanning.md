@@ -13,6 +13,10 @@ Three ways to scan: **Quick Scan** for any image reference the platform can pull
 
 **Where:** Container Security → **Quick Scan**.
 
+:::warning[Known issue in 1.4.0: Quick Scan fails on on-premises installs]
+Quick Scan runs its scanners inside the API service, which has no Docker access in the on-premises deployment, so every Quick Scan ends **failed** with *Cannot connect to the Docker daemon*. Scan an image by reference on the scan workers instead: `POST /api/container-registries/scan-image` with `{ "image_uri": "nginx:1.27" }`. The results appear under **Scan Results** like any other image scan.
+:::
+
 ![Quick Scan tab: SBOM / vulnerability detection / real-time integration cards, container image name field and scan type selector](/img/screenshots/security-scanning/ctr-quick-scan.webp)
 
 1. Enter the **image reference** — `nginx:1.27`, `ghcr.io/org/app:2.4.0`, or a full registry path such as `<account>.dkr.ecr.<region>.amazonaws.com/app:1.4`. Public images work without setup. Private ECR, Artifact Registry and ACR images use a connected cloud account; images in other private registries cannot be pulled.
