@@ -11,7 +11,7 @@ Offload Security is the system of record for posture, findings, risk and complia
 
 **Where:** left navigation → *Management* → **Integrations**.
 
-![Integrations hub: available integrations, connected tools, open-source and category counts; the eight integration categories; search](/img/screenshots/integrations/integrations-hub.webp)
+![Integrations page: available integrations, connected tools, open-source and category counts above the Data collection health panel (lost, stale, degraded, not yet collected, healthy) and the Webhooks panel](/img/screenshots/integrations/integrations-hub.webp)
 
 ## What an integration does
 
@@ -29,7 +29,7 @@ Scanners in the *connection test only* group that the platform already **runs na
 
 Planned tools are hidden by default; the note above the cards counts them and **Show planned** lists them.
 
-![Catalog cards with capability badges: OWASP ZAP and Nuclei "connection test only", Wazuh "pulls data in", PentestGPT "catalog only · Planned"](/img/screenshots/integrations/integrations-catalog.webp)
+![Security Testing catalog with planned tools shown: OWASP ZAP, Burp Suite and Nuclei "connection test only", PentestGPT "catalog only" and "Planned", Wazuh and Greenbone OpenVAS "pulls data in"](/img/screenshots/integrations/integrations-catalog.webp)
 
 ## Categories
 

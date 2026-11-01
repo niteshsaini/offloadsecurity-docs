@@ -13,7 +13,7 @@ AI in Offload Security has one job: help a human read, explain and act on securi
 
 **Where:** the **AI Security Assistant** button at the bottom-right of every page.
 
-![AI Security Assistant panel: "How can I help you today?", suggested questions under Security Posture (current security posture, most critical vulnerabilities) and Compliance (SOC 2 requirements, NIST CSF gaps), a message box](/img/screenshots/reports-and-ai/ai-assistant-widget.webp)
+![AI Security Assistant panel open over Compliance Posture: "How can I help you today?", suggested questions under Security Posture (current security posture, most critical vulnerabilities) and Compliance (SOC 2 requirements), a message box](/img/screenshots/reports-and-ai/ai-assistant-widget.webp)
 
 Open it and ask in plain language — *what are my most critical vulnerabilities*, *am I compliant with SOC 2 requirements*, *what are my NIST CSF gaps*. The panel offers **suggested questions** for the page you are on, keeps a **conversation** so follow-ups work ("and which of those are internet-exposed?"), and shows which provider and model answered. Conversations are per user and can be cleared.
 
@@ -51,7 +51,7 @@ With no provider configured, the assistant and the helpers explain that AI is un
 
 **Where:** left navigation → **Knowledge Base** → *AI Assistant* tab → **AI Configuration**.
 
-![AI Configuration: Anthropic Claude, OpenAI Direct and Google Gemini cards, each with Add Key; quick-start templates below](/img/screenshots/reports-and-ai/ai-configuration.webp)
+![Knowledge Base, AI Assistant tab — AI Configuration: Anthropic Claude, OpenAI Direct and Google Gemini cards, each Not configured with Add Key; quick-start templates below](/img/screenshots/reports-and-ai/ai-configuration.webp)
 
 | Provider | Default model | Fast model |
 | --- | --- | --- |

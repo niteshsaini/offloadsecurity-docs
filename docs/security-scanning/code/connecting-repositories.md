@@ -11,7 +11,7 @@ The Code Command Center reads repositories through your Git provider's API with 
 
 **Where:** Code Command Center → **Automation** → **Git Connections**.
 
-![Automation tab, Git Connections: GitHub, Bitbucket and GitLab cards with Connect buttons](/img/screenshots/security-scanning/code-automation.webp)
+![Automation tab, Git Connections: GitHub, Bitbucket and GitLab cards, each Not Connected with a Connect button, alongside the PR Review, GitHub App and CI/CD Pipeline sub-tabs](/img/screenshots/security-scanning/code-automation.webp)
 
 ## Supported providers and tokens
 

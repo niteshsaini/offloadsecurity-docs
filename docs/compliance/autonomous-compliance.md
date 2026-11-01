@@ -11,7 +11,7 @@ The **Compliance Engine** tab is the operations view behind the posture: when th
 
 **Where:** left navigation → **Compliance Posture** → *Compliance Engine* tab.
 
-![Autonomous Compliance Engine overview: 1,003 controls, 10 frameworks, total syncs, 10 active breaches; sync status, evidence collection and active breaches panels; score changes since last check and recent sync operations](/img/screenshots/compliance/compliance-engine.webp)
+![Autonomous Compliance Engine overview: 1,046 controls, 11 frameworks, 4 engine evidence items, 6 total syncs, 11 active breaches; sub-tabs; sync status, evidence collection and active breaches panels](/img/screenshots/compliance/compliance-engine.webp)
 
 The tiles across the top are **Total Controls**, **Frameworks**, **Engine Evidence Items** (a count of items the engine collected, not of controls with evidence), **Total Syncs** and **Active Breaches**. The sub-tabs are *Overview*, *Compliance Trends*, *Breaches*, *Timeline*, *Manual Overrides*, *Evidence Expiry*, *Control Testing*, *Exceptions*, *Engine Exports*, *Remediation* and *Thresholds*.
 
@@ -35,29 +35,29 @@ See [How control status is decided](./control-status.md) for the full rules.
 
 ## Thresholds and breaches
 
-![Compliance Thresholds: current default threshold 70%, set a per-framework or global threshold, custom framework thresholds list](/img/screenshots/compliance/compliance-engine-thresholds.webp)
+![Compliance Thresholds: current default threshold 70%, set a global or per-framework threshold, custom framework thresholds list (ISO 27001:2022 and ISO 27002:2022 at 97%)](/img/screenshots/compliance/compliance-engine-thresholds.webp)
 
 A **threshold** is the implementation score a framework must hold. The default is **70%** for every active framework; set a stricter one per framework (ISO 27001 at 90 before the certification audit, PCI DSS at 85). The framework list on the *Thresholds* tab is built from your team's active frameworks. Setting thresholds requires the **admin** role.
 
 After every refresh the engine compares each active framework's implementation score (the same score as the Posture page) with its threshold and records a **breach** when it is below, with the gap in points and the **minimum number of controls** that would have to become implemented to close it. If no combination of in-scope controls can reach the threshold, the breach says so.
 
-![Framework Threshold Breaches: soc2, cis_v8, iso_27002, nist_800_53_r5, nist_csf_2 … each with current score, threshold and gap](/img/screenshots/compliance/compliance-engine-breaches.webp)
+![Framework Threshold Breaches: iso_27001, iso_27002, hipaa, nist_csf_2, soc2 … each with current score, threshold, points below threshold and the minimum number of controls that must move to implemented](/img/screenshots/compliance/compliance-engine-breaches.webp)
 
 Breaches surface on the overview (*Active Breaches*), on the *Breaches* sub-tab, as a **Threshold Crossed** drift, and through [alert policies](./drift-detection.md#alert-policies).
 
 ## Trends and timeline
 
-![Compliance Score Trends: score per framework over time with a time-range selector](/img/screenshots/compliance/compliance-engine-trends.webp)
+![Implementation Score Trends: score per active framework at each engine evaluation with the 70% threshold line and a 7 / 30 / 90 days / all time-range selector](/img/screenshots/compliance/compliance-engine-trends.webp)
 
 **Compliance Trends** plots each framework's implementation score across threshold checks (7 days, 30 days, 90 days or all). **Timeline** lists every check with per-framework score, delta and direction, and explains each move since the previous check by cause: status upgrades, status downgrades, evidence gained, evidence expired, newly assessed, or added to scope (a framework was activated). Sync rows show their trigger and per-cause counts, and the timeline notes any period with no scheduled sync for more than two cadences.
 
 When the scoring method changes between releases, the timeline marks the change point: checks scored with the previous method are labeled and not compared with current ones.
 
-![Compliance Check History timeline entries with framework scores and deltas](/img/screenshots/compliance/compliance-engine-timeline.webp)
+![Compliance Check History: each check with per-framework scores, breach count and the score moves since the previous check with their cause (status downgrades)](/img/screenshots/compliance/compliance-engine-timeline.webp)
 
 ## Manual overrides
 
-![Manual Control Overrides: lock a control by SCF ID with a reason; active overrides list with reason, locked time and an Unlock action](/img/screenshots/compliance/compliance-engine-overrides.webp)
+![Manual Control Overrides: lock a control by SCF ID with a reason; 14 active overrides (CRY-05, IAC-06, PRI-01, RSK-01, TPM-01 …) with reason, locked time and an Unlock action](/img/screenshots/compliance/compliance-engine-overrides.webp)
 
 This sub-tab lists every control the team has locked, whether from the [posture gap analysis](./compliance-dashboard.md#manual-overrides) or from the **Override a Control** form here, with the reason and when it was locked. **Unlock** removes the lock. Locking and unlocking require the **admin** role and are written to the compliance audit log.
 
@@ -72,7 +72,7 @@ Expired evidence stops supporting its controls and shows up as an *Evidence Expi
 
 ## Remediation playbooks
 
-![Remediation Playbooks (20): Block S3 Public Access, Enable S3 Default Encryption, Remove Open Security Group Ingress, Enable CloudTrail Logging, Disable RDS Public Accessibility, Enable EBS Default Encryption, Strengthen IAM Password Policy, Enable GuardDuty, Restrict GCP Firewall Rules, Restrict Azure NSG Rules …](/img/screenshots/compliance/compliance-engine-remediation.webp)
+![Remediation: action tiles (total, pending approval, approved, executed, rolled back) and Remediation Playbooks (20) with Process Active Findings: Block S3 Public Access, Enable S3 Default Encryption, Remove Open Security Group Ingress, Enable CloudTrail Logging, Disable RDS Public Accessibility, Enable EBS Default Encryption, Strengthen IAM Password Policy, Enable GuardDuty …](/img/screenshots/compliance/compliance-engine-remediation.webp)
 
 Twenty cloud-native fixes for the misconfigurations that most often drag a framework down: public S3, unencrypted storage, open security groups, missing CloudTrail or GuardDuty, public RDS, IMDSv1, unused access keys, and their GCP and Azure equivalents. Each playbook carries a **risk level** and **rollback parameters**.
 

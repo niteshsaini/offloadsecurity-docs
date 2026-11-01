@@ -17,7 +17,7 @@ Three ways to scan: **Quick Scan** for any image reference the platform can pull
 Quick Scan runs its scanners inside the API service, which has no Docker access in the on-premises deployment, so every Quick Scan ends **failed** with *Cannot connect to the Docker daemon*. Scan an image by reference on the scan workers instead: `POST /api/container-registries/scan-image` with `{ "image_uri": "nginx:1.27" }`. The results appear under **Scan Results** like any other image scan.
 :::
 
-![Quick Scan tab: SBOM / vulnerability detection / real-time integration cards, container image name field and scan type selector](/img/screenshots/security-scanning/ctr-quick-scan.webp)
+![Quick Scan tab: SBOM / vulnerability detection / real-time integration cards, the container image name field (nginx:1.27), the Vulnerabilities and Full Analysis scan types, and the Start Security Scan button](/img/screenshots/security-scanning/ctr-quick-scan.webp)
 
 1. Enter the **image reference** — `nginx:1.27`, `ghcr.io/org/app:2.4.0`, or a full registry path such as `<account>.dkr.ecr.<region>.amazonaws.com/app:1.4`. Public images work without setup. Private ECR, Artifact Registry and ACR images use a connected cloud account; images in other private registries cannot be pulled.
 2. Pick the **scan type**:
@@ -73,7 +73,7 @@ A reused result shows a blue banner naming the scan it came from and when. Secre
 
 **Where:** Container Security → **Scan Results** → **View Details**.
 
-![Scan Results tab listing nginx:1.25.3, python:3.9-slim, node:18-alpine and alpine:3.17 full-analysis scans with per-severity counts and View Details buttons](/img/screenshots/security-scanning/ctr-scan-results.webp)
+![Scan Results tab: 8 scans recorded with 241 critical issues, search, scan-type and severity filters, and scans of node:14-alpine, python:3.8-slim-buster, juice-shop and nginx:1.19.0 (some marked Partial) with per-severity counts and View Details buttons](/img/screenshots/security-scanning/ctr-scan-results.webp)
 
 ![Expanded scan detail for alpine:3.17: vulnerability summary by severity (26 total), risk score, JSON / CSV / SBOM export and AI Summary](/img/screenshots/security-scanning/ctr-scan-detail.webp)
 
@@ -109,7 +109,7 @@ Most of an application image's CVEs come from its base. Compare `python:3.9-slim
 
 Paste a Dockerfile and select **Scan Dockerfile** to get a graded result in seconds — before anything is built.
 
-![Dockerfile Security Scanner: a pasted Dockerfile, Grade F with 8 findings, and rule cards such as DS004 (secrets in ENV, critical) with the fix](/img/screenshots/security-scanning/ctr-dockerfile-scan.webp)
+![Dockerfile Security Scanner: a pasted example Dockerfile, scan results with Grade F and 16 findings, and the first rule card, DS004 (secrets in ENV, critical, line 3) with its fix](/img/screenshots/security-scanning/ctr-dockerfile-scan.webp)
 
 Two linters run on every Dockerfile: the platform's 14 native rules below, and **Hadolint** (2.15.1). The rule cards list the native findings; Hadolint's findings are added to the total and returned in full by the API (`POST /api/container-security/dockerfile/scan`, field `hadolint`).
 

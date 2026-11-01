@@ -11,7 +11,7 @@ description: "Triage SAST, dependency, secret and IaC findings across repositori
 
 **Where:** Code Command Center → **Findings**.
 
-![Findings tab for payments-api.zip: 134 open findings (2 critical, 15 high, 103 medium, 14 low), grouped by source with dependency CVEs (GHSA IDs, package versions) and Triage buttons](/img/screenshots/security-scanning/code-findings.webp)
+![Findings tab for juice-shop.zip: 1197 open findings (54 critical, 239 high, 709 medium, 90 low, 105 info), the Security / Hygiene & compliance lens, per-source need-action counts, top dependency upgrades, and filters by source, severity and rule grouping](/img/screenshots/security-scanning/code-findings.webp)
 
 The Findings tab is the cross-repository triage list. Pick a **repository** (or all), and the tiles show open findings by severity. Findings can be searched by title, file, CVE or package, and **AI Analysis** summarises the current view: what is exploitable, what is noise, where to start.
 
@@ -82,13 +82,13 @@ Dependency findings usually outnumber everything else and are the cheapest to fi
 
 **Where:** Code Command Center → **Reports**.
 
-![Reports tab: scan reports list with payments-api.zip (upload, completed) and Refresh / page-size controls](/img/screenshots/security-scanning/code-reports.webp)
+![Reports tab, Scan History: juice-shop.zip grouped by branch (upload) with two runs — a partial scan with 1,121 findings by severity and the note that one tool (cve_manifest) failed, and an earlier failed scan — plus search, Refresh and page-size controls](/img/screenshots/security-scanning/code-reports.webp)
 
 **Scan History** is grouped **repository → branch → run**, so a repository's whole history reads in one place and each run keeps its full report. Each run shows its type, status (**completed**, **completed with errors** when a tool failed, **failed**) and date. Search by repository, branch or application ([Repository ownership](./connecting-repositories.md#repository-ownership)). Tick runs — or a branch to select all of its runs — and **Delete selected** to prune.
 
 Open a run for the detail view:
 
-![Report detail: Security Findings (98) grouped by tool — Dependencies (SCA), Secrets, SAST — with severity, package/file, and per-finding AI Fix and Triage actions](/img/screenshots/security-scanning/code-report-detail.webp)
+![Report detail for the juice-shop.zip (upload) run: Back to Scan History and Export Report (PDF), severity tiles (1197 open: 54 critical, 239 high, 709 medium, 90 low, 105 info), new / existing / resolved since the last scan, and the findings summary by source](/img/screenshots/security-scanning/code-report-detail.webp)
 
 - **Security findings** for that scan — the same rows, grouping, drawer (code context, activity, fix PR) and triage as the Findings tab, so a decision made from a report is the same decision. Findings are marked **new** or **existing** against the previous scan of the same repository, including its SBOM, so a dependency CVE that was already there is not "new" on every scan.
 - **The linked SBOM** summary when the scan generated one.

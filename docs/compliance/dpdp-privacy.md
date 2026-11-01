@@ -16,7 +16,7 @@ The module is marked beta in the product. It does not include a personal-data in
 
 **Where:** left navigation → **DPDP Compliance**.
 
-![DPDP Compliance overview: readiness 36.4% (8 of 22 controls implemented), penalty exposure ₹650 Cr, 2 active breaches, SDF status Likely SDF; priority findings; DPIAs; vendor compliance; control status breakdown](/img/screenshots/compliance/dpdp-overview.webp)
+![DPDP Compliance overview: readiness 18.2% (4 of 22 controls implemented), 9 penalty provisions at risk with the highest ceiling ₹250 Cr, 2 active breaches, 0 overdue reports, 2 in reportability triage, SDF status SDF; controls the platform cannot assess](/img/screenshots/compliance/dpdp-overview.webp)
 
 ## Overview
 
@@ -37,7 +37,7 @@ Below the tiles:
 
 ## Controls
 
-![DPDP controls: rule, type, penalty, SCF mapping and status for each of the 22 rule-level controls](/img/screenshots/compliance/dpdp-controls.webp)
+![DPDP control catalog (22 controls): search, obligation-type and control filters; ID, title, rule, type, penalty (₹ Cr), SDF-only flag and enforcement date for each rule-level control](/img/screenshots/compliance/dpdp-controls.webp)
 
 The 22 DPDP controls are **rule-level requirements** — Rule 6 security safeguards (a)–(g), Rule 7 breach intimation and reporting, Rule 8 retention and erasure, DPO contact and grievance redressal, the Significant Data Fiduciary duties (DPO appointment, independent audits, DPIAs), Data Principal rights (access, correction, grievance) and cross-border transfer — each mapped to the SCF controls that implement it. Status is derived from those SCF controls with a deliberately conservative **worst-link rule**:
 
@@ -50,7 +50,7 @@ Enforcement is not fractional — nine of ten controls in place still means the 
 
 ## DPIA
 
-![Data Protection Impact Assessments: list with completeness and status (draft, in_review); New DPIA](/img/screenshots/compliance/dpdp-dpia.webp)
+![Data Protection Impact Assessments: Fraud scoring on card transactions (Payments API), 12% complete, draft; Customer KYC onboarding (Customer Portal), 100% complete, in review; New DPIA](/img/screenshots/compliance/dpdp-dpia.webp)
 
 A **DPIA** is required for high-risk processing (and for every processing activity of a Significant Data Fiduciary). Each DPIA covers one **processing activity** through eight sections — description, necessity and proportionality, legal basis (consent or Section 7 legitimate use), data flows and storage, risks to Data Principals with inherent severity, mitigations (technical / organisational / procedural), residual risk, and approval with a review cadence. Required questions drive the **completeness** percentage.
 
@@ -60,7 +60,7 @@ Workflow: **draft → in review** (Submit) **→ approved** (with a validity per
 
 ## SDF classification
 
-![Significant Data Fiduciary classification: current classification Likely SDF; volume tier, sector, data categories, cross-border, automated decision-making, children's data](/img/screenshots/compliance/dpdp-sdf.webp)
+![Significant Data Fiduciary classification: current classification Likely SDF (score 11, formula v1.0); auto-fill suggestions from platform data; volume tier, sector and data-category questions](/img/screenshots/compliance/dpdp-sdf.webp)
 
 The Act lets the Government designate **Significant Data Fiduciaries**, who carry extra duties (DPO in India, independent audits, mandatory DPIAs). The thresholds are not yet prescribed, so the module scores the factors the Act names — **volume tier** of Data Principals, **sector** (BFSI, healthcare, telecom, government, edtech, e-commerce, …), sensitive **data categories** (financial, health, biometric, children, government ID, …), **cross-border** processing, **automated decision-making** and **children's data at scale** — into a versioned score:
 
@@ -74,7 +74,7 @@ Every assessment is kept in the **history** with the formula version, so a later
 
 ## Vendor assessment
 
-![Vendor assessments (DPDP Section 8 / Rule 6): FaceSure Technologies — conditional pass, expires 2027; Assess Vendor](/img/screenshots/compliance/dpdp-vendors.webp)
+![Vendor assessments (DPDP Section 8 / Rule 6): FaceSure Technologies — conditional pass, CloudMail Relay — passing, both expiring 11/1/2027; Assess Vendor](/img/screenshots/compliance/dpdp-vendors.webp)
 
 A fiduciary remains responsible for its **processors**. The vendor questionnaire has **18 questions** across encryption, access control, logging, backups, incident handling, sub-processors, data location, erasure, audit rights and HR security; answer each **pass / partial / fail / not assessed** with notes.
 
@@ -89,7 +89,7 @@ Assessments carry a **validity** (365 days by default); the history per vendor s
 
 ## Breach management
 
-![Breach Incident Management (Rule 7): incident list with status, CERT-In and DPB report state, detected time and affected Data Principals; Report Incident](/img/screenshots/compliance/dpdp-breach.webp)
+![Breach Incident Management (Rule 7): two incidents with detection source, detected time, status (detected, declared), DPB 72 h and CERT-In 6 h clocks with reportability state; Report Incident](/img/screenshots/compliance/dpdp-breach.webp)
 
 Two clocks start when something goes wrong, and they start at different moments:
 
@@ -113,7 +113,7 @@ The **triage** views list incidents whose reportability decision is pending; the
 
 ## Audit & export
 
-![Audit & Export: retention policy, generate audit pack, recent audit events](/img/screenshots/compliance/dpdp-audit.webp)
+![Audit & Export: retention policy (730 days, residency india), generate an audit pack for a period with Verify integrity and Download PDF, and the recent DPDP audit events](/img/screenshots/compliance/dpdp-audit.webp)
 
 Every DPDP action (a DPIA approved, a vendor assessed, a breach declared, a report recorded) is written to the **DPDP audit event log**. An **audit pack** is an export, for a period you select, of those events plus the module's state at period end (readiness, SDF classification, DPIA and vendor summaries), persisted in full as an immutable record and downloadable as PDF.
 

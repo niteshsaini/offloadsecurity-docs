@@ -11,7 +11,7 @@ Leadership does not ask which SCF control is partial; it asks *are we ready for 
 
 **Where:** left navigation → **Dashboard** → *Executive Dashboard* tab.
 
-![Executive Compliance Dashboard — Compliance Overview: maturity 53%, ten framework cards (ISO 27001 83% moderate preparation 3–4 months, SOC 2 52.6% significant preparation 6–9 months, PCI DSS 44.9% extensive preparation 12+ months…), priority compliance gaps](/img/screenshots/reports-and-ai/exec-dashboard.webp)
+![Executive Compliance Dashboard — Compliance Overview: mean implementation score 57.2%, framework cards (ISO 27001:2022 94.2% minor gaps 1–2 months, HIPAA 60.7% and SOC 2 52.1% significant preparation 6–9 months, ISO 42001 48% extensive preparation 12+ months…) with implemented, partial and evidence-only control counts](/img/screenshots/reports-and-ai/exec-dashboard.webp)
 
 ## Compliance overview
 
@@ -29,17 +29,17 @@ Leadership does not ask which SCF control is partial; it asks *are we ready for 
 - **Priority compliance gaps** — SCF controls holding frameworks back, with control name, framework, domain, status and the number of open findings behind each. Priority is derived from state, not typed in: *not implemented* with open findings → **Critical**; *not implemented*, or *partial* with open findings → **High**; other *partial* → **Medium**.
 - **Certification readiness** for the certifiable frameworks you have active (ISO 27001, SOC 2, PCI DSS, HIPAA, ISO 27701, ISO 42001) with score, timeline and next steps; **compliance strengths** (frameworks at 85% or above); the **90-day trend** from the daily posture snapshots; **recommended actions**.
 
-![Priority compliance gaps and certification readiness cards](/img/screenshots/reports-and-ai/exec-dashboard-readiness.webp)
+![Priority compliance gap cards (control, SCF domain, open findings, status, owner, High priority) followed by Certification Readiness cards for ISO 27001, HIPAA, SOC 2 and PCI DSS with score, timeline and next steps](/img/screenshots/reports-and-ai/exec-dashboard-readiness.webp)
 
 ## Gap analysis
 
-![Comprehensive Gap Analysis: overall score 53%, 10 frameworks, 25 gaps, 10 critical; critical gap cards with control, framework, domain, open findings, owner, due date and status; remediation recommendations by horizon](/img/screenshots/reports-and-ai/exec-gap-analysis.webp)
+![Comprehensive Gap Analysis: implementation score 57.2%, 11 frameworks, 24 total gaps, a critical-gaps tile of 10; gap cards with framework, priority, control, SCF domain, open findings, assignment and control status](/img/screenshots/reports-and-ai/exec-gap-analysis.webp)
 
 **Generate Gap Analysis** turns the current gaps into a document: overall score, frameworks analysed, gaps by priority, the critical gaps in full, per-framework gap counts, recommendations grouped as *immediate (0–30 days)*, *short-term (1–3 months)* and *long-term (3–6 months)*, and a risk-impact assessment (financial, operational, reputational). Export it as PDF or email it to stakeholders from the buttons at the bottom.
 
 ## Remediation roadmap
 
-![Strategic Remediation Roadmap: duration 5 months, 25 gaps, 3 phases — Phase 1 Critical Remediation weeks 1–13 with objectives, deliverables and success criteria](/img/screenshots/reports-and-ai/exec-roadmap.webp)
+![Strategic Remediation Roadmap: duration 2 months, 24 gaps, 3 phases — Phase 1 Critical Remediation with 0 gaps and no timeline, its objectives, deliverables and success criteria; Phase 2 High Priority Enhancement weeks 1–4 with 10 gaps](/img/screenshots/reports-and-ai/exec-roadmap.webp)
 
 **Generate Roadmap** lays the gaps out in three phases — **critical remediation**, **high-priority enhancement**, **optimisation & certification** — each with objectives, deliverables and success criteria. Phase lengths are sized for controls worked in parallel (roughly a week per two critical gaps, a week per three high gaps, and a fixed four-week certification phase), run consecutively, and a phase with no gaps has no timeline. Milestone **progress** can be updated over the API as work lands, and gaps can be **assigned an owner and a status**.
 

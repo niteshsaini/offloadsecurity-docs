@@ -11,7 +11,7 @@ Before building a report, check whether it already exists. This page is the comp
 
 ## Scanning
 
-![Consolidated Security Report dialog on Scan Results: 4 scans, 3 targets, 4 tools; title, HTML / PDF / DOCX format and optional evidence screenshots](/img/screenshots/reports-and-ai/scan-results-report.webp)
+![Consolidated Security Report dialog on Scanning → Targeted runs: 1 scan, 1 target, 1 tool (security headers on http://juice-shop:3000); report title, HTML / PDF / DOCX format and optional evidence screenshots](/img/screenshots/reports-and-ai/scan-results-report.webp)
 
 | Report | Content | Formats | Where |
 | --- | --- | --- | --- |

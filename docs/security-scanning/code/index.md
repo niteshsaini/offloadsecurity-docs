@@ -12,7 +12,7 @@ The Code Command Center is where source code gets tested before it becomes a run
 
 **Where:** left navigation → **Code Command Center**.
 
-![Code Command Center — Overview: repository security coverage (1 scanned repository, 100 findings by severity), repository coverage and top repositories by severity](/img/screenshots/security-scanning/code-overview.webp)
+![Code Command Center — Overview: repository security coverage (1 scanned repository, 1121 findings in its latest scan), findings by severity, repository coverage, and top repositories by severity with juice-shop.zip](/img/screenshots/security-scanning/code-overview.webp)
 
 ## What you get
 

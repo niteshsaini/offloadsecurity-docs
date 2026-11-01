@@ -11,7 +11,7 @@ Posture says *what* you claim; evidence is *why an auditor should believe you*. 
 
 **Where:** left navigation → **Compliance Posture** → *Evidence Hub* tab.
 
-![Evidence Hub: framework-aware mode with 10 active frameworks; tiles for total controls, with evidence (46.7% coverage), auto-collected, manual evidence, no evidence; evidence coverage by SCF domain](/img/screenshots/compliance/evidence-hub.webp)
+![Evidence Hub: framework-aware mode with 11 active frameworks; tiles for total controls (1,046), with evidence (329), auto-collected, manual evidence, no evidence and evidence coverage (31.5%); evidence coverage by SCF domain](/img/screenshots/compliance/evidence-hub.webp)
 
 ## Where evidence comes from
 
@@ -55,19 +55,19 @@ Opening a control shows its evidence, comments and a **Why this status** panel: 
 
 ## Freshness
 
-![Evidence Freshness: fresh, expiring within 14 days, stale and expired counts](/img/screenshots/compliance/evidence-hub-freshness.webp)
+![Evidence Freshness: tiles for fresh (more than 14 days left), expiring within 14 days, no expiry set, expired / retired and total evidence items, above the auditor-package download buttons](/img/screenshots/compliance/evidence-hub-freshness.webp)
 
 Evidence ages. Manual evidence carries a **valid-until** date; assessments carry a validity window; scan evidence is superseded by the next scan. Freshness splits all of the team's evidence items into four buckets that add up to the total: **Fresh**, **Expiring within** the window, **No expiry set** (current until archived or revoked) and **Expired / retired** (expired, archived, revoked or superseded; earns no credit). Expired evidence stops supporting its controls and appears as an *Evidence Expired* [drift](./drift-detection.md).
 
 ## Smart breakdown
 
-![Smart Breakdown: evidence by source, type and quality band](/img/screenshots/compliance/evidence-hub-smart.webp)
+![Smart Breakdown: the 1,046 controls of the active frameworks counted once by their strongest current evidence: auto-collected, policy docs, manual uploads, expired evidence only and no evidence](/img/screenshots/compliance/evidence-hub-smart.webp)
 
 Each evidence item carries a **quality score** — the source's base score (CSPM scan 95, vulnerability scan 90, container / Kubernetes / security scan 85, assessment 75, knowledge base or policy 70, manual 60) adjusted by type (scan result 1.0, assessment 0.9, policy 0.85, config 0.8, document 0.75, attestation 0.65, screenshot 0.5, email 0.4). The breakdown shows where your evidence is strong and where a framework leans on screenshots.
 
 ## Review queue
 
-![Review Queue: pending evidence reviews with Approve and Reject](/img/screenshots/compliance/evidence-hub-review.webp)
+![Review Queue: pending evidence reviews (policy documents, manual uploads and scan results) with type, source and linked SCF controls, each with Approve and Reject](/img/screenshots/compliance/evidence-hub-review.webp)
 
 Auto-collected evidence enters as **auto_collected**; before an audit you move it to **pending_review** and a reviewer marks it **approved** (audit-ready) or **rejected** (needs replacement). The queue lists what is waiting, with the controls each item supports. The person who uploaded an item cannot review it, expired or superseded items cannot be approved, and items replaced by a newer version leave the queue (the queue says how many were hidden).
 
@@ -85,11 +85,11 @@ Manual evidence from the last cycle — the access-review export, the pen-test r
 
 ## Adding evidence yourself
 
-![Upload Manual Evidence: SCF control IDs, title, evidence type, description, file](/img/screenshots/compliance/evidence-hub-upload.webp)
+![Upload Manual Evidence dialog: SCF control IDs, evidence title, evidence type, file attachment and description](/img/screenshots/compliance/evidence-hub-upload.webp)
 
 **Quick Upload** takes a title, an evidence type (document, screenshot, config, policy), one or more **SCF control IDs** and the file. The **Evidence Wizard** starts from the other end — pick a framework, see its controls without evidence, and upload against each.
 
-![Interactive Evidence Upload wizard: choose a framework, then controls needing evidence](/img/screenshots/compliance/evidence-hub-wizard.webp)
+![Interactive Evidence Upload wizard, first step: choose one of the 11 enabled frameworks (NIST 800-53 Rev 5, SOC 2, PCI DSS 4.0.1, ISO 27001:2022 …) to walk through its controls and upload evidence](/img/screenshots/compliance/evidence-hub-wizard.webp)
 
 ## Auditor package
 

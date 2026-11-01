@@ -26,7 +26,7 @@ Every security team answers the same questions over and over — *what is our pa
 
 On upload the text is extracted, split into chunks and **embedded** for semantic retrieval; the status goes *processing* → *ready*. From Word files the body text and the text in **tables** is read (headers, footers, text boxes and images are not), up to 2,000,000 characters with a warning beyond that. A scanned or image-only PDF has no text and there is no built-in OCR: the document is flagged, and you should OCR it before uploading. **Re-process documents** on the Questionnaire tab re-extracts and re-embeds everything.
 
-![Document Library: search, section filter, document cards with type, status, tags, questions asked and views; Ask AI About This](/img/screenshots/ai-threat-intelligence/kb-documents.webp)
+![Document Library: search, section filter, document cards with status, type, key topics, questions asked, views and date; Ask AI About This, Delete](/img/screenshots/ai-threat-intelligence/kb-documents.webp)
 
 **Document Library** searches by title, content or topic, filters by section, and shows per document how many questions it has answered, how often it was viewed, and any extraction warning. **Ask AI About This** opens the assistant scoped to that document. Documents are team-scoped and sensitivity is metadata for your own handling rules — every member of the team can read the library.
 

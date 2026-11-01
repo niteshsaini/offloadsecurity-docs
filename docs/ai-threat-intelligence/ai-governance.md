@@ -11,11 +11,11 @@ Regulators now ask the same questions about your AI systems that auditors have l
 
 **Where:** left navigation → *Threat & Intelligence* → **AI Governance**.
 
-![AI Governance overview: ISO 42001 control posture 46 %, total AI models, high-risk models, active assessments, controls implemented; quick actions](/img/screenshots/ai-threat-intelligence/aig-overview.webp)
+![AI Governance overview: ISO 42001 implementation score 48 % (71 of 149 SCF controls, Not Ready), total AI models, high-risk models, active assessments, controls implemented; quick actions](/img/screenshots/ai-threat-intelligence/aig-overview.webp)
 
 ## Overview
 
-The **ISO 42001 control posture** is the headline: the share of applicable SCF controls implemented (49 of 145 in the screenshot) and the readiness level it implies. Beside it: total AI systems in the registry, how many are high risk, active assessments and controls implemented — each tile opens its tab (Model Registry, Risk Assessment, Compliance) — then quick actions to register a model, run a risk assessment or open the compliance check.
+The **ISO 42001 control posture** is the headline: the share of applicable SCF controls implemented (71 of 149 in the screenshot) and the readiness level it implies. Beside it: total AI systems in the registry, how many are high risk, active assessments and controls implemented — each tile opens its tab (Model Registry, Risk Assessment, Compliance) — then quick actions to register a model, run a risk assessment or open the compliance check.
 
 ## Model registry
 
@@ -37,7 +37,7 @@ Every AI system your organisation operates or depends on, registered once:
 
 ## Risk assessments and bias tests
 
-![Risk Assessment & Bias Testing: assessments with score, type and status; bias tests with score and test type](/img/screenshots/ai-threat-intelligence/aig-risk-assessment.webp)
+![Risk Assessment & Bias Testing: risk assessments with risk band and score, type and status; a bias test with bias score and test type](/img/screenshots/ai-threat-intelligence/aig-risk-assessment.webp)
 
 - **Risk assessment** — per system: assessment type (comprehensive, bias-focused, privacy-focused, safety-focused), the **risk categories** considered (fairness, privacy, safety, transparency, robustness…), impact and likelihood, an overall score, mitigation measures, who conducted it and the next review date. Scores and mitigations are yours; the AI assessment helper (when an LLM is configured) can suggest scores, mitigations and a summary from the description.
 - **Bias test** — per system: test type (demographic parity, equal opportunity, individual fairness, calibration), protected attributes, data source, baseline metrics, results and a bias score with recommendations. A production system without a bias test is a certification blocker (below).
@@ -60,7 +60,7 @@ Both are records with evidence, not automated scans: the platform does not run y
 
 ## Compliance — ISO 42001
 
-![ISO 42001 Compliance Dashboard: 46 % Not Ready; certification blockers by clause; Add Training, Generate Report, Statement of Applicability, Auditor Package](/img/screenshots/ai-threat-intelligence/aig-compliance.webp)
+![ISO 42001 Compliance Dashboard: 48 % Not Ready; certification blockers by clause; Add Training, Generate Report, Statement of Applicability, Auditor Package; Statement of Applicability summary](/img/screenshots/ai-threat-intelligence/aig-compliance.webp)
 
 The AIMS posture is computed from two things: the SCF controls mapped to ISO 42001 clauses 4–10 and Annex A (their implementation status comes from [Compliance Posture](../compliance/compliance-dashboard.md)), and the **records in this module**. The readiness level:
 

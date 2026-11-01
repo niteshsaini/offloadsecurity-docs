@@ -12,7 +12,7 @@ Kubernetes Security assesses your clusters for risky workloads, over-permissive 
 
 **Where:** left navigation → **Kubernetes Security**.
 
-![Kubernetes Security — Coverage tab: 3 clusters, all scanned, 24 findings by severity, cluster coverage and top clusters by severity](/img/screenshots/security-scanning/k8s-coverage.webp)
+![Kubernetes Security — Coverage tab: 1 cluster, scanned (100% coverage), 212 findings by severity (0 critical, 47 high, 138 medium, 27 low), a missing-sources notice because no cloud account is connected, and cluster coverage](/img/screenshots/security-scanning/k8s-coverage.webp)
 
 ## What you get
 

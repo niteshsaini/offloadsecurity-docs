@@ -21,7 +21,7 @@ What the tool is, its category, the authentication type it uses and its pricing 
 
 Only the fields that tool needs, required ones marked `*`. Defaults are pre-filled where there is a sensible one (Wazuh port `55000`, `verify_ssl` true). Fields named for the tool's own vocabulary — `wazuh_host`, `gmp_host`, `jenkins_url` — are what the docs of that tool call them.
 
-![Setup Wazuh, step 2: Api Username, Api Password, Wazuh Host required; Wazuh Port 55000, Verify Ssl true, Ca Cert optional](/img/screenshots/integrations/wizard-step2-auth.webp)
+![Setup Wazuh, step 2: Api Username, Api Password, Wazuh Host required; Wazuh Port 55000, Verify Ssl checked, Ca Cert and Indexer Host optional](/img/screenshots/integrations/wizard-step2-auth.webp)
 
 Every tool's fields are listed in the [Integration Catalog](./third-party.md). Two that need a word:
 
@@ -43,7 +43,7 @@ The platform contacts the tool with the credentials from step 2 and shows the re
 | SMTP Email | Connects, negotiates STARTTLS when enabled, authenticates. No mail is sent |
 | GitHub Actions | No remote call: the integration generates pipeline configuration, so the step reports that and passes |
 
-![Setup GitHub Actions, step 3: Connection Test — "Connection Successful!" with the tool's message](/img/screenshots/integrations/wizard-step3-test.webp)
+![Setup GitHub Actions, step 3: Connection Test — "Connection Successful!" with the tool's message that it integrates via CI/CD pipeline configs, and the response time](/img/screenshots/integrations/wizard-step3-test.webp)
 
 A failed test shows the tool's own error (`Authentication failed — check username and API token`, `Webhook returned HTTP 404: no_service`, `535 authentication failed`), and **Next** stays disabled until a test passes. A passing test moves on automatically after a moment; a partial success (Wazuh without its Indexer) or a result marked **Not tested** waits so you can read it and click Next yourself. Each test sends exactly one message or event — press the test again if it failed.
 
@@ -67,7 +67,7 @@ The result tells you what was saved:
 
 A setup left open for more than two hours expires (*Invalid session ID*); the values typed into it are deleted with it.
 
-![Setup GitHub Actions, step 5: Review & Complete — tool, authentication type token, health check every hour, Complete Setup](/img/screenshots/integrations/wizard-step5-review.webp)
+![Setup GitHub Actions, step 5: Review & Complete — tool, authentication type token, health check every 1 hour(s), status Ready to configure, Complete Setup](/img/screenshots/integrations/wizard-step5-review.webp)
 
 ## After connecting
 

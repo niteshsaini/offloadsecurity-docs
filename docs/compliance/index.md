@@ -11,7 +11,7 @@ Compliance in Offload Security is not a spreadsheet you fill in before an audit.
 
 **Where:** left navigation → **Compliance Posture**, **Assessments**, **Audit Reports** and **DPDP Compliance** (all under *Compliance & Risk*).
 
-![Compliance Posture: 1,003 controls across 10 active frameworks, implemented / with-evidence tiles, control test cadence, compliance by framework (ISO 27001 83%, ISO 27002 76%, NIST CSF 57%, SOC 2 53%…), evidence sources and SCF domains](/img/screenshots/compliance/compliance-posture.webp)
+![Compliance Posture: 1,046 controls across 11 active frameworks, implemented / with-evidence / evidence-items tiles, control test cadence, implementation score by framework (ISO 27001 94%, ISO 27002 94%, HIPAA 61%, NIST CSF 59%, SOC 2 52%…), evidence sources and evidence per framework](/img/screenshots/compliance/compliance-posture.webp)
 
 ## The four workspaces
 

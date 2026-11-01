@@ -51,7 +51,7 @@ The first administrator account is created during platform setup. If you're the 
 
 The Dashboard is a stitched summary of posture across every module. It has two tabs: **Security Overview** and **Executive Dashboard**. The overview is computed in the background and refreshes about every 15 minutes, so a scan that just finished can take a few minutes to appear here; the module pages themselves are live.
 
-![Dashboard, Security Overview tab: overall risk score, active alerts, vulnerabilities, compliance score and assets monitored; risk posture by domain; top risk findings](/img/screenshots/dashboard.webp)
+![Dashboard, Security Overview tab: overall risk score (unknown until assets are inventoried), active alerts, vulnerabilities, implementation score and assets monitored tiles; Since yesterday counts (new, reopened, newly overdue, resolved, back for review, P1 open); Cloud IAM & Network Posture; risk posture by domain and top risk findings below](/img/screenshots/dashboard.webp)
 
 | Area | What it shows |
 |---|---|

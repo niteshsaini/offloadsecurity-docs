@@ -98,7 +98,7 @@ For source-code SBOMs with licence analysis, see [SBOM & Licences](../code/sbom-
 
 **Where:** Container Security → **Compliance**.
 
-![Compliance tab: security posture trend chart, container compliance report form (target, target type, framework) and the supported frameworks — CIS Docker Benchmark 1.6.0, NIST 800-53, PCI DSS, SOC 2](/img/screenshots/security-scanning/ctr-compliance.webp)
+![Compliance tab: security posture trend chart, the container compliance report form (target ID, target type, framework, Generate and Latest) and the supported frameworks, starting with CIS Docker Benchmark 1.6.0 and NIST 800-53 Rev 5](/img/screenshots/security-scanning/ctr-compliance.webp)
 
 - **Security Posture Trend** — total findings per scan over time.
 - **Container Compliance Report** — choose a **target type** (**Account**, **Registry** or **Image**), the **target**, a **framework** (**CIS Docker Benchmark 1.6.0**, **NIST 800-53 Rev 5**, **PCI-DSS v4.0**, **SOC 2**) and generate. The report scores the mapped controls against the latest completed scan of each image in the target, listing controls assessed, passed and failed. Controls the scanners cannot observe are reported as *not assessed* rather than passed.

@@ -11,7 +11,7 @@ The **Compliance Posture** tab is the page you open when someone asks "where are
 
 **Where:** left navigation → **Compliance Posture** → *Compliance Posture* tab.
 
-![Compliance Posture: tiles for total controls, implemented, with evidence, evidence items, dedup ratio and frameworks; control test cadence; compliance by framework; evidence sources; SCF domains](/img/screenshots/compliance/compliance-posture.webp)
+![Compliance Posture: tiles for total controls (1,046 across 11 active frameworks), implemented, with evidence, evidence items, average controls per item and frameworks (11/27, custom selection); control test cadence; implementation score by framework; evidence sources and evidence per framework](/img/screenshots/compliance/compliance-posture.webp)
 
 ## The tiles
 
@@ -28,13 +28,13 @@ The **Compliance Posture** tab is the page you open when someone asks "where are
 
 One bar per active framework with its **implementation score** and the inputs it was computed from (for example "33 implemented · 89 partial · 12 evidence-only of 371"). The score is the weighted formula in the [overview](./index.md#how-a-framework-score-is-calculated): implemented 1.0, partial 0.5, evidence-only 0.25, over every in-scope control; an implemented control with open findings counts as partial. A framework with no assessed controls and no evidence-only credit reads *Not Assessed* instead of 0%. Hover the help icon for the definition.
 
-![Compliance by framework and evidence sources panel](/img/screenshots/compliance/compliance-posture-frameworks.webp)
+![Implementation score by framework (ISO 27001 94%, ISO 27002 94%, HIPAA 61%, NIST CSF 59%, SOC 2 52%, PCI DSS 51%, ISO 42001 48%) with implemented, partial and evidence-only counts; evidence sources, evidence per framework and SCF domains panels](/img/screenshots/compliance/compliance-posture-frameworks.webp)
 
 **Click a framework** to open its **gap analysis**.
 
 ## Gap analysis
 
-![Gap Analysis for PCI DSS 4.0.1: 262 gaps, one row per control with SCF ID, control name, domain, priority, status and an Override action; page 1 of 14](/img/screenshots/compliance/compliance-gap-analysis.webp)
+![Gap Analysis for PCI DSS 4.0.1: 366 controls, 189 gaps, implementation score 50.8%; search, domain and status filters; one row per control with SCF ID, control name, domain, priority, status and an Override action; page 1 of 10](/img/screenshots/compliance/compliance-gap-analysis.webp)
 
 Every **gap**: an in-scope control (not marked not applicable) that is not implemented with current evidence. That is a control that is not implemented, partial, implemented with open findings, or implemented without current evidence. The header shows the total, the gap count and the implementation score. Each row shows:
 
@@ -47,7 +47,7 @@ The **Override** action on each row opens the manual override dialog.
 
 ## Manual overrides
 
-![Manual Override dialog for AST-04 Network Diagrams & Data Flow Diagrams: new status (Partially Implemented) and a required justification](/img/screenshots/compliance/compliance-override.webp)
+![Manual Override dialog for CFG-02 Secure Baseline Configurations (current: partial): new status Implemented and a required justification, with Apply Override](/img/screenshots/compliance/compliance-override.webp)
 
 Scans can prove that a bucket is encrypted; they cannot prove that the board approved the security policy. For controls satisfied by a document, a committee or a process, set the status yourself:
 
@@ -63,7 +63,7 @@ Setting *GOV-01 Information security programme* to implemented is not a shortcut
 
 ## Framework activation
 
-![Framework activation panel: 27 frameworks with toggles, activate all / deactivate all, save](/img/screenshots/compliance/compliance-frameworks-panel.webp)
+![Framework activation panel: 11 of 27 frameworks active, a toggle per framework with its control count, Activate All / Deactivate All, who last changed the set, and Save Activation](/img/screenshots/compliance/compliance-frameworks-panel.webp)
 
 The **Frameworks** tile opens the activation panel. Active frameworks determine what is counted everywhere: tiles, scores, thresholds, evidence per framework, audit reports and the executive dashboard. Activation is **per team**. A team that has not saved its own selection uses the default set of ten (ISO 27001, ISO 27002, SOC 2, PCI DSS 4.0.1, NIST CSF 2.0, NIST 800-53 r5, CIS v8.1, HIPAA, GDPR, OWASP Top 10); activate others from the [27-framework catalog](./supported-frameworks.md) as you need them.
 

@@ -55,7 +55,7 @@ The result is stored on the finding (KEV flag, EPSS, exploit available, threat a
 
 ## IOC analysis
 
-![Threat Indicators: search, severity / type / confidence filters, IOC Correlation Analysis box, indicator table with value, type, severity, confidence, source and Correlate action](/img/screenshots/ai-threat-intelligence/ti-indicators.webp)
+![Threat Indicators: + Create IOC, search, severity / type / confidence / status filters, IOC Correlation Analysis box, active indicator table with value, type, severity, confidence, source and Correlate / Mark false positive actions](/img/screenshots/ai-threat-intelligence/ti-indicators.webp)
 
 Every indicator from every feed in one table: value, type, severity, confidence (0–100), source feed. Search by value or description; filter by severity, type, confidence, or **status** (active or false positive — false-positive marks can be listed and cleared here). **+ Create IOC** adds your own indicator (type — IP, domain, URL, file hash, email, certificate, registry key, user agent, cryptocurrency address, YARA rule — value, severity, confidence, description) — from an incident, a partner, or a red-team exercise — and it is treated like any feed indicator from then on.
 
@@ -97,7 +97,7 @@ It is a map of *observed activity and intelligence*, not of your defensive cover
 
 **Threat Landscape Reporting** generates a report for a period (last 7, 30 or 90 days) in a chosen format (**Executive Summary**, **Technical Analysis**, **Comprehensive Report**) from the team's indicators: threats analysed, new threats discovered, active actors and campaigns, top techniques, and recommendations. Reports are kept in **Report History** and retrievable over the API.
 
-![Threat Landscape Reporting: report period and format, Generate Report, report history](/img/screenshots/ai-threat-intelligence/ti-reporting.webp)
+![Threat Landscape Reporting: report period and format, Generate Report and Refresh History; report history with one generated report](/img/screenshots/ai-threat-intelligence/ti-reporting.webp)
 
 ## Import / export and indicator aging
 
