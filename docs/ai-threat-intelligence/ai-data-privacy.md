@@ -9,7 +9,7 @@ description: "What the platform's own AI features see, where it goes, how it is 
 
 Offload Security uses AI to help you work faster — summarizing scans, answering questions, drafting remediation and assessment content, and assisting triage. This page explains exactly **what the AI sees, where your data goes, how it's isolated, and how to turn it off** — so you can make an informed decision for regulated or data-residency-sensitive environments.
 
-:::info[The short version]
+:::note[The short version]
 AI features are **optional and assistive**. They run only when your operator configures an LLM provider, they only ever see data your team already has access to, tenant data is never served from a shared cache, and remediation suggestions are **advisory** — a person makes the change. If you don't want prompts leaving your environment, you can run the platform with AI **disabled**.
 :::
 

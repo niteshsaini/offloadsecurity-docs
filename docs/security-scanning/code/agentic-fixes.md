@@ -2,6 +2,7 @@
 title: "Fix with Agent"
 sidebar_label: "Fix with Agent"
 sidebar_position: 9
+status: opt-in
 description: "Let an agent clone the repository, fix a finding, open a pull request, and verify the fix on the merged commit — opt-in per deployment and per team, with honest verification outcomes."
 ---
 

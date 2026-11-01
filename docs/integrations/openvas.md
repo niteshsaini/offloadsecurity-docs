@@ -9,7 +9,7 @@ description: "Connect a Greenbone / OpenVAS instance so the platform verifies an
 
 Connect **OpenVAS** (part of the Greenbone Vulnerability Management stack) to scan the internal and private assets a public SaaS scanner can't reach — internal servers, network appliances, databases, and segmented environments. OpenVAS performs the scanning inside your network, so it runs **where the assets are** and sensitive scan data stays inside your boundary; Offload Security connects to your Greenbone/OpenVAS deployment and verifies connectivity to it.
 
-:::tip[Looking for the full picture?]
+:::note[Looking for the full picture?]
 This page covers connecting OpenVAS as an integration. For scan strategy — authenticated vs. unauthenticated scanning, scheduling, and internal-network coverage — see the **[OpenVAS Scanning deep-dive](../on-premises/openvas-scanning.md)**.
 :::
 

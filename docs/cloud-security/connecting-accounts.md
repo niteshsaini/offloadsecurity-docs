@@ -100,7 +100,7 @@ You can toggle individual projects in or out of scanning from the connection's h
 
 The wizard tells you what to create; the snippets below let you create it with infrastructure-as-code. They match the roles the wizard's setup summary asks for.
 
-<Tabs groupId="cloud">
+<Tabs groupId="cloud" queryString>
 <TabItem value="aws" label="AWS">
 
 ### AWS {#aws}

@@ -19,7 +19,7 @@ In roughly 30 minutes you will:
 
 When you finish, jump to the **[First 7 Days plan](./adoption/first-7-days.md)** to turn this first scan into an operating security program.
 
-:::info[Before you begin]
+:::note[Before you begin]
 A quick checklist so your first scan goes smoothly:
 
 - **A platform account.** Your administrator provides your login. What you can do depends on your role — viewing findings needs *view* access, while connecting accounts and starting scans needs *management* access. See [RBAC & Team Management](./authentication/rbac-team-management.md).
@@ -33,7 +33,7 @@ A quick checklist so your first scan goes smoothly:
 - **Time to value:** connecting your first cloud account takes about **3 minutes**; the first scan then runs in the background.
 :::
 
-:::tip[Scans are read-only — you won't touch production]
+:::note[Scans are read-only — you won't touch production]
 Every scan uses **read-only** credentials and only ever *reads* your environment; Offload never changes anything in your cloud. There's no separate sandbox to configure — but if you'd rather start small, scope your first scan to a single non-production account or region.
 :::
 
@@ -43,7 +43,7 @@ Every scan uses **read-only** credentials and only ever *reads* your environment
 2. Enter your **email** and **password** on the login screen and select **Sign in** — or **Sign in with …** if your organisation uses single sign-on. If MFA is enabled on your account, enter the code from your authenticator app.
 3. On success you land on the **Dashboard**.
 
-:::info[First administrator]
+:::note[First administrator]
 The first administrator account is created during platform setup. If you're the operator who installed the platform, sign in with the admin email and the password you set (`DEFAULT_ADMIN_EMAIL` / `DEFAULT_ADMIN_PASSWORD`). You can then invite teammates and assign roles from **Team Management**.
 :::
 
@@ -122,7 +122,7 @@ Connect **Slack** or **Microsoft Teams** under Integrations — the connection t
 ### Then automate it
 Once the manual path works, **[gate your CI/CD pipelines](./cli-and-cicd.md)** on scan results so this runs on every build.
 
-:::tip[Tip]
+:::tip
 You can change your **active team** at any time from the account menu in the top-right. Make sure you're in the right team before running scans or reviewing data.
 :::
 

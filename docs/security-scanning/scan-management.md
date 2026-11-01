@@ -101,7 +101,7 @@ From a completed run you can:
 - **Download a report** — generate a consolidated security report; you can select multiple completed scans to roll them into a single report.
 - **Delete** runs you no longer need.
 
-:::tip[Re-running vs. scheduling]
+:::note[Re-running vs. scheduling]
 Use **Re-scan** for a one-off "run that again" check. If you find yourself re-scanning the same target regularly, turn it into a **schedule** instead so it happens automatically.
 :::
 
