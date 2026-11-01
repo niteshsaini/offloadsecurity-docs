@@ -54,7 +54,7 @@ Use `bitbucket` in place of `gitlab` for Bitbucket. The response contains the `h
 { "hook_id": "3f9c…", "secret": "…", "path": "/api/scm/webhooks/gitlab/3f9c…" }
 ```
 
-:::caution
+:::warning
 The secret is shown **once**; only its hash is stored. If you lose it, create the hook again.
 :::
 

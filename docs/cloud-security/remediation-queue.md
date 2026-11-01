@@ -35,7 +35,7 @@ Each row shows the finding title, the affected **resource ID**, **severity** (fr
 | **Won't fix** | The owner decided not to change it. Pair this with a **suppression** on the finding so the risk is recorded as accepted, not ignored. |
 | **Cancelled** | Created by mistake or superseded. |
 
-:::tip[Tasks vs. suppressions]
+:::note[Tasks vs. suppressions]
 A **task** says "someone will fix this by a date". A **suppression** says "we accept this for a period". Use a task for anything you intend to change, and a suppression for accepted risk — the queue stays a true to-do list and the audit trail stays honest.
 :::
 

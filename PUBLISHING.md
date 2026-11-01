@@ -26,11 +26,13 @@ The build is configured to surface broken internal links and anchors
 
 ## Information architecture
 
-- Pages live under `docs/`. The sidebar is **auto-generated** from the folder structure.
-- Section order and labels come from `_category_.json` files in each folder;
-  standalone top-level pages use `sidebar_position` in their frontmatter.
-- Deep-technical / internal pages are grouped under **Architecture (Advanced)** and
-  ordered last, keeping the customer journey up top.
+- Pages live under `docs/`. The top level of the sidebar is explicit in
+  `sidebars.ts` (group headings + one category per directory); pages inside a
+  directory are auto-generated, so a new page appears without editing the
+  sidebar.
+- Writing conventions (page types, task-guide template, admonitions, tables,
+  status badges): [CONTRIBUTING.md](CONTRIBUTING.md).
+- Versions and release notes: [VERSIONING.md](VERSIONING.md).
 
 ## Screenshots
 

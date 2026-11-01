@@ -19,6 +19,6 @@ Pick your entry point:
 | **[Compliance Officer journey](./compliance-officer-journey.md)** | You own frameworks, assessments, evidence, and audits. |
 | **[Recommended Production Configuration](./production-configuration.md)** | You want opinionated starting points for coverage, schedules, SLAs, alerting, and access. |
 
-:::tip[These guides link, they don't restate]
+:::note[These guides link, they don't restate]
 Every step links to the reference page that documents it in full. If a step and a reference page ever disagree, the reference page wins.
 :::

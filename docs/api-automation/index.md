@@ -48,7 +48,7 @@ The platform is built on a standard **OpenAPI** foundation and serves its own in
 
 For curated, task-oriented endpoint guides (authentication, conventions, cloud accounts, Kubernetes, vulnerabilities, alerts, and copy-paste workflows), see the **[API Reference](../api-reference/index.md)** section.
 
-:::tip[This section vs. the API reference]
+:::note[This section vs. the API reference]
 These pages explain the *concepts and common workflows*. The interactive reference on your instance is the *authoritative, always-current list of endpoints* for your version — use them together.
 :::
 

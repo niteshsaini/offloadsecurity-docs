@@ -160,3 +160,90 @@ html {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* API endpoints (src/plugins/rehype-api-endpoints.js) */
+.api-endpoint {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: var(--ifm-leading);
+  padding: 0.55rem 0.8rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+  background: var(--ifm-code-background);
+  overflow-x: auto;
+}
+
+.api-endpoint code {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+/* The method label never wraps away from its path; the path itself may wrap
+ * (long query strings would otherwise widen API tables). */
+.api-inline code {
+  overflow-wrap: anywhere;
+}
+
+.api-inline .api-method {
+  margin-right: 0.3rem;
+}
+
+.api-method {
+  display: inline-block;
+  min-width: 3.4rem;
+  padding: 0.05rem 0.4rem;
+  border-radius: 4px;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+  text-align: center;
+  vertical-align: 0.1em;
+  color: #fff;
+}
+
+.api-inline .api-method {
+  min-width: 0;
+  font-size: 0.68rem;
+}
+
+/* Text-on-colour pairs chosen for >= 4.5:1 contrast with white text. */
+.api-method--get { background: #15803d; }
+.api-method--post { background: #1d4ed8; }
+.api-method--put,
+.api-method--patch { background: #b45309; }
+.api-method--delete { background: #b91c1c; }
+
+/* Page status badges (front matter `status` / `new_in`; DocItem/Content) */
+.doc-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.doc-badge {
+  display: inline-block;
+  padding: 0.1rem 0.55rem;
+  border: 1px solid;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.doc-badge--beta,
+.doc-badge--opt-in { color: #92400e; border-color: #f59e0b; background: #fffbeb; }
+.doc-badge--planned { color: #374151; border-color: #9ca3af; background: #f3f4f6; }
+.doc-badge--deprecated { color: #991b1b; border-color: #f87171; background: #fef2f2; }
+.doc-badge--new { color: #1e40af; border-color: #60a5fa; background: #eff6ff; }
+
+[data-theme='dark'] .doc-badge--beta,
+[data-theme='dark'] .doc-badge--opt-in { color: #fcd34d; border-color: #b45309; background: rgba(245, 158, 11, 0.12); }
+[data-theme='dark'] .doc-badge--planned { color: #d1d5db; border-color: #6b7280; background: rgba(156, 163, 175, 0.12); }
+[data-theme='dark'] .doc-badge--deprecated { color: #fca5a5; border-color: #b91c1c; background: rgba(248, 113, 113, 0.12); }
+[data-theme='dark'] .doc-badge--new { color: #93c5fd; border-color: #2563eb; background: rgba(96, 165, 250, 0.12); }

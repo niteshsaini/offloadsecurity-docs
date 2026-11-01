@@ -9,7 +9,7 @@ description: "Connect Wazuh (Manager API + Indexer) to bring agents, alerts and 
 
 Connect your **Wazuh** deployment to bring host-level security telemetry — endpoint detections, SIEM events, vulnerability state, file-integrity monitoring, and compliance checks — into the same unified view as your cloud, application, and container posture. Wazuh data doesn't sit in a separate console; agents, alerts and host CVEs are synced into the platform's own inventory, alert stream and vulnerability views, and the rest is browsed live from an in-platform dashboard.
 
-:::tip[Looking for the full picture?]
+:::note[Looking for the full picture?]
 This page covers connecting Wazuh as an integration. For the complete capability walkthrough — the in-platform dashboard, MITRE ATT&CK mapping, active response, and how host data feeds Vulnerability Management and Compliance — see the **[Wazuh Integration deep-dive](../on-premises/wazuh-integration.md)**.
 :::
 

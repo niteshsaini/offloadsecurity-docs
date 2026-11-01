@@ -74,7 +74,7 @@ The Coverage tab is the landing view and the quickest health check for your clou
 
 Below the tiles you get **Findings by Severity**, **Accounts Coverage**, **Top Accounts by Severity** (which account carries the most critical/high findings) and **Coverage Decay** — accounts whose last scan is older than 30 days, so a once-green account cannot silently go stale.
 
-:::tip[Team scope]
+:::note[Team scope]
 Everything in Cloud Security is scoped to your **active team**. If the workspace looks empty, check the team switcher in the account menu (top-right) before assuming nothing is connected.
 :::
 

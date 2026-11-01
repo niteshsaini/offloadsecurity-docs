@@ -28,7 +28,7 @@ Think of it as **three buckets** — you don't need all of them for every featur
 
 Pick your cloud. These are the exact roles the connect wizard provisions.
 
-<Tabs groupId="cloud">
+<Tabs groupId="cloud" queryString>
 <TabItem value="aws" label="AWS">
 
 Offload Security assumes a **cross-account IAM role** via STS (with an **External

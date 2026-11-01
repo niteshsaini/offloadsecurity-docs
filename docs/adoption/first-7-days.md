@@ -11,7 +11,7 @@ The **[Quickstart](../getting-started.md)** gets you through your first scan, fi
 
 Each "day" is a working session of roughly one to two hours. Compress or stretch the calendar as you like — the **order** is what matters, because each day builds on the previous one.
 
-:::info[Who does what]
+:::note[Who does what]
 Days 1–4 need the **Admin** or **Security Manager** role (connecting accounts and configuring scans require management access). Day 5 is natural **Compliance Officer** territory, and Day 7 is where **Viewer**/executive accounts start to matter. See [Roles, Teams & API Keys](../authentication/rbac-team-management.md).
 :::
 

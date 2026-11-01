@@ -58,7 +58,11 @@ const config: Config = {
           // freshness. Author is omitted — the date is the useful signal.
           showLastUpdateTime: true,
           // Wide tables scroll inside their own box (see custom.css).
-          rehypePlugins: [require('./src/plugins/rehype-table-wrap')],
+          // Endpoints get an HTTP-method badge (see custom.css → "API endpoints").
+          rehypePlugins: [
+            require('./src/plugins/rehype-table-wrap'),
+            require('./src/plugins/rehype-api-endpoints'),
+          ],
           // Versioned docs, Wazuh-style: a version selector in the navbar,
           // the current release at the root, older releases under /<version>/
           // with an "unmaintained version" banner.
