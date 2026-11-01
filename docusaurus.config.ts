@@ -9,6 +9,24 @@ import type * as Preset from '@docusaurus/preset-classic';
 // /<version>/) and bump this constant. See VERSIONING.md.
 const CURRENT_RELEASE = '1.4.0';
 
+// Optional, cookieless analytics — off unless set at build time (the deploy
+// workflow passes these from the repository's Actions variables):
+//   DOCS_ANALYTICS       plausible | umami
+//   DOCS_ANALYTICS_SRC   the script URL (hosted or self-hosted)
+//   DOCS_ANALYTICS_SITE  Plausible: the site domain · Umami: the website ID
+// Page feedback and zero-result searches are sent as events when enabled.
+const ANALYTICS = process.env.DOCS_ANALYTICS;
+const ANALYTICS_SRC = process.env.DOCS_ANALYTICS_SRC;
+const ANALYTICS_SITE = process.env.DOCS_ANALYTICS_SITE;
+const analyticsScripts =
+  ANALYTICS && ANALYTICS_SRC && ANALYTICS_SITE
+    ? [
+        ANALYTICS === 'umami'
+          ? {src: ANALYTICS_SRC, defer: true, 'data-website-id': ANALYTICS_SITE}
+          : {src: ANALYTICS_SRC, defer: true, 'data-domain': ANALYTICS_SITE},
+      ]
+    : [];
+
 const config: Config = {
   title: 'Offload Security Docs',
   // Canonical entity positioning — kept consistent with the marketing site's
@@ -85,7 +103,15 @@ const config: Config = {
   ],
 
   // Self-hosted Inter (no Google Fonts request).
-  clientModules: [require.resolve('@fontsource-variable/inter')],
+  clientModules: [
+    require.resolve('@fontsource-variable/inter'),
+    // Filter box on long tables (12+ rows).
+    require.resolve('./src/clientModules/tableFilter.ts'),
+    // Zero-result searches → analytics (no-op without analytics).
+    require.resolve('./src/clientModules/searchTracking.ts'),
+  ],
+
+  scripts: analyticsScripts,
 
   plugins: [
     // Click a screenshot to view it full size.
