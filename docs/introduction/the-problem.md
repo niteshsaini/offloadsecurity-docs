@@ -1,5 +1,6 @@
 ---
 title: "The Problem: Security Tool Sprawl"
+description: "Why security tool sprawl leaves teams without one answer to 'how exposed are we?', and the manual work and cost that fragmentation creates."
 sidebar_label: "The Problem"
 sidebar_position: 1
 ---

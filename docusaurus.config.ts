@@ -57,6 +57,8 @@ const config: Config = {
           // history at build time). Helps API users and self-hosters judge
           // freshness. Author is omitted — the date is the useful signal.
           showLastUpdateTime: true,
+          // Wide tables scroll inside their own box (see custom.css).
+          rehypePlugins: [require('./src/plugins/rehype-table-wrap')],
           // Versioned docs, Wazuh-style: a version selector in the navbar,
           // the current release at the root, older releases under /<version>/
           // with an "unmaintained version" banner.
@@ -76,6 +78,16 @@ const config: Config = {
         },
       } satisfies Preset.Options,
     ],
+  ],
+
+  // Self-hosted Inter (no Google Fonts request).
+  clientModules: [require.resolve('@fontsource-variable/inter')],
+
+  plugins: [
+    // Click a screenshot to view it full size.
+    'docusaurus-plugin-image-zoom',
+    // Writes /llms.txt — a page index for AI assistants and answer engines.
+    './src/plugins/llms-txt.js',
   ],
 
   themes: [
@@ -105,6 +117,13 @@ const config: Config = {
           'Offload Security is a unified CNAPP, vulnerability management and compliance platform that consolidates findings across cloud, code, containers, Kubernetes, applications, on-premises infrastructure and existing security tools into one governed risk view.',
       },
     ],
+    zoom: {
+      selector: '.markdown img:not(a img)',
+      background: {
+        light: 'rgba(255, 255, 255, 0.95)',
+        dark: 'rgba(15, 23, 42, 0.95)',
+      },
+    },
     mermaid: {
       theme: { light: 'neutral', dark: 'dark' },
     },

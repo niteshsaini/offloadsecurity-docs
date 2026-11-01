@@ -1,5 +1,6 @@
 ---
 title: "Supported Frameworks"
+description: "The compliance frameworks Offload Security supports, mapped through the Secure Controls Framework (SCF 2026.2) so evidence for one control advances every framework that references it."
 sidebar_label: "Supported Frameworks"
 sidebar_position: 8
 ---

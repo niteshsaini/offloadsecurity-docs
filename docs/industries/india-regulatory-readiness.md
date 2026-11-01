@@ -1,5 +1,6 @@
 ---
 title: "India Regulatory Readiness"
+description: "How Offload Security capabilities map to Indian obligations: RBI directions for banks and NBFCs, SEBI CSCRF, CERT-In incident reporting and the DPDP Act, 2023."
 sidebar_label: "India Regulatory Readiness"
 sidebar_position: 8
 ---

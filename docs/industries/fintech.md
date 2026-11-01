@@ -1,5 +1,6 @@
 ---
 title: "Fintech"
+description: "How Offload Security helps fintechs prove audit-readiness to bank partners, customers and investors without slowing delivery, across cloud, applications and payment APIs."
 sidebar_label: "Fintech"
 sidebar_position: 2
 ---

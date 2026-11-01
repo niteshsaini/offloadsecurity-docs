@@ -1,5 +1,6 @@
 ---
 title: "Healthcare"
+description: "How Offload Security supports hospitals, health systems and health-tech vendors: protecting PHI, internal networks with legacy and medical equipment, and privacy obligations."
 sidebar_label: "Healthcare"
 sidebar_position: 4
 ---

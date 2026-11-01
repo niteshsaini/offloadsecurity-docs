@@ -23,6 +23,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Full history: "Last updated" on each page comes from that file's
+          # last commit. A shallow clone stamps every page with the latest
+          # commit's date.
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 20

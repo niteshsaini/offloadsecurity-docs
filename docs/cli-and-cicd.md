@@ -1,5 +1,6 @@
 ---
 title: "CLI & CI/CD Integration"
+description: "Run Offload Security scans from CI/CD and gate releases on the results: API keys, REST calls from any CI system, the GitHub Action, SARIF export, release-gate policy and the GitHub App."
 sidebar_label: "CLI & CI/CD"
 sidebar_position: 10
 ---

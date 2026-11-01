@@ -1,5 +1,6 @@
 ---
 title: "FAQ"
+description: "Short answers to common questions about Offload Security: what it covers, how it secures your data, access and operations, and compliance."
 sidebar_label: "FAQ"
 sidebar_position: 13
 ---
