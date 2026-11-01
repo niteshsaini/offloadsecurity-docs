@@ -19,14 +19,16 @@ These are recommended defaults for a typical production deployment, not universa
 
 | Surface | Recommendation |
 |---|---|
-| Cloud accounts | Connect **all** production accounts/projects/subscriptions, not a sample. Grant access at the AWS Organization / GCP org node / Azure management group so future accounts are covered by one binding — [Required Permissions](../cloud-security/permissions.md). |
-| Container registries | Every registry that feeds production deploys — [Container Security](../security-scanning/containers/index.md). |
-| Kubernetes | All production clusters; EKS/GKE/AKS are auto-discovered from connected cloud accounts — [Kubernetes Security](../security-scanning/kubernetes/index.md). |
+| Cloud accounts | Connect **all** production accounts/projects/subscriptions, not a sample. For GCP, onboard the organization or folder so new projects are discovered; AWS accounts and Azure subscriptions are added one by one, so add new ones as they are created — [Required Permissions](../cloud-security/permissions.md). |
+| Container registries | Every ECR, Artifact Registry and ACR registry that feeds production deploys; images from other registries by reference — [Container Security](../security-scanning/containers/index.md). |
+| Kubernetes | All production clusters; EKS/GKE/AKS clusters found on connected cloud accounts are listed for you to connect, and the Clusters tab counts discovered-but-not-connected clusters — [Kubernetes Security](../security-scanning/kubernetes/index.md). |
 | Code repositories | Every repo that ships to production — [Code Command Center](../security-scanning/code/index.md). |
-| Web apps & APIs | Your externally reachable applications and APIs — [Native Scans](../security-scanning/native-scans.md). |
+| Web apps & APIs | Your externally reachable applications and APIs, as App Scans with a recorded authorization — [Native Scans](../security-scanning/native-scans.md). |
 | Internal infrastructure | If you have significant on-prem estate, see [On-Premises & Private Infrastructure](../on-premises/index.mdx). |
 
-All scanning access is **read-only** — there is no write path from the scanner into your environment.
+All cloud, registry and cluster access is **read-only** — there is no write path from the scanner into your environment. Active web scans send test traffic to the target; state-changing probes are off unless you allow them.
+
+For regulated environments, consider setting `SCAN_REQUIRE_AUTHORIZATION=true` so every web, API and network scan must carry an authorization attestation (it is off by default so existing API and CI callers keep working, and such scans are reported as "authorization not recorded").
 
 ## Scan schedules
 
@@ -66,14 +68,14 @@ Then:
 **Principle: criticals interrupt a human; everything else batches.**
 
 - **Slack or Teams** ([Notifications](../integrations/notifications.md)): send **Critical and High** findings to your on-call/security channel. On Slack, routing rules can map category, severity, and source to different channels. Don't send Medium/Low to chat — that's how channels get muted.
-- **Email (SMTP)**: configure as the fallback channel and for people who don't live in chat.
-- **Jira** ([Jira](../integrations/jira.md)): connect it so critical findings become tickets automatically, high ones on request, and ticket status flows back — remediation happens in the tool engineers already use. (ServiceNow is a catalog entry today, not a connection.)
-- **Webhooks / SIEM**: subscribe your SIEM (Splunk, Sentinel, QRadar — anything with an HTTP collector) to signed [webhook subscriptions](../integrations/webhooks.md) so the SOC sees platform events alongside everything else.
+- **Email (SMTP)**: configure it for the daily SOC digest (per-alert email is not sent) and for scheduled reports.
+- **Jira** ([Jira](../integrations/jira.md)): connect it so critical findings become tickets automatically, high ones on request, and ticket status flows back — remediation happens in the tool engineers already use. GitHub Issues and GitLab Issues are also available as ticketing targets. (ServiceNow is a catalog entry today, not a connection.)
+- **SIEM**: forward platform alerts, finding changes and the audit trail to **Splunk** (HTTP Event Collector) or any **syslog / CEF** SIEM, or subscribe any HTTP collector to signed [webhook subscriptions](../integrations/webhooks.md) (including `alert.created`, `alert.updated` and `alert.resolved`) so the SOC sees platform events alongside everything else.
 
 ## Compliance
 
 - Activate **one or two frameworks** you actually answer to — not the whole catalog. The SCF common-control model means adding more later costs little ([Supported Frameworks](../compliance/supported-frameworks.md)).
-- Run **Collect All** in the [Evidence Hub](../compliance/evidence-hub.md) once scans are flowing, then keep evidence fresh automatically: cloud and scan evidence expires on a validity window (see the Evidence Hub validity table), so recurring scans keep it perpetually current.
+- Run **Collect All Evidence** in the [Evidence Hub](../compliance/evidence-hub.md) once scans are flowing, then keep evidence fresh automatically: cloud and scan evidence expires on a validity window (see the Evidence Hub validity table), so recurring scans keep it perpetually current.
 - **Indian regulated entities:** follow the deployment shape in [India Regulatory Readiness](../industries/india-regulatory-readiness.md) (private deployment, anchor framework, reporting clocks) and enable the [DPDP module](../compliance/dpdp-privacy.md).
 
 ## Access control
@@ -86,7 +88,7 @@ Then:
 
 - Start with **fail on Critical only**, then tighten to include High once the team trusts the signal and the backlog is under control — [CLI & CI/CD](../cli-and-cicd.md).
 - Prefer the **GitHub App** on GitHub (inline PR annotations, auto-scan); use the GitHub Action or plain REST calls elsewhere.
-- Export **SARIF** if other tools in your pipeline consume it (SARIF is export-only — the platform doesn't import SARIF from other scanners).
+- Export **SARIF** if other tools in your pipeline consume it, and import SARIF 2.1.0 from scanners you keep (CodeQL, Semgrep and others) so their results join the same triage queue — [CLI & CI/CD](../cli-and-cicd.md#import-sarif-from-other-scanners).
 
 ## What "healthy" looks like
 

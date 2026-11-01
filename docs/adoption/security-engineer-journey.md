@@ -14,9 +14,9 @@ Typical role: **Security Manager** — Stages 1 and 5 involve connecting account
 ## Stage 1 — Connect everything you defend
 
 1. [Connecting Cloud Accounts](../cloud-security/connecting-accounts.md) — AWS, GCP, and Azure with read-only access and copy-paste Terraform.
-2. [Required Permissions](../cloud-security/permissions.md) — the exact per-provider permission sets, and how granting at the org level covers future accounts.
-3. [Container Security](../security-scanning/containers/index.md) — connect ECR, Artifact Registry/GCR, ACR, or Docker Hub.
-4. [Kubernetes Security](../security-scanning/kubernetes/index.md) — clusters auto-discovered from cloud accounts, or onboarded via read-only kubeconfig.
+2. [Required Permissions](../cloud-security/permissions.md) — the exact per-provider permission sets, including GCP organization or folder onboarding (AWS and Azure accounts are added one by one).
+3. [Container Security](../security-scanning/containers/index.md) — connect ECR, Artifact Registry/GCR or ACR through a cloud account; scan other images (Docker Hub included) by reference.
+4. [Kubernetes Security](../security-scanning/kubernetes/index.md) — connect clusters discovered on your cloud accounts, or onboard any cluster with a self-contained, read-only kubeconfig.
 
 **You can now:** see your estate in [Asset Inventory](../cloud-security/asset-inventory.md).
 
@@ -24,7 +24,7 @@ Typical role: **Security Manager** — Stages 1 and 5 involve connecting account
 
 1. [App & Infrastructure Scanning overview](../security-scanning/index.md) — every scan type and the open-source engines behind it.
 2. [How Cloud Scans Run](../cloud-security/scan-orchestration.md) — per-provider partitioning, statuses, and the daily/weekly scheduled-scan options.
-3. [Native Scans](../security-scanning/native-scans.md) — web (ZAP, Nuclei), network (Nmap), TLS, API scanning, and authenticated scanning.
+3. [Native Scans](../security-scanning/native-scans.md) — the Scanning module's **Assessments** (App Scan: authenticated, graded web and API assessment) and **Targeted runs** (ZAP, Nuclei, Nmap, testssl.sh, API discovery), each run's provenance and kept raw output, and comparing a run with the previous one.
 4. [Compliance & Benchmark Checks](../cloud-security/prowler-integration.md) — CIS benchmarks and framework mappings for cloud posture.
 
 **You can now:** run any scan type on demand and explain what a **Partial** status means.
@@ -33,6 +33,7 @@ Typical role: **Security Manager** — Stages 1 and 5 involve connecting account
 
 1. [Vulnerability & Risk overview](../vulnerability-risk/index.md) — the detection-to-remediation lifecycle.
 2. [Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx) — deduplication, occurrences, lifecycle statuses, and the prioritization signals: CVSS severity, EPSS, CISA KEV, and P0–P4 priority rank.
+3. The **Case file** on each finding (its investigation record across handoffs) and **Risk exceptions** for approved, time-limited decisions not to fix yet.
 4. [Risk Register](../vulnerability-risk/risk-management/index.md) — promote what matters into governed risks with owners and treatment plans.
 
 **You can now:** answer "what are our ten most important findings, and why those?"
@@ -49,7 +50,7 @@ Typical role: **Security Manager** — Stages 1 and 5 involve connecting account
 ## Stage 5 — Automate yourself out of the loop
 
 1. [Scan Management & Scheduling](../security-scanning/scan-management.md) — the Unified Scheduler: cron/interval schedules, failure notifications, and history.
-2. [CLI & CI/CD](../cli-and-cicd.md) — gate builds via the GitHub Action or plain REST; SARIF export for other tools.
+2. [CLI & CI/CD](../cli-and-cicd.md) — gate builds via the GitHub Action or plain REST; SARIF export, and SARIF import from other scanners.
 3. [API & Automation](../api-automation/index.md) and [Automation Use Cases](../api-automation/automation-use-cases.md) — API keys, release gates, findings export, webhook receivers.
 4. [API Reference](../api-reference/index.md) — the full endpoint catalog when you outgrow the recipes.
 
@@ -58,6 +59,6 @@ Typical role: **Security Manager** — Stages 1 and 5 involve connecting account
 ## Going deeper
 
 - [Attack Path Analysis](../cloud-security/attack-paths.md) — from individual findings to exploitable chains.
-- [Threat Intelligence](../ai-threat-intelligence/threat-intelligence.md) — KEV/OTX/URLhaus feeds correlated against your assets.
-- [Security Command Center (AI-SOC)](../ai-threat-intelligence/ai-soc-agents.md) — AI-assisted triage and remediation drafts (human approval required for any change).
-- [On-Premises & Private Infrastructure](../on-premises/index.mdx) — internal networks, Wazuh, and OpenVAS.
+- [Threat Intelligence](../ai-threat-intelligence/threat-intelligence.md) — KEV/OTX/URLhaus and the other built-in feeds correlated against your assets and findings.
+- [Security Command Center (AI-SOC)](../ai-threat-intelligence/ai-soc-agents.md) — AI-assisted triage over the same queue and remediation drafts (human approval required for any change).
+- [On-Premises & Private Infrastructure](../on-premises/index.mdx) — internal networks, Wazuh (Endpoint 360, Fix first), and Greenbone OpenVAS results in Infra Command Center.

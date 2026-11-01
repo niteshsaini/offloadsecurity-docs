@@ -40,7 +40,7 @@ Every scan uses **read-only** credentials and only ever *reads* your environment
 ## 1. Sign in
 
 1. Open the platform URL in your browser — e.g. `https://yourdomain.com` (the address your administrator gave you).
-2. Enter your **email** and **password** on the login screen and select **Sign in** — or **Sign in with …** if your organisation uses single sign-on. If MFA is enabled on your account, enter the code from your authenticator app.
+2. Enter your **email** and **password** on the login screen and select **Sign in** — or **Sign in with …** if your organization uses single sign-on. If MFA is enabled on your account, enter the code from your authenticator app.
 3. On success you land on the **Dashboard**.
 
 :::note[First administrator]
@@ -49,17 +49,25 @@ The first administrator account is created during platform setup. If you're the 
 
 ## 2. Tour the dashboard
 
-The Dashboard is your security command center — a real-time summary of posture, recent activity, and quick actions into the most-used modules.
+The Dashboard is a stitched summary of posture across every module. It has two tabs: **Security Overview** and **Executive Dashboard**. The overview is computed in the background and refreshes about every 15 minutes, so a scan that just finished can take a few minutes to appear here; the module pages themselves are live.
 
-![Dashboard: quick-action cards; overall risk score, active alerts, vulnerabilities, compliance score, assets monitored; risk posture by domain; top risk findings](/img/screenshots/dashboard.webp)
+![Dashboard, Security Overview tab: overall risk score, active alerts, vulnerabilities, compliance score and assets monitored; risk posture by domain; top risk findings](/img/screenshots/dashboard.webp)
 
 | Area | What it shows |
 |---|---|
 | **Left navigation** | Every module, grouped into Core Security, Cloud & Infrastructure, Compliance & Risk, Threat & Intelligence, and Management. |
-| **Quick-action cards** | One-click entry into AI Governance, Assessments, Container Security, Cloud Security and Web Application Security. |
-| **Headline tiles** | Overall risk score, active alerts, vulnerabilities (with occurrence count), compliance score, assets monitored. |
-| **Risk posture by domain** · **Top risk findings** | Where the risk sits — cloud, vulnerabilities, infrastructure, code, compliance — and the findings to open first. |
+| **Headline tiles** | Overall Risk Score, Active Alerts, Vulnerabilities (deduplicated, with the open occurrence count under it), Implementation Score and Assets Monitored. Click a tile to open the module it comes from. |
+| **Since yesterday** | New, reopened, newly overdue and resolved findings in the last 24 hours, plus accepted risks that came back for review. |
+| **Risk posture by domain** · **Top risk findings** | Where the risk sits — cloud, vulnerabilities, infrastructure, code, compliance — and the findings to open first. Click a finding to open it in Vulnerability Management. |
 | **Executive Dashboard** tab | The leadership view: framework readiness, gaps, roadmap and executive reports — see [Executive Dashboard](./reports-and-ai/executive-dashboard.md). |
+
+A tile or ring that shows **—** or **Not assessed** means the number is unknown or nothing has been scanned yet — never zero. Dashboard tiles and coverage cards across the modules drill down: clicking one opens the filtered list behind the number.
+
+### Finding your way around
+
+- **Help on every module.** Each module page has a **Help** button in its header. It opens a side panel of task guides ("How do I…") with prerequisites, steps, what you will see, common errors and limits. Search it, or share a link to one guide.
+- **Deep-linkable tabs.** Module tabs are reflected in the page URL, so the browser's Back and Forward buttons step through tabs and a copied link opens the same tab. The page header shows a **Module › Tab** breadcrumb.
+- **Scanning is one module.** **Core Security → Scanning** has three tabs: **Assessments** (App Scans: one authenticated, graded run of every selected web and API tool), **Targeted runs** (one tool at a time, such as Nmap, testssl.sh or Nuclei) and **New scan** (the one launcher for both).
 
 ## 3. Understand the core concepts
 
@@ -100,9 +108,9 @@ In **Cloud Security → Cloud Accounts**, select **Add Cloud Account** and follo
 - **Verify:** the account is listed as Connected, and you can see a scan in progress with a scan run ID.
 
 ### Step 2 — Run and watch a scan
-Start a cloud scan at any time (an initial scan may already have started on connect), or run a **[native web / API / network scan](./security-scanning/native-scans.md)** against a target you own.
-- **Expected result:** the scan reaches **Completed** (or **Partial**, if some checks couldn't run), and findings appear.
-- **Verify:** on the **Scans** page the status shows Completed with a finding count — open it to see the results.
+Start a cloud scan at any time from the account card in **Cloud Security** (an initial scan may already have started on connect) and follow it on the **Cloud Scans** tab. Or open **Scanning → New scan** and run a **[web / API / network scan](./security-scanning/native-scans.md)** against a target you own — tick the attestation that you are authorized to test it; the launch button stays disabled until you do.
+- **Expected result:** the scan reaches **Completed** (or **Partial**, if some checks couldn't run), and findings appear. Completed scans reach Vulnerability Management straight away.
+- **Verify:** the scan list shows Completed with a finding count — open the run to see its findings, what ran (tool, version, settings), and how it compares with the previous run of the same target.
 
 ### Step 3 — Understand a finding
 Open **[Vulnerability Management](./vulnerability-risk/vulnerability-management/index.mdx)** and select a finding.
@@ -110,13 +118,13 @@ Open **[Vulnerability Management](./vulnerability-risk/vulnerability-management/
 - **Verify:** you can see the affected asset and a concrete remediation step — and the same issue found by two scanners appears as **one** deduplicated record.
 
 ### Step 4 — Create a remediation ticket
-With **[Jira connected](./integrations/jira.md)**, critical findings get a ticket automatically; for a high finding, select it under Vulnerability Management → *Raw Findings* and choose **Create Jira Ticket**.
+With **[Jira connected](./integrations/jira.md)**, critical findings get a ticket automatically; for others, select the occurrences under **Vulnerability Management → All Occurrences** and create Jira tickets for them. GitHub Issues and GitLab Issues can also be connected as ticketing targets.
 - **Expected result:** a Jira issue is created and linked to the finding.
 - **Verify:** the finding shows its ticket key, and the **Jira** tab in Vulnerability Management lists it; when the ticket is closed in Jira the finding resolves within 15 minutes.
 
 ### Step 5 — Configure an alert
-Connect **Slack** or **Microsoft Teams** under Integrations — the connection test posts a message to the channel — or set up a [webhook subscription](./integrations/webhooks.md) for your SIEM. See [Notifications](./integrations/notifications.md).
-- **Expected result:** new or reopened alerts of high severity and above reach the channel; every alert appears in the bell and in **Alerts** regardless.
+Connect **Slack**, **Microsoft Teams** or **Google Chat** under Integrations — the connection test posts a message to the channel — or set up a [webhook subscription](./integrations/webhooks.md) for your SIEM. Choose the minimum severity and channels under **Alerts → Delivery settings**. See [Notifications](./integrations/notifications.md).
+- **Expected result:** new or reopened alerts at or above the delivery severity (high by default) reach the channel; every alert appears in the bell and in **Alerts** regardless. Email is sent as a daily digest, not per alert.
 - **Verify:** the wizard's test message arrived; the next high or critical finding produces a channel post.
 
 ### Then automate it
@@ -134,7 +142,7 @@ Use this checklist to confirm the quickstart worked end to end:
 - [ ] One scan has reached **Completed** and produced findings.
 - [ ] You've opened a finding and can name its affected resource and remediation step.
 - [ ] A finding is linked to a Jira ticket (or you've consciously skipped ticketing for now).
-- [ ] A notification channel (Slack, Teams, email, or webhook) received a test message.
+- [ ] A notification channel (Slack, Teams, Google Chat, or webhook) received a test message.
 
 If any box won't check, see [Troubleshooting](./troubleshooting.md).
 

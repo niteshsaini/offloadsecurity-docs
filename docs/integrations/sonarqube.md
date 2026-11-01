@@ -1,7 +1,7 @@
 ---
 title: "SonarQube Integration"
 sidebar_label: "SonarQube"
-sidebar_position: 6
+sidebar_position: 10
 description: "Connect a SonarQube server to keep a per-team snapshot of its projects and open vulnerability issues alongside the platform's own code-security results — what is synced, how often, where to read it, and what is deliberately not imported."
 ---
 
@@ -37,7 +37,7 @@ SonarQube issues are **not imported as platform findings** — they do not appea
 | `project_key` *(optional)* | Restrict the snapshot to one project |
 | `verify_ssl` · `ca_cert` *(optional)* | TLS verification and a private CA certificate for on-premises servers |
 
-The connection test authenticates against the server before anything is saved. SonarQube Cloud works the same way with an organisation token; a server on a private network needs the platform deployed where it can reach it, or `ALLOW_PRIVATE_SCAN_TARGETS=true` on an on-premises install — see [On-Premises](../on-premises/index.mdx).
+The connection test authenticates against the server before anything is saved. SonarQube Cloud works the same way with an organisation token; a server on a private network needs the platform deployed where it can reach it; private addresses are allowed by default (`ALLOW_PRIVATE_INTEGRATION_TARGETS`) — see [On-Premises](../on-premises/index.mdx).
 
 ## Related
 

@@ -7,7 +7,9 @@ description: "Scan every pull or merge request on GitHub, GitLab and Bitbucket: 
 
 # Pull Request Review
 
-A repository scan tells you where a codebase stands. A **pull request review** tells a developer what *this change* introduces — in the diff, before it merges — and lets you make that a required check. The platform reviews pull requests on **GitHub**, merge requests on **GitLab** (gitlab.com) and pull requests on **Bitbucket** with the same engines as a full scan.
+A repository scan tells you where a codebase stands. A **pull request review** tells a developer what *this change* introduces — in the diff, before it merges — and lets you make that a required check. The platform reviews pull requests on **GitHub**, merge requests on **GitLab** (gitlab.com or the self-managed instance of your Git connection) and pull requests on **Bitbucket** with the same engines as a full scan.
+
+**Where:** Code Command Center → **Automation** → **PR Review** (per-repository GitHub settings, GitLab / Bitbucket webhooks and the team quality gate) and **GitHub App**.
 
 ## What a review does
 
@@ -29,11 +31,28 @@ flowchart LR
 
 ### The gate
 
-The pass/fail decision is made from **the review's own findings** (severity threshold and the active [SCA policy pack](./sbom-and-licenses.md#sca-policy-packs)), never from findings elsewhere in the platform. Findings you have already triaged — false positive, accepted risk — do not fail a review. Configure thresholds as described in [CI/CD & Automation](./ci-cd-and-automation.md#gating).
+The pass/fail decision is made from **the review's own findings** against the **team quality gate** (Automation → PR Review → *Team quality gate*: max critical / high / medium / low, minimum score, block on critical or known-exploited, stale-database handling) and the active [SCA policy pack](./sbom-and-licenses.md#sca-policy-packs) — never from findings elsewhere in the platform. By default the gate counts **only findings the pull request introduces**; per GitHub repository you can switch *Pull request gate counts* to **every finding in the scanned files**. Findings you have already triaged — false positive, accepted risk — do not fail a review. A scan whose tools failed fails the gate rather than passing it. See [CI/CD & Automation](./ci-cd-and-automation.md#gating).
 
 ## GitHub
 
-Install the **Offload Security GitHub App** ([Deeper GitHub integration](../../cli-and-cicd.md#5-deeper-github-integration-the-github-app)). The App receives pull-request events and creates a **check run** on the head commit with the inline annotations and the summary. Mark that check as a **required status check** in the repository's branch protection to block merges on a failing review. Nothing else to configure per repository.
+1. **Set up the GitHub App** (once, an administrator): create the App on GitHub and save its App ID, private key and webhook secret under **Automation → GitHub App** — step by step in [Pull Request Scanning](./pull-request-scanning.md#github--the-github-app). Install it on your repositories.
+2. **Choose the repository settings** under **Automation → PR Review**: pick a repository from the App's installation (if none appear, select **Sync from GitHub** or link the installation by ID), then set:
+
+   | Setting | Default |
+   | --- | --- |
+   | **Scan on push to the default branch** — keeps the baseline current | on |
+   | **Scan pull requests** — on open and on every new commit | on |
+   | **Post a summary comment on the pull request** | on |
+   | **Create a GitHub check run** — the merge gate | on |
+   | **Scan types** — Full code security, or SAST / Dependencies / Secrets / Infrastructure as Code | Full code security |
+   | **Pull request gate counts** — only findings the PR introduces, or every finding in the scanned files | introduced only |
+
+   Select **Save repository settings**. Changing them needs **Manage Integrations**.
+3. **Make it blocking.** Mark the check run as a **required status check** in the repository's branch protection.
+
+The check run is what gates the merge. If you turn it off, the PR comment says the result **does not block the merge**, and a scan that fails is reported as a failure comment (when comments are on) rather than disappearing.
+
+**Webhook deliveries.** **Automation → GitHub App** shows what GitHub recorded when it sent the App's events to the platform: delivered and failed counts, the last success, the latest deliveries, and for a failure its likely cause and fix — 401 (webhook secret mismatch), 403 (no secret), 404 (wrong URL path), no response (firewall, DNS or timeout) or a server error. This includes deliveries that never reached the platform, so an App that shows *Connected* while every delivery is rejected is visible here instead of only in GitHub's *Recent Deliveries*. An App that is saved but not working is shown as **Saved, but not working**, with the problems listed.
 
 ## GitLab and Bitbucket
 
@@ -41,7 +60,7 @@ GitLab and Bitbucket reviews are driven by a webhook the platform gives you, aut
 
 **1. Connect the provider.** Under Code Command Center → Automation → **Git Connections**, connect GitLab or Bitbucket with a token that can read the repository and comment on merge/pull requests (GitLab: `read_api`, `read_repository` and `api` for comments and statuses; Bitbucket: repository read plus pull-request write).
 
-**2. Create the review hook** (once per team and provider — needs *Manage Integrations*):
+**2. Create the review hook** (once per team and provider — needs *Manage Integrations*). Under **Automation → PR Review**, the GitLab and Bitbucket merge-request panels have **Create webhook secret**: copy the **Webhook URL** and the secret, which is shown once. Or over the API:
 
 ```bash
 curl -s -X POST https://<your-host>/api/scm/webhooks/gitlab/secret \
@@ -55,7 +74,7 @@ Use `bitbucket` in place of `gitlab` for Bitbucket. The response contains the `h
 ```
 
 :::warning
-The secret is shown **once**; only its hash is stored. If you lose it, create the hook again.
+The secret is shown **once**. For GitLab only its hash is stored; for Bitbucket it is also kept encrypted, because Bitbucket signs each delivery with it. If you lose it, **Rotate secret** — this issues a new URL and secret, and the old webhook stops working until you update it on the provider.
 :::
 
 **3. Register it on the repository.**
@@ -63,9 +82,9 @@ The secret is shown **once**; only its hash is stored. If you lose it, create th
 | Provider | Where | URL | Secret | Events |
 | --- | --- | --- | --- | --- |
 | **GitLab** | Project → Settings → Webhooks | `https://<your-host>` + `path` | *Secret token* = `secret` | Merge request events, Push events |
-| **Bitbucket** | Repository settings → Webhooks | `https://<your-host>` + `path` | *Secret* = `secret` | `pullrequest:created`, `pullrequest:updated`, `repo:push` |
+| **Bitbucket** | Repository settings → Webhooks | `https://<your-host>` + `path` | *Secret* = `secret` | `pullrequest:created`, `pullrequest:updated`, `pullrequest:fulfilled`, `pullrequest:rejected`, `repo:push` |
 
-`GET /api/scm/webhooks/gitlab` (or `…/bitbucket`) confirms a hook is configured for the team.
+The panel then shows **Webhook configured** with its URL and creation time; `GET /api/scm/webhooks/gitlab` (or `…/bitbucket`) returns the same status, never the secret.
 
 **4. Open a merge request.** Within a minute the MR shows inline comments on new findings, a summary note and a commit status. Make the status required in the project's merge-request approval settings to block merges.
 

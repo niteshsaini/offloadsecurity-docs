@@ -1,13 +1,13 @@
 ---
 title: "Wazuh + OpenVAS: Complete On-Premises Coverage"
-description: "Run Wazuh and OpenVAS together with Offload Security for complete on-premises coverage: endpoint telemetry and network vulnerability scanning, correlated in one place."
+description: "Run Wazuh and OpenVAS together with Offload Security for complete on-premises coverage: endpoint telemetry and network vulnerability scanning, in one set of views."
 sidebar_label: "Wazuh + OpenVAS"
-sidebar_position: 8
+sidebar_position: 9
 ---
 
 # Wazuh + OpenVAS: Complete On-Premises Coverage
 
-Wazuh and OpenVAS answer two different questions about your internal estate. Run them together, connected to Offload Security, and you get both — correlated in one place instead of two consoles.
+Wazuh and OpenVAS answer two different questions about your internal estate. Run them together, connected to Offload Security, and you get both in the same Vulnerability Management views instead of two consoles.
 
 | | **[Wazuh](./wazuh.md)** | **[OpenVAS](./openvas.md)** |
 |---|---|---|
@@ -20,22 +20,22 @@ Wazuh and OpenVAS answer two different questions about your internal estate. Run
 
 - **Breadth × depth.** Wazuh gives continuous, agent-level visibility on the hosts you manage; OpenVAS reaches everything on the network — including appliances, OT/IoT, and unmanaged systems where you can't install an agent.
 - **Detection × prevention.** Wazuh tells you what's *happening* (events, integrity changes, active response); OpenVAS tells you what's *exposed* before it's exploited.
-- **Corroborated vulnerability state.** A host CVE flagged by Wazuh's vulnerability detection (which streams into the platform) and confirmed by an authenticated OpenVAS scan gives you higher-confidence signal on the same host.
-- **Both control types covered.** Wazuh's SCA/FIM telemetry becomes audit evidence in the platform for endpoint-hardening controls, while OpenVAS covers the internal-scanning controls many frameworks require (e.g., PCI-DSS) — together spanning both requirements.
+- **Corroborated vulnerability state.** A host CVE flagged by Wazuh's vulnerability detection and found again by an authenticated OpenVAS scan — both synced into Vulnerability Management — gives you higher-confidence signal on the same host.
+- **Both control types covered.** Wazuh SCA failures map to SCF controls as fleet evidence for endpoint-hardening controls, while OpenVAS covers the internal-scanning controls many frameworks require (e.g., PCI-DSS) — together spanning both requirements.
 
 ## How they fit together
 
 The two integrations sit at different depths in the platform:
 
-- **Wazuh telemetry streams into the platform** — detections, alerts, FIM, SCA compliance, and host CVE state flow into **[Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx)** and the centralized **[Alerts](./notifications.md)**, deduplicated against native scans.
-- **OpenVAS is a connectivity integration** — Offload connects to and verifies your Greenbone/OpenVAS deployment; you run and review the network scans there. Its results are not imported into the platform today, so OpenVAS remains the system of record for internal scan findings.
+- **Wazuh telemetry streams into the platform** — agents become assets, alerts reach the centralized **[Alerts](../vulnerability-risk/alerts.md)**, and host CVE state becomes vulnerability occurrences in **[Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx)**. SCA and FIM are browsed in the Endpoint Security dashboard.
+- **OpenVAS results are synced over GMP** — every 30 minutes the latest report of each Greenbone scan task becomes vulnerability occurrences (one per check, host and port) in the same Vulnerability Management views. You still define targets, scan configurations and schedules in the Greenbone console.
 
-Together they give you continuous host visibility in-platform *and* deep network vulnerability assessment on your own infrastructure — covering the endpoint-hardening and internal-scanning controls that regulated environments require.
+Together they give you continuous host visibility *and* network vulnerability assessment in one place — covering the endpoint-hardening and internal-scanning controls that regulated environments require.
 
 ## Get started
 
 1. Connect **[Wazuh](./wazuh.md)** (Manager API + Indexer).
-2. Connect **[OpenVAS](./openvas.md)** and define your internal scan scope.
-3. Review Wazuh's host activity in **[Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx)** and **[Alerts](./notifications.md)**, and run your network scans in the OpenVAS / Greenbone console.
+2. Connect **[OpenVAS](./openvas.md)** (GMP on port 9390) and define your internal scan scope in the Greenbone console.
+3. Review host and network findings together in **[Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx)**, and Wazuh alerts in **[Alerts](../vulnerability-risk/alerts.md)**.
 
 For the full architecture of internal coverage, see the **[On-Premises](../on-premises/index.mdx)** section.

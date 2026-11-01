@@ -28,7 +28,7 @@ The report nobody has to remember to generate is the one that actually reaches t
 Every 30 minutes the platform looks for schedules whose `next_run` has passed and, for each:
 
 1. Builds the report from the live executive overview (the same scorer as the dashboard).
-2. Renders it to **PDF** (falls back to a labelled text report if the PDF renderer is unavailable — never a silent empty file).
+2. Renders it to **PDF** with the same builder as the dashboard's **Export PDF**, so the emailed copy matches what you see (falls back to a labelled text report if the PDF renderer is unavailable — never a silent empty file).
 3. Stores the artefact in report history (team-stamped, kept **180 days**).
 4. **Emails** it to the recipients as an attachment, subject `[OffloadSecurity] Scheduled <report> compliance report — <maturity>`; if no email channel is configured the run is recorded as *not delivered* rather than pretending.
 5. Writes `last_run`, `last_status` (`generated`, or `error:<category>`), `run_count` and the next `next_run` back onto the schedule.

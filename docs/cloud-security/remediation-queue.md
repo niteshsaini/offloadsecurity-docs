@@ -15,9 +15,12 @@ Resolving a finding in the platform does not fix the cloud; someone still has to
 
 ## Creating a task
 
-1. On the **Scanning** tab, expand a finding and select **Fix** (*Create remediation task*).
-2. Enter an **assignee** (email or name), a **priority**, a **due date** and any **notes** for the owner.
-3. The task is created as **Open** and linked to the finding (check, resource, account).
+1. On the **Findings** tab, expand a finding and select **Fix** (*Create Remediation Task*).
+2. Under **Affected Resource**, pick the resource the task is for. A task targets one resource; when a check has many, the list shows the most recently detected ones and says how many there are in total.
+3. Enter an **assignee** (email or name), a **priority**, a **due date** and any **notes** for the owner.
+4. The task is created as **Open** and linked to the finding (check, resource, account).
+
+**Fix** is not offered on findings raised by [custom policies](./custom-policies.md); track those in Vulnerability Management.
 
 You can create tasks over the API as well — see [Cloud Security API](./api.md#remediation-tasks).
 
@@ -31,13 +34,15 @@ Each row shows the finding title, the affected **resource ID**, **severity** (fr
 | --- | --- |
 | **Open** | Created, nobody has started. |
 | **In progress** | The owner is working on it. |
-| **Done** | The change is made. The next scan verifies it — if the check still fails, the finding stays open and you will see it on the Scanning tab. |
+| **Done** | The change is made. The next scan verifies it — if the check still fails, the finding stays open and you will see it on the Findings tab. |
 | **Won't fix** | The owner decided not to change it. Pair this with a **suppression** on the finding so the risk is recorded as accepted, not ignored. |
 | **Cancelled** | Created by mistake or superseded. |
 
 :::note[Tasks vs. suppressions]
 A **task** says "someone will fix this by a date". A **suppression** says "we accept this for a period". Use a task for anything you intend to change, and a suppression for accepted risk — the queue stays a true to-do list and the audit trail stays honest.
 :::
+
+Removing a cloud account closes its open tasks rather than deleting them, so the hand-off history stays.
 
 ## Related
 

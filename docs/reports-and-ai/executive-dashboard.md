@@ -57,7 +57,19 @@ It is a planning skeleton generated from your gap list, not an effort estimate f
 | **Trend Analysis** | Compliance metrics over a period (default 90 days, up to 365 over the API) |
 | **Certification Plan** | The roadmap framed as a certification timeline |
 
-Each generates on demand; **Export PDF** renders the branded **Compliance Posture Report** — cover and document control, implementation summary, status distribution, and the framework table (implemented / partial / in scope / score) with a bar chart — using the same scorer and the same active frameworks as the dashboard. Generated reports are stored for 180 days.
+Each generates on demand. **Export PDF** renders the overview you are looking at — the same computation, not a separate one — as a branded PDF in one of three forms:
+
+| `report_type` | Title | Contents |
+| --- | --- | --- |
+| `summary` (default) | Executive Compliance Summary | Executive summary, framework status table and chart, trend from the daily control-state snapshots, open control gaps (top 15, with how many more) |
+| `board` | Board Compliance Report | The summary plus certification readiness and strengths |
+| `gap-analysis` | Compliance Gap Analysis | Every open control gap |
+
+A framework without SCF control state is shown as *Not assessed*, not 0%. Scheduled reports use the same builder, so the emailed PDF matches **Export PDF**. Generated reports are stored for 180 days.
+
+:::note[No AI in these numbers or words]
+The executive summary, gap priorities, roadmap and readiness bands are computed and worded from your control state by templates. No AI model is called to produce them.
+:::
 
 The **Scheduled reports** panel on this tab is described on [Scheduled Reports](./scheduled-reports.md).
 

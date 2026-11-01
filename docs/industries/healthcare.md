@@ -9,17 +9,17 @@ sidebar_position: 4
 
 Healthcare organizations — hospitals, health systems, health-tech vendors, and medical device or IoT operators — carry an unusual security burden. They hold some of the most sensitive data in existence (protected health information, or PHI), they run sprawling internal networks full of legacy and specialized equipment, and they answer to strict data-protection and privacy expectations. Much of the attack surface never touches the public internet at all.
 
-OffloadSecurity gives these teams one correlated source of truth across cloud, applications, code, containers, and — critically for healthcare — the internal network and endpoints that traditional cloud-first tools ignore. A posture picture that omits the internal network is, by definition, incomplete — and it's usually the part auditors and attackers care about most.
+Offload Security gives these teams one correlated source of truth across cloud, applications, code, containers, and — critically for healthcare — the internal network and endpoints that traditional cloud-first tools ignore. A posture picture that omits the internal network is, by definition, incomplete — and it's usually the part auditors and attackers care about most.
 
 ## Why healthcare organizations choose Offload Security
 
 ### The internal network is treated as a first-class citizen
 
-Medical devices, imaging systems, nurse workstations, and OT rarely leave the hospital network — and often can't be patched or re-imaged like a laptop. OffloadSecurity's [On-Premises](../on-premises/index.mdx) model scans these environments in place. [Internal Network Visibility](../on-premises/internal-network-visibility.md) maps what's actually running behind the firewall, so segments full of unmanaged devices stop being blind spots.
+Medical devices, imaging systems, nurse workstations, and OT rarely leave the hospital network — and often can't be patched or re-imaged like a laptop. Offload Security's [On-Premises](../on-premises/index.mdx) model scans these environments in place; network scans accept excluded hosts, so fragile devices can be kept out of active probing. [Internal Network Visibility](../on-premises/internal-network-visibility.md) maps what's actually running behind the firewall, so segments full of unmanaged devices stop being blind spots.
 
 ### Vulnerability management that reaches legacy internal systems
 
-Authenticated and unauthenticated scanning via the [OpenVAS integration](../on-premises/openvas-scanning.md) surfaces exposures on internal hosts a public SaaS scanner can't reach — the internal-host coverage regulated healthcare environments require, running inside your own network so scan data about sensitive systems stays within your boundary.
+Your [Greenbone OpenVAS](../on-premises/openvas-scanning.md) scans — authenticated or unauthenticated, configured and run in Greenbone inside your network — are imported into Vulnerability Management, surfacing exposures on internal hosts a public SaaS scanner can't reach. With the platform deployed on-premises, scan data about sensitive systems stays within your boundary.
 
 ### Endpoint and telemetry monitoring without shipping data out
 
@@ -47,16 +47,16 @@ Because internal scans, endpoint telemetry, and cloud findings share one data mo
 | --- | --- |
 | Protect PHI and patient privacy | Correlated posture across cloud and internal systems, with data-protection framework mapping in [Compliance](../compliance/index.md) |
 | Secure large internal networks and medical devices/IoT/OT | [Internal Network Visibility](../on-premises/internal-network-visibility.md) and in-place scanning via [On-Premises](../on-premises/index.mdx) |
-| Vulnerability scanning of legacy internal hosts | [OpenVAS integration](../on-premises/openvas-scanning.md) for internal-host coverage |
+| Vulnerability scanning of legacy internal hosts | [Greenbone OpenVAS](../on-premises/openvas-scanning.md) results imported for internal-host coverage |
 | Endpoint and behavioral monitoring | [Wazuh Integration](../on-premises/wazuh-integration.md) for endpoint/SIEM coverage |
 | Keep sensitive telemetry in the boundary | [Centralized Ingestion](../on-premises/centralized-ingestion.md) within the on-premises model |
 | Audit-ready, continuous evidence | [Evidence Hub](../compliance/evidence-hub.md) collecting artifacts as work happens |
 | Cloud and health-tech workloads | [Cloud Security](../cloud-security/index.md) correlated with internal findings |
 
 :::note
-OffloadSecurity speaks to data-protection and privacy frameworks and internal/endpoint coverage generally. Map the platform to your organization's specific regulatory obligations with your compliance team.
+Offload Security speaks to data-protection and privacy frameworks and internal/endpoint coverage generally. Map the platform to your organization's specific regulatory obligations with your compliance team.
 :::
 
 ## The bottom line
 
-Healthcare security fails most often at the seams — between the cloud program and the hospital floor, between the audit binder and what's actually running. OffloadSecurity closes those seams by bringing internal-network scanning, endpoint monitoring, cloud posture, and compliance evidence into one correlated view, with sensitive telemetry kept inside your boundary. To see it against your own environment, start with [Quickstart](../getting-started.md).
+Healthcare security fails most often at the seams — between the cloud program and the hospital floor, between the audit binder and what's actually running. Offload Security closes those seams by bringing internal-network scanning, endpoint monitoring, cloud posture, and compliance evidence into one correlated view, with sensitive telemetry kept inside your boundary. To see it against your own environment, start with [Quickstart](../getting-started.md).

@@ -2,12 +2,12 @@
 title: "Drift Detection"
 sidebar_label: "Drift Detection"
 sidebar_position: 3
-description: "Catch a control that regressed, evidence that expired, a clean domain that picked up findings or a framework that fell below its threshold — computed from daily posture snapshots, with alert policies that route it to Slack, Teams or email."
+description: "Catch a control that regressed, lost its evaluation or was marked not applicable while failing, an attestation that scans contradict, evidence that expired or a framework that fell below its threshold, each reported once with the findings behind it, and route it to email, Slack or in-app notifications."
 ---
 
 # Drift Detection
 
-A compliance score is a number; drift is the *change* in it — and change is what auditors, and you, actually care about between two dates. Drift detection compares today's posture snapshot with the previous one and names every control, framework and evidence item that moved the wrong way.
+A compliance score is a number; drift is the *change* in it, and change is what auditors and you care about between two dates. Drift detection names every control, framework and evidence item that moved, with what caused it, and reports each change exactly once.
 
 **Where:** left navigation → **Compliance Posture** → *Drift Detection* tab.
 
@@ -15,29 +15,42 @@ A compliance score is a number; drift is the *change* in it — and change is wh
 
 ## What counts as drift
 
+Each control status maps to one of four states: pass, fail, not evaluated, or not applicable. Drift is a move between those states, or one of the framework- and evidence-level events below.
+
 | Type | Detected when | Severity |
 | --- | --- | --- |
-| **Control regression** | A control's status moved in the wrong direction between the two most recent daily snapshots (implemented → partial, partial → not implemented, …) | high |
-| **Finding-count regression** | A control's status did not change but the number of open findings behind it rose | high if it rose by 5 or more, otherwise medium |
-| **New finding in a compliant domain** | An SCF domain that was fully clean in the previous snapshot now has a non-clean control | high |
-| **Evidence expired** | Evidence linked to a control passed its validity date | medium |
-| **Threshold crossed** | A framework's score fell below its [threshold](./autonomous-compliance.md#thresholds-and-breaches) | critical |
+| **Control Regression** | Pass → fail, or a failing control moved further down (partial → not implemented) | high |
+| **Control Recovered** | Fail → pass | low |
+| **No Longer Evaluated** | Pass or fail → not evaluated (the evidence or assessment behind it was lost) | high if it was passing, otherwise medium |
+| **Re-evaluated** | Not evaluated → pass or fail, for a control that was evaluated before. A control's first evaluation is its baseline, not drift. | high if it is now failing, otherwise low |
+| **Failing Control Marked N/A** | A failing control was taken out of scope | high |
+| **Control contradicted** / **contradiction cleared** | Active mapped scan failures contradict a status a person set to implemented, and later stop doing so (see [How status is decided](./control-status.md)) | high / low |
+| **New Finding in Clean Domain** | An SCF domain whose controls were all implemented or not applicable has a regression | high |
+| **Finding-count regression** | Open findings behind a control rose while its status stayed the same (compared between the last two daily snapshots) | high if up by 5 or more, otherwise medium |
+| **Evidence Expired** | Evidence linked to a control passed its validity date | medium |
+| **Threshold Crossed** | A framework fell below its [threshold](./autonomous-compliance.md#thresholds-and-breaches) | critical |
+| **Resolved** | A breached framework is back at or above its threshold | low |
 
-Each drift names the control (SCF ID, name, domain), the previous and current status, the two snapshot dates and a message you can paste into a ticket.
+Each control drift names the control (SCF ID, name, domain), the previous and current status, and what moved it: for an engine downgrade, the active findings that caused it (a sample plus the true total); for a recovery, the findings it resolved; for a person's change, who made it and why.
 
-## Where the baseline comes from
+A framework that has not been assessed never crosses a threshold, and nothing is reported as crossing between two checks scored by different scoring methods.
 
-The engine takes a **snapshot of every control's status at 00:05 UTC every day** (kept under the snapshot retention policy, trimmed weekly). Detection diffs the two most recent snapshots, so:
+## How changes are found
 
-- **Run Drift Detection** re-runs the comparison now (the automatic run happens with every 4-hourly refresh) — it reports what changed since yesterday's baseline, not since the last click;
-- a brand-new team has **no drift until its second daily snapshot exists**;
-- a control locked by a manual override still produces a regression if you lower its status — the override is a decision, and decisions are auditable.
+Every change to a control's status is written to the compliance audit log as it happens. Drift detection reads those recorded transitions, so a change made today is reported on the next detection run, not the next day.
 
-**Drift History** keeps every detection run with its counts by type.
+- Detection runs with every 4-hourly compliance refresh, after scans, and when you click **Run Drift Detection**.
+- Each change is reported once, no matter how many runs see it. The summary tiles (**Total Drifts**, **Regressions**, **Evidence Expired**, **New in Clean**, **Threshold Crossed**) count the drifts new in the latest run.
+- The first run for a team back-fills up to 90 days of history. Back-filled drifts are shown and flagged, but not alerted.
+- **Drift History** keeps every detection run with its counts by type.
+
+Daily posture snapshots (00:05 UTC) are still taken. They feed finding-count regressions and answer point-in-time questions such as "what was your posture on 14 March?".
+
+Each drift is also mirrored to the unified Alerts board. A control has one row per state: a recovery resolves it, and a later regression reopens the same row.
 
 ## Fix this
 
-A regression whose control maps to one of the [remediation playbooks](./autonomous-compliance.md#remediation-playbooks) shows **Fix this**: it creates a remediation action for the matching playbook (approval and dry-run rules apply as on the engine tab).
+A regression whose control maps to one of the [remediation playbooks](./autonomous-compliance.md#remediation-playbooks) shows **Fix this**: it creates a remediation action for the matching playbook. Approval and dry-run rules apply as on the engine tab.
 
 ## Alert policies
 
@@ -47,15 +60,20 @@ An **alert policy** decides which drifts become notifications:
 
 | Field | Meaning |
 | --- | --- |
-| **Drift types** | Any of the five types above |
-| **Severity threshold** | Minimum drift severity to notify (default *high*) |
-| **Frameworks** | Only drifts touching these frameworks (empty = all) |
-| **Channels** | Email, Slack, Teams, in-app — using the integrations configured under [Notifications](../integrations/notifications.md) |
+| **Drift Types to Monitor** | Any of the control, evidence and threshold types above; empty = all. A policy that monitors *Control Regression* also matches *No Longer Evaluated*, *Failing Control Marked N/A* and a re-evaluation into fail. |
+| **Minimum Severity** | Lowest drift severity that notifies: *Medium+* (the form's default), *High+* or *Critical only* |
+| **Notification Channels** | Email and Slack, using the integrations configured under [Notifications](../integrations/notifications.md); in-app notifications are always on |
 
-Policies are evaluated after every detection run; matching drifts are delivered once per run. Keep one broad policy at *high* for the security channel and one narrow policy (regulated frameworks, *medium*) for the compliance owner.
+Choose at least one of Email or Slack; with neither selected the policy notifies in-app only. Policies apply to all of the team's active frameworks; there is no per-framework filter. Recipients are the policy's escalation recipients (set over the API), or every team member when none are set. With no policy configured, a default applies: severity *high* and above, by email, Slack and in-app.
+
+Policies are evaluated after every detection run. Each notification lists up to 10 matching drifts; the full list is on the tab.
+
+:::note
+The policy form also offers a **Teams** channel and an *Info (all)* severity. In 1.4.0 drift notifications are delivered by email, Slack and in-app only, so selecting Teams has no effect, and *Info (all)* is evaluated as *High+*. Use *Medium+* to be notified of the most drifts.
+:::
 
 ## Related
 
-- [Compliance Engine](./autonomous-compliance.md) — the refresh that triggers detection, thresholds and playbooks.
-- [Evidence Hub → Freshness](./evidence-hub.md#freshness) — see expiring evidence before it becomes drift.
-- [Compliance & GRC API](./api.md#compliance-engine) — `detect-drift`, `drift-history`, `alert-policies`.
+- [Compliance Engine](./autonomous-compliance.md): the refresh that triggers detection, thresholds and playbooks.
+- [Evidence Hub → Freshness](./evidence-hub.md#freshness): see expiring evidence before it becomes drift.
+- [Compliance & GRC API](./api.md#compliance-engine): `detect-drift`, `drift-history`, `alert-policies`.

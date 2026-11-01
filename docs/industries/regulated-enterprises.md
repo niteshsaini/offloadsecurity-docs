@@ -14,16 +14,16 @@ Offload Security is built to be the **security governance system of record** for
 ## Why regulated enterprises choose Offload Security
 
 ### One control library, many frameworks
-Regulated enterprises rarely comply with one standard — they carry SOC 2, ISO 27001, NIST CSF, PCI-DSS, and sector or regional mandates simultaneously, with heavy control overlap between them. Offload Security tracks these frameworks together with control status and **drift detection**, so a single control satisfied once counts everywhere it applies, and slippage is caught as it happens. See **[Compliance & GRC](../compliance/index.md)**.
+Regulated enterprises rarely comply with one standard — they carry SOC 2, ISO 27001, NIST CSF, PCI DSS, and sector or regional mandates (NIS2, DORA, the EU AI Act and others in the catalog of 27) simultaneously, with heavy control overlap between them. Offload Security tracks these frameworks together with control status and **drift detection**, so a single control satisfied once counts everywhere it applies, and slippage is caught as it happens. See **[Compliance & GRC](../compliance/index.md)**.
 
 ### Continuous audit readiness
 With multiple audits and examinations per year, point-in-time evidence collection is unsustainable. The **[Evidence Hub](../compliance/evidence-hub.md)** captures proof as work happens and maps it to controls automatically, so any given assessment is a matter of producing a package — not mobilizing the team for weeks. On-demand **[Reports](../vulnerability-risk/index.md)** turn the same live data into executive and audit deliverables.
 
 ### Governance across a complex estate
-Subsidiaries, business units, and mixed cloud/on-prem infrastructure normally fragment security into many local views. Offload Security's multi-tenant model and unified **[Risk Register](../vulnerability-risk/risk-management/index.md)** roll findings from every source and every part of the organization into one governed picture — the foundation of defensible, board-level oversight.
+Subsidiaries, business units, and mixed cloud/on-prem infrastructure normally fragment security into many local views. Offload Security's team model and unified **[Risk Register](../vulnerability-risk/risk-management/index.md)** roll findings from every source and every part of the organization into one governed picture — the foundation of defensible, board-level oversight.
 
 ### Cloud *and* private infrastructure, together
-Large regulated organizations keep critical systems on private infrastructure by choice and by mandate. Offload Security governs both: continuous **[Cloud Security](../cloud-security/index.md)** posture for the modern estate, and a full **[on-premises model](../on-premises/index.mdx)** — internal scanning, OpenVAS vulnerability assessment, and **[Wazuh](../on-premises/wazuh-integration.md)** endpoint and SIEM visibility — for the systems that never leave the network.
+Large regulated organizations keep critical systems on private infrastructure by choice and by mandate. Offload Security governs both: continuous **[Cloud Security](../cloud-security/index.md)** posture for the modern estate, and a full **[on-premises model](../on-premises/index.mdx)** — internal scanning, imported Greenbone OpenVAS results, and **[Wazuh](../on-premises/wazuh-integration.md)** endpoint visibility — for the systems that never leave the network.
 
 ### Data residency and sovereignty
 For many regulated enterprises, security telemetry cannot leave the boundary. Because the internal scanning and monitoring engines run inside your network, **[centralized ingestion](../on-premises/centralized-ingestion.md)** delivers a unified view while keeping sensitive data on-prem — reconciling the need for oversight with the constraints of sovereignty.
@@ -37,10 +37,10 @@ Ultimately these organizations must report risk upward with confidence. Because 
 |---|---|
 | **Multiple frameworks at once** | One control library with overlap handling + drift detection — [Compliance](../compliance/index.md) |
 | **Continuous audit readiness** | Control-mapped [evidence](../compliance/evidence-hub.md) and on-demand [reports](../vulnerability-risk/index.md) |
-| **Centralized governance** | Multi-tenant model + unified [Risk Register](../vulnerability-risk/risk-management/index.md) across the estate |
+| **Centralized governance** | Team model + unified [Risk Register](../vulnerability-risk/risk-management/index.md) across the estate |
 | **Hybrid coverage** | [Cloud Security](../cloud-security/index.md) + full [on-premises](../on-premises/index.mdx) scanning and monitoring |
 | **Data residency** | On-prem engines + [centralized ingestion](../on-premises/centralized-ingestion.md) that keeps telemetry in-boundary |
-| **SOC / endpoint visibility** | [Wazuh](../on-premises/wazuh-integration.md) plus enterprise SIEM/SOAR integrations |
+| **SOC / endpoint visibility** | [Wazuh](../on-premises/wazuh-integration.md) plus Splunk and syslog / CEF SIEM forwarding, and a tamper-evident audit trail |
 | **Board reporting** | Complete, trended risk from one correlated data model |
 
 ## The bottom line for regulated enterprises

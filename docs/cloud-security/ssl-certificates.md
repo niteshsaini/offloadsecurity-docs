@@ -40,7 +40,7 @@ Open a row to see the full certificate detail and the **check history** for that
 
 Every monitored domain is re-checked **every 12 hours**; you can also **Check All** or check a single domain on demand (for example right after renewing). Monitoring can be paused per domain with the **Monitoring** toggle without deleting its history.
 
-Notifications are sent when a certificate **changes state for the worse** — into warning, critical or expired, honouring the per-domain alert threshold — rather than on every check, so you are told once per transition instead of twice a day. Delivery follows your team's [notification channels](../integrations/notifications.md).
+Notifications are sent when a certificate **changes state for the worse** — into warning, critical or expired, honoring the per-domain alert threshold — rather than on every check, so you are told once per transition instead of twice a day. Delivery follows your team's [notification channels](../integrations/notifications.md).
 
 :::tip[Set the threshold to your renewal lead time]
 If renewals need a change ticket and a week of lead time, set the alert threshold to 14 or 21 days for those domains so the warning arrives while there is still time to act.

@@ -19,19 +19,21 @@ This section is for the people who deploy and operate that stack and for the sec
 | Where the platform runs | Offload Security's cloud | Your host(s), your MongoDB and Redis, your object storage |
 | Where scan data, findings, evidence and reports live | Offload Security's tenant store | Your network only |
 | What the scanners can reach | Public targets and cloud provider APIs | Public targets, cloud APIs **and** private ranges (`10/8`, `172.16/12`, `192.168/16`) once the operator opts in |
-| Endpoint and host telemetry | Via a Wazuh you expose to us | Wazuh on your LAN, connected directly |
+| Endpoint and host telemetry | Via a Wazuh you expose to us | Wazuh and Greenbone OpenVAS on your LAN, connected directly |
 | Identity | Offload-hosted sign-in, or your IdP over OIDC | Your IdP over OIDC, your SMTP, your certificates |
-| Outbound traffic needed | — | Image registry for installs and upgrades; threat feeds; the cloud provider APIs you scan; optionally an LLM provider |
+| Outbound traffic needed | — | Image registry for installs and upgrades; threat feeds and vulnerability databases; the cloud provider APIs you scan; optionally an LLM provider and off-host backup storage |
 
 ## In this section
 
 | Page | Read it for |
 | --- | --- |
-| [Deployment & Operations](./deployment.md) | Prerequisites, the stack, install with prebuilt images, first-run setup, TLS, upgrades, backups, what needs outbound access |
+| [Deployment & Operations](./deployment.md) | Prerequisites, the stack, install with prebuilt images, first-run setup and encryption keys, TLS, upgrades, encrypted backups, retention, audit-trail integrity, what needs outbound access |
 | [Internal Network Visibility](./internal-network-visibility.md) | How internal hosts and endpoints get into the inventory — network scans of private ranges and Wazuh agents |
 | [Private Infrastructure Scanning](./private-infrastructure-scanning.md) | Web, API, TLS and network scans against targets that only resolve inside your network |
-| [Wazuh Integration](./wazuh-integration.md) | Agents, alerts and host CVEs synced into the platform; the Endpoint Security dashboard |
-| [OpenVAS Scanning](./openvas-scanning.md) | Connecting a Greenbone / OpenVAS instance — and what the connection does and does not do |
+| [Wazuh Integration](./wazuh-integration.md) | What syncs from Wazuh — agents, alerts, host CVEs, login anomalies, SCA failures — and the bundled Wazuh stack |
+| [Endpoint Security](./endpoint-security.md) | Endpoint 360, Fix first, alert triage, logins, file integrity, ATT&CK, Wazuh server health |
+| [Agent Health & Cloud Links](./wazuh-agent-fleet.md) | Agent health, stale-agent cleanup, agent coverage of cloud VMs, linking agents to VMs in bulk |
+| [OpenVAS Scanning](./openvas-scanning.md) | Importing Greenbone / OpenVAS results over GMP, host-side correlation with Wazuh, the network VAPT report |
 | [Centralized Ingestion](./centralized-ingestion.md) | What is actually unified across cloud, code, container, Kubernetes, DAST and Wazuh sources |
 | [Troubleshooting & FAQ](./troubleshooting.md) | Blocked private targets, workers without Docker, feeds without egress, TLS and SMTP |
 
@@ -59,12 +61,12 @@ flowchart LR
     HOSTS --> WK
     APPS --> WK
     EP --> |Manager + Indexer sync| API
-    GV --> |connection verified| API
+    GV --> |GMP: latest reports| API
     WK --> API --> DB
     API --> INV & VM & AL & CMP
 ```
 
-The scanners are the same engines used for public targets; the difference is that the worker containers sit on your network and the operator has allowed private ranges. Wazuh data is pulled every 30 minutes and browsed live from an in-platform dashboard. Greenbone / OpenVAS is connected and health-checked; its scan results stay in Greenbone today.
+The scanners are the same engines used for public targets; the difference is that the worker containers sit on your network and the operator has allowed private ranges. Wazuh data is pulled every 30 minutes and worked in the in-platform Endpoint Security dashboard. Greenbone / OpenVAS results are imported over GMP on the same 30-minute cycle; scans are still defined and run in Greenbone. The platform reads from both and changes neither.
 
 :::note[Same product, same limits]
 On-premises does not add modules. What runs on your host is the platform documented in every other section — with the caveats that threat feeds, container-tool databases and any LLM provider still need outbound HTTPS, and that the AI features send prompts to the provider you configured (see [AI Data & Privacy](../ai-threat-intelligence/ai-data-privacy.md)).

@@ -20,10 +20,13 @@ The Findings tab is the cross-repository triage list. Pick a **repository** (or 
 | Group by | One row per | Use it when |
 | --- | --- | --- |
 | **Rule** (default) | rule, detector or CVE — with the worst severity, the source, open/suppressed counts and the repositories it appears in | Working the list: the same mistake in forty files is one decision, not forty |
+| **Fix** | dependency upgrade — every CVE one package upgrade closes | Fixing dependencies: one upgrade, one change ([Upgrade Impact](./upgrade-impact.md)) |
 | **Source** | Dependencies (SCA), Secrets, SAST, Dockerfile / IaC, Outdated packages | Reviewing one engine's output |
 | **Severity** | severity band | Reporting |
 | **Repository** | repository (when *all repositories* is selected) | Seeing which repository carries the load |
 | **None** | finding | A flat list |
+
+**Top fixes**, above the list, names the dependency upgrades that close the most findings in the current view; select one to open its [upgrade drawer](./upgrade-impact.md#open-an-upgrade).
 
 In the rule view, ticking a rule **selects every finding it produced** into the bulk bar, and **Triage all N** opens one decision for exactly those findings. Expand a rule to see its individual findings.
 
@@ -81,17 +84,47 @@ Dependency findings usually outnumber everything else and are the cheapest to fi
 
 ![Reports tab: scan reports list with payments-api.zip (upload, completed) and Refresh / page-size controls](/img/screenshots/security-scanning/code-reports.webp)
 
-One report per scan: source (repository and branch, or upload), type, status (**completed**, **completed with errors** when a tool failed, **failed**) and date. Filter with **Show: application / owner** once repositories are mapped ([Repository ownership](./connecting-repositories.md#repository-ownership)). Select several and **Delete** to prune.
+**Scan History** is grouped **repository → branch → run**, so a repository's whole history reads in one place and each run keeps its full report. Each run shows its type, status (**completed**, **completed with errors** when a tool failed, **failed**) and date. Search by repository, branch or application ([Repository ownership](./connecting-repositories.md#repository-ownership)). Tick runs — or a branch to select all of its runs — and **Delete selected** to prune.
 
-Open a report for the detail view:
+Open a run for the detail view:
 
 ![Report detail: Security Findings (98) grouped by tool — Dependencies (SCA), Secrets, SAST — with severity, package/file, and per-finding AI Fix and Triage actions](/img/screenshots/security-scanning/code-report-detail.webp)
 
 - **Security findings** for that scan — the same rows, grouping, drawer (code context, activity, fix PR) and triage as the Findings tab, so a decision made from a report is the same decision. Findings are marked **new** or **existing** against the previous scan of the same repository, including its SBOM, so a dependency CVE that was already there is not "new" on every scan.
-- **The linked SBOM** when the scan generated one.
+- **The linked SBOM** summary when the scan generated one.
 - **Artifact / image scan results** when the scan was of a build artifact or compiled image.
 - **SonarQube report** when SonarQube is configured — the platform stores the report artifact and links it.
 - **AI Analysis** of the whole scan and **Export Report (PDF)** for a release record or an auditor.
+
+### The frozen report
+
+When a scan completes, its report — findings, the triage state at that moment, and the SonarQube artifact — is **frozen** to object storage with a SHA-256. **Export Report (PDF)** renders that frozen copy, so one scan always produces the same document, however the findings are triaged later. The PDF's *Scan Details* state the report basis and the run's provenance: scanner versions, the OpenGrep rules commit, path exclusions, the branch actually scanned (and any fallback), an upload's hash, submodule / LFS gaps and the hashes of the kept raw tool outputs.
+
+| Need | How |
+| --- | --- |
+| The report as issued | **Export Report (PDF)** — the default. If the frozen copy fails its hash check the export is refused (409) rather than silently re-rendered. |
+| Today's state of the same scan | `GET /api/code/reports/{scan_id}/export?format=pdf&live=true` (API only). |
+| Prove a PDF is unmodified | Every export is fingerprinted and recorded; the response carries `X-Content-SHA256`. |
+
+If freezing fails, the scan still completes and the failure is recorded on it.
+
+**Large scans in the PDF.** Each findings table in the PDF shows at most 500 rows and says *"Showing the first 500 of N … The full list is available in the Code Command Center"*; severity counts and totals always cover every finding.
+
+**Deleting a run** keeps a tombstone (who deleted it and when, with the frozen report and raw outputs) until `SCAN_TOMBSTONE_DAYS` (default 90) passes, and the delete is audit-logged.
+
+### Compare two scans (API)
+
+`GET /api/code/reports/{scan_id}/compare` compares a scan with the previous completed scan of the same repository and branch, or with any earlier scan of that repository via `?base=<scan_id>`. It returns complete lists, finding by finding:
+
+| Bucket | Meaning |
+| --- | --- |
+| **new** | In the later scan, not in the base. |
+| **fixed** | In the base and gone — only when the later scan actually re-evaluated it (the engine ran, the file was assessed, the list was not truncated). |
+| **triaged** | Gone from the open list because it is now a false positive or accepted risk (an expired acceptance does not count). |
+| **not re-evaluated** | The later scan could not assess it, so it is neither fixed nor persisting. |
+| **persisting** | In both. |
+
+A base scan from another repository is refused. There is no comparison screen yet; the Reports tab marks findings new or existing against the previous scan only.
 
 ## Where code findings go next
 
@@ -105,4 +138,6 @@ Open a report for the detail view:
 - [SBOM & Licences](./sbom-and-licenses.md) — the inventory and licence side of the same scans.
 - [Secret Detection](./secret-detection.md) — validation badges and history-only secrets.
 - [Pull Request Review](./pull-request-review.md) — the same findings, reviewed on the pull request before merge.
+- [Upgrade Impact](./upgrade-impact.md) — dependency findings as ranked upgrades.
+- [SARIF Imports](./sarif-imports.md) — findings from third-party scanners.
 - [Scanning API](../api.md#code) — findings lifecycle, reports and exports over REST.

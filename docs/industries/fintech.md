@@ -27,7 +27,7 @@ Misconfigured storage, over-permissive IAM, and exposed data stores are the most
 
 ### Containers and Kubernetes covered by default
 
-Most fintech workloads run in containers. [Container Security](../security-scanning/containers/index.md) scans images and Kubernetes clusters for vulnerabilities and misconfigurations, so your deploy pipeline stays fast without shipping known-bad images to production.
+Most fintech workloads run in containers. [Container Security](../security-scanning/containers/index.md) scans images for vulnerabilities, secrets and misconfigurations and shows where each image runs, and [Kubernetes Security](../security-scanning/kubernetes/index.md) assesses your clusters, so your deploy pipeline stays fast without shipping known-bad images to production.
 
 ### Prioritized vulnerabilities, tracked as real risk
 
@@ -35,7 +35,7 @@ Raw findings are noise; decisions need context. [Vulnerability Management](../vu
 
 ### Security questionnaires answered in hours, not weeks
 
-Bank partners and enterprise buyers send long security questionnaires, and they send them constantly. Offload Security's [Knowledge Base](../ai-threat-intelligence/knowledge-base.md) supports questionnaire auto-fill: it draws on your accumulated answers and live posture data to draft responses, so your team reviews and approves instead of writing from scratch every time.
+Bank partners and enterprise buyers send long security questionnaires, and they send them constantly. Offload Security's [Knowledge Base](../ai-threat-intelligence/knowledge-base.md) supports questionnaire auto-fill: it draws on your uploaded policies and previously approved answers to draft responses, so your team reviews and approves instead of writing from scratch every time.
 
 :::tip
 The same evidence that satisfies a SOC 2 auditor usually satisfies a partner questionnaire. Because both draw from one correlated source of truth, answering one makes the next faster.
@@ -48,10 +48,10 @@ The same evidence that satisfies a SOC 2 auditor usually satisfies a partner que
 | Win enterprise and bank customers | Live SOC 2 / PCI-DSS readiness via [Compliance](../compliance/index.md), backed by the [Evidence Hub](../compliance/evidence-hub.md) |
 | Secure the APIs that move money | SAST, API testing, and SBOM/license checks in [API & Code Scanning](../security-scanning/code/index.md) |
 | Prove a strong cloud posture | Continuous CSPM across AWS/Azure/GCP in [Cloud Security](../cloud-security/index.md) |
-| Ship containers safely | Image and cluster scanning in [Container Security](../security-scanning/containers/index.md) |
+| Ship containers safely | Image scanning in [Container Security](../security-scanning/containers/index.md) and cluster scanning in [Kubernetes Security](../security-scanning/kubernetes/index.md) |
 | Turn findings into board-level risk | [Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx) feeding the [Risk Register](../vulnerability-risk/risk-management/index.md) |
 | Answer diligence and partner questionnaires fast | Auto-fill from the [Knowledge Base](../ai-threat-intelligence/knowledge-base.md) |
-| Cover internal networks and legacy systems | Internal scanning, OpenVAS, and Wazuh SIEM in [On-Premises](../on-premises/index.mdx) |
+| Cover internal networks and legacy systems | Internal scanning, Greenbone OpenVAS results, and Wazuh endpoint data in [On-Premises](../on-premises/index.mdx) |
 
 ## The bottom line
 

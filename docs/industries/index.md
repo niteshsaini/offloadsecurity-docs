@@ -22,17 +22,17 @@ This section explains how the platform serves specific industries. The underlyin
 | **Manufacturing & Logistics** | Internal-network and OT visibility, on-prem vulnerability scanning, endpoint monitoring, supply-chain security. | [Manufacturing & Logistics](./manufacturing-and-logistics.md) |
 | **Retail & E-commerce** | PCI-DSS for payment environments, cloud and application security, store/branch network coverage. | [Retail & E-commerce](./retail.md) |
 | **Regulated Enterprises** | Centralized governance across a complex estate, data residency, continuous audit readiness. | [Regulated Enterprises](./regulated-enterprises.md) |
-| **India Regulatory Readiness** | RBI directions, SEBI CSCRF, CERT-In reporting clocks, and the DPDP Act — mapped to platform capabilities. | [India Regulatory Readiness](./india-regulatory-readiness.md) |
+| **India Regulatory Readiness** | RBI directions, SEBI CSCRF, CERT-In reporting clocks, and the DPDP Act — mapped to platform capabilities (SEBI CSCRF and DPDPA are scored frameworks; RBI is not). | [India Regulatory Readiness](./india-regulatory-readiness.md) |
 
 ## How the platform maps to industry needs
 
 Regardless of sector, the same building blocks are recombined to fit:
 
 - **Cloud + on-premises coverage** — for regulated and enterprise sectors, the ability to govern private infrastructure and endpoints alongside cloud is decisive. See **[On-Premises](../on-premises/index.mdx)**.
-- **Compliance frameworks** — SOC 2, ISO 27001, NIST CSF, PCI-DSS, and sector-specific mappings are tracked with control status and drift detection. See **[Compliance](../compliance/index.md)**.
+- **Compliance frameworks** — a catalog of 27, including SOC 2, ISO 27001, NIST CSF, PCI DSS, HIPAA, GDPR, NIS2, DORA, SEBI CSCRF and India's DPDPA, tracked with control status and drift detection. See **[Compliance](../compliance/index.md)**.
 - **Continuous audit evidence** — captured as work happens and mapped to controls, so audits stop being fire drills. See **[Evidence Hub](../compliance/evidence-hub.md)**.
 - **Unified risk governance** — findings from every source promote into one **[Risk Register](../vulnerability-risk/risk-management/index.md)** with treatment plans and SLAs.
-- **SIEM and endpoint visibility** — **[Wazuh](../on-premises/wazuh-integration.md)** and **[SIEM integrations](../integrations/third-party.md)** bring security-operations data into the same picture.
+- **SIEM and endpoint visibility** — **[Wazuh](../on-premises/wazuh-integration.md)** brings endpoint data into the same picture, and Splunk and syslog / CEF **[SIEM forwarding](../integrations/third-party.md)** sends platform events out to your SOC.
 
 :::tip[Start with your regulator, then your estate]
 The fastest way to scope a rollout is to start from the frameworks you're accountable to and the systems that hold your most sensitive data — then let the platform's unified model connect the two. The **[Banking & Financial Services](./banking-financial-services.md)** page is the most detailed worked example.
