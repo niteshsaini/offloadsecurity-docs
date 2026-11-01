@@ -36,6 +36,12 @@ jobs:
         run: npm ci
       - name: Build site
         run: npm run build
+        env:
+          # Optional analytics (see docusaurus.config.ts). Set as repository
+          # Actions *variables*; leave unset to build without analytics.
+          DOCS_ANALYTICS: ${{ vars.DOCS_ANALYTICS }}
+          DOCS_ANALYTICS_SRC: ${{ vars.DOCS_ANALYTICS_SRC }}
+          DOCS_ANALYTICS_SITE: ${{ vars.DOCS_ANALYTICS_SITE }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
