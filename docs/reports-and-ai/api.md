@@ -23,7 +23,7 @@ Send the key as `X-API-Key`; calls are scoped to the key's team.
 | Overview | `GET /api/executive-dashboard/overview` | Maturity, per-framework status, priority gaps, certification readiness, strengths, 90-day trend, recommendations — the same scorer as Compliance Posture. |
 | Metrics | `GET /api/executive-dashboard/compliance-metrics?period_days=90` (≤ 365) · `GET /api/executive-dashboard/board-metrics` | |
 | Generate | `POST /api/executive-dashboard/gap-analysis` · `POST /api/executive-dashboard/remediation-roadmap` · `POST /api/executive-dashboard/executive-report?report_type=summary\|detailed\|board` | **View Dashboard**. |
-| PDF | `GET /api/executive-dashboard/export-pdf?report_type=summary\|board\|gap-analysis` | Branded Compliance Posture Report (PDF stream). |
+| PDF | `GET /api/executive-dashboard/export-pdf?report_type=summary\|board\|gap-analysis` | Branded PDF of the overview (PDF stream); same builder as scheduled reports. |
 | Work the gaps | `PUT /api/executive-dashboard/gaps/{gap_id}/assign?owner=` · `PUT …/gaps/{gap_id}/status?status=` · `PUT …/roadmap/{milestone_id}/progress?progress=` | `gap_id` is the SCF ID. |
 
 ## Scheduled reports
@@ -45,6 +45,8 @@ Send the key as `X-API-Key`; calls are scoped to the key's team.
 | Container / Kubernetes | `GET /api/container/scans/{scan_id}/export?format=json\|csv\|cyclonedx` · `POST /api/container-security/compliance-report` · `POST /api/k8s/compliance/report` | |
 | Cloud findings | `GET /api/cspm/findings/export?format=csv\|xlsx` | Session-authenticated only. |
 | Risk | `GET /api/risk-management/reports/export?format=json\|csv` · `…/reports/executive-summary` · `…/reports/executive-pdf-data` | |
+| Network VAPT | `GET /api/export/network-vapt` · `.html` · `.docx` | Greenbone OpenVAS + nmap; any of **Vulnerability View**, **View Scans**, **View Assessments**. Wazuh host correlation only for callers with **View Integrations**. |
+| Verify / re-download issued reports | `GET /api/native-scans/exports/verify?sha256=` · `GET /api/export/issued/{sha256}` · `GET /api/native-scans/results/{scan_id}/exports` · `…/exports/{sha256}` | Did your team receive exactly this file; the byte-for-byte issued copy (409 if the kept copy no longer matches). |
 | Compliance | `POST /api/compliance-engine/reports/generate` → `GET …/reports/{report_id}/download/{section}` · `GET /api/evidence-completion/auditor-package/{framework}` · `GET /api/common-controls/soa/{framework}` · `GET /api/assessments/{assessment_id}/export-pdf` · `GET /api/dpdp/audit/pack/{pack_id}/pdf` | See [Compliance & GRC API](../compliance/api.md). |
 
 ## Branded report family
@@ -52,14 +54,14 @@ Send the key as `X-API-Key`; calls are scoped to the key's team.
 | Route | Formats |
 | --- | --- |
 | `GET /api/export/executive-dashboard` · `GET /api/export/compliance-posture` · `GET /api/export/ai-decisions` · `GET /api/export/scan-results?scan_type=all\|…` | PDF |
-| `GET /api/export/cloud-posture` · `web-app` · `network` · `app-sec` · `consolidated-exec` — each also as `.html` and `.docx` | PDF · HTML · DOCX |
+| `GET /api/export/cloud-posture` · `web-app` · `network` · `network-vapt` · `app-sec` · `consolidated-exec` — each also as `.html` and `.docx` | PDF · HTML · DOCX |
 
 ## AI
 
 | Task | Endpoint | Notes |
 | --- | --- | --- |
-| Assistant | `POST /api/ai/chat/message` `{message, conversation_id?, context?}` · `GET /api/ai/chat/conversations` · `GET` · `DELETE …/conversations/{conversation_id}` · `POST /api/ai/chat/suggestions` `{context?}` · `GET /api/ai/chat/status` | Message and provider name come back with `cached: true` when served from platform knowledge. |
-| Quick insight | `POST /api/ai/chat/quick-insight` `{insight_type: vulnerability\|scan\|compliance\|risk, data}` | Two or three sentences for a card. |
+| Assistant | `POST /api/ai/chat/message` `{message, conversation_id?, context?}` · `GET /api/ai/chat/conversations` · `GET` · `DELETE …/conversations/{conversation_id}` · `POST /api/ai/chat/suggestions` `{context?}` · `GET /api/ai/chat/status` | Message and provider name come back with `cached: true` when served from platform knowledge; grounded answers carry `citations` (id, link, whether referenced). Any of **View Scans**, **View Cloud Accounts**, **View Assessments**. |
+| Quick insight | `POST /api/ai/chat/quick-insight` `{insight_type: vulnerability\|scan\|compliance\|risk, data}` | Two or three sentences for a card. Same permissions as the assistant. |
 | Explain / fix / summarise | `POST /api/ai/explain-vulnerability` · `POST /api/ai/suggest-fix` · `POST /api/ai/summarize-scan` · `POST /api/ai/prioritize-findings` · `GET /api/ai/status` · `GET /api/ai/models` | **Manage Integrations**. |
 | Scan analysis | `POST /api/ai/analysis/analyze` · `…/compare` · `…/executive-report` · `…/predict-risk` · `…/quick-insights` · `GET /api/ai/analysis/status` | **Manage Scans**. |
 | Risk AI | `POST /api/risk-management/ai/{suggest \| treatment-plan \| compliance-gaps \| recommend-kris \| scenarios}` | See [Vulnerabilities & Risk API](../vulnerability-risk/api.md#risks). |
@@ -81,7 +83,10 @@ Send the key as `X-API-Key`; calls are scoped to the key's team.
 | Read executive overview, metrics, PDF, scheduled reports, report history | any authenticated team member |
 | Generate gap analysis / roadmap / executive reports, assign gaps, update roadmap progress, create or delete schedules | **View Dashboard** (`view_dashboard`) |
 | Consolidated scan reports and per-module exports | the module's view permission (e.g. **View Scans**) |
-| Assistant messages, explain / suggest fix / summarise / prioritise, LLM provider configuration | **Manage Integrations** (`manage_integrations`) |
+| Assistant messages, quick insights, suggestions | Any of **View Scans**, **View Cloud Accounts**, **View Assessments** |
+| Explain / suggest fix / summarise / prioritise, LLM provider configuration | **Manage Integrations** (`manage_integrations`) |
+| Network VAPT report | Any of **Vulnerability View**, **View Scans**, **View Assessments** |
+| Verify a scan export or consolidated report | **View Scans** |
 | AI scan analysis | **Manage Scans** (`manage_scans`) |
 
 See [Authentication](../api-reference/authentication.md) for key scopes and [Conventions](../api-reference/conventions.md) for pagination, error shapes and rate limits.

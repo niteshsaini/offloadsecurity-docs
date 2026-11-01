@@ -60,7 +60,11 @@ An **OWASP LLM01** red-team suite of eight probes — direct instruction overrid
 - Give an **OpenAI-compatible chat endpoint** (and, optionally, a key used only for this run and never stored) and the suite is sent live; each probe is scored on whether the response shows the injected behaviour, and the result is recorded against the model with pass / fail per category.
 - Leave the endpoint blank for a **dry run**: the payloads are recorded for manual execution against a system the platform cannot reach (an internal assistant, a vendor console).
 
-Results are evidence for the model's risk assessment; a production LLM system with no test is one of the ISO 42001 [certification blockers](./ai-governance.md#compliance--iso-42001).
+Results are evidence for the model's risk assessment; a production LLM system with no test is one of the ISO 42001 [certification blockers](./ai-governance.md#compliance--iso-42001). When the team has an LLM provider, the model judges whether each response shows the injected behaviour; without one, or when the judge's answer cannot be used, scoring falls back to keyword heuristics (a verdict made heuristic by the team's AI budget says so).
+
+:::note[Not the same as "AI Security Testing"]
+This prompt-injection suite is part of AI Governance and available on every deployment. A separate, broader **AI Security Testing** module is still in development: it is hidden from the menu and its API (`/api/ai-security/*`) answers 403 unless the operator sets `AI_SECURITY_TESTING_ENABLED=true` (off by default). Do not rely on it in production.
+:::
 
 :::note[Permissions and scope]
 Discovery, classification, the AIBOM and prompt tests need **Manage Assessments**. The AIBOM reads only your team's SBOMs; discovery reads only your team's inventory and configuration.

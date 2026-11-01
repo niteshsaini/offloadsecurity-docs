@@ -7,7 +7,7 @@ description: "Every App & Infrastructure Scanning workflow over REST — web/API
 
 # Scanning API
 
-Everything in this section can be driven over the REST API. This page maps each workflow to its endpoints; [API Reference](../api-reference/index.md) covers authentication and conventions, [CLI & CI/CD](../cli-and-cicd.md) covers the pipeline contract in depth, and Swagger at `https://<your-host>/api/docs` is exhaustive.
+Everything in this section can be driven over the REST API. This page maps each workflow to its endpoints; [API Reference](../api-reference/index.md) covers authentication and conventions, and [CLI & CI/CD](../cli-and-cicd.md) covers the pipeline contract in depth. The interactive Swagger UI at `https://<your-host>/api/docs` is exhaustive, but it is off in production unless the deployment sets `ENABLE_API_DOCS=true`.
 
 ```bash
 export OFFLOAD_HOST="https://your-instance.example.com"
@@ -20,17 +20,46 @@ Send the key as `X-API-Key`; calls are scoped to the key's team.
 
 | Task | Endpoint | Notes |
 | --- | --- | --- |
-| Start a scan | `POST /api/native-scans/web-vulnerability` · `/network-discovery` · `/ssl-security` · `/security-headers` · `/api-security-testing` · `/nuclei/url-scan` (`/nuclei/bulk-scan` for many URLs) | Body per tool: `target_url` or `target`, `scan_type` (`quick` / `standard` / `comprehensive`; network: `ping_sweep` / `port_scan` / `service_detection` / `comprehensive` / `vulnerability_scan`), optional auth and `rate_limit_profile`. Returns `scan_id` and `status`. Headers scan completes inline. |
-| Poll / read | `GET /api/native-scans/results/{scan_id}` | `status` (`running` → `completed` / `failed` / `partial`), `findings[]`, `findings_count`, `raw_output`. |
-| List | `GET /api/native-scans/results?tool_type=&status=&limit=&skip=` | `count` is the page size. |
-| Download report | `GET /api/native-scans/results/{scan_id}/download?format=html\|pdf\|docx` | File stream. |
-| Re-scan / delete | `POST /api/native-scans/results/{scan_id}/rescan` · `DELETE /api/native-scans/results/{scan_id}` | |
+| Start a targeted scan | `POST /api/native-scans/web-vulnerability` · `/network-discovery` · `/ssl-security` · `/security-headers` · `/api-security-testing` · `/nuclei/url-scan` (`/nuclei/bulk-scan` for many URLs) | Body per tool: `target_url` or `target`, `scan_type` (`quick` / `standard` / `comprehensive`; network: `ping_sweep` / `port_scan` / `service_detection` / `full_tcp` / `udp_top` / `comprehensive` / `vulnerability_scan`), optional auth. Returns `scan_id` and `status`. Headers scan completes inline. |
+| Engagement and scope | `engagement` object on App Scan, ZAP, Nmap, testssl.sh and Nuclei requests | `{ "attested": true, "reference", "environment": "production" \| "staging" \| "development" \| "test" \| "unspecified", "valid_until": "YYYY-MM-DD" }`. Who / when are taken from the caller. Required (else 400) only when `SCAN_REQUIRE_AUTHORIZATION=true`. ZAP also takes `exclude_paths`; Nmap takes `exclude_hosts`, `skip_host_discovery` (`-Pn`) and `timing` (`polite` / `normal` / `aggressive`). |
+| Poll / read | `GET /api/native-scans/results/{scan_id}` | `status` (`running` → `completed` / `partial` / `failed`), `findings[]`, `findings_count`, `metadata.provenance`, `metadata.artifacts`, `metadata.engagement`. |
+| List | `GET /api/native-scans/results?tool_type=&status=&scan_type=&search=&exclude_app_scan_children=&limit=&skip=` | `total` is the true matching count; `limit` up to 500. |
+| History as a target tree | `GET /api/native-scans/scan-history?tool_type=&status=&exclude_app_scan_children=&runs_per_group=&max_targets=` | Target → scan type → runs. Each group has its true `run_count`; `runs_per_group` up to 200 (default 50), `max_targets` up to 300; `truncated`, `total_targets`, `total_scans`. |
+| Compare runs | `GET /api/native-scans/results/{scan_id}/compare[?baseline={scan_id}]` | `new`, `fixed`, `not_seen`, `severity_changed`, `unchanged`, `counts`, `caveats`. Default baseline: the latest earlier completed / partial run of the same tool on the same target. 409 if a run is not completed or partial. |
+| Download report | `GET /api/native-scans/results/{scan_id}/download?format=html\|pdf\|docx\|json\|csv[&include_screenshots=true]` | File stream with `X-Content-SHA256`; each download is logged and kept. |
+| Raw tool output | `GET /api/native-scans/results/{scan_id}/artifacts/{name}` | Nmap XML, Nuclei JSONL, testssl JSON, ZAP JSON; `X-Content-SHA256`. |
+| Re-scan / delete | `POST /api/native-scans/results/{scan_id}/rescan` · `DELETE /api/native-scans/results/{scan_id}` | Rescan carries profile, Nmap options, exclusions and attestation. Delete tombstones the run. |
 | Statistics | `GET /api/native-scans/statistics` | Totals by tool and status. |
 | Reconnaissance & lightweight | `POST /api/domain-recon` · `POST /api/lightweight-scans/technologies` · `/waf` · `/subdomains` · `/comprehensive` | Domain OSINT, fingerprint, WAF detection, subdomains. |
-| API discovery / deep scan | `POST /api/api-scan/discover` · `POST /api/api-scan/deep-scan` | Endpoint discovery, then OWASP API Top 10 testing with optional spec upload. |
-| App Scan (all tools) | `POST /api/app-scan` | One run, standards mapping, consolidated report. |
-| Consolidated report | `POST /api/reports/consolidated` | Merge selected scans into one HTML/PDF/Word report. |
+| API discovery / deep scan | `POST /api/api-scan/discover` · `POST /api/api-scan/deep-scan` · `POST /api/api-scan/upload-spec` · `POST /api/api-scan/upload-postman` | Endpoint discovery, then OWASP API Top 10 testing of discovered endpoints, an OpenAPI file or a Postman collection. |
+| Consolidated report | `POST /api/reports/consolidated` · `GET /api/reports/{job_id}/download` · `GET /api/reports/history` | Merge selected scans into one HTML / PDF / Word report; generated in the background. |
 | CI trigger / poll / gate | `POST /api/cicd/scans/trigger` · `GET /api/cicd/scans/{scan_id}/status` · `GET /api/cicd/scans/{scan_id}/results` | `scan_type`, `target`, `scan_profile`, `fail_on_severity` → `gate_passed`. Release-gate policy: `GET /api/ci/gate/policy`, history `GET /api/ci/gate/history`; SARIF `GET /api/ci/scan/{scan_id}/sarif`; badges `GET /api/ci/badge/{type}.svg`. |
+
+### App Scan
+
+| Task | Endpoint | Notes |
+| --- | --- | --- |
+| Start | `POST /api/app-scan` | `{ "target_url", "scan_types"?, "standards"?, "options"?, "engagement"? }`. `standards` defaults to `["asvs-l2", "owasp-web-top10"]`. `options` carries `rate_limit_profile` (`gentle` / `normal` / `aggressive`), `auth_config`, `exclude_paths`, the second user, and the state-changing-probes opt-in. |
+| Auth types | `options.auth_config.auth_type` | `bearer` · `cookie` · `header` · `form` · `oauth2_client_credentials` · `oauth2_refresh_token` · `browser_login` (only with `DAST_BROWSER_AUTH=true`; otherwise refused with 400). |
+| Test a login | `POST /api/app-scan/validate-auth` | Same pre-scan check the scan runs; for OAuth2 it fetches a token and calls the probe URL. |
+| What this deployment accepts | `GET /api/app-scan/auth-capabilities` | `browser_login`, `auth_guard` and the guard's default keywords. |
+| List / read | `GET /api/app-scan?limit=` (up to 100) · `GET /api/app-scan/{app_scan_id}` | Status, completeness, findings, coverage, rating, `tool_versions`, authentication verdict. |
+| Report | `GET /api/app-scan/{app_scan_id}/report?format=html\|pdf` | Completed scans only. |
+| SARIF | `GET /api/app-scan/{app_scan_id}/sarif` | SARIF 2.1.0; confirmed findings tagged `proven-exploitable`. Export only. |
+| Retest a finding | `POST /api/app-scan/{app_scan_id}/findings/{finding_id}/retest` | Body for authenticated scans: `{ "secrets": { "password" \| "token" \| "cookie_string" \| "header_value": "…" } }` (not stored). Without it an authenticated finding is `inconclusive`. The old `POST /api/app-scan/retest` with a bare finding is refused (410). |
+| API inventory | `GET /api/app-scan/api-inventory?target_url=&include_gone=` | Endpoints seen across scans, with first / last seen and active / gone. |
+
+### Evidence and integrity
+
+| Task | Endpoint | Notes |
+| --- | --- | --- |
+| Exports issued for a scan | `GET /api/native-scans/results/{scan_id}/exports` | Format, SHA-256, size, who, when, whether the copy is kept. |
+| Re-download an issued report | `GET /api/native-scans/results/{scan_id}/exports/{sha256}` | The byte-for-byte copy as issued, not regenerated. |
+| Verify a report | `GET /api/native-scans/exports/verify?sha256=` | Matches the team's scan exports and consolidated reports. |
+| Network VAPT report | `GET /api/export/network-vapt` (PDF) · `/api/export/network-vapt.docx` · `/api/export/network-vapt.html` | Greenbone OpenVAS + Nmap; needs View Vulnerabilities, View Scans or View Assessments. Wazuh correlation only for users who can view integrations. |
+| Retention | `GET /api/scan-retention/status` · `GET /api/scan-retention/policies` · `POST /api/scan-retention/run-cycle` | Run-cycle needs **Manage Scans**. |
+
+See [Engagement & Evidence](./scan-evidence.md) and [Network Scans & VAPT Report](./network-scans.md).
 
 ## Code
 
@@ -51,8 +80,8 @@ Send the key as `X-API-Key`; calls are scoped to the key's team.
 | Comments & activity | `POST /api/code/findings/{fingerprint}/comment` · `GET …/activity` | |
 | AI analysis / fix | `POST /api/code/scan/{scan_id}/ai-analyze` · `POST /api/code/scan/{scan_id}/ai-fix` | |
 | Fix pull request | `POST /api/code/findings/fix-pr` | `{ repo, branch?, provider?, patch?, finding{…} }` — **writes to your Git host**; needs *Execute Remediations*. |
-| SBOM & licences | `POST /api/code/sbom` · `POST /api/code/sbom/upload` · `GET /api/code/sbom` · `GET /api/code/sbom/{scan_id}` · `…/download` · `…/export?format=csv\|csv-vulns\|json` · `…/notices` · `…/fix-plan` · `…/report` · `DELETE …` | Upload accepts CycloneDX (JSON/XML) or SPDX (JSON). |
-| Licence enrichment | `GET` · `PUT /api/code/settings/license-enrichment` | `{ "enabled": true }` opts in to deps.dev lookups. |
+| SBOM & licenses | `POST /api/code/sbom` · `POST /api/code/sbom/upload` · `GET /api/code/sbom` · `GET /api/code/sbom/{scan_id}` · `…/download` · `…/export?format=csv\|csv-vulns\|json` · `…/notices` · `…/fix-plan` · `…/report` · `DELETE …` | Upload accepts CycloneDX (JSON/XML) or SPDX (JSON). |
+| License enrichment | `GET` · `PUT /api/code/settings/license-enrichment` | `{ "enabled": true }` opts in to deps.dev lookups. |
 | SCA policy | `GET /api/code/sca/policy` · `GET /api/code/sca/policy-packs` | Active rules and the versioned packs. |
 | Repository ownership | `GET` · `PUT /api/code/repo-ownership` | `{ "repo", "application", "owner", "environment", "criticality" }`. |
 | Pipeline generation | `GET /api/ci/pipeline/{provider}` · `POST /api/cicd/pipeline/comprehensive` | `provider` = `github_actions` \| `gitlab_ci` \| `bitbucket` \| `azure_devops` \| `jenkins`. |
@@ -62,7 +91,7 @@ Send the key as `X-API-Key`; calls are scoped to the key's team.
 
 | Task | Endpoint | Notes |
 | --- | --- | --- |
-| Providers & registries | `GET /api/container-registries/providers` · `POST /api/container-registries/saved` · `GET /api/container-registries/saved` · `GET` · `DELETE …/saved/{registry_id}` · `POST …/test-connection` | Providers `aws_ecr` \| `gcp_artifact_registry` \| `azure_container_registry` \| `docker_hub`. |
+| Providers & registries | `GET /api/container-registries/providers` · `POST /api/container-registries/saved` · `GET /api/container-registries/saved` · `GET` · `DELETE …/saved/{registry_id}` · `POST …/test-connection` | Providers `aws_ecr` \| `gcp_artifact_registry` \| `azure_container_registry`. `docker_hub` is listed by the API but its registry scanning is not supported yet. |
 | Sync, browse, drift | `POST …/saved/{id}/sync` · `GET …/sync-status` · `GET …/repositories` · `GET …/images` · `GET …/vulnerability-summary` · `GET …/drift` | |
 | Scan existing images | `POST …/saved/{id}/scan-existing` (`{ "repository"?, "max_images": 50 }`) · `GET …/scan-estimate` · scan jobs: `GET`/`POST …/scan-jobs`, `…/{job_id}/pause` · `/resume` · `/cancel` | |
 | Polling | `POST …/saved/{id}/poll` · `GET …/polling-status` · `PUT …/polling-config` (`polling_interval_seconds` 300–86400) | |

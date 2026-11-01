@@ -34,7 +34,7 @@ flowchart TB
         CD["Code / SAST / SBOM"]
         CK["Container / Kubernetes"]
         WZ["On-Prem: Wazuh"]
-        TP["Connected tools<br/>(Wazuh · SonarQube · Jenkins<br/>snapshots · Jira two-way)"]
+        TP["Connected tools<br/>(Wazuh · Greenbone OpenVAS · SARIF imports<br/>SonarQube / Jenkins summaries · Jira two-way)"]
         TI["Threat Intelligence"]
     end
 
@@ -72,7 +72,7 @@ The **[Vulnerability Dashboard](../vulnerability-risk/vulnerability-management/i
 
 - **Native modules** — Cloud Security, application/API/network scanning, SAST and code, SBOM/license, and container and Kubernetes all land here.
 - **On-prem telemetry** — host and endpoint findings from Wazuh contribute to the same view.
-- **Connected tools** — [Wazuh](../on-premises/wazuh-integration.md) host CVEs, alerts and endpoints are synced into the same stores; SonarQube and Jenkins contribute snapshots; Jira carries findings out as tickets and brings status back. Other catalog integrations verify a connection today rather than import findings — the [Integration Catalog](../integrations/third-party.md) says which is which, tool by tool.
+- **Connected tools** — [Wazuh](../on-premises/wazuh-integration.md) host CVEs, alerts and endpoints are synced into the same stores; the latest report of each [Greenbone OpenVAS](../on-premises/openvas-scanning.md) scan task becomes vulnerability occurrences; SARIF 2.1.0 logs from other code scanners (CodeQL, Semgrep, Snyk Code and others) are imported in Code Command Center; SonarQube and Jenkins contribute project and job summaries (SonarQube issues are not imported as findings); Jira carries findings out as tickets and brings status back. Other catalog integrations verify a connection today rather than import findings — the [Integration Catalog](../integrations/third-party.md) says which is which, tool by tool.
 
 The result is one place where a team can see its vulnerability exposure from every scanner the platform runs — cloud, code, container, Kubernetes, web, API, network — plus the host layer from Wazuh, instead of logging into each product to assemble the picture by hand.
 
@@ -102,6 +102,6 @@ In short: the data lake is the foundation, the interlinked modules are the struc
   },
   {
     q: "Can Offload ingest findings from tools like Wazuh, SonarQube or Snyk?",
-    a: "Wazuh, yes: agents, alerts and host CVEs are synced into the same data lake and appear in the deduplicated, risk-scored queue alongside Offload's own findings. SonarQube and Jenkins contribute snapshots; Snyk, Security Hub, OpenVAS and similar catalog entries verify a connection today and do not import findings. Indicators can be imported via STIX.",
+    a: "Wazuh and Greenbone OpenVAS, yes: Wazuh agents, alerts and host CVEs, and the latest OpenVAS report of each scan task, land in the same data lake and appear in the deduplicated, risk-scored queue alongside Offload's own findings. Code scanners that export SARIF 2.1.0 (CodeQL, Semgrep, Snyk Code and others) can be imported in Code Command Center. SonarQube and Jenkins contribute summaries; Snyk, AWS Security Hub and similar catalog entries verify a connection today and do not import findings. Indicators can be imported via STIX.",
   },
 ]} />

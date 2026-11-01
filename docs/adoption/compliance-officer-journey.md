@@ -13,9 +13,9 @@ Typical role: **Compliance Officer**, with **Auditor** accounts for external rev
 
 ## Stage 1 — Choose your frameworks
 
-1. [Supported Frameworks](../compliance/supported-frameworks.md) — the full catalog (ISO 27001:2022, SOC 2, PCI DSS 4.0.1, NIST CSF 2.0, GDPR, DPDP Act, SEBI CSCRF, and more), all mapped through the SCF common-control library.
+1. [Supported Frameworks](../compliance/supported-frameworks.md) — the catalog of 27 (ISO 27001, SOC 2, PCI DSS, NIST CSF, GDPR, DPDPA, SEBI CSCRF, and more), all mapped through the SCF common-control library. The RBI Cyber Security Framework is not in the catalog.
 2. [Compliance & GRC overview](../compliance/index.md) — how one control maps to many frameworks, and how statuses become scores.
-3. Activate the one or two frameworks you actually answer to. Every additional framework is mostly free later — the common-control model means evidence and control status carry across.
+3. Ask the platform administrator to activate the one or two frameworks you actually answer to (activation is theirs; other users see the list read-only). Every additional framework is mostly free later — the common-control model means evidence and control status carry across.
 
 **You can now:** explain to an auditor which framework versions you track and where the control library comes from.
 
@@ -24,7 +24,7 @@ Typical role: **Compliance Officer**, with **Auditor** accounts for external rev
 1. [Compliance Posture Dashboard](../compliance/compliance-dashboard.md) — scores, gap analysis, and drift detection.
 2. [Autonomous Compliance](../compliance/autonomous-compliance.md) — how control statuses are derived automatically from scan findings, what the score weightings are, and when manual overrides are appropriate.
 
-**You can now:** name your top gaps per framework and distinguish "failing" from "not assessed."
+**You can now:** name your top gaps per framework, distinguish "failing" from "not assessed," and open any control's **Why this status** panel to see who or what set its status and on which evidence.
 
 ## Stage 3 — Assess what scans can't see
 
@@ -35,8 +35,8 @@ Typical role: **Compliance Officer**, with **Auditor** accounts for external rev
 
 ## Stage 4 — Build the evidence trail
 
-1. [Evidence Hub](../compliance/evidence-hub.md) — auto-collected evidence with quality scores and validity windows (cloud and scan evidence stays valid 90 days; assessment answers and policy documents, 365), plus manual upload for policies and screenshots.
-2. Run **Collect All**, then work the review queue: approve what's right, reject what isn't, replace what's expired.
+1. [Evidence Hub](../compliance/evidence-hub.md) — auto-collected evidence with quality scores and validity windows (cloud and scan evidence stays valid 90 days; Wazuh endpoint evidence 7 days; assessment answers and manual uploads, 365), plus manual upload for policies and screenshots.
+2. Run **Collect All Evidence**, then work the review queue: approve what's right, reject what isn't, replace what's expired.
 3. Turn material gaps into governed risks in the [Risk Register](../vulnerability-risk/risk-management/index.md) so they get owners, treatment plans, and SLAs instead of living in a spreadsheet.
 
 **You can now:** show, for any control, *why* it has its status — with dated evidence behind it.
@@ -52,8 +52,8 @@ Typical role: **Compliance Officer**, with **Auditor** accounts for external rev
 
 ## Stage 6 — Face the audit
 
-1. Export the audit package for your framework from the [Evidence Hub](../compliance/evidence-hub.md) — up to four layers of proof per control: policy, procedure, technical proof, attestation.
-2. Generate executive and audit reports in PDF/HTML — [Reports & AI Assistance](../reports-and-ai/index.md).
+1. Download the auditor package for your framework from the [Evidence Hub](../compliance/evidence-hub.md) — one folder per control with four layers of proof: governance (policies and documents), technical (scan results), operational (assessment answers) and monitoring (alerts).
+2. Generate [Audit Reports](../compliance/audit-reports.md) — they are frozen when issued, carry a SHA-256 fingerprint on every page, and can be verified later against what the platform issued — plus executive reports in PDF/HTML ([Reports & AI Assistance](../reports-and-ai/index.md)).
 3. Give your external auditor an **Auditor** account: read-only access to evidence and reports, with export rights — [Roles, Teams & API Keys](../authentication/rbac-team-management.md).
 
 **You can now:** hand an auditor a package and an account instead of a shared drive of screenshots.

@@ -1,6 +1,6 @@
 ---
 title: "Trust & Security"
-description: "How Offload Security protects the platform itself: tenant isolation, credential and secret handling, API security, AI data handling, data residency, retention and responsible disclosure."
+description: "How Offload Security protects the platform itself: tenant isolation, a tamper-evident audit trail, credential and secret handling, API security, AI data handling, data residency, retention and responsible disclosure."
 sidebar_label: "Trust & Security"
 sidebar_position: 12
 ---
@@ -11,7 +11,18 @@ How Offload Security protects the platform itself — the questions security rev
 
 ## Tenant isolation
 
-Every record on the platform is scoped to your **team**. All queries filter on that scope server-side — API keys and user sessions both resolve to a team before any data is read. Role-based access control ([Roles, Teams & API Keys](./authentication/rbac-team-management.md)) governs what members of a team can see and do, and an [audit trail](./authentication/audit-trail.md) records every authenticated request with actor, team, action and outcome, sensitive fields redacted, for 365 days by default.
+Every record on the platform is scoped to your **team**. All queries filter on that scope server-side — API keys and user sessions both resolve to a team before any data is read. Role-based access control ([Roles, Teams & API Keys](./authentication/rbac-team-management.md)) governs what members of a team can see and do.
+
+## Audit trail
+
+The platform [audit trail](./authentication/audit-trail.md) records every authenticated change (POST, PUT, PATCH, DELETE) and every report download or export, with actor, team, IP address, action and outcome; request bodies are summarized with sensitive fields redacted, and the bodies of sign-in, registration, MFA and SSO requests are never logged. Since 1.4.0 the trail is **tamper-evident**: each entry is appended to a per-team hash chain (HMAC-SHA256 over the entry and the previous hash), and writes are retried rather than dropped. Two admin-only endpoints, also reachable with an API key that holds the `admin:audit` scope, serve it to your own tooling:
+
+| Action | Endpoint |
+| --- | --- |
+| Check the chain and report the first broken link | `GET /api/audit-trail/verify` |
+| Pull entries for a SIEM (cursor by sequence; JSON lines or CEF) | `GET /api/audit-trail/export/siem` |
+
+Splunk (HTTP Event Collector) and syslog / CEF integrations can also forward the trail. Because the chain must stay verifiable, audit-trail entries are no longer deleted by a time-to-live; the operator can additionally write the chain head to an external witness (`AUDIT_HEAD_WITNESS_DIR`, `AUDIT_HEAD_WITNESS_SYSLOG`).
 
 ## Credentials & secrets handling
 
@@ -30,10 +41,11 @@ For scanning, the platform asks only for **read-only roles** wherever the provid
 The platform's AI features (summaries, remediation suggestions, questionnaire auto-fill, the assistant) are designed so that AI is a consumer of your data under the same controls as everything else:
 
 - **Scoped retrieval.** AI answers are generated from data your team already has access to — the same tenant scoping applies to AI context as to API queries.
-- **Configurable model providers.** AI calls route through a central provider layer to leading LLM APIs. On-premises and enterprise deployments can configure their own provider keys, so inference happens under your own agreements.
+- **What the model receives.** Depending on the feature: finding and asset details, scan summaries and compliance status for the page you are on, code snippets around a code finding (explanations, fix suggestions, and the fix agent when enabled), and the text of documents you upload to the Knowledge Base (questionnaire answers and policy Q&A). Page context is validated and passed to the model as delimited data, not instructions.
+- **Configurable model providers.** AI calls route through a central provider layer to Anthropic, OpenAI or Google. A team can configure its own provider and key; otherwise the deployment-wide key the operator set is used. With neither, AI features are off and everything else works.
 - **A cache that never crosses tenants.** Frequently asked *generic platform questions* are answered from a curated knowledge cache without any model call. Only tenant-neutral content is ever cached — answers derived from your data are not stored in the shared cache.
 - **No training on your data.** Your data is sent to model providers only to serve the specific request, under API terms that do not use it for model training.
-- **AI is advisory.** Suggestions (remediation guidance, auto-fill drafts) are drafts for human review — they never change your configuration or accept a risk on their own.
+- **AI is advisory.** Suggestions (remediation guidance, auto-fill drafts) are drafts for human review — they never change your configuration or accept a risk on their own. The agentic fix feature, which can open a pull request with a code change, is off by default (`AGENTIC_FIX_ENABLED`), must also be switched on per team, and never merges.
 
 ## Deployment options & data residency
 
@@ -42,7 +54,24 @@ The platform's AI features (summaries, remediation suggestions, questionnaire au
 
 ## Data retention & deletion
 
-Retention is enforced platform-wide: scan results age out on schedules (`SCAN_RETENTION_DAYS` 90, cloud and container scans 180 by default), generated reports after 180 days (`REPORT_RETENTION_DAYS`), audit-trail events after 365 (`AUDIT_TRAIL_RETENTION_DAYS`), and regulated records where the regulation requires specific periods (for example, [DPDP audit records](./compliance/dpdp-privacy.md)), and deleting a team or account cascades through the platform's data stores rather than orphaning records. On request, customer data is deleted at contract end.
+Retention is enforced platform-wide by time-to-live indexes and a daily retention sweep. The defaults in 1.4.0 (each is an environment variable the operator can change):
+
+| Data | Default | Variable |
+| --- | --- | --- |
+| Scans, scan runs, container scans | 730 days (24 months) | `SCAN_RETENTION_DAYS`, `SCAN_RUN_RETENTION_DAYS`, `CONTAINER_SCAN_RETENTION_DAYS` |
+| Cloud and Kubernetes findings | 730 days | `FINDING_RETENTION_DAYS` |
+| Native web / API / network scan records | 365 days | `NATIVE_SCAN_RETENTION_DAYS` |
+| Generated reports | 180 days | `REPORT_RETENTION_DAYS` |
+| Alerts | 90 days | `ALERT_RETENTION_DAYS` |
+| Compliance records (frozen Kubernetes compliance reports, drift reports, control-state history) | 1,825 days (5 years) | `COMPLIANCE_RETENTION_DAYS`, `COMPLIANCE_DRIFT_TTL_DAYS`, `COMPLIANCE_AUDIT_LOG_RETENTION_DAYS` |
+| Compliance evidence | 7 years | `EVIDENCE_RETENTION_YEARS` |
+| Platform audit trail | Not deleted automatically (hash-chained) | — |
+
+Regulated records keep the periods their regulation requires (for example, [DPDP audit records](./compliance/dpdp-privacy.md), never less than 365 days). A deleted native scan is kept as a tombstone (who, when, why) until its grace period ends, then purged with its raw artifacts. Deleting a team or account cascades through the platform's data stores rather than orphaning records. On request, customer data is deleted at contract end.
+
+:::note[Upgrading from an older `.env`]
+An `.env` copied from an earlier `.env.example` pins the older, shorter windows (90 / 180 / 365 days). Raise or delete those lines to get the 1.4.0 defaults.
+:::
 
 ## Secure development
 

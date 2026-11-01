@@ -64,13 +64,19 @@ Exactly what it says: no provider is active for your team. Knowledge Base → AI
 Older builds turned that message into an opaque 500 (a bug in the error helper that affected several endpoints). Fixed in the current release; the behaviour is the same, the message is now honest.
 
 **"Forbidden" when sending a message.**
-The assistant, Explain / Suggest fix / AI Summary and provider configuration require the **Manage Integrations** permission; scan analysis requires **Manage Scans**. Give the role the permission or ask an admin.
+Asking the assistant needs one of **View Scans**, **View Cloud Accounts** or **View Assessments**. Explain / Suggest fix / AI Summary and provider configuration require **Manage Integrations**; scan analysis requires **Manage Scans**. Give the role the permission or ask an admin.
+
+**The answer says some of my data could not be read, or cites nothing.**
+The assistant retrieves only from sources your role can read (findings: View Scans; assets: View Cloud Accounts; controls: View Assessments) and reports a source that failed rather than guessing. Ask again after the source recovers, or ask an admin for the read permission.
+
+**"Rate limit" / HTTP 429 from an AI feature.**
+The team's AI budget is used up for now, or the provider is rate-limiting the key. Every AI call is metered against the team; wait and retry, or raise the budget with your administrator.
 
 **Test succeeds but Activate does nothing / another provider answers.**
 The first configured provider becomes active automatically; when several are configured, **Activate** switches. Check `GET /api/llm/providers` for `active_provider` — the assistant header shows the model that answered.
 
 **The answer is generic and ignores my findings.**
-Two possibilities: the question was recognised as *generic* and served from platform knowledge (fast, no tenant data — ask about *your* accounts or findings explicitly), or the page you asked from has no security context to attach (the widget on a settings page knows less than on Scan Results).
+The question was recognized as *generic* and served from platform knowledge (fast, no tenant data). Ask about *your* accounts, assets or findings explicitly; a grounded answer lists the records it cited under the reply.
 
 **AI Summary / Explain is slow or times out.**
 Large scan reports are summarised from counts and the top findings, but the provider call still takes several seconds; the fast model (`claude-haiku-4-5`, `gpt-4o-mini`) is used for short helpers. Persistent timeouts usually mean the provider key has hit its rate limit — the provider's error is shown in **Test**.
@@ -81,10 +87,16 @@ Large scan reports are summarised from counts and the top findings, but the prov
 Reports never leave the platform unless you email them (scheduled reports) or download them. AI requests go directly to the provider you configured with your key; only tenant-agnostic questions are cached, and never with your data.
 
 **Can I brand the PDFs?**
-Yes — every server-rendered document (executive, compliance posture, consolidated, DPDP pack, branded export family) uses the team's brand configuration: logo, colours, confidentiality banner.
+Yes — every server-rendered document (executive, compliance posture, consolidated, DPDP pack, branded export family) uses the brand configuration: name, logo, colors, classification banner and legal footer, set by your operator with the `PLATFORM_BRAND_*` settings and optionally overridden per team. There is no branding screen.
+
+**How do I prove a report has not been altered?**
+For audit reports, paste the content SHA-256 from the PDF footer into *Verify a report* on the Audit Reports page. For scan, cloud posture, code, Kubernetes and container reports, call `GET /api/native-scans/exports/verify?sha256=` with the file's SHA-256. See [Point-in-time and verifiable reports](./report-catalog.md#point-in-time-and-verifiable-reports).
+
+**Does AI write the report narrative?**
+No, by default. Executive summaries and narratives are templated from your data. An AI-written remediation narrative in the cloud-posture and consolidated executive reports is opt-in per team and off by default.
 
 **Which report do I give an external auditor?**
-Status: [Audit Reports](../compliance/audit-reports.md) (controls CSV). Evidence: the per-framework [auditor package](../compliance/evidence-hub.md#auditor-package). Narrative: the Board Report PDF. For DPDP: the [audit pack](../compliance/dpdp-privacy.md#audit--export).
+Status: [Audit Reports](../compliance/audit-reports.md) (attestable PDF and controls CSV). Network / infrastructure VAPT: the [Network VAPT report](./report-catalog.md#network-vapt-report). Evidence: the per-framework [auditor package](../compliance/evidence-hub.md#auditor-package). Narrative: the Board Report PDF. For DPDP: the [audit pack](../compliance/dpdp-privacy.md#audit--export).
 
 **Can I generate reports from CI or a script?**
 Yes — every report on the [Report Catalog](./report-catalog.md) has an API route; the [branded export family](./report-catalog.md#branded-report-family-api) is designed for exactly that.

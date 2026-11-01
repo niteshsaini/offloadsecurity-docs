@@ -2,12 +2,12 @@
 title: "Compliance & GRC API"
 sidebar_label: "API"
 sidebar_position: 9
-description: "Every compliance workflow over REST — SCF controls and posture, gap analysis and overrides, the compliance engine (sync, thresholds, drift, alert policies, control testing, exceptions, remediation), evidence, assessments, audit reports and the full DPDP surface."
+description: "Every compliance workflow over REST: SCF controls, posture and status basis, gap analysis, SoA and overrides, the compliance engine (sync, thresholds, drift, alert policies, control testing, exceptions, remediation), evidence, policy acknowledgements, assessments, attestable audit reports and the full DPDP surface."
 ---
 
 # Compliance & GRC API
 
-Everything in this section is available over the REST API. [API Reference](../api-reference/index.md) covers authentication and conventions; Swagger at `https://<your-host>/api/docs` is exhaustive.
+Everything in this section is available over the REST API. [API Reference](../api-reference/index.md) covers authentication and conventions. Swagger at `https://<your-host>/api/docs` is exhaustive; in production it is served only when `ENABLE_API_DOCS` is enabled.
 
 ```bash
 export OFFLOAD_HOST="https://your-instance.example.com"
@@ -20,13 +20,14 @@ Send the key as `X-API-Key`; calls are scoped to the key's team.
 
 | Task | Endpoint | Notes |
 | --- | --- | --- |
-| Frameworks | `GET /api/common-controls/frameworks` · `POST /api/common-controls/frameworks/activate` | Catalog of 27 with active flags; activation is platform-admin. |
+| Frameworks | `GET /api/common-controls/frameworks` · `PUT /api/common-controls/frameworks/activate` `{active_frameworks[]}` | Catalog of 27 with the team's active flags, whether the team uses the default set, and who last changed it. Activation is per team and platform-admin only; unknown keys are rejected. |
 | Posture | `GET /api/common-controls/posture` · `GET /api/common-controls/posture/active` · `GET /api/common-controls/stats` · `GET /api/common-controls/map/stats` | Per-framework score, counts, assessed flag (`/active` = active frameworks only). |
 | Controls | `GET /api/common-controls/controls?limit=&skip=` · `GET /api/common-controls/search?q=&framework=&domain=` · `GET /api/common-controls/control/{scf_id}` · `GET /api/common-controls/framework/{framework}` | Catalog plus the caller's team state per control. |
+| Status basis | `GET /api/common-controls/control/{scf_id}/status-basis` | Why the control has its status: who or what set it and when, the latest transition, failing checks (reviewed or derived mapping), current evidence and the basis. See [How status is decided](./control-status.md). |
 | Gap analysis | `GET /api/common-controls/gap-analysis/{framework}` | Non-implemented controls with priority (SCF weighting), status and evidence. |
-| Statement of Applicability | `GET /api/common-controls/soa/{framework}` · `GET …/soa/{framework}/requirements/{requirement}` | Requirement → controls → status, ready for an ISO SoA. |
+| Statement of Applicability | `GET /api/common-controls/soa/{framework}?format=json\|csv\|xlsx` · `PUT …/soa/{framework}/requirements/{requirement}` `{justification}` | Requirement → controls → status for any framework; the PUT sets one requirement's justification (**Manage Assessments**). |
 | Override | `PUT /api/common-controls/controls/{scf_id}/override` `{implementation_status, justification, override_type}` | Locks the control. **admin** role. |
-| Status / evidence link | `POST /api/common-controls/control/{scf_id}/status` · `POST /api/common-controls/control/{scf_id}/evidence` | Set status without a lock; link an evidence item. |
+| Status / evidence link | `PUT /api/common-controls/control/{scf_id}/status` · `POST /api/common-controls/control/{scf_id}/evidence` | Set status without a lock (**admin** role; a person's status is still never changed by automation); link an evidence item (**Manage Assessments**). |
 | Sync | `POST /api/common-controls/map/sync-all` · `POST /api/common-controls/map/assessment` · `POST /api/common-controls/map/scan-findings` · `POST /api/common-controls/correlate-all` | Replay assessments and scan findings into controls; `correlate-all` is admin-only. |
 | Auto-fill | `POST /api/common-controls/auto-fill` `{framework, questions[]}` · `GET …/auto-fill/readiness/{framework}` · `POST …/auto-fill/build-mapping` · `GET …/auto-fill/mapping/{framework}` | Suggested answers with confidence from SCF state; pre-computed question→control map. |
 | Audit log | `GET /api/common-controls/audit-log` · `GET …/audit-log/{scf_id}` | Every status change, override and evidence link, with actor. |
@@ -39,9 +40,9 @@ Send the key as `X-API-Key`; calls are scoped to the key's team.
 | Status | `GET /api/compliance-engine/status` | Last sync and result, thresholds check, active breaches, `overridden_controls`. |
 | Run | `POST /api/compliance-engine/sync` · `POST /api/compliance-engine/refresh` | Sync returns a job id (`GET /api/jobs/{job_id}`); refresh = sync + thresholds + scores. |
 | History | `GET /api/compliance-engine/sync-history` · `GET /api/compliance-engine/timeline?limit=` | |
-| Thresholds | `GET` · `POST /api/compliance-engine/thresholds` `{framework?, threshold}` · `GET /api/compliance-engine/check-thresholds` | Omit `framework` to set the default (70). |
-| Drift | `POST /api/compliance-engine/detect-drift` · `GET /api/compliance-engine/drift-history?limit=` | Diff of the two most recent daily snapshots. |
-| Alert policies | `GET` · `POST /api/compliance-engine/alert-policies` · `PUT` · `DELETE …/alert-policies/{policy_id}` | `{policy_name, drift_types[], severity_threshold, frameworks[], channels[], enabled}`. |
+| Thresholds | `GET` · `POST /api/compliance-engine/thresholds` `{framework?, threshold}` · `GET /api/compliance-engine/check-thresholds` | Omit `framework` to set the default (70). Setting a threshold needs the **admin** role. |
+| Drift | `POST /api/compliance-engine/detect-drift` · `GET /api/compliance-engine/drift-history?limit=` | Reports each recorded status transition, threshold crossing and evidence expiry once; see [Drift Detection](./drift-detection.md). |
+| Alert policies | `GET` · `POST /api/compliance-engine/alert-policies` · `PUT` · `DELETE …/alert-policies/{policy_id}` | `{policy_name, drift_types[], severity_threshold, alert_channels: {email, slack, in_app}, escalation_recipients[], enabled}`. |
 | Overrides | `POST /api/compliance-engine/controls/{scf_id}/override` `{override: true/false, reason}` | Lock / unlock; **admin**. Same store as the posture override. |
 | Evidence expiry | `GET /api/compliance-engine/evidence-expiring-soon` · `GET …/evidence-expiry-alerts` · `POST …/evidence-expiry-alerts/{alert_id}/acknowledge` | |
 | Reseed | `POST /api/compliance-engine/reseed-controls` | Add newly shipped baseline controls (admin). |
@@ -64,8 +65,8 @@ Send the key as `X-API-Key`; calls are scoped to the key's team.
 
 | Task | Endpoint |
 | --- | --- |
-| Playbooks and actions | `GET /api/compliance-engine/remediation/playbooks` · `GET …/remediation/actions` · `GET …/remediation/stats` · `POST …/remediation/process-findings` |
-| Act | `POST …/remediation/actions/{action_id}/approve` · `…/deny` · `…/execute` · `…/rollback` — **Execute Remediations** permission; execution is a dry run unless `REMEDIATION_LIVE_EXECUTE=true` |
+| Playbooks and actions | `GET /api/compliance-engine/remediation/playbooks` · `GET …/remediation/actions` · `GET …/remediation/stats` · `POST …/remediation/process-findings` `{dry_run?, finding_ids?, all_active?}` — `dry_run` counts "N findings → M new actions (K already pending)" without writing; a finding never gets a second open action for the same playbook |
+| Act | `POST …/remediation/actions/{action_id}/approve` · `…/deny` · `…/execute` · `…/rollback` — **Execute Remediations** permission; the action's creator cannot approve it; execution is a dry run unless `REMEDIATION_LIVE_EXECUTE=true` |
 
 ## Evidence
 
@@ -74,10 +75,23 @@ Send the key as `X-API-Key`; calls are scoped to the key's team.
 | Evidence store | `GET` · `POST /api/common-controls/evidence` `{title, evidence_type, source, scf_control_ids[], metadata}` · `GET …/evidence/{evidence_id}` · `POST …/evidence/{evidence_id}/link-controls` · `GET …/evidence/framework/{framework}` · `GET …/evidence/dedup-stats` · `GET …/evidence-reuse` · `POST …/evidence/auto-from-scan` | Deduplicated by content hash. |
 | Collection | `POST /api/evidence-collection/collect-all` · `GET …/collection-history` · `GET …/coverage` · `GET …/framework-controls/{framework_key}` · `GET …/control/{scf_id}` · `POST …/manual-upload` · `POST …/manual-upload-file` (multipart) · `GET …/evidence/{id}` · `GET …/evidence/{id}/download` · `DELETE …/evidence/{id}` · `POST …/evidence/{id}/comment` | `collect-all` returns a job id. |
 | API captures | `POST /api/evidence-capture/collect-all` · `POST …/collect/{account_id}` · `GET …/status` | Read-only cloud API evidence per connected account. |
-| Review, quality, renewals | `POST /api/evidence-completion/review/submit/{evidence_id}` · `POST …/review/action/{evidence_id}` `{action: approve\|reject}` · `POST …/review/bulk-approve` · `GET …/review/pending` · `POST …/quality/score-all` · `GET …/quality/{evidence_id}` · `GET …/renewals?days_since=365` · `POST …/renewals/{evidence_id}` | |
+| Review, quality, renewals | `POST /api/evidence-completion/review/submit/{evidence_id}` · `POST …/review/action/{evidence_id}` `{action: approve\|reject}` · `POST …/review/bulk-approve` · `GET …/review/pending` · `POST …/quality/score-all` · `GET …/quality/{evidence_id}` · `GET …/renewals?days_since=365` · `POST …/renewals/{evidence_id}` | The uploader cannot review their own item (403); expired or superseded items cannot be approved (409). |
+| Store status | `GET /api/evidence-completion/store-status` · `GET …/unassigned` · `POST …/unassigned/{unassigned_id}/assign` | Notices about the canonical evidence store; evidence from earlier releases with no team, which a platform admin can assign to their current team (audited). |
 | AI document mapping | `POST /api/evidence-completion/ai-map/{document_id}` · `POST …/ai-map/{document_id}/confirm` | Needs an LLM provider. |
 | Auditor package | `GET /api/evidence-completion/auditor-package/{framework}` | ZIP, organised by control in four layers. |
 | Intelligence | `GET /api/evidence-intelligence/freshness` · `GET …/smart-coverage` · `GET …/control-bundle/{scf_id}` | |
+
+## Policy acknowledgements
+
+| Task | Endpoint | Notes |
+| --- | --- | --- |
+| Publish | `POST /api/knowledge-base/documents/{document_id}/attestations` `{version, user_ids[], roles[], due_at, control_ids[], reminder_interval_days?}` | Supersedes the policy's previous active version. **Manage Assessments**. |
+| List | `GET /api/knowledge-base/attestations` · `GET …/attestations/overdue` · `GET …/attestations/mine` · `GET …/attestations/{campaign_id}` | |
+| Acknowledge | `GET …/attestations/{campaign_id}/document` · `POST …/attestations/{campaign_id}/acknowledge` | Any recipient. Refused if the document changed after publishing. |
+| Manage | `POST …/attestations/{campaign_id}/remind` · `POST …/attestations/{campaign_id}/recipients/{user_id}/remove` · `…/exempt` `{reason}` | **Manage Assessments**. |
+| Export | `GET …/attestations/{campaign_id}/export?format=csv\|pdf` | **Export Reports**. |
+
+See [Policy Acknowledgement](./policy-attestation.md).
 
 ## Assessments
 
@@ -92,7 +106,10 @@ Send the key as `X-API-Key`; calls are scoped to the key's team.
 
 | Task | Endpoint |
 | --- | --- |
-| Generate / list / download | `POST /api/compliance-engine/reports/generate` `{report_type: full\|controls\|findings\|drift\|remediation}` · `GET /api/compliance-engine/reports` · `GET …/reports/{report_id}/download/{section}` (`controls` · `findings` · `drift` · `remediation` · `compliance_scores`) |
+| Generate | `POST /api/compliance-engine/reports/generate` `{report_type: full\|controls\|findings\|drift\|remediation, format: csv\|pdf}` — runs as a background job and returns `{job_id}`; poll `GET /api/jobs/{job_id}`. `format` defaults to `csv`. **Manage Assessments**. |
+| List | `GET /api/compliance-engine/reports?limit=` — newest reports plus the team's true `total` |
+| Download issued files | `GET …/reports/{report_id}/document` (PDF) · `GET …/reports/{report_id}/data` (canonical JSON; its SHA-256 is the content hash) · `GET …/reports/{report_id}/download/{section}` (`framework_scores` · `controls` · `contradictions` · `findings` · `drift` · `remediation` · `compliance_scores` · `unmapped_checks`). A file whose kept copy is missing returns 410. |
+| Verify | `GET /api/compliance-engine/reports/verify?sha256=` — whether a file's SHA-256 or a PDF's content hash was issued to your team, and which kind of match it is |
 
 ## DPDP
 
@@ -102,7 +119,7 @@ Send the key as `X-API-Key`; calls are scoped to the key's team.
 | DPIA | `GET /api/dpdp/dpia/template` · `GET` · `POST /api/dpdp/dpia` `{processing_activity, initial_answers?}` · `GET …/dpia/{dpia_id}` · `PUT …/dpia/{dpia_id}/answers` `{answers, risk_assessments?, answer_sources?}` · `GET …/dpia/{dpia_id}/autofill-suggestions` · `POST …/dpia/{dpia_id}/submit` · `…/approve` `{validity_days}` · `…/reject` `{reason}` |
 | SDF | `GET /api/dpdp/sdf/template` · `POST /api/dpdp/sdf/assess` `{volume_tier, data_categories[], sector, processes_cross_border, uses_automated_decision_making, processes_children_at_scale, additional_context}` · `GET …/sdf/current` · `GET …/sdf/history` · `GET …/sdf/autofill-suggestions` |
 | Vendors | `GET /api/dpdp/vendor/template` · `POST /api/dpdp/vendor/assess` `{vendor_name, vendor_processing_description, answers, notes?, validity_days}` · `GET /api/dpdp/vendor` · `GET …/vendor/{vendor_name}` · `GET …/vendor/{vendor_name}/history` · `GET /api/dpdp/vendor-failing` |
-| Breaches | `POST /api/dpdp/breach` `{detected_at, detection_source, detection_evidence_refs[], initial_notes}` · `GET /api/dpdp/breach` · `GET …/breach/{incident_id}` · `POST …/declare` `{declaration_basis}` · `PUT …/assessment` `{fields}` · `POST …/assess` `{is_reportable, reportability_basis, is_cert_in_reportable, cert_in_reportability_basis, cert_in_incident_category}` · `GET …/cert-in-reportability` · `POST …/notify-dp` `{channels_used[], notification_summary}` · `POST …/report-dpb` · `POST …/report-cert-in` `{filed_by, filed_at, report_reference}` · `GET …/dpb-report-text` · `GET …/dpb-completeness` · `GET …/cert-in-report-text` · `GET …/cert-in-completeness` · `POST …/close` `{closure_notes}` · `POST …/withdraw` |
+| Breaches | `POST /api/dpdp/breach` `{detected_at, detection_source, detection_evidence_refs[], initial_notes}` · `GET /api/dpdp/breach` · `GET …/breach/{incident_id}` · `POST …/declare` `{declaration_basis}` · `PUT …/assessment` `{fields}` · `POST …/assess` `{is_reportable, reportability_basis, is_cert_in_reportable, cert_in_reportability_basis, cert_in_incident_category}` · `POST …/cert-in-reportability` · `POST …/notify-dp` `{channels_used[], notification_summary}` · `POST …/report-dpb` · `POST …/report-cert-in` `{filed_by, filed_at, report_reference}` · `GET …/dpb-report-text` · `GET …/dpb-completeness` · `GET …/cert-in-report-text` · `GET …/cert-in-completeness` · `POST …/close` `{closure_notes}` · `POST …/withdraw` |
 | Breach queues | `GET /api/dpdp/breach/overdue/dpb` · `…/overdue/cert-in` · `…/approaching/dpb` · `…/approaching/cert-in` · `…/triage/dpb` · `…/triage/cert-in` |
 | Audit & export | `GET /api/dpdp/audit/events?event_type=&limit=` · `POST /api/dpdp/audit/pack` `{period_start, period_end, pack_label}` · `GET …/audit/packs` · `GET …/audit/pack/{pack_id}` · `GET …/audit/pack/{pack_id}/pdf` · `POST …/audit/pack/{pack_id}/verify` · `GET` · `PUT /api/dpdp/audit/retention` `{retention_days ≥ 365, data_residency}` |
 
@@ -111,9 +128,10 @@ Send the key as `X-API-Key`; calls are scoped to the key's team.
 | Action | Permission |
 | --- | --- |
 | Read posture, controls, evidence, assessments, DPDP | any authenticated team member (`view_assessments` for DPDP and assessment lists) |
-| Sync, auto-fill, evidence upload / review, assessments, DPIA / SDF / vendor / breach writes, thresholds, drift, alert policies, test schedules, exceptions, reports | **Manage Assessments** (`manage_assessments`) |
-| Manual overrides (lock / unlock), `correlate-all`, reseed controls, SCF import | **admin** role (or admin-scoped API key) |
+| Sync, auto-fill, evidence upload / review, assessments, DPIA / SDF / vendor / breach writes, drift, alert policies, test schedules and results, exceptions, SoA justifications, audit report generation, publishing policy acknowledgements | **Manage Assessments** (`manage_assessments`) |
+| Manual overrides (lock / unlock), plain status changes, thresholds, `correlate-all`, reseed controls, SCF import | **admin** role (or admin-scoped API key) |
 | Framework activation | platform administrator |
-| Approve / deny / execute / roll back remediation actions | **Execute Remediations** (`execute_remediations`) |
+| Process findings; approve / deny / execute / roll back remediation actions | **Execute Remediations** (`execute_remediations`) |
+| Export a policy acknowledgement record | **Export Reports** (`export_reports`) |
 
 See [Authentication](../api-reference/authentication.md) for key scopes and [Conventions](../api-reference/conventions.md) for pagination, error shapes and rate limits.

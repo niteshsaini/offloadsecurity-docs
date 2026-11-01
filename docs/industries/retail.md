@@ -14,7 +14,7 @@ Offload Security unifies the two halves of that problem — the cloud and web es
 ## Why retail & e-commerce teams choose Offload Security
 
 ### PCI-DSS, tracked continuously
-Payment-card compliance is the sector's dominant driver, and it's demanding: secure configurations, vulnerability management, and — critically — **regular internal vulnerability scanning** of the cardholder-data environment. Offload Security tracks PCI-DSS control status with drift detection in **[Compliance](../compliance/index.md)**, and captures the proof in a continuous **[Evidence Hub](../compliance/evidence-hub.md)** so a QSA assessment is a package you produce, not a project you launch.
+Payment-card compliance is the sector's dominant driver, and it's demanding: secure configurations, vulnerability management, and — critically — **regular internal vulnerability scanning** of the cardholder-data environment. Offload Security tracks PCI DSS control status with drift detection in **[Compliance](../compliance/index.md)**, and captures the proof in a continuous **[Evidence Hub](../compliance/evidence-hub.md)** so a QSA assessment is a package you produce, not a project you launch.
 
 ### E-commerce application and API security
 The storefront is the crown jewel and the front line. **[App & Infrastructure Scanning](../security-scanning/index.md)** tests your web applications and APIs for the OWASP-class weaknesses attackers probe for — before a seasonal traffic spike turns a latent flaw into an incident. Findings are risk-scored and tracked to remediation in **[Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx)**.
@@ -23,7 +23,7 @@ The storefront is the crown jewel and the front line. **[App & Infrastructure Sc
 Modern commerce runs on cloud infrastructure, where a single misconfigured bucket or over-permissive role can expose customer data. **[Cloud Security (CSPM)](../cloud-security/index.md)** continuously assesses your AWS, Azure, and GCP footprint and detects drift, keeping the platform behind the storefront as governed as the storefront itself.
 
 ### Coverage across every store and branch
-This is where retail resembles no SaaS company: the cardholder-data environment extends to store networks and POS endpoints in the field. Offload Security reaches those internal networks — the **[OpenVAS integration](../on-premises/openvas-scanning.md)** for the internal PCI scans the standard requires, and **[Wazuh endpoint monitoring](../on-premises/wazuh-integration.md)** (streamed into the platform) for POS and back-office systems — as part of one program alongside the cloud and web estate. See **[On-Premises](../on-premises/index.mdx)**.
+This is where retail resembles no SaaS company: the cardholder-data environment extends to store networks and POS endpoints in the field. Offload Security reaches those internal networks — results of your **[Greenbone OpenVAS](../on-premises/openvas-scanning.md)** scans for the internal PCI scans the standard requires, and **[Wazuh endpoint monitoring](../on-premises/wazuh-integration.md)** (synced into the platform) for POS and back-office systems — as part of one program alongside the cloud and web estate. See **[On-Premises](../on-premises/index.mdx)**.
 
 ### One picture, many locations
 A retailer's risk is spread across the cloud, the storefront, and every store network. Bringing them into one inventory, one risk register, and one report is what lets a central team defend a distributed business without drowning in per-location consoles.
@@ -33,7 +33,7 @@ A retailer's risk is spread across the cloud, the storefront, and every store ne
 | Retail / e-commerce need | How Offload Security delivers it |
 |---|---|
 | **PCI-DSS compliance** | Continuous control tracking + drift detection in [Compliance](../compliance/index.md), with [audit evidence](../compliance/evidence-hub.md) |
-| **Internal PCI scanning** | [OpenVAS](../on-premises/openvas-scanning.md) internal vulnerability scans of the cardholder-data environment |
+| **Internal PCI scanning** | [Greenbone OpenVAS](../on-premises/openvas-scanning.md) internal scans of the cardholder-data environment, imported into Vulnerability Management |
 | **E-commerce app/API security** | Web and API testing via [App & Infrastructure Scanning](../security-scanning/index.md) |
 | **Cloud posture** | CSPM for the [e-commerce platform](../cloud-security/index.md) with drift detection |
 | **Store & POS coverage** | [Wazuh](../on-premises/wazuh-integration.md) endpoint monitoring across store networks |
@@ -44,5 +44,5 @@ A retailer's risk is spread across the cloud, the storefront, and every store ne
 The cost of a payment breach — fines, forensics, and lost trust — dwarfs the cost of preventing one. Offload Security gives retailers continuous PCI-DSS evidence, hardened storefront and cloud security, and real coverage of the store networks where card data actually lives — in one platform, so a central team can protect the whole business.
 
 :::tip[Where to start]
-Retailers typically begin by scoping the cardholder-data environment, connecting cloud accounts, and standing up internal [OpenVAS](../on-premises/openvas-scanning.md) scanning against store/PCI segments, then mapping the results to PCI-DSS controls. See **[Quickstart](../getting-started.md)**.
+Retailers typically begin by scoping the cardholder-data environment, connecting cloud accounts, and bringing in internal [OpenVAS](../on-premises/openvas-scanning.md) scans of store/PCI segments, then mapping the results to PCI DSS controls. See **[Quickstart](../getting-started.md)**.
 :::

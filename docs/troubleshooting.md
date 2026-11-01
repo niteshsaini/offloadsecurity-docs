@@ -10,7 +10,7 @@ sidebar_position: 11
 Most problems in Offload Security come down to one of a few things: a credential or permission that's slightly off, a target that doesn't match what you typed, or a scan that ran out of time. This page walks through the issues people hit most often, framed as **symptom → likely cause → fix** so you can get unblocked quickly.
 
 :::tip[Read the status and warnings first]
-Before you dig in, open the scan and check its **status** and any **warnings**. The platform deliberately surfaces a **Partial** or **Failed** status (rather than a misleadingly clean "green" run) and attaches a plain-language reason whenever it can. That note is usually the fastest path to the fix.
+Before you dig in, open the scan and check its **status** and any **warnings**. The platform deliberately surfaces a **Partial** or **Failed** status (rather than a misleadingly clean "green" run) and attaches a plain-language reason whenever it can. That note is usually the fastest path to the fix. For module-specific errors, open the module's **Help** button in the product — each task guide lists its common errors and fixes.
 :::
 
 ## Where the detailed answers are
@@ -40,7 +40,7 @@ The rest of this page keeps the cross-cutting answers.
 **Likely cause.** The run may not have fully succeeded, even though it looks finished. A scan can end as **Partial** (some jobs succeeded, some failed) or **Failed** (everything failed) — and a partial run with the failing half missing can look empty.
 
 **Fix.**
-1. Open the scan and check its **status**. In your scan results view, the **Failed** tab lists runs that errored or were rejected; the **Completed** tab holds genuinely successful runs.
+1. Open the scan and check its **status**. For web, API and network scans, **Scanning → Targeted runs** has **Completed**, **Running** and **Failed** tabs (App Scans are on the **Assessments** tab); cloud scans are on **Cloud Security → Cloud Scans**. An App Scan's **Overview → Tools Executed** lists every tool that failed and its error.
 2. If the status is **Partial**, expand the scan and read its **warnings**. For cloud scans you can also expand the **per-region** breakdown to see exactly which region or check failed.
 3. If the status really is **Completed** with zero findings, that's a clean result — nothing was wrong with the resources or target you scanned. Confirm you scanned the target you intended (right account, right regions, right image).
 
@@ -53,7 +53,7 @@ For cloud scans, the two most common causes of a partial result are a **missing 
 **Likely cause.** Heavier profiles legitimately take a while (a Comprehensive web scan can run 15–20 minutes; a full multi-region cloud scan longer still). It may simply be in progress.
 
 **Fix.**
-- Open the **Running** tab in your scan results — it refreshes on its own so you can watch progress. Cloud scans show an **overall percentage**, separate **discovery** and **compliance** progress, and an **estimated completion time** that scales with the number of regions.
+- Open the **Running** tab (or the scan itself) — every scanning module now reports progress in the same progress view, refreshing on its own. Cloud scans show an **overall percentage**, separate **discovery** and **compliance** progress, and an **estimated completion time** that scales with the number of regions.
 - If you started a cloud scan and got a message that one is **already in progress**, that's expected: only **one scan per cloud account per team** can run at a time. Wait for the running scan (its ID and status are shown) to finish, or cancel it.
 - If a scan stays stuck far past its estimate, your team can be notified about stuck scans where that's configured; otherwise cancel it and re-run.
 
@@ -75,7 +75,7 @@ For cloud scans, the two most common causes of a partial result are a **missing 
 
 **Fix.**
 - For **cloud scans**, use a supported scan type: **`full`** (or **`incremental`**). A **full** scan re-runs every check across the default regions; an **incremental** scan focuses on what changed.
-- For **native scans**, pick the **Assessment Type** from the launcher rather than typing a free-form value — Web Vulnerability (ZAP), Nuclei, Security Headers, Network Discovery (Nmap), SSL/TLS, or API Security. Each expects a specific kind of target (a URL, a host/CIDR, or a hostname + port).
+- For **web, API and network scans**, pick the **Assessment Type** on **Scanning → New scan** rather than typing a free-form value — App Scan (the default), or a targeted run grouped under Web, API, Network & SSL, and Reconnaissance. Each expects a specific kind of target (a URL, a host/CIDR, or a hostname + port).
 - For **container scans**, the valid types are **Vulnerabilities** (CVEs only) and **Full Analysis** (CVEs plus SBOM, secrets, and misconfigurations).
 
 ---
@@ -122,11 +122,11 @@ The image name or tag doesn't resolve.
 
 **2. Private registry not authenticated.**
 Quick Scan works for **public** images with no setup, but a **private** image needs access.
-- *Fix:* Connect the registry first on the **Cloud Registries** tab (or connect the underlying AWS/GCP/Azure account, which lets the platform discover and pull from ECR, Artifact Registry, and ACR automatically). For Docker Hub, provide a username and access token. See [Container Security](./security-scanning/containers/index.md).
+- *Fix:* AWS ECR, GCP Artifact Registry and Azure Container Registry are connected through a cloud account: add the account under **Cloud Accounts** with registry read and pull rights, then add the registry on **Container Security → Cloud Registries** with **Use Existing Cloud Account**. Other registries, including Docker Hub, cannot be added as a registry in this release — scan their images by reference with **Quick Scan**. See [Container Security](./security-scanning/containers/index.md).
 
 **3. Wrong account scope (`cloud_account_id`).**
 When scanning a registry tied to a cloud account, the scan must reference the correct connected account.
-- *Fix:* If you're driving scans by registry or account, make sure you're pointing at the **cloud account ID** that actually owns that registry. You can find these IDs in the **Cloud Accounts** and **Container Registries** sections. Pointing at the wrong account means the platform authenticates against a registry that doesn't contain your image.
+- *Fix:* If you're driving scans by registry or account, make sure you're pointing at the **cloud account ID** that actually owns that registry. You can find these IDs under **Cloud Accounts** and **Container Security → Cloud Registries**. Pointing at the wrong account means the platform authenticates against a registry that doesn't contain your image.
 
 :::tip[Confirm with a public image first]
 If a private scan won't run, try a known public image (like `nginx:latest`) in **Quick Scan**. If that works, the problem is registry access — not the scanner.
@@ -161,7 +161,7 @@ Create, scope, rotate, and IP-restrict API keys under the account menu → **API
 ## General tips
 
 - **Confirm your active team.** Everything you create is recorded under your **active team** (top-right account menu). "Missing" data is often just data sitting in a different team — switch teams and check again.
-- **Re-run with the same settings.** From a completed run, use **Re-scan** to repeat it without re-entering the target. If you re-run the same target often, turn it into a **schedule** instead.
+- **Re-run with the same settings.** From a completed targeted run, use **Rescan** to repeat it without re-entering the target; it carries the original authorization record and exclusions, and is refused once the authorized window has ended. Open the run's comparison to see what is new, fixed or unchanged since the previous run. If you re-run the same target often, turn it into a **schedule** instead.
 - **Remember retention.** Old scan data is summarized, archived, and eventually deleted on a schedule. If a much older run looks thinner than expected, it may have been summarized; if it's gone entirely, it aged past the delete threshold. See [Scan Management & Scheduling](./security-scanning/scan-management.md).
 
 ---

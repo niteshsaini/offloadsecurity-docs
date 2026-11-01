@@ -20,9 +20,9 @@ Days 1–4 need the **Admin** or **Security Manager** role (connecting accounts 
 **Goal: everything you're responsible for is connected and discovered.**
 
 1. Set up your team and invite colleagues with appropriate roles — [Roles, Teams & API Keys](../authentication/rbac-team-management.md).
-2. Connect your cloud accounts (AWS, GCP, Azure) with read-only access — [Connecting Cloud Accounts](../cloud-security/connecting-accounts.md). For the exact permissions per provider, see [Required Permissions](../cloud-security/permissions.md); granting at the AWS Organization / GCP org node / Azure management group covers current *and future* accounts with one binding.
-3. Connect container registries (ECR, Artifact Registry/GCR, ACR, Docker Hub) — [Container Security](../security-scanning/containers/index.md). The same cloud credentials often unlock these.
-4. Onboard Kubernetes clusters — EKS, GKE, and AKS clusters are auto-discovered from connected cloud accounts; on-prem clusters onboard with a read-only kubeconfig or service-account token — [Kubernetes Security](../security-scanning/kubernetes/index.md).
+2. Connect your cloud accounts (AWS, GCP, Azure) with read-only access — [Connecting Cloud Accounts](../cloud-security/connecting-accounts.md). For the exact permissions per provider, see [Required Permissions](../cloud-security/permissions.md). A whole GCP organization or folder can be onboarded through one connection; AWS accounts and Azure subscriptions are added one by one.
+3. Connect container registries (ECR, Artifact Registry/GCR, ACR) through the cloud accounts you just added — [Container Security](../security-scanning/containers/index.md). Images in other registries, such as Docker Hub, are scanned by reference with **Quick Scan**.
+4. Onboard Kubernetes clusters — EKS, GKE, and AKS clusters found on connected cloud accounts are listed on the **Clusters** tab for you to **Connect** (a GKE cluster reuses the account's service account; EKS and AKS need a kubeconfig); other clusters onboard with a self-contained, read-only kubeconfig — [Kubernetes Security](../security-scanning/kubernetes/index.md).
 5. Review what was found — [Asset Inventory](../cloud-security/asset-inventory.md).
 
 **Done when:** every production cloud account shows **Connected / Active**, and Asset Inventory lists resources from each of them.
@@ -32,7 +32,7 @@ Days 1–4 need the **Admin** or **Security Manager** role (connecting accounts 
 **Goal: one full scan of everything connected, so you have a "day zero" picture.**
 
 1. Cloud posture: an initial scan can start automatically when an account connects — trigger one from **Cloud Security** for any account that hasn't scanned yet, and confirm each account's scan reached **Completed** on the Scans page ([How Cloud Scans Run](../cloud-security/scan-orchestration.md)).
-2. Run scans for the surfaces you own: web applications and APIs ([Native Scans](../security-scanning/native-scans.md)), container images ([Container Security](../security-scanning/containers/index.md)), and clusters ([Kubernetes Security](../security-scanning/kubernetes/index.md)).
+2. Run scans for the surfaces you own: web applications and APIs from **Scanning → New scan** — an App Scan for a graded, authenticated assessment, or a targeted run for one tool ([Native Scans](../security-scanning/native-scans.md)) — container images ([Container Security](../security-scanning/containers/index.md)), and clusters ([Kubernetes Security](../security-scanning/kubernetes/index.md)).
 3. Connect a repository and run code scanning — SAST, secrets, SCA, SBOM, and license checks — [Code Command Center](../security-scanning/code/index.md).
 4. Open [Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx) and note your baseline: total findings by severity. This is the number you'll measure progress against.
 
@@ -43,6 +43,7 @@ Days 1–4 need the **Admin** or **Security Manager** role (connecting accounts 
 **Goal: know which ten findings matter most, and why.**
 
 1. In [Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx), sort by **priority rank (P0–P4)** — it rolls severity (CVSS), exploit probability (**EPSS**), and known exploitation (**CISA KEV**) into one order of work.
+2. Open a top finding's **Case file** to see its priority evidence, owner, next action and history in one place; for anything you formally decide not to fix yet, request a time-limited **risk exception** (Vulnerability Management → Risk exceptions) so a second person approves it.
 3. Promote the findings that represent real business exposure into the [Risk Register](../vulnerability-risk/risk-management/index.md) with owners and treatment plans.
 
 **Done when:** your top findings have named owners, and at least your most critical items exist as governed risks with treatment plans.
@@ -52,8 +53,8 @@ Days 1–4 need the **Admin** or **Security Manager** role (connecting accounts 
 **Goal: the platform chases the work, not you.**
 
 1. Create SLA policies — the **Create Default Policies** button gives you documented starting points per severity and environment — [SLA Management](../vulnerability-risk/sla-management.md).
-2. Connect [Jira](../integrations/jira.md) so critical findings become tickets automatically and status flows both ways.
-3. Set up Slack, Microsoft Teams, or email notifications; on Slack, add routing rules so critical findings reach the right channel — [Notifications](../integrations/notifications.md).
+2. Connect [Jira](../integrations/jira.md) so critical findings become tickets automatically and status flows both ways (GitHub Issues and GitLab Issues are also available as ticketing targets).
+3. Set up Slack, Microsoft Teams or Google Chat notifications, and the daily SOC email digest; on Slack, add routing rules so critical findings reach the right channel — [Notifications](../integrations/notifications.md).
 4. Schedule recurring scans in **Management → Unified Scheduler** — a daily incremental plus weekly full scan for cloud accounts, and schedules for web, container, Kubernetes, and code scans. Turn on schedule **failure notifications** so a silently broken scan can't hide — [Scan Management & Scheduling](../security-scanning/scan-management.md).
 
 **Done when:** a test notification has arrived in your channel, a finding is linked to a real ticket, SLA policies are active, and every scan type you rely on has a schedule.
@@ -62,9 +63,9 @@ Days 1–4 need the **Admin** or **Security Manager** role (connecting accounts 
 
 **Goal: continuous compliance tracking against the frameworks you actually answer to.**
 
-1. Activate the frameworks that apply to you — start with one or two, not ten — [Supported Frameworks](../compliance/supported-frameworks.md) lists the full catalog (ISO 27001, SOC 2, PCI DSS, DPDP Act, SEBI CSCRF, and more).
+1. Have the platform administrator activate the frameworks that apply to you — start with one or two, not ten — [Supported Frameworks](../compliance/supported-frameworks.md) lists the full catalog of 27 (ISO 27001, SOC 2, PCI DSS, DPDPA, SEBI CSCRF, and more).
 2. Review your posture on the [Compliance Dashboard](../compliance/compliance-dashboard.md) — scores populate from the scans you ran on Day 2 via [Autonomous Compliance](../compliance/autonomous-compliance.md).
-3. Open the [Evidence Hub](../compliance/evidence-hub.md) and run **Collect All**; review what was auto-collected and upload manual evidence (policies, screenshots) where automation can't reach.
+3. Open the [Evidence Hub](../compliance/evidence-hub.md) and run **Collect All Evidence**; review what was auto-collected and upload manual evidence (policies, screenshots) where automation can't reach.
 4. Turn failing controls that matter into governed risks — compliance gaps can be promoted into the [Risk Register](../vulnerability-risk/risk-management/index.md) just like findings.
 5. **Indian regulated entities:** run the DPDP readiness assessment ([DPDP Act (India) Privacy](../compliance/dpdp-privacy.md)) and read [India Regulatory Readiness](../industries/india-regulatory-readiness.md) for the RBI / SEBI CSCRF / CERT-In mapping.
 
@@ -74,7 +75,7 @@ Days 1–4 need the **Admin** or **Security Manager** role (connecting accounts 
 
 **Goal: new code is scanned before it ships, not after.**
 
-1. Connect your GitHub or Bitbucket repositories for SAST, secrets, SCA, SBOM, and license scanning — [Code Command Center](../security-scanning/code/index.md).
+1. Connect your GitHub, GitLab or Bitbucket repositories for SAST, secrets, SCA, SBOM, and license scanning — [Code Command Center](../security-scanning/code/index.md). Results from other scanners can be added as SARIF imports.
 2. Add scanning to your pipeline — the [GitHub Action](../cli-and-cicd.md), or plain `curl` against the REST API from any CI system ([Automation Use Cases](../api-automation/automation-use-cases.md) has a copy-paste release-gate recipe).
 3. Decide your gate policy: which severities block a build. Start permissive (fail on Critical only) and tighten once the team trusts the signal.
 4. On GitHub, install the GitHub App for inline PR annotations and automatic scans — [CLI & CI/CD](../cli-and-cicd.md).
@@ -85,7 +86,7 @@ Days 1–4 need the **Admin** or **Security Manager** role (connecting accounts 
 
 **Goal: leadership can see posture without asking you for a status update.**
 
-1. Review the Dashboard trends: security score, findings by severity, and recent activity.
+1. Review the Dashboard: the Overall Risk Score and its trend, the **Since yesterday** changes, and risk posture by domain. Tiles drill down into the list behind each number.
 2. Check the SLA **Breach Dashboard** — this is your operational health metric from now on — [SLA Management](../vulnerability-risk/sla-management.md).
 3. Generate reports for your stakeholders — executive and audit outputs in PDF and HTML — [Reports & AI Assistance](../reports-and-ai/index.md). AI summaries turn scan results into narrative for non-specialist readers.
 4. Give leadership their own access: a **Viewer** role for dashboards, or **Auditor** for read-only evidence and report export — [Roles, Teams & API Keys](../authentication/rbac-team-management.md).
@@ -96,4 +97,4 @@ Days 1–4 need the **Admin** or **Security Manager** role (connecting accounts 
 
 - Harden your setup against the **[Recommended Production Configuration](./production-configuration.md)** checklist.
 - Go deeper on your own track: the **[Security Engineer](./security-engineer-journey.md)** or **[Compliance Officer](./compliance-officer-journey.md)** journey.
-- Extend coverage to what the first week skipped: [Attack Path Analysis](../cloud-security/attack-paths.md), [Threat Intelligence](../ai-threat-intelligence/threat-intelligence.md), and [on-premises visibility](../on-premises/index.mdx).
+- Extend coverage to what the first week skipped: [Attack Path Analysis](../cloud-security/attack-paths.md), [Threat Intelligence](../ai-threat-intelligence/threat-intelligence.md), and [on-premises visibility](../on-premises/index.mdx) (Wazuh endpoints and Greenbone OpenVAS results in Infra Command Center).

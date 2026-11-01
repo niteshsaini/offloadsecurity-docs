@@ -1,6 +1,6 @@
 ---
 title: "CLI & CI/CD Integration"
-description: "Run Offload Security scans from CI/CD and gate releases on the results: API keys, REST calls from any CI system, the GitHub Action, SARIF export, release-gate policy and the GitHub App."
+description: "Run Offload Security scans from CI/CD and gate releases on the results: API keys, REST calls from any CI system, the GitHub Action, SARIF export and import, release-gate policy and the GitHub App."
 sidebar_label: "CLI & CI/CD"
 sidebar_position: 10
 ---
@@ -76,7 +76,7 @@ curl -s -X POST "$OFFLOAD_API_URL/api/cicd/scans/trigger" \
 | `fail_on_severity` | No | Severity gate: `critical`, `high`, `medium`, or `low`. Sets `gate_passed=false` when findings at or above this level are found. |
 | `branch` | No | Git branch to scan, for the code-security scan types. |
 | `pipeline_context` | No | Free-form metadata about the build (repo, branch, commit, build ID) stored with the scan. |
-| `callback_url` | No | HTTPS webhook the platform POSTs to when the scan completes (must resolve to a public address). |
+| `callback_url` | No | HTTPS webhook the platform POSTs to when the scan completes. Must resolve to a public address (checked at trigger and again at send; redirects are not followed). Signed with your team's webhook signing secret (`X-Offload-Timestamp`, `X-Offload-Signature-V1`). |
 
 **Common `scan_type` values and their profiles**
 
@@ -88,11 +88,11 @@ curl -s -X POST "$OFFLOAD_API_URL/api/cicd/scans/trigger" \
 | `ssl_security` | SSL/TLS configuration (testssl.sh) | `quick`, `standard`, `comprehensive`, `vulnerability` |
 | `security_headers` | HTTP security headers | `standard` |
 | `api_security` | API security testing | `standard` |
-| `container_image` | Container image vulnerabilities | `standard` |
+| `container_image` / `compiled_image` | Container image vulnerabilities (Trivy + Grype, SBOM with Syft) | `standard` |
 | `kubernetes_manifest` | Kubernetes manifest checks | `standard` |
 | `lightweight_comprehensive` | Combined lightweight scans with scoring | `standard` |
-| `code_security` | SAST + dependencies + secrets + IaC + SBOM | `standard` |
-| `sast` / `dependency_scan` / `secret_scan` / `iac_scan` / `sbom` | Individual code-security scans | `standard` |
+| `code_security` | SAST (OpenGrep, Bandit) + dependencies (OSV) + secrets (Gitleaks) + IaC (Checkov) | `standard` |
+| `sast` / `dependency_scan` / `secret_scan` / `iac_scan` / `sbom` | Individual code-security scans (`sbom` uses Syft) | `standard` |
 
 :::tip[Discover scan types programmatically]
 `GET /api/cicd/scan-types` (with your `X-API-Key`) returns the live list of supported scan types, their available profiles, and descriptions — handy for keeping pipeline config in sync.
@@ -232,10 +232,17 @@ jobs:
 | `timeout` | No | `1800` | Maximum seconds to wait for the scan (default 30 minutes). |
 | `comment_on_pr` | No | `true` | Post the results summary as a PR comment. |
 | `auth_config` | No | — | JSON for authenticated scanning (form login, bearer token, cookie, or custom header). |
+| `code_repo` | No | — | `owner/repo` — switches the action to the SBOM + license **release gate** for a repository the platform's Git connection can reach (usually `${{ github.repository }}`). Takes precedence over `container_image` and `target_url`. |
+| `code_branch` | No | PR head / pushed branch | Branch for the `code_repo` scan. |
+| `git_provider` | No | `github` | Provider of `code_repo` on the platform: `github` or `bitbucket`. |
+| `fail_on_gate` | No | `fail` | For `code_repo`: `fail` (only a failing gate breaks the build), `review` (review or fail breaks it) or `none`. |
+| `set_commit_status` | No | `true` | Post the release-gate verdict as an `offload/release-gate` commit status (needs `statuses: write`). |
+| `cloud_account_id` | No | — | Cloud account to authenticate to ECR / Artifact Registry / ACR with, when you have several of one provider. |
+| `poll_interval` | No | `15` | Seconds between status polls. |
 
 ### Outputs
 
-The action exposes results you can use in later steps, including `scan_id`, `status`, `total_findings`, `critical_count`, `high_count`, `medium_count`, `low_count`, `info_count`, `security_rating` (A–F), `security_score` (0–100), and `report_url`.
+The action exposes results you can use in later steps, including `scan_id`, `status`, `total_findings`, `critical_count`, `high_count`, `medium_count`, `low_count`, `info_count`, `security_rating` (A–F), `security_score` (0–100), and `report_url`; in `code_repo` mode also `release_gate` (`pass`, `review` or `fail`), `release_gate_policy_version` and `sbom_scan_id`.
 
 ```yaml
       - name: Run Security Scan
@@ -263,7 +270,7 @@ The platform performs the scan from its own network, so `target_url` (and regist
 
 ---
 
-## 4. SARIF export, release-gate policy, and badges
+## 4. SARIF export and import, release-gate policy, and badges
 
 Beyond triggering scans, the platform exposes CI helpers under `/api/ci` for teams that want native GitHub Code Scanning, a reusable gate policy, or status badges. These accept the same **`X-API-Key`** header as the scan endpoints.
 
@@ -282,7 +289,28 @@ curl -s "$OFFLOAD_API_URL/api/ci/scan/$SCAN_ID/sarif" \
           sarif_file: offload.sarif
 ```
 
-SARIF is **export-only** — the platform produces SARIF for other tools to consume; it does not import SARIF from other scanners.
+For a scan started with `POST /api/cicd/scans/trigger`, `GET /api/cicd/scans/{scan_id}/sarif` returns the same SARIF 2.1.0 (`409` until the scan has completed).
+
+### Import SARIF from other scanners
+
+The platform also **imports** SARIF 2.1.0 from other tools (CodeQL, Semgrep, Checkmarx, Snyk Code, Trivy, gitleaks and others). The results become findings in Code Command Center and the Vulnerability Management triage queue, beside the platform's own. Use an API key with the `scans:trigger` scope:
+
+```bash
+curl -s -X POST \
+  "$OFFLOAD_API_URL/api/cicd/sarif/upload?repository=https://github.com/acme/shop&branch=main&default_branch=main&commit_sha=$GIT_SHA&full_run=true" \
+  -H "X-API-Key: $OFFLOAD_API_KEY" \
+  -H "Content-Type: application/sarif+json" \
+  --data-binary @results.sarif
+```
+
+| Parameter | Meaning |
+| --- | --- |
+| `repository` | The repository URL your code scans target; use the same URL every time (findings are kept per repository). Falls back to the log's `versionControlProvenance`. |
+| `branch` / `default_branch` | The scanned branch, and the repository's default branch. A non-default branch is kept apart and never resolves the default branch's findings. |
+| `commit_sha` | The scanned commit. |
+| `full_run` | `true` only when the tool scanned the whole repository and branch with its normal rules; findings it no longer reports are then resolved. |
+
+Logs over the size or result limit (`SARIF_UPLOAD_MAX_BYTES`, `SARIF_INGEST_MAX_RESULTS`) are refused whole, never truncated. Suppressions in the log are imported as suppressed findings. The same upload is available in the UI under **Code Command Center → SARIF Imports**, and `GET /api/cicd/sarif/sources` lists what has been imported.
 
 ### Configure a release-gate policy
 
@@ -301,7 +329,7 @@ curl -s -X PUT "$OFFLOAD_API_URL/api/ci/gate/policy" \
 curl -s "$OFFLOAD_API_URL/api/ci/gate?scan_id=$SCAN_ID" -H "X-API-Key: $OFFLOAD_API_KEY"
 ```
 
-The policy caps findings by severity and can **block on any critical** finding or on any finding in the **CISA KEV** (Known Exploited Vulnerabilities) catalog. Past evaluations are available at `GET /api/ci/gate/history`.
+The policy caps findings by severity (`max_critical`, `max_high`, `max_medium`, `max_low`; `-1` means no limit) and can **block on any critical** finding or on any finding in the **CISA KEV** (Known Exploited Vulnerabilities) catalog. It also sets a minimum score (`min_score`), what to do when the vulnerability database is stale (`stale_advisories`: `review`, `block` or `ignore`) and whether IaC that Checkov could not assess fails the gate (`fail_on_unassessed_iac`, off by default). Fields you leave out keep their stored values. Past evaluations are available at `GET /api/ci/gate/history` (up to 200 per page; `paged=true` returns the true total).
 
 ### Status badges
 

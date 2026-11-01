@@ -38,7 +38,9 @@ Scanners cover the technical half of a framework. Assessments cover the rest —
 
 ![SOC 2 checklist: categories on the left with completion per category; each question with Yes / Partially / No / N/A, evidence, explanation and notes, and Auto-Suggest from Platform Data](/img/screenshots/compliance/assessments-checklist.webp)
 
-Each question takes a **response** — **Yes**, **Partially**, **No** or **N/A** — plus free-text **evidence** (where the proof lives), an **explanation** and **notes**. Answers save individually, so an assessment can be worked over weeks by several people; progress is tracked per category.
+Each question takes a **response** (**Yes**, **Partially**, **No** or **N/A**) plus free-text **evidence**, an **explanation** and **notes**. Answers save individually (text fields save shortly after you stop typing), so an assessment can be worked over weeks by several people; progress is tracked per category.
+
+The *evidence* field is text only: files cannot be attached to an answer. Upload files in the [Evidence Hub](./evidence-hub.md) against the matching control, then name the item in the answer.
 
 Two helpers use what the platform already knows:
 
@@ -53,7 +55,8 @@ Suggestions are proposals: **Auto-Fill All** lists them with confidence and reas
 
 - **Score** = (yes × 1 + partially × 0.5) ÷ scored questions, as a percentage; **N/A** counts towards progress but is excluded from the score; per-category scores are shown alongside.
 - **Maturity level** from the score: **Initial** (< 50), **Developing** (50–74), **Structured** (75–89), **Advanced** (≥ 90).
-- **Complete Assessment** freezes the answers, records the final score and **maps every answer to SCF controls**: the question's requirement reference (ISO clause `4.1`, Annex A `5.1`, TSC `CC6.1`, CSF `PR.AA-01`) is matched to the controls that carry that framework requirement; *Yes* sets them **implemented**, *Partially* **partial**, *No* **not implemented**, *N/A* **not applicable** — never overriding a [manually locked](./compliance-dashboard.md#manual-overrides) control. The posture page reflects it immediately, and every answer becomes an evidence item on its controls.
+- **Complete Assessment** needs at least **80%** of the questions answered (N/A counts as answered); an assessment answered entirely N/A cannot be completed. Completing freezes the answers, records the final score and **maps every answer to SCF controls**: the question's requirement reference (ISO clause `4.1`, Annex A `5.1`, TSC `CC6.1`, CSF `PR.AA-01`) is matched to the controls that carry that framework requirement; *Yes* sets them **implemented**, *Partially* **partial**, *No* **not implemented**, *N/A* **not applicable**. Assessment mapping never changes a status a person set, such as a [manual override](./compliance-dashboard.md#manual-overrides); the answer is still linked as evidence. The posture page reflects it immediately, and every answer becomes an evidence item on its controls.
+- After completion the **results** view opens: scores by category, each answer with the SCF controls it mapped to, and a printable export. Reopen it later from Assessment History; **Open Checklist** returns to the answers.
 
 Completed assessments are re-mapped by the 4-hourly [compliance refresh](./autonomous-compliance.md), so a later change to the SCF catalog is picked up without redoing the questionnaire.
 
@@ -61,7 +64,7 @@ Completed assessments are re-mapped by the 4-hourly [compliance refresh](./auton
 
 ![Assessment History: total, completed, in progress and frameworks used; table with framework, organisation, status, progress, score, date and View Details](/img/screenshots/compliance/assessments-history.webp)
 
-**View All Assessments** on the hub opens **Assessment History** — every assessment with status, progress, score and date, filterable by status and framework. **View Details** reopens the checklist (to continue) or the completed record.
+**View All Assessments** on the hub opens **Assessment History**: every assessment with status, progress, score and date, filterable by status and framework. **View Details** reopens the checklist (to continue) or the completed assessment's results.
 
 :::tip[Run the assessment against one product, not the company]
 Scope the ISO 27001 or SOC 2 assessment to the system your customers actually buy (the *product / system name* field). A focused assessment is finished in days and its answers map cleanly; an enterprise-wide one stalls at 40% and maps to nothing.

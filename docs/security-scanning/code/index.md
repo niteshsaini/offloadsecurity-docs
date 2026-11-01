@@ -25,19 +25,21 @@ The Code Command Center is where source code gets tested before it becomes a run
 | **SBOM & Licences** | Syft (CycloneDX), licence enrichment via deps.dev | Component inventory, licence families and obligations, policy-pack checks |
 | **Compiled Image Scan** | Trivy + Grype | The Docker image a pipeline just built |
 
-**Full Code Security** runs all of the above in one pass. All three rule-based engines also run your own [custom rules](./custom-rules.md).
+**Full Code Security** runs SAST, SCA, secrets, IaC and SBOM & licences in one pass; the compiled image scan is a separate source on **New Scan**. All three rule-based engines also run your own [custom rules](./custom-rules.md).
 
 ## The workspace
 
 | Tab | Use it to | Page |
 | --- | --- | --- |
-| **Overview** | Repository coverage — scanned, scheduled, uncovered, stale (no push in 90 days) — and findings by severity. | *this page* |
-| **New Scan** | Scan a repository, an uploaded ZIP, a build artifact or a compiled image. | [Running Code Scans](./running-code-scans.md) |
-| **Findings** | Triage across repositories: SAST, secrets, dependency CVEs and IaC grouped by rule, with lifecycle states and bulk decisions. | [Findings & Reports](./findings-and-reports.md) |
+| **Overview** | Repository coverage — total, scanned, scheduled, not covered — findings by severity, and cards (top repositories by severity, coverage decay, most active, stale) that each open the full ranked list. | *this page* |
+| **New Scan** | Scan a repository, an uploaded ZIP, a container image or a build artifact, and manage scheduled repository scans. | [Running Code Scans](./running-code-scans.md) |
+| **Findings** | Triage across repositories: SAST, secrets, dependency CVEs and IaC grouped by rule or by fix, with lifecycle states and bulk decisions. | [Findings & Reports](./findings-and-reports.md) |
+| **Upgrade Impact** | Dependency upgrades ranked by how many vulnerabilities each resolves. | [Upgrade Impact](./upgrade-impact.md) |
 | **Suppressions** | What is hidden, since when and until when — by rule, with revoke. | [Findings & Reports](./findings-and-reports.md#suppressions) |
-| **Reports** | Per-scan reports, exports and AI analysis. | [Findings & Reports](./findings-and-reports.md#scan-reports) |
-| **SBOM & Licenses** | Generate or upload SBOMs, licence governance, fix plans. | [SBOM & Licences](./sbom-and-licenses.md) |
-| **Automation** | Git connections, scheduled scans, CI/CD pipeline generation. | [Connecting Repositories](./connecting-repositories.md) · [CI/CD & Automation](./ci-cd-and-automation.md) |
+| **SARIF Imports** | Bring in results from CodeQL, Semgrep or any other SARIF 2.1.0 scanner. | [SARIF Imports](./sarif-imports.md) |
+| **Reports** | Scan history by repository → branch → run; each run's frozen report, PDF export and AI analysis. | [Findings & Reports](./findings-and-reports.md#scan-reports) |
+| **SBOM & Licenses** | Generate or upload SBOMs, licence governance, CycloneDX / SPDX / VEX exports, fix plans. | [SBOM & Licences](./sbom-and-licenses.md) |
+| **Automation** | **Git Connections**, **PR Review** settings and the team quality gate, **GitHub App**, **CI/CD Pipeline** generation. | [Connecting Repositories](./connecting-repositories.md) · [Pull Request Review](./pull-request-review.md) · [CI/CD & Automation](./ci-cd-and-automation.md) |
 
 ## How it flows
 
@@ -45,6 +47,7 @@ The Code Command Center is where source code gets tested before it becomes a run
 flowchart LR
     G[Git provider<br/>GitHub · GitLab · Bitbucket] --> R[Repository / branch]
     Z[ZIP · artifact · image] --> S
+    SA[SARIF log<br/>CodeQL · Semgrep · …] --> F
     R --> S[Scan<br/>SAST · SCA · secrets · IaC · SBOM]
     CI[CI pipeline<br/>scan.sh / API] --> S
     PR[Pull / merge request<br/>GitHub · GitLab · Bitbucket] --> S
@@ -54,6 +57,8 @@ flowchart LR
     F --> FIX[AI fix · Fix PR · Fix with agent]
     F --> V[Vulnerability Mgmt · Risk]
 ```
+
+Every finding a scan's tools report is stored as its own record. The only per-scan limit is a sanity ceiling of 50,000 findings (`CODE_FINDINGS_MAX`); a scan that reaches it says so on the scan and in its PDF.
 
 Findings are **fingerprinted** (rule + file + code context, or package + CVE), so a re-scan updates the same finding instead of creating a new one, and a triage decision — triaged, risk accepted with an owner and justification, false positive — carries forward. Decisions are scoped to the repository they were made in unless you apply them to every repository ([scope](./findings-and-reports.md#scope-this-repository-or-every-repository)).
 
@@ -66,7 +71,7 @@ Pull and merge requests get a review of their own: only the changed files, new f
 
 ## Related
 
-- [Pull Request Review](./pull-request-review.md) · [Secret Detection](./secret-detection.md) · [Custom Rules](./custom-rules.md) · [Fix with Agent](./agentic-fixes.md) — the deeper pages of this section.
+- [Pull Request Review](./pull-request-review.md) · [Secret Detection](./secret-detection.md) · [SARIF Imports](./sarif-imports.md) · [Upgrade Impact](./upgrade-impact.md) · [Custom Rules](./custom-rules.md) · [Fix with Agent](./agentic-fixes.md) — the deeper pages of this section.
 - [Pull Request Scanning](./pull-request-scanning.md) — every PR/MR scanned on its changed files, diffed against the base branch.
 - [CLI & CI/CD](../../cli-and-cicd.md) — the `scan.sh` script, the CLI and release gates.
 - [Container Security](../containers/index.md) — the images your code becomes.

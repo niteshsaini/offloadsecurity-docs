@@ -1,7 +1,7 @@
 ---
 title: "Wazuh Integration"
 sidebar_label: "Wazuh"
-sidebar_position: 5
+sidebar_position: 7
 description: "Connect Wazuh (Manager API + Indexer) to bring agents, alerts and host vulnerability state into the platform — what is synced every 30 minutes, where it lands, and the Endpoint Security dashboard."
 ---
 
@@ -43,8 +43,9 @@ Wazuh exposes its data through two services, and the platform connects to both:
 | `api_username` · `api_password` | A Manager API user — read-only is enough |
 | `verify_ssl` · `ca_cert` | Keep verification on and paste your CA certificate for a private PKI; off only for a self-signed lab |
 | `indexer_host` · `indexer_port` · `indexer_username` · `indexer_password` *(optional)* | The Indexer (OpenSearch) for alerts and vulnerability state. Leave blank on a single-node deployment — the Manager host on `9200` with the same credentials is assumed |
+| `login_alert_min_severity` *(optional)* | Lowest login-anomaly severity (`critical` · `high` · `medium` · `low`) that raises a platform alert for this team. Blank uses the deployment default (`WAZUH_LOGIN_ALERT_MIN_SEVERITY`, else `high`). Any other value is refused on save |
 
-The connection test authenticates to the Manager **and** checks the Indexer. A Manager-only success with an unreachable Indexer is shown as a **warning you must accept**: agents will sync, alerts and vulnerabilities will stay empty until the Indexer is reachable. Wazuh normally lives on a private network — on an on-premises install set `ALLOW_PRIVATE_SCAN_TARGETS=true` or the private address is refused before any connection is attempted.
+The connection test authenticates to the Manager **and** checks the Indexer. A Manager-only success with an unreachable Indexer is shown as a **warning you must accept**: agents will sync, alerts and vulnerabilities will stay empty until the Indexer is reachable. Wazuh normally lives on a private network. Private addresses are allowed by default (`ALLOW_PRIVATE_INTEGRATION_TARGETS`, default `true`); on a deployment that turned it off, only the bundled stack's `WAZUH_BIND` address is accepted. Loopback is always refused. If you run the bundled Wazuh stack (`docker-compose.integrations.yml`), use `WAZUH_API_USERNAME` / `WAZUH_API_PASSWORD` from `.env` as the API credentials.
 
 ## What a sync does
 
@@ -61,7 +62,7 @@ Every 30 minutes (and on **Sync now**) the platform pulls agents from the Manage
 
 **Where:** **Infra Command Center → Endpoint Security** (the tab appears once Wazuh is connected for the team).
 
-Overview counts, then tabs for **Agents**, **Alerts**, **Vulnerabilities**, **Compliance** (SCA results per agent), **FIM** and **MITRE**. Agents, alerts and vulnerabilities are browsable beyond the sync snapshot — the dashboard queries your Wazuh directly with the stored credentials — and a dataset the Indexer refused is flagged on the page rather than shown empty.
+Overview counts, then tabs that include **Agents**, **Alerts**, **Vulnerabilities**, **Compliance** (SCA results per agent), **FIM** and **MITRE**; 1.4.0 adds alert triage, agent health and per-endpoint views, described in the [Wazuh deep-dive](../on-premises/wazuh-integration.md). Agents, alerts and vulnerabilities are browsable beyond the sync snapshot — the dashboard queries your Wazuh directly with the stored credentials — and a dataset the Indexer refused is flagged on the page rather than shown empty.
 
 ## Related
 

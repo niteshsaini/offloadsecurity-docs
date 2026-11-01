@@ -19,7 +19,7 @@ Your attack surface is your cloud accounts. [Cloud Security](../cloud-security/i
 
 ### Shift-left security in the CI/CD pipeline
 
-Engineering-led teams want security to meet code where it's written. Offload Security folds static analysis, secrets detection, and infrastructure-as-code checks into the pipeline with [API & Code Scanning](../security-scanning/code/index.md), then extends that coverage to dependencies. SBOM generation and license compliance surface risky or non-permissive packages early, and vulnerable dependencies flow straight into [Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx) with severity, exploitability, and fix guidance already attached.
+Engineering-led teams want security to meet code where it's written. Offload Security folds static analysis, secrets detection, and infrastructure-as-code checks into the pipeline with [API & Code Scanning](../security-scanning/code/index.md), then extends that coverage to dependencies. Scanners you already run in CI can feed the same queue through SARIF 2.1.0 import. SBOM generation and license compliance surface risky or non-permissive packages early, and vulnerable dependencies flow straight into [Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx) with severity, exploitability, and fix guidance already attached.
 
 ### Containers and Kubernetes, covered end to end
 
@@ -39,7 +39,7 @@ Keep your knowledge base answers current alongside your controls. When posture a
 
 ### DevSecOps velocity without silos
 
-Correlation is what makes speed safe. A finding from a code scan, a cloud misconfiguration, a container CVE, and a Kubernetes RBAC gap all land in the same risk register, dedeuplicated and prioritized — so teams triage by real exposure instead of chasing every tool's separate alert stream.
+Correlation is what makes speed safe. A finding from a code scan, a cloud misconfiguration, a container CVE, and a Kubernetes RBAC gap all land in the same triage queue, deduplicated and prioritized — container and Kubernetes findings carry their workload's internet exposure into the score — so teams triage by real exposure instead of chasing every tool's separate alert stream.
 
 ## SaaS/tech need to how Offload Security delivers it
 
@@ -52,7 +52,7 @@ Correlation is what makes speed safe. A finding from a code scan, a cloud miscon
 | Kubernetes cluster and workload posture | [Kubernetes Security](../security-scanning/kubernetes/index.md) config, RBAC, and workload checks |
 | SOC 2 Type II / ISO 27001 attestations | [Compliance](../compliance/index.md) mapping plus the [Evidence Hub](../compliance/evidence-hub.md) |
 | Fast inbound questionnaire responses | [Knowledge Base](../ai-threat-intelligence/knowledge-base.md) questionnaire auto-fill |
-| One prioritized view of total risk | Unified risk register correlating every source |
+| One prioritized view of total risk | One triage queue correlating every source, feeding the risk register |
 
 ## Bottom line
 

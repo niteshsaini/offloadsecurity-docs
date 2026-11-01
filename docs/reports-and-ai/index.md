@@ -20,7 +20,7 @@ Every module in Offload Security writes to one normalised data layer, and that i
 | --- | --- |
 | [Executive Dashboard](./executive-dashboard.md) | The leadership view — per-framework readiness, priority gaps, gap analysis, a remediation roadmap, board report and PDF export |
 | [Scheduled Reports](./scheduled-reports.md) | Weekly / monthly / quarterly executive reports rendered to PDF, emailed to recipients and kept in history |
-| [Report Catalog](./report-catalog.md) | Every export in the platform, by module — format, where to click, the API route, retention |
+| [Report Catalog](./report-catalog.md) | Every export in the platform, by module — format, where to click, the API route, retention — including the Network VAPT report and how issued reports are verified |
 | [AI Assistant](./ai-assistant.md) | The floating security assistant, the in-context AI features across modules, provider setup, caching and data handling |
 | [API](./api.md) · [Troubleshooting & FAQ](./troubleshooting.md) | Endpoint map and the common problems |
 
@@ -39,8 +39,23 @@ flowchart LR
 Three properties hold everywhere:
 
 - **Reports are team-scoped.** A report contains the active team's data only; switch teams before generating a report for another business unit.
-- **Reports are generated from live data and kept.** Generated artefacts are stored with a retention window (180 days by default) so the version you sent to the auditor is the version you can download again.
-- **AI answers only from data your team can already see**, and only *generic* questions are ever served from a shared cache — nothing derived from your tenant is.
+- **Reports are kept, and the important ones are frozen.** Generated artefacts are stored with a retention window (180 days by default) so the version you sent to the auditor is the version you can download again. Cloud posture, code, Kubernetes and container reports are built from data frozen at scan time, say what they are made of (tools, versions, scan identity, coverage), and can be verified by SHA-256 — see [Point-in-time and verifiable reports](./report-catalog.md#point-in-time-and-verifiable-reports).
+- **AI answers only from data your team can already see**, cites the findings, assets and controls it used, and only *generic* questions are ever served from a shared cache — nothing derived from your tenant is. Report narratives are templated; AI-written narrative is opt-in.
+
+## Dashboards you can click through
+
+Overview widgets lead to the filtered detail behind them rather than ending at a number:
+
+| Widget | Opens |
+| --- | --- |
+| Vulnerability Management → Analytics → **By Source** | Raw findings filtered to that source |
+| Risk Management dashboard tiles (Total Risks, KRI Health, Treatment Plans, Pending Approvals) | Register, KRIs, Treatment |
+| **Findings by Severity** donut on the Kubernetes and Container coverage dashboards | Findings / scan results filtered to that severity (only non-zero segments are clickable) |
+| Coverage cards (Top by Severity, Coverage Decay, Most Active, Stale) on the Cloud, CIEM, Kubernetes, Container, AI Governance and Code coverage dashboards | The full ranked list, paged on the server |
+| Cloud account and Kubernetes cluster cards, including their severity counts | That account's or cluster's findings |
+| Scanning, Threat Intelligence, Security Command Center, AI Governance, Compliance Posture and Asset Inventory summary tiles | The matching tab, filter or drill-down |
+
+Numbers on the main dashboards use one format — thousands separators, a percentage with at most one decimal — and a value the platform could not read is shown as **—** (with the reason where one is known), never as 0.
 
 ## Start here
 

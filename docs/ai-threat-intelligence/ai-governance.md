@@ -15,7 +15,7 @@ Regulators now ask the same questions about your AI systems that auditors have l
 
 ## Overview
 
-The **ISO 42001 control posture** is the headline: the share of applicable SCF controls implemented (49 of 145 in the screenshot) and the readiness level it implies. Beside it: total AI systems in the registry, how many are high risk, active assessments and controls implemented, then quick actions to register a model, run a risk assessment or open the compliance check.
+The **ISO 42001 control posture** is the headline: the share of applicable SCF controls implemented (49 of 145 in the screenshot) and the readiness level it implies. Beside it: total AI systems in the registry, how many are high risk, active assessments and controls implemented — each tile opens its tab (Model Registry, Risk Assessment, Compliance) — then quick actions to register a model, run a risk assessment or open the compliance check.
 
 ## Model registry
 

@@ -2,18 +2,24 @@
 title: "Infra Command Center"
 sidebar_label: "Infra Command Center"
 sidebar_position: 8
-description: "Wire the platform's scan into GitHub Actions or Jenkins in three steps, test whether your WAF actually blocks common attack payloads, and load-test an API endpoint."
+description: "See your connected infrastructure sources, wire the platform's scan into GitHub Actions or Jenkins in three steps, test whether your WAF blocks common attack payloads, and load-test an API endpoint."
 ---
 
 # Infra Command Center
 
-The Infra Command Center collects the operational checks that sit next to scanning: the **CI/CD setup guides** (GitHub Actions and Jenkins) for the platform's scan step, a **WAF test** that fires real attack payloads at a URL to see what gets through, and an **API load test**.
+The Infra Command Center collects the operational checks that sit next to scanning: the infrastructure sources you have connected (the **Endpoint Security** view of a Wazuh connection, and the **GitHub Actions** and **Jenkins** setup guides for the platform's scan step), plus two built-in DAST checks that need no connection — a **WAF test** that fires real attack payloads at a URL to see what gets through, and an **API load test**. Authenticated web app and API scans run from [Scanning](./native-scans.md); source-code scanning lives in [Code Command Center](./code/index.md).
 
 **Where:** left navigation → **Infra Command Center**.
 
+## Overview and tabs
+
+The **Overview** tab lists the connected sources and the built-in tests. The **Endpoint Security**, **GitHub Actions** and **Jenkins** tabs appear only once that integration is connected for your team in **Integrations**; until then the Overview offers a link to connect each one. **WAF Testing** and **API Load Test** are always shown.
+
+**Endpoint Security** is the in-platform view of your Wazuh agents (alerts, vulnerabilities, compliance, agent health and Endpoint 360). It is documented under [Wazuh](../integrations/wazuh.md); its **Network VAPT findings on this host** panel is described in [Network Scans & VAPT Report](./network-scans.md#host-side-correlation-with-wazuh).
+
 ## GitHub Actions and Jenkins
 
-**Where:** Infra Command Center → **GitHub Actions** / **Jenkins**.
+**Where:** Infra Command Center → **GitHub Actions** / **Jenkins** (shown once connected in Integrations).
 
 ![GitHub Actions tab: how it works, step 1 create a CI/CD API key, step 2 add repository secrets OFFLOAD_API_URL and OFFLOAD_API_KEY with copy buttons, step 3 add the workflow step](/img/screenshots/security-scanning/infra-github-actions.webp)
 
