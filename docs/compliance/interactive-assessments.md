@@ -11,7 +11,7 @@ Scanners cover the technical half of a framework. Assessments cover the rest —
 
 **Where:** left navigation → **Assessments**.
 
-![Security Assessments hub: cards for OWASP ASVS 5.0, OWASP SAMM, OWASP API Security Top 10, NIST SSDF, NIST CSF 2.0, Unified DevSecOps Maturity, Insider Risk, ISO 27001:2022, SOC 2 Type II, Security Operations & Resilience](/img/screenshots/compliance/assessments-hub.webp)
+![Assessments hub: Assessment Center listing 10 frameworks, View All Assessments, and cards for OWASP ASVS 5.0, OWASP SAMM, OWASP API Security Top 10, NIST SSDF, NIST CSF 2.0, Unified DevSecOps Maturity, Insider Risk, ISO 27001:2022, SOC 2 Type II and Security Operations & Resilience](/img/screenshots/compliance/assessments-hub.webp)
 
 ## Frameworks
 
@@ -28,7 +28,7 @@ Scanners cover the technical half of a framework. Assessments cover the rest —
 
 ## Create an assessment
 
-![Create New Assessment, step 2: organisation name, assessor name, designation, product / system name, attendees](/img/screenshots/compliance/assessments-create.webp)
+![Create New Assessment, step 2 for SOC 2 Type II: organization name, assessor name, designation, product / system name and attendees](/img/screenshots/compliance/assessments-create.webp)
 
 1. Click a framework card (or **Create Assessment** → pick the framework). ASVS asks for the **verification level**.
 2. Enter the **organisation**, **assessor** and designation, the **product / system** in scope and the **attendees** — these appear on the results and in the audit trail.
@@ -36,7 +36,7 @@ Scanners cover the technical half of a framework. Assessments cover the rest —
 
 ## Answer the checklist
 
-![SOC 2 checklist: categories on the left with completion per category; each question with Yes / Partially / No / N/A, evidence, explanation and notes, and Auto-Suggest from Platform Data](/img/screenshots/compliance/assessments-checklist.webp)
+![SOC 2 checklist for Northwind Payments: overall progress 39% and score 30%, Auto-Fill All Questions with SCF coverage, categories on the left with completion per category, and question CC1.0.Q1 with Yes / Partially / No / N/A and an evidence field](/img/screenshots/compliance/assessments-checklist.webp)
 
 Each question takes a **response** (**Yes**, **Partially**, **No** or **N/A**) plus free-text **evidence**, an **explanation** and **notes**. Answers save individually (text fields save shortly after you stop typing), so an assessment can be worked over weeks by several people; progress is tracked per category.
 
@@ -51,7 +51,7 @@ Suggestions are proposals: **Auto-Fill All** lists them with confidence and reas
 
 ## Scoring and completion
 
-![Completed ISO 27001 assessment: 100% progress, 73% score, category scores, questions with their answers and evidence](/img/screenshots/compliance/assessments-completed.webp)
+![Completed ISO 27001 assessment results: overall score 77%, maturity Structured, 248 of 248 questions answered, 1,397 SCF control mappings; Overview, Score Map, Gap Analysis and Recommendations tabs; strong areas, needs improvement, critical gaps and per-category scores](/img/screenshots/compliance/assessments-completed.webp)
 
 - **Score** = (yes × 1 + partially × 0.5) ÷ scored questions, as a percentage; **N/A** counts towards progress but is excluded from the score; per-category scores are shown alongside.
 - **Maturity level** from the score: **Initial** (< 50), **Developing** (50–74), **Structured** (75–89), **Advanced** (≥ 90).
@@ -62,7 +62,7 @@ Completed assessments are re-mapped by the 4-hourly [compliance refresh](./auton
 
 ## Find your assessments
 
-![Assessment History: total, completed, in progress and frameworks used; table with framework, organisation, status, progress, score, date and View Details](/img/screenshots/compliance/assessments-history.webp)
+![Assessment History: 2 total, 1 completed, 1 in progress, 2 frameworks used; table with framework, organization, status, progress, score, date and View Details / Results for a SOC 2 assessment in progress and a completed ISO 27001 assessment](/img/screenshots/compliance/assessments-history.webp)
 
 **View All Assessments** on the hub opens **Assessment History**: every assessment with status, progress, score and date, filterable by status and framework. **View Details** reopens the checklist (to continue) or the completed assessment's results.
 

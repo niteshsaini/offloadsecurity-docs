@@ -11,7 +11,7 @@ A cluster is onboarded once, read-only, and can then be scanned on demand or on 
 
 **Where:** Kubernetes Security → **Clusters**.
 
-![Clusters tab: total / active clusters, critical findings and active scans tiles, and a card per cluster (prod-aks-weu, staging-gke-usc1, prod-eks-use1) with severity counts, last scan and Dashboard / Scan actions](/img/screenshots/security-scanning/k8s-clusters.webp)
+![Clusters tab: the discovered-on-cloud-accounts panel with a missing-sources notice, and the docs-demo project with the orbstack-local cluster card (Other · Kubeconfig, Degraded) showing 0 critical and 185 high + medium findings, last scan time, a partial-coverage notice, and Dashboard / Scan actions](/img/screenshots/security-scanning/k8s-clusters.webp)
 
 ## Before you start — RBAC profiles {#rbac-profiles}
 
@@ -26,7 +26,7 @@ The platform needs a Kubernetes identity that can **read** the resources it asse
 
 Select **Generate Deployment Script**, choose the profile, the **namespace** and the **service account name**, and copy or download the script. Run it with a `kubectl` context that has cluster-admin: it creates the namespace if needed, applies the service account, `ClusterRole` and binding, creates a long-lived service-account token Secret (falling back to a bound token only if the token controller is disabled), and prints the **API server URL and token**. The same `ClusterRole` is listed in [Required Permissions — Bucket B](../../cloud-security/permissions.md#bucket-b--kubernetes-in-cluster-rbac).
 
-![Deployment Script dialog: profile, namespace and service account, the generated bash script, and usage instructions with copy/download](/img/screenshots/security-scanning/k8s-rbac-script.webp)
+![Deployment Script dialog: script details (Minimal profile, namespace default, service account cspm-scanner), the generated bash script, and usage instructions](/img/screenshots/security-scanning/k8s-rbac-script.webp)
 
 The platform needs a **kubeconfig**, not a bare token. Put the printed values into a self-contained kubeconfig before onboarding:
 

@@ -67,7 +67,7 @@ To read it, open the cluster's dashboard: each recent scan has **Not tested in t
 
 Select **📊 Dashboard** on a cluster card, or a cluster on the Fleet Heatmap.
 
-![Cluster dashboard for prod-aks-weu: security score 34/100 (grade F), findings summary by severity, and findings by category and by scanner](/img/screenshots/security-scanning/k8s-cluster-dashboard.webp)
+![Cluster dashboard for orbstack-local (Other · Kubeconfig · Minimal RBAC): View Findings / Start Scan / Back actions, security score 3/100 (grade F), and the findings summary by severity (0 critical, 47 high, 138 medium, 27 low)](/img/screenshots/security-scanning/k8s-cluster-dashboard.webp)
 
 - **Security Score** (0–100 with a letter grade) — derived from open findings weighted by severity. It shows **Not Assessed** until a scan in which a scanner produced output completes; a scan whose scanners all failed never grades a cluster.
 - **Findings Summary** — open findings by severity, with a link to the Findings tab pre-filtered to this cluster.
@@ -79,7 +79,7 @@ Select **📊 Dashboard** on a cluster card, or a cluster on the Fleet Heatmap.
 
 **Kubernetes Security → Findings** lists every finding across your clusters, grouped by check. Selecting a cluster card opens the same view filtered to that cluster.
 
-![Findings tab: severity tiles (24 total, 4 critical, 7 high, 9 medium, 4 low), filters for cluster, severity, status and scanner, and the finding list with AI Summary](/img/screenshots/security-scanning/k8s-findings.webp)
+![Findings tab: filters for cluster, severity, status (Open Only) and scanner, tiles for 212 findings, 49 unique checks and 76.9% fewer rows to triage, and the checks list grouped by check with Resolve all / Suppress all / False positive actions](/img/screenshots/security-scanning/k8s-findings.webp)
 
 Filter by **cluster**, **severity**, **status** (the default is **Open Only**) and **scanner**; the tiles above update to the filtered set. **AI Summary** produces a short narrative of what matters most in the current view. An empty list says why: *No clusters connected*, *Not scanned yet*, or no findings after a scan of a cluster in scope.
 

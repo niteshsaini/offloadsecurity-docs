@@ -11,7 +11,7 @@ Scanners produce findings faster than a team can read them. The Security Command
 
 **Where:** left navigation → *Core Security* → **Security Command Center**. Tabs: **Overview**, **Triage Center**, **AI Remediation**, **Auto-Fix Engine**, **Remediation Workflows**, **Security Advisor**, **Activity Log**.
 
-![Security Command Center overview: agents active, auto-triggers, open remediations, auto-fixable, pipeline runs; triage distribution; AI remediation queue](/img/screenshots/ai-threat-intelligence/soc-overview.webp)
+![Security Command Center overview in Rule-Based Mode: agents active, auto-triggers, AI remediations, auto-fixable, pipeline runs; triage distribution of AI verdicts (Critical, Investigate) with Run Triage Now; AI remediation queue](/img/screenshots/ai-threat-intelligence/soc-overview.webp)
 
 ## Two modes
 
@@ -30,7 +30,7 @@ Agents run on their own after a **cloud scan** completes: the trigger service gi
 
 ## Triage Center
 
-![Triage Center: worklist with verdict, severity, confidence and reasoning per finding; fix / defer / dedup / suppress; Triage new/changed, Correlate, Assess FP/TP, Assess code, Prepare fixes](/img/screenshots/ai-threat-intelligence/soc-triage.webp)
+![Triage Center: open findings, need action now, AI-triaged and need-AI-triage tiles; Triage new/changed, Correlate, Assess FP/TP, Assess code scans, Prepare fixes; action-queue worklist with priority, severity, AI verdict and confidence, reasoning and recommended action per finding, Open in VM Triage](/img/screenshots/ai-threat-intelligence/soc-triage.webp)
 
 The Triage Center lists the **same findings, ids and totals** as VM Triage, with the AI layer on top:
 
@@ -102,7 +102,7 @@ An answer built from rules — because no provider is configured, or the AI call
 
 ## Activity Log
 
-![Agent Activity Log: decision, agent, finding, resource, confidence and time for every agent decision](/img/screenshots/ai-threat-intelligence/soc-activity.webp)
+![Agent Activity Log: agent, decision and finding, resource, resource type, severity, confidence and time for every agent decision](/img/screenshots/ai-threat-intelligence/soc-activity.webp)
 
 Every agent decision for the team, newest first: which agent, which finding and resource, the decision, the reasoning and the confidence. It is the answer to "why did the platform call this critical", and it is scoped to the active team like everything else on the page. Agent audit records are kept for five years by default (`AGENT_AUDIT_RETENTION_DAYS`).
 

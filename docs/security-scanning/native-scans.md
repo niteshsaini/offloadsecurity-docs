@@ -17,7 +17,7 @@ The **Scanning** module is where you actively test a target you can reach over t
 
 **Where:** left navigation → **Scanning** → **New scan**. The **?** button in the page header opens the Scanning "How do I…" guides.
 
-![New Web Vulnerability Scan form: assessment type, target URL, OWASP ZAP configuration (Standard: spider + active, 5–10 min), authenticated-scan toggle and launch button](/img/screenshots/security-scanning/scans-new-scan.webp)
+![Scanning → New scan tab: App Scan — Unified Security Assessment form with the assessment type selector, application URL http://juice-shop:3000, and the scan tools checklist (security headers, SSL/TLS, OWASP web and API checks, technology fingerprint, known CVEs, WAF detection, traffic capture)](/img/screenshots/security-scanning/scans-new-scan.webp)
 
 :::note[Older links]
 Links to the former **App Scan** sidebar entry (`?section=app-scan`) open the **Assessments** tab, and the former New Scan links open the **New scan** tab.
@@ -94,7 +94,7 @@ Active scans submit payloads. Point comprehensive web and API scans at a staging
 
 Open a run from **Targeted runs** to see the summary — target, type, status, finding count — what ran (engine, pinned version, templates release, profile, UTC start and end), links to the tool's kept raw output, a comparison with the previous run of the same tool on the same target, and the findings: each with a severity, what was observed, the tool's own proof (CVE, CVSS, matched URL, reproducing request where the tool gives one) and the **fix**. Export the run as **HTML, PDF or Word**, with screenshots for web scans, or ask for an **AI Summary**. Details in [Scan Results](./scan-results.md).
 
-![ZAP scan result dialog: quick scan of a public site, six header-related findings each with a plain-language fix, and HTML / PDF / DOCX / with-screenshots export buttons](/img/screenshots/security-scanning/scans-result-detail.webp)
+![Targeted run detail for a Security Headers scan of http://juice-shop:3000: target, scan type, status and 12 findings, a comparison with the previous run (1 new, 5 fixed), the findings list, and HTML / PDF / DOCX / With Screenshots / AI Summary / Rescan actions](/img/screenshots/security-scanning/scans-result-detail.webp)
 
 A run that could not finish is never shown as clean. If ZAP could not run and only the built-in HTTP checks ran, the run is **partial** and marked **Degraded coverage**; if Nmap timed out, the hosts it finished are kept and the run is **partial** with the reason.
 

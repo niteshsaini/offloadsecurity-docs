@@ -56,6 +56,16 @@ docker compose -f docker-compose.client.yml up -d
 docker compose -f docker-compose.client.yml ps  # every service healthy
 ```
 
+:::warning[Known issue in 1.4.0: blank values in `.env`]
+`.env.example` lists about 100 optional settings as `NAME=` with no value. In 1.4.0 a blank value overrides the built-in default instead of falling back to it, which breaks, among others, Nmap scans (*No such file or directory: ''*) and the Kubernetes Trivy cache. After `cp .env.example .env`, comment out every setting you leave blank:
+
+```bash
+sed -i -E 's/^([A-Z_][A-Z0-9_]*)=[[:space:]]*$/# \1=/' .env
+```
+
+Then fill in the required values as usual.
+:::
+
 Then open `http://<host>:3000` (or `https://<DOMAIN_NAME>`) and sign in as `admin@offloadsecurity.com` with `DEFAULT_ADMIN_PASSWORD` from `.env` (if you left it empty, the generated password is in the backend log). That account is the [platform administrator](../authentication/platform-administration.md); change its password immediately and enable MFA.
 
 ### First-run setup wizard

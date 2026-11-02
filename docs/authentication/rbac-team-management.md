@@ -70,7 +70,7 @@ Security Managers cannot promote anyone (including themselves) to Admin.
 
 **Where:** account menu → **API Keys**. Creating, editing, rotating and revoking keys needs the **Manage Integrations** permission (Admin and Security Manager).
 
-![API Key Management: active keys, total requests (30 d), keys expiring soon; key list with prefix, environment, status, usage, last used; Rotate / Revoke](/img/screenshots/platform-security/api-keys.webp)
+![API Key Management: active keys, total requests (30 d), keys expiring soon; key list with prefix, environment, status, usage, last used; Scopes / Rotate / Revoke](/img/screenshots/platform-security/api-keys.webp)
 
 An API key is `osk_` followed by 48 random characters. It authenticates as **the user who created it, in the team that was active when it was created**, and is further limited to its **scopes** — a session user implicitly has every scope, an API key only the ones it was given.
 

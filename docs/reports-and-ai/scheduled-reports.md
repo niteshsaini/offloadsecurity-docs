@@ -11,7 +11,7 @@ The report nobody has to remember to generate is the one that actually reaches t
 
 **Where:** Dashboard → *Executive Dashboard* → **Executive Reports** → *Scheduled reports*.
 
-![Scheduled reports: report type, frequency and recipients form; table of schedules with last run, delivery and next run](/img/screenshots/reports-and-ai/exec-reports-scheduled.webp)
+![Scheduled reports: report type, frequency and recipients form; table of a monthly board report and a weekly compliance summary with recipients, last run (never, pending), delivery and next run](/img/screenshots/reports-and-ai/exec-reports-scheduled.webp)
 
 ## Create a schedule
 

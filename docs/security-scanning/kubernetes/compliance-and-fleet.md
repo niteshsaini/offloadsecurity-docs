@@ -13,7 +13,7 @@ Three tabs turn cluster findings into the views auditors and platform leads ask 
 
 **Where:** Kubernetes Security → **Compliance**.
 
-![Compliance tab: 3 clusters across 4 frameworks, average score 88%, 3 compliant clusters, 0 at risk, and a per-cluster table with grade, overall score and per-framework scores](/img/screenshots/security-scanning/k8s-compliance.webp)
+![Compliance tab: 1 cluster across 4 frameworks, average score 5%, 0 compliant clusters, 1 at risk, and the per-cluster table for orbstack-local with grade F, overall score and per-framework scores](/img/screenshots/security-scanning/k8s-compliance.webp)
 
 ### How scores are built
 
@@ -66,7 +66,7 @@ For each production cluster, take the frozen CIS and SOC 2 reports of the weekly
 
 **Where:** Kubernetes Security → **Fleet Heatmap**.
 
-![Fleet Heatmap: severity tiles across clusters, a cluster × severity matrix (prod-aks-weu, staging-gke-usc1, prod-eks-use1) and the MITRE ATT&CK container tactic coverage row](/img/screenshots/security-scanning/k8s-fleet-heatmap.webp)
+![Fleet Heatmap: severity tiles across clusters (0 critical, 47 high, 138 medium, 27 low), the cluster × severity matrix for orbstack-local (degraded, 212 total) and the MITRE ATT&CK containers tactic coverage row](/img/screenshots/security-scanning/k8s-fleet-heatmap.webp)
 
 - **Severity tiles** — critical / high / medium / low totals and how many clusters each affects.
 - **Cluster matrix** — every cluster with its provider and status and the count per severity, sorted so the worst cluster is on top, with search and paging. Select a cluster to open its dashboard, or a severity count to open those findings.

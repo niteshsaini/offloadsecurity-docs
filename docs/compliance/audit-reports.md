@@ -11,7 +11,7 @@ An auditor's first request is rarely a dashboard; it is "send me the list". Audi
 
 **Where:** left navigation → **Audit Reports**.
 
-![Audit Report Generation: report types (Full, Controls Only, Findings Only, Drift History, Remediation Audit) and a report history with per-section download links](/img/screenshots/compliance/audit-reports.webp)
+![Audit Reports: generate a new report by type (Full Report, Controls Only, Findings Only, Drift History, Remediation Audit) and format (PDF + CSV or CSV only), with 3 reports generated; Network VAPT report downloads and the Evidence Bundle per active framework below](/img/screenshots/compliance/audit-reports.webp)
 
 ## Generate a report
 

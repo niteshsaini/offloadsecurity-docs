@@ -11,7 +11,7 @@ A compliance score is a number; drift is the *change* in it, and change is what 
 
 **Where:** left navigation → **Compliance Posture** → *Drift Detection* tab.
 
-![Compliance Drift Detection: 2 total drifts, 2 regressions; latest drift details listing IAC-06 (implemented → partial) and CRY-05 (implemented → not_implemented) as control regressions with Fix this actions](/img/screenshots/compliance/compliance-drift.webp)
+![Compliance Drift Detection: 2 total drifts, both Threshold Crossed; latest drift details listing iso_27001 (95.1%) and iso_27002 (94.9%) below their 97% threshold, severity critical, each with a Fix this action](/img/screenshots/compliance/compliance-drift.webp)
 
 ## What counts as drift
 
@@ -54,7 +54,7 @@ A regression whose control maps to one of the [remediation playbooks](./autonomo
 
 ## Alert policies
 
-![Alert Policies: create policy with name, drift types, severity threshold, frameworks and notification channels](/img/screenshots/compliance/compliance-drift-policies.webp)
+![Alert Policies: create a policy with name, drift types to monitor, minimum severity and notification channels (Email, Slack, Teams); active policy "Payments API regressions" for Control Regression and Threshold Crossed, minimum high, email and in-app](/img/screenshots/compliance/compliance-drift-policies.webp)
 
 An **alert policy** decides which drifts become notifications:
 

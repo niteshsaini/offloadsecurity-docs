@@ -12,7 +12,7 @@ Every module in Offload Security writes to one normalised data layer, and that i
 
 **Where:** reports are generated where their data lives (each module's page) and from the **Executive Dashboard** (Dashboard → *Executive Dashboard* tab); the **AI Security Assistant** is the floating button on every page; AI configuration lives under **Knowledge Base → AI Assistant**.
 
-![Executive Compliance Dashboard: organisational compliance maturity 53%, per-framework cards with readiness and timeline, priority compliance gaps, certification readiness](/img/screenshots/reports-and-ai/exec-dashboard.webp)
+![Executive Compliance Dashboard: mean implementation score across assessed frameworks 57.2%, Compliance Overview tab with per-framework cards showing readiness band, implementation score, control counts and timeline](/img/screenshots/reports-and-ai/exec-dashboard.webp)
 
 ## What this section covers
 

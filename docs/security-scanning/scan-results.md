@@ -11,7 +11,7 @@ Every targeted run started from **Scanning** — and every such scan sent in fro
 
 **Where:** left navigation → **Scanning** → **Targeted runs**.
 
-![Scan Results hub with 36 scans and 981 findings, Completed / Running / Failed tabs, tool-type filter, and rows for ZAP, Nmap and testssl with View / HTML / PDF actions](/img/screenshots/security-scanning/scans-results.webp)
+![Targeted runs tab: total scans, total findings, completed and failed tiles, Completed / Running / Failed tabs, the Tool Type filter, and the grouped target tree for http://juice-shop:3000 with a completed security_headers run](/img/screenshots/security-scanning/scans-results.webp)
 
 ## The list
 

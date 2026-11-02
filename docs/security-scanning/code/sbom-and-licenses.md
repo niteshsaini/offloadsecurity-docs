@@ -11,7 +11,7 @@ A Software Bill of Materials answers "what exactly is in this build?" — and on
 
 **Where:** Code Command Center → **SBOM & Licenses**.
 
-![SBOM & Licenses tab: licence-enrichment opt-in banner, Generate SBOM (provider, repository), Upload an existing SBOM, and the SBOM reports list showing payments-api.zip with 0 components analysed](/img/screenshots/security-scanning/code-sbom-licenses.webp)
+![SBOM & Licenses tab: licence-enrichment opt-in banner, Generate SBOM (provider, repository, branch), Upload an existing SBOM, and the SBOM reports list showing juice-shop.zip with 1 licence violation and 972 components](/img/screenshots/security-scanning/code-sbom-licenses.webp)
 
 ## Getting an SBOM
 

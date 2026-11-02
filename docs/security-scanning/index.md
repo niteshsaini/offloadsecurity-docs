@@ -9,7 +9,7 @@ description: "Test what you build and run — web apps, APIs, hosts, TLS, contai
 
 Cloud Security tells you how your accounts are configured. This section covers everything you **build and run** on top of them: the web apps and APIs you expose, the hosts behind them, the container images you ship, the Kubernetes clusters they run in, and the source code they came from. Each area has its own workspace, but every result becomes a finding with a severity, an affected resource and a fix, and flows into the same triage, risk and reporting pipeline.
 
-![Scan Results hub: 36 scans, 981 findings, completed / running / failed tabs, and a table of ZAP, Nmap and testssl runs with View / HTML / PDF actions](/img/screenshots/security-scanning/scans-results.webp)
+![Scanning → Targeted runs: scan and finding tiles, Completed / Running / Failed tabs, Tool Type filter and the grouped target tree for http://juice-shop:3000](/img/screenshots/security-scanning/scans-results.webp)
 
 ## The five workspaces
 
