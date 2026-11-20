@@ -21,8 +21,8 @@ A cloud scan inventories the resources in one account and evaluates its configur
 
 Only one scan can run per account at a time. Starting another while one is in progress returns the running scan instead of queuing a duplicate. Starting scans from the UI needs the **Create Cloud Scans** permission.
 
-:::note[Read-only, always]
-Scans only ever **read** your environment with the credentials you provided at onboarding. Nothing is created, changed or deleted in your cloud. On AWS, each scan assumes the account's role (or uses its access keys) and verifies with `sts:GetCallerIdentity` that it reached the account you entered; a mismatch refuses the scan.
+:::note[Scans are read-only]
+Scans only ever **read** your environment with the credentials you provided at onboarding. A scan creates, changes and deletes nothing in your cloud. (Cloud remediation is a separate capability, off by default and approval-gated; see [What Offload Reads, Tests and Changes](../what-offload-changes.md).) On AWS, each scan assumes the account's role (or uses its access keys) and verifies with `sts:GetCallerIdentity` that it reached the account you entered; a mismatch refuses the scan.
 :::
 
 ## Scan authorization

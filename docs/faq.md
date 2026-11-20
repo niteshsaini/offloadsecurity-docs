@@ -13,7 +13,7 @@ sidebar_position: 13
 A unified security platform: cloud posture (CSPM), code and container security, vulnerability management, Kubernetes, on-prem visibility, compliance automation, risk management, and privacy (DPDP) — all feeding one normalized findings model, one risk register, and one reporting layer. Start with [What is Offload Security](./introduction/index.md).
 
 **Is it SaaS or on-premises?**
-Both. The managed platform is the default; regulated customers can run the full platform **inside their own environment**, where scan data, findings, evidence and reports stay in their network. The web app does send browser usage analytics to PostHog; see [Usage analytics](./trust-and-security.md#usage-analytics). See [On-Premises](./on-premises/index.mdx).
+Both. The managed platform is the default; regulated customers can run the full platform **inside their own environment**, where scan data, findings, evidence and reports are stored on their own infrastructure. Some optional features send specific data out (AI prompts, secret validation, enrichment lookups, notifications), and the web app sends browser usage analytics to PostHog; see [What needs outbound access](./on-premises/deployment.md#what-needs-outbound-access). See [On-Premises](./on-premises/index.mdx).
 
 **Which cloud providers are supported?**
 AWS, Google Cloud, and Azure — with read-only access wherever the provider supports it. Depth varies by provider: GCP can be onboarded by organization or folder, while AWS accounts and Azure subscriptions are connected one at a time (bulk scans, tests and deletes then work across them). See [Cloud Security](./cloud-security/index.md) and [permissions](./cloud-security/permissions.md).
@@ -25,7 +25,7 @@ Mostly by not needing them: the platform runs Prowler, Trivy, Grype, Syft, ZAP, 
 Severity is normalized across sources, then enriched with exploit intelligence — findings on the **CISA KEV** list or with high **EPSS** scores are flagged so actively-exploited issues rise to the top — and with exposure, environment and asset context, including internet exposure of container and Kubernetes workloads. Critical findings can auto-promote into the [Risk Register](./vulnerability-risk/risk-management/index.md).
 
 **Does the platform change our systems?**
-Scanning is read-only. Remediation guidance — including AI suggestions — is advisory; people make the changes. Two opt-in exceptions exist: approved Auto-Fix Engine cloud actions (simulated unless the operator enables live execution) and agent-written fix pull requests (off by default; a pull request for a human to merge).
+Cloud, registry, cluster and code scanning is read-only; web, API and network scans send test traffic to the targets you name. Remediation guidance, including AI suggestions, is advisory. The platform does write in specific, separate places, each off by default or behind an approval: approved cloud remediation actions (simulated unless the operator enables live execution), fix pull requests (never merged by the platform), pull request comments and checks, tickets in Jira or GitHub / GitLab, and OpenVAS tasks in Greenbone. See [What Offload Reads, Tests and Changes](./what-offload-changes.md) for each one, its permission and its approval gate.
 
 ## Security
 

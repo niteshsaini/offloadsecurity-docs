@@ -68,7 +68,7 @@ See [Engagement & Evidence](./scan-evidence.md) and [Network Scans & VAPT Report
 | Task | Endpoint | Notes |
 | --- | --- | --- |
 | Git connections | `GET /api/code/connections` · `POST /api/code/connections/{provider}` · `DELETE …/{provider}` | `provider` = `github` \| `gitlab` \| `bitbucket`; body `{ "token", "username" }`. Token is validated against the provider. |
-| Repositories & branches | `GET /api/code/repos?provider=` · `GET /api/code/repos/{repo}/branches` | Live from the provider. |
+| Repositories & branches | `GET /api/code/repos?provider=` · `GET /api/code/repos/branches?repo=&provider=` | Live from the provider. |
 | Start a scan | `POST /api/code/scan` | `{ "provider", "repo", "branch", "scan_type" }` — `code_security` \| `sast` \| `dependency_scan` \| `secret_scan` \| `iac_scan` \| `sbom` \| `compiled_image`; optional `policy_pack`. Returns `scan_id`. |
 | Upload a ZIP / artifact / image | `POST /api/code/upload-scan` (multipart `file`) · `POST /api/code-scan/artifact` · `POST /api/code-scan/image` | ZIP up to 500 MB; artifacts `.jar .war .ear .whl .egg .tgz .gem .nupkg`. |
 | Poll | `GET /api/code/scan-status/{scan_id}` | `status`, `progress`, `phase`. |

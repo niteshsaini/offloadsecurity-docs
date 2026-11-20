@@ -57,6 +57,8 @@ docker compose -f docker-compose.client.yml ps  # every service healthy
 ```
 
 :::warning[Known issue in 1.4.0: blank values in `.env`]
+**Fixed in 1.4.1:** from [1.4.1-beta.1](/release-notes/1.4.1-beta.1) a blank value falls back to the built-in default, so this workaround is only needed on 1.4.0. The [one-file installer](/on-premises/deployment) also generates a working `.env`.
+
 `.env.example` lists about 100 optional settings as `NAME=` with no value. In 1.4.0 a blank value overrides the built-in default instead of falling back to it, which breaks, among others, Nmap scans (*No such file or directory: ''*) and the Kubernetes Trivy cache. After `cp .env.example .env`, comment out every setting you leave blank:
 
 ```bash

@@ -36,6 +36,13 @@ Then, in the same PR:
 
 1.4.0 is then served at `/1.4.0/...` with a banner pointing to the latest.
 
+## API reference (every release)
+
+Export the published OpenAPI file and the route list for the new tag and add
+the version to the reference page's menu: see `tools/openapi/README.md`.
+`tools/openapi/check_doc_endpoints.py` (run on every pull request) then checks
+that every endpoint the docs name exists in that release.
+
 ## Pre-releases (1.4.1-beta.N)
 
 Customers run betas, so the root follows the **latest published pre-release**:

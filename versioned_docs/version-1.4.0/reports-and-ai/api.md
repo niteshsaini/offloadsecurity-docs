@@ -47,7 +47,7 @@ Send the key as `X-API-Key`; calls are scoped to the key's team.
 | Risk | `GET /api/risk-management/reports/export?format=json\|csv` · `…/reports/executive-summary` · `…/reports/executive-pdf-data` | |
 | Network VAPT | `GET /api/export/network-vapt` · `.html` · `.docx` | Greenbone OpenVAS + nmap; any of **Vulnerability View**, **View Scans**, **View Assessments**. Wazuh host correlation only for callers with **View Integrations**. |
 | Verify / re-download issued reports | `GET /api/native-scans/exports/verify?sha256=` · `GET /api/export/issued/{sha256}` · `GET /api/native-scans/results/{scan_id}/exports` · `…/exports/{sha256}` | Did your team receive exactly this file; the byte-for-byte issued copy (409 if the kept copy no longer matches). |
-| Compliance | `POST /api/compliance-engine/reports/generate` → `GET …/reports/{report_id}/download/{section}` · `GET /api/evidence-completion/auditor-package/{framework}` · `GET /api/common-controls/soa/{framework}` · `GET /api/assessments/{assessment_id}/export-pdf` · `GET /api/dpdp/audit/pack/{pack_id}/pdf` | See [Compliance & GRC API](../compliance/api.md). |
+| Compliance | `POST /api/compliance-engine/reports/generate` → `GET …/reports/{report_id}/download/{section}` · `GET /api/evidence-completion/auditor-package/{framework}` · `GET /api/common-controls/soa/{framework}` · `GET /api/assessments/{assessment_id}/download-pdf` · `GET /api/dpdp/audit/pack/{pack_id}/pdf` | See [Compliance & GRC API](../compliance/api.md). |
 
 ## Branded report family
 

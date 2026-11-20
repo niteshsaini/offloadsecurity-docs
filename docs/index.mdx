@@ -17,7 +17,7 @@ import SearchPrompt from '@site/src/components/SearchPrompt';
 <SearchPrompt />
 
 <CardGrid>
-  <Card title="Get started" to="/getting-started">Sign in, connect a cloud account and review your first finding in about 30 minutes.</Card>
+  <Card title="Get started" to="/getting-started">Sign in, run your first scan on a cloud account or a website and read your first finding in about 15 minutes. Self-hosting? Install first.</Card>
   <Card title="Security modules" to="/introduction/platform-at-a-glance">Cloud, scanning, code, containers, Kubernetes, endpoints, vulnerabilities and threat intelligence: what each module does.</Card>
   <Card title="Integrations" to="/integrations">Slack, Teams, Google Chat, email, PagerDuty, Jira, GitHub and GitLab Issues, Wazuh, Greenbone OpenVAS, Splunk and syslog forwarding, and webhooks.</Card>
   <Card title="API & automation" to="/api-automation">API keys, the REST API, CI/CD release gates and automation recipes.</Card>
@@ -32,7 +32,7 @@ import SearchPrompt from '@site/src/components/SearchPrompt';
     title="New customer"
     audience="From first sign-in to an operating security program."
     steps={[
-      {label: 'Quickstart (30 minutes)', to: '/getting-started'},
+      {label: 'Quickstart (15 minutes)', to: '/getting-started'},
       {label: 'First 7 days', to: '/adoption/first-7-days'},
       {label: 'Connecting cloud accounts', to: '/cloud-security/connecting-accounts'},
     ]}
@@ -127,7 +127,7 @@ This documentation describes capabilities that exist in the platform today. Wher
   },
   {
     q: "Is Offload Security SaaS or on-premises?",
-    a: "Both. Offload Security runs as a multi-tenant SaaS platform or can be deployed fully on-premises / self-hosted, so regulated organizations can keep data inside their own environment.",
+    a: "Both. Offload Security runs as a multi-tenant SaaS platform or can be deployed fully on-premises / self-hosted, so regulated organizations can keep findings and evidence on infrastructure they control.",
   },
   {
     q: "What does Offload Security consolidate?",

@@ -26,7 +26,7 @@ These are recommended defaults for a typical production deployment, not universa
 | Web apps & APIs | Your externally reachable applications and APIs, as App Scans with a recorded authorization — [Native Scans](../security-scanning/native-scans.md). |
 | Internal infrastructure | If you have significant on-prem estate, see [On-Premises & Private Infrastructure](../on-premises/index.mdx). |
 
-All cloud, registry and cluster access is **read-only** — there is no write path from the scanner into your environment. Active web scans send test traffic to the target; state-changing probes are off unless you allow them.
+Cloud, registry and cluster **scanning** is read-only: the scanners use the read-only roles above and change nothing. Writes exist, but they are separate capabilities, each off by default or behind an approval: live cloud remediation (`REMEDIATION_LIVE_EXECUTE`, plus an approval per action), fix pull requests, ticketing, OpenVAS task management and notifications. Active web, API and network scans send test traffic to their targets; state-changing probes are off unless you allow them. Secret validation calls each leaked secret's provider by default (`SECRET_VALIDATION_ENABLED`). Review the full list in [What Offload Reads, Tests and Changes](../what-offload-changes.md) and decide which to leave off.
 
 For regulated environments, consider setting `SCAN_REQUIRE_AUTHORIZATION=true` so every web, API and network scan must carry an authorization attestation (it is off by default so existing API and CI callers keep working, and such scans are reported as "authorization not recorded").
 

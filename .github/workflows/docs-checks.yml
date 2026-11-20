@@ -1,0 +1,30 @@
+name: Docs checks
+
+# Runs on pull requests: documented API endpoints must exist in the release
+# the docs describe (tools/openapi/check_doc_endpoints.py), and the site must
+# build without broken links.
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Documented endpoints exist in their release
+        run: python3 tools/openapi/check_doc_endpoints.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Build (fails on broken links)
+        run: npm run build -- --no-minify 2>&1 | tee build.log; ! grep -iE 'Docusaurus found broken|broken link' build.log

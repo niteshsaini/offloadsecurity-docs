@@ -99,8 +99,8 @@ The agentic-fix services are `agent-launcher`, `agent-sandbox`, `agent-egress` a
 
 For internal-network coverage, ingestion and the on-prem architecture, see **[On-Premises](./on-premises/index.mdx)**.
 
-:::note[Read-only by default]
-Across both models, scans only ever **read** your environment using the read-only credentials you provide. The two places the platform can write are explicit and opt-in: the Auto-Fix Engine (approved actions, simulated until an operator sets `REMEDIATION_LIVE_EXECUTE=true`) and agent-written fix pull requests to your repositories (off by default — `AGENTIC_FIX_ENABLED` — run in a disposable sandbox whose only network exit is an egress proxy; a branch and a PR, never a merge).
+:::note[Scanning is read-only; writes are separate]
+Across both models, cloud, registry, cluster and code scans only **read** your environment using the read-only credentials you provide. Web, API and network scans send test traffic to their targets. Writes are separate capabilities, each off by default or approval-gated: the Auto-Fix Engine (approved actions, simulated until an operator sets `REMEDIATION_LIVE_EXECUTE=true`), fix pull requests (a branch and a PR, never a merge; agent-written ones also need `AGENTIC_FIX_ENABLED` and run in a disposable sandbox whose only network exit is an egress proxy), pull request comments and checks, tickets in Jira or GitHub / GitLab, and OpenVAS tasks in Greenbone. The full list, with permissions and approval gates, is in [What Offload Reads, Tests and Changes](./what-offload-changes.md).
 :::
 
 ## Related

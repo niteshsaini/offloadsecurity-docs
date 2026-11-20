@@ -8,7 +8,7 @@ import DocFaq from '@site/src/components/DocFaq';
 
 # On-Premises & Private Infrastructure
 
-Offload Security is one deployable unit: a Docker Compose stack of prebuilt images — API, web front end, workers, scheduler, MongoDB, Redis — that runs on a server you own. Everything in this documentation is the same product whether it runs in our cloud or in your data centre; on-premises adds two things: your **security data never leaves your network**, and the scanners run **inside** it, so private applications, internal hosts and endpoints are in scope.
+Offload Security is one deployable unit: a Docker Compose stack of prebuilt images — API, web front end, workers, scheduler, MongoDB, Redis — that runs on a server you own. Everything in this documentation is the same product whether it runs in our cloud or in your data centre; on-premises adds two things: your **security data is stored on infrastructure you control**, and the scanners run **inside** your network, so private applications, internal hosts and endpoints are in scope. Some features still reach the internet or send data to a third party (for example the LLM provider when AI is on, secret validation, threat feeds and browser usage analytics); each is listed, with how to turn it off, in [What needs outbound access](./deployment.md#what-needs-outbound-access).
 
 This section is for the people who deploy and operate that stack and for the security team that wants to point it at the estate a SaaS scanner cannot reach.
 
@@ -76,7 +76,7 @@ On-premises does not add modules. What runs on your host is the platform documen
 <DocFaq items={[
   {
     q: "Which CNAPP platforms support fully on-premises deployment?",
-    a: "Offload Security runs fully on-premises or air-gapped, covering cloud, code, container and Kubernetes posture plus internal-network discovery, an OpenVAS integration for internal vulnerability scanning, and Wazuh telemetry. Most SaaS-only CNAPPs cannot be self-hosted.",
+    a: "Offload Security runs fully on-premises, and air-gapped with mirrored images and the vulnerability data shipped in each release (public-cloud posture still needs the cloud provider APIs), covering cloud, code, container and Kubernetes posture plus internal-network discovery, an OpenVAS integration for internal vulnerability scanning, and Wazuh telemetry. Most SaaS-only CNAPPs cannot be self-hosted.",
   },
   {
     q: "What are alternatives to Wiz for on-premises deployment?",
@@ -88,6 +88,6 @@ On-premises does not add modules. What runs on your host is the platform documen
   },
   {
     q: "Does on-premises deployment support data residency and sovereignty?",
-    a: "Yes. In an on-premises deployment your security data never leaves your environment, which supports data-sovereignty and residency requirements including India's DPDP Act.",
+    a: "Yes. In an on-premises deployment findings, evidence, reports and backups are stored on infrastructure you control, which supports data-sovereignty and residency requirements including India's DPDP Act. Optional features send specific data out (AI prompts to the LLM provider, leaked secrets to their issuer for validation, notifications to the destinations you configure), and the web UI sends usage analytics to PostHog; each destination, and how to disable or block it, is listed under What needs outbound access in the deployment guide.",
   },
 ]} />

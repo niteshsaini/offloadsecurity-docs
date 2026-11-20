@@ -159,7 +159,7 @@ These are required from 1.4.0; there is no `latest` default. Set them in `.env`.
 ## Frequently asked questions
 
 **Can the platform run fully air-gapped?**
-The platform itself, yes — images loaded from an internal registry, no LLM provider, feeds imported via STIX, vulnerability databases mirrored. Each release's images carry Trivy and Grype databases from the image build, so container scans work offline, with findings as current as that build. Cloud modules need reachability to the cloud provider APIs by definition, and Endpoint Security's Fix first shows fixed versions for Linux packages only from cached or reachable OSV advisories.
+The platform itself, yes — images loaded from an internal registry, no LLM provider, feeds imported via STIX, vulnerability databases mirrored. Each release's images carry Trivy and Grype databases from the image build, so container scans work offline, with findings as current as that build. Cloud modules need reachability to the cloud provider APIs by definition, and Endpoint Security's Fix first shows fixed versions for Linux packages only from cached or reachable OSV advisories. What works in each mode is in [Air-gapped, restricted-egress and connected installs](./deployment.md#air-gapped-restricted-egress-and-connected-installs).
 
 **Can the platform patch hosts for us?**
 No. Fix first shows which package upgrade resolves which CVEs and the command to run; applying it is done on the host or through your own patch tooling.

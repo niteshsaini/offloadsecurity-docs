@@ -56,7 +56,7 @@ description: "Sign-in, MFA and SSO; teams, members and invitations; API key life
 | Authentication log | `GET /api/auth/audit-log?limit=` | Platform administrator |
 | User activity | `GET /api/platform-admin/activity/summary` · `…/users` · `…/sessions` · `DELETE …/sessions/{session_id}` · `GET …/login-history?email=&event=&days=` · `POST …/users/{user_id}/reset-password` · `POST …/users/{user_id}/require-password-change` `{required}` | Platform administrator |
 | Menu configuration | `GET /api/menu-config` (any signed-in user — drives the sidebar) · `PUT /api/admin/menu-config` `{menu_visibility: {section_id: bool}}` | PUT: platform administrator |
-| Platform setup | `GET /api/platform-setup/status` · `POST /api/platform-setup/reopen` · `…/validate-service` · `…/validate-smtp` · `…/validate-storage` · `…/save-config` · `…/complete` | Admin |
+| Platform setup | `GET /api/setup/status` · `POST /api/setup/reopen` · `…/validate-service` · `…/validate-smtp` · `…/validate-storage` · `…/save-config` · `…/complete` | Admin |
 
 ## Permissions
 

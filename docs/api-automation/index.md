@@ -49,7 +49,9 @@ An API key carries its scopes' permissions for your team. If a key is exposed, r
 
 ## The API reference
 
-The platform can serve its own interactive reference, generated from the
+**Start with the [published API reference](pathname:///api/reference/?version=1.4.1-beta.8)**: every operation an API key can call in this release, with the scope each needs, generated from the platform at the release tag ([OpenAPI JSON](pathname:///api/openapi/1.4.1-beta.8.json)). See [API Reference](../api-reference/index.md#openapi-reference).
+
+The platform can also serve its own interactive reference, covering the full route map including internal routes, generated from the
 running server and self-hosted on your instance (no external dependencies, so
 it works in air-gapped deployments):
 

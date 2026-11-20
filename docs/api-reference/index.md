@@ -38,7 +38,13 @@ export OFFLOAD_HOST="https://your-instance.example.com"
 export OFFLOAD_API_KEY="osk_xxxxxxxxxxxxxxxxxxxx"   # see Authentication
 ```
 
-## Interactive reference (Swagger)
+## Published OpenAPI reference {#openapi-reference}
+
+The **[API reference](pathname:///api/reference/?version=1.4.1-beta.8)** lists every operation an API key can call in this release, generated from the platform at the release tag, with the key scope each one needs (`x-offload-api-key-scope`). It is the contract for integrations: the operations in it are the ones the docs and the API-key scope checks cover. Download the schema for Postman, Insomnia or code generation: [`openapi/1.4.1-beta.8.json`](pathname:///api/openapi/1.4.1-beta.8.json). The version menu at the top of the reference switches between releases.
+
+Routes that are not in it are the web interface's internal API. They accept only a signed-in session and can change between releases without notice.
+
+## Interactive reference on your own instance (Swagger)
 
 When enabled, the platform serves an interactive API explorer generated from
 the running server. The UI assets are self-hosted under `/api/static/apidocs`,
@@ -59,7 +65,7 @@ the backend environment and restart. The schema exposes the full route map, so
 enable it only where that is acceptable.
 :::
 
-Where it is enabled, use Swagger UI for the exhaustive endpoint list. This
+Where it is enabled, Swagger UI shows the full route map of your instance, internal routes included; the [published reference](#openapi-reference) is the supported API. This
 documentation focuses on authentication, conventions and common workflows.
 
 ## Quick start
@@ -103,7 +109,7 @@ permission each needs.
 | Platform Security: sign-in, MFA, SSO, teams, API keys, audit trail, platform admin | [Platform Security API](../authentication/api.md) | [Authentication](./authentication.md) |
 | CI/CD: trigger scans and gate builds | [CLI & CI/CD](../cli-and-cicd.md) | [Workflows § 5](./workflows.md#5-trigger-a-scan-from-ci-and-fail-the-build-on-criticals) |
 
-For anything not on those pages, the [Swagger UI](#interactive-reference-swagger)
+For anything not on those pages, the [published API reference](#openapi-reference)
 is generated from the running server, where your administrator has enabled it.
 
 ## Conventions at a glance

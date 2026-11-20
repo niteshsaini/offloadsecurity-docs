@@ -57,7 +57,7 @@ description: "Sign-in, MFA and SSO; teams, members and invitations; API key life
 | SIEM export | `GET /api/audit-trail/export/siem?after_seq=&limit=&format=jsonl\|cef&store=` | As verify; ≤ 5,000 entries per call, cursor in `X-Audit-Next-After-Seq` |
 | Authentication log | `GET /api/auth/audit-log?limit=` | Platform administrator |
 | Menu configuration | `GET /api/menu-config` (any signed-in user — drives the sidebar) · `PUT /api/admin/menu-config` `{menu_visibility: {section_id: bool}}` | PUT: platform administrator |
-| Platform setup | `GET /api/platform-setup/status` · `POST /api/platform-setup/reopen` · `…/validate-service` · `…/validate-smtp` · `…/validate-storage` · `…/save-config` · `…/complete` | No sign-in on a fresh install; reopening, and every write after a reopen, needs the platform administrator |
+| Platform setup | `GET /api/setup/status` · `POST /api/setup/reopen` · `…/validate-service` · `…/validate-smtp` · `…/validate-storage` · `…/save-config` · `…/complete` | No sign-in on a fresh install; reopening, and every write after a reopen, needs the platform administrator |
 | Scanner image override | `PUT /api/scan-tools/versions/{tool}` `{image, reason}` · `DELETE /api/scan-tools/versions/{tool}` (roll back) | Platform administrator; image must be the tool's own repository, pinned by digest |
 
 ## Platform-admin console

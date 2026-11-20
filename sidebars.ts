@@ -132,6 +132,7 @@ const sidebars: SidebarsConfig = {
         'cli-and-cicd',
         'architecture',
         'trust-and-security',
+        'what-offload-changes',
         'troubleshooting',
         'faq',
         'glossary',

@@ -14,6 +14,8 @@ Three ways to scan: **Quick Scan** for any image reference the platform can pull
 **Where:** Container Security → **Quick Scan**.
 
 :::warning[Known issue in 1.4.0: Quick Scan fails on on-premises installs]
+**Fixed in 1.4.1:** from [1.4.1-beta.3](/release-notes/1.4.1-beta.3) Quick Scan runs on the scan worker.
+
 Quick Scan runs its scanners inside the API service, which has no Docker access in the on-premises deployment, so every Quick Scan ends **failed** with *Cannot connect to the Docker daemon*. Scan an image by reference on the scan workers instead: `POST /api/container-registries/scan-image` with `{ "image_uri": "nginx:1.27" }`. The results appear under **Scan Results** like any other image scan.
 :::
 

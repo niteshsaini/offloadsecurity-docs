@@ -365,28 +365,51 @@ Enabling it also needs `AGENTIC_FIX_ENABLED=true`, `AGENTIC_FIX_RUNNER=sandbox`,
 
 ## What needs outbound access
 
-| Destination | Why | If blocked |
-| --- | --- | --- |
-| `ghcr.io`, Docker Hub | Platform images; scanner images (ZAP, Nuclei, Prowler, testssl.sh) on first use | Pre-pull or mirror to an internal registry and point `GHCR_OWNER` / image references at it |
-| Trivy and Grype vulnerability databases, Nuclei templates | Container, dependency and template-based scans stay current | Scans run on the databases baked into the release's images, which age from the image build date; mirror updates |
-| Threat feeds (`cisa.gov`, `abuse.ch`, `otx.alienvault.com`, Blocklist.de, Spamhaus, OpenPhish) | Threat intelligence, KEV-based prioritization | Feeds show *degraded*; import indicators via STIX instead |
-| `api.first.org` (EPSS), `services.nvd.nist.gov` (NVD) | Exploit-probability and CVSS enrichment | Findings carry less enrichment |
-| `api.osv.dev` and OSV advisory data | Fixed versions for Linux host packages in Endpoint Security **Fix first**; dependency enrichment | Host CVEs show "fix data pending" or the last cached advisories |
-| `api.deps.dev` | Licence enrichment for code scans | More components show an unknown licence |
-| Cloud provider APIs (AWS, Azure, GCP) | Cloud posture scans, asset discovery | Those modules cannot run |
-| Your SCM (GitHub, GitLab, Bitbucket, Azure DevOps) | Code scans, fix PRs | Use an internal SCM the host can reach |
-| LLM provider (Anthropic, OpenAI, Google) — optional | AI features; Knowledge Base embeddings; the agentic fix sandbox via `agent-egress` | Everything else works in rule-based mode |
-| Let's Encrypt — optional | Automatic TLS | Bring your own certificate / proxy |
-| `registry.community.greenbone.net` — only with the bundled Greenbone stack | Greenbone engine and vulnerability-feed images | The bundled stack cannot load its feed; mirror the images |
-| S3-compatible backup storage — optional | Off-host backups | Backups stay on the host's disk |
-| Your SMTP relay, Slack / Teams / PagerDuty / Jira endpoints | Notifications and integrations | Configure what you have |
-| `us.i.posthog.com` — from users' browsers, not the server | The web UI loads PostHog product analytics with a built-in project key | Analytics are not sent; the UI works normally |
+The platform's database, findings, evidence and reports are stored on your host. Some features still need to reach the internet, and a few send data to third parties. The table lists every outbound destination in this release, what each one receives, and how to turn it off or host it internally. All connections are HTTPS on port 443 unless the Port column says otherwise. Inbound, the stack needs only 443 (and 80 for Let's Encrypt), plus the webhook routes your clouds, registries and Git providers push to if you use them.
 
-Wazuh and Greenbone OpenVAS are reached on your own network, not the internet. Nothing about your findings is sent to Offload Security by the server. Support works from logs and exports you choose to share.
+**Data sent** uses these categories: **none** (a download; the destination sees only your IP address and the request), **metadata** (identifiers such as CVE IDs, package names and versions, domain names), **finding details** (titles, descriptions, severities, resource names), **code snippets**, **secrets for validation**, **usage analytics** and **backups**.
 
-:::note[Known issue: usage analytics in the web UI]
-The frontend image includes a PostHog loader with a hard-coded project key, so users' browsers send usage analytics to PostHog's US region. It cannot be turned off from `.env` in this release; block `us.i.posthog.com` and `us-assets.i.posthog.com` at your proxy or firewall if your policy requires it. A product decision on this is pending.
+| Destination | Port | Purpose | Data sent | Required or optional | How to disable or host internally |
+| --- | --- | --- | --- | --- | --- |
+| `ghcr.io` | 443 | Platform images at install and upgrade | None | Required unless images are mirrored | Mirror to an internal registry and set `GHCR_OWNER` / image references |
+| Docker Hub, `quay.io`, `gcr.io`, `ghcr.io` | 443 | Scanner images (ZAP, Nuclei, testssl.sh, nmap, Prowler, Trivy, Grype, Syft, Kubescape, Polaris, Cosign and others), pulled on first use | None | Required for the scans that use them | Pre-pull, or mirror and set `SCANNER_IMAGE_<TOOL>` (for example `SCANNER_IMAGE_ZAP=registry.local/zap:2.17.0`) |
+| `ghcr.io` | 443 | Trivy and Grype vulnerability-database refresh | None | Optional | `GRYPE_DB_REFRESH_HOURS=0` stops the Grype refresh. Without egress both tools fall back to the databases baked into the release's images |
+| `github.com` | 443 | The pinned Nuclei templates release, downloaded once per version | None | Optional | `NUCLEI_TEMPLATES_ARCHIVE` set to an internal HTTPS URL or a local file |
+| `www.cisa.gov`, `*.abuse.ch`, `otx.alienvault.com`, `lists.blocklist.de`, `www.spamhaus.org`, `openphish.com`, PhishTank | 443 | Threat feeds, CISA KEV prioritization | None (an API key for feeds that need one) | Optional | Disable the feeds; [import indicators as STIX](../ai-threat-intelligence/threat-intelligence.md) |
+| `api.first.org`, `services.nvd.nist.gov` | 443 | EPSS scores and NVD CVSS enrichment | Metadata: CVE IDs | Optional | Block; findings carry less enrichment |
+| `api.osv.dev` | 443 | Fixed versions for dependency and host-package CVEs, Endpoint Security **Fix first** | Metadata: package names and versions | Optional | `OSV_API_URL` repoints the Fix first and upgrade-impact lookups to an OSV mirror; other OSV lookups have no override in this release |
+| `api.deps.dev` | 443 | Licence enrichment for code scans | Metadata: package names and versions | Optional, off until you opt in | Leave it off |
+| Your cloud provider APIs (AWS, Azure, GCP) | 443 | Cloud posture scans, discovery and, if enabled, [live remediation](../what-offload-changes.md#live-cloud-remediation) | API calls with your read-only credentials | Required for cloud modules | Use private endpoints where the provider offers them |
+| Your registries and Kubernetes API servers | 443 / 6443 | Image pulls and cluster reads | API calls with your credentials | Required for those modules | They are usually internal already |
+| Your Git provider (GitHub, GitLab, Bitbucket, Azure DevOps) | 443 | Clone for code scans; fix PRs, PR comments, checks and issues | Code (pushed fix branches), finding details (comments, issues) | Optional | Use a self-hosted SCM the host can reach |
+| LLM provider: `api.anthropic.com`, `api.openai.com`, `generativelanguage.googleapis.com`, Cohere | 443 | AI features, Knowledge Base embeddings and reranking, the agentic fix sandbox via `agent-egress` | Finding details, code snippets, Knowledge Base document text ([details](../ai-threat-intelligence/ai-data-privacy.md)) | Optional; off with no key | `ENABLE_AI_FEATURES=false`. A self-hosted model is not supported in this release |
+| Secret-validation APIs (about 40 providers, such as `api.github.com`, `slack.com`, `api.stripe.com`, AWS STS) | 443 | Checking whether a leaked secret found in code is still live | **Secrets for validation**: each secret goes only to its own issuer; only the verdict is stored | Optional, **on by default** | `SECRET_VALIDATION_ENABLED=false` |
+| `www.virustotal.com`, `api.abuseipdb.com`, Shodan | 443 | Indicator enrichment | Metadata: the IPs, domains, URLs or hashes being enriched | Optional; only with `VIRUSTOTAL_API_KEY`, `ABUSEIPDB_API_KEY` or `SHODAN_API_KEY` | Leave the keys unset |
+| Slack, Teams, Google Chat, PagerDuty, webhook receivers | 443 | Notifications and [webhooks](../integrations/webhooks.md) | Finding details | Optional | Configure none, or point them at internal receivers |
+| Jira, Confluence and other [catalog tools](../integrations/connecting-tools.md) you connect | 443 | Ticketing, publishing, and syncs from tools such as SonarQube and Jenkins | Finding details (Jira tickets), the compliance summary (Confluence publish); syncs only read | Optional | Configure none, or use internal instances |
+| Splunk HEC, syslog receiver | Your HEC port (Splunk default 8088); syslog 514 / 6514 | [SIEM forwarding](../integrations/siem-forwarding.md) | Finding and alert details; optionally the audit trail | Optional | Configure none |
+| Your SMTP relay | 25 / 465 / 587 | Email notifications, invitations, scheduled reports | Finding details, report files | Optional | Use an internal relay |
+| Your OIDC identity provider | 443 | Single sign-on | Sign-in exchange only | Optional | Local accounts only |
+| `acme-v02.api.letsencrypt.org` | 443 out, 80 in | Automatic TLS | Metadata: your domain name | Optional | Leave `DOMAIN_NAME` unset and bring your own certificate or proxy |
+| `registry.community.greenbone.net` | 443 | Greenbone engine and feed images, only with the bundled Greenbone stack | None | Optional | Mirror the images |
+| S3-compatible backup storage | 443 | Off-host backups | Backups, encrypted to your age key | Optional | Leave `BACKUP_S3_BUCKET` unset (backups stay on the host) or use internal storage |
+| `us.i.posthog.com`, `us-assets.i.posthog.com`, from users' browsers | 443 | Product usage analytics in the web UI | Usage analytics: page views, clicks and page addresses, with a project key built into the image | **On, with no setting** in this release | Block both hosts at your egress proxy or firewall; the UI works normally |
+
+Wazuh and Greenbone OpenVAS are reached on your own network, not the internet. The server sends no telemetry, findings or usage data to Offload Security; support works from logs and exports you choose to share.
+
+:::warning[Usage analytics from the web UI cannot be turned off in this release]
+The frontend loads PostHog with a hard-coded project key, so users' browsers send usage analytics to PostHog's US region on every install, including on-premises. There is no `.env` setting for it. If your policy requires it, block `us.i.posthog.com` and `us-assets.i.posthog.com` at your proxy or firewall. A product decision on this is pending.
 :::
+
+### Air-gapped, restricted-egress and connected installs
+
+| Mode | What works | What you mirror or give up |
+| --- | --- | --- |
+| **Connected** (outbound internet allowed) | Everything in the table, as configured | Review the optional rows and turn off what your policy forbids: AI, secret validation, analytics at egress |
+| **Restricted egress** (allow-list only) | Allow the rows you need. A typical allow-list: your cloud APIs, your Git provider, your notification targets and the vulnerability-database and image hosts | Rows you do not allow behave as in the air-gapped column below. Set `SECRET_VALIDATION_ENABLED=false` and `ENABLE_AI_FEATURES=false` if you do not allow those hosts, so the platform reports them as off rather than failing |
+| **Air-gapped** (no outbound internet) | Code scans (ZIP upload or an internal SCM), container scans of internal registries, Kubernetes, internal network scans, Wazuh, Greenbone, compliance, risk and reporting | Load images with `docker save` / `docker load` or an internal registry (`SCANNER_IMAGE_<TOOL>`, `NUCLEI_TEMPLATES_ARCHIVE`). Vulnerability data is as current as the release's images; upgrade to refresh it or import a Grype database with `grype db import`. No AI features, secret validation, threat feeds (use STIX import), EPSS / NVD / OSV enrichment or Let's Encrypt. Public-cloud posture needs the cloud APIs, so it does not work fully air-gapped |
+
+In every mode the platform's own data, meaning findings, evidence, reports and backups, stays on your host unless you configure a destination in the table that receives it.
 
 ## Health
 

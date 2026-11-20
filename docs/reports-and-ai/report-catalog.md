@@ -44,7 +44,7 @@ Before building a report, check whether it already exists. This page is the comp
 | **Audit reports** | Controls (with overrides and evidence counts), findings, drift history, remediation audit trail, compliance-score history | Attestable PDF (content SHA-256 on every page) + CSV per section, or CSV only | Audit Reports · `POST /api/compliance-engine/reports/generate` → `…/download/{section}` — see [Audit Reports](../compliance/audit-reports.md) |
 | **Auditor package** | Per framework, per control, evidence in four layers | ZIP | Evidence Hub → **Download audit package** · `GET /api/evidence-completion/auditor-package/{framework}` |
 | **Statement of Applicability** | Requirement → controls → status | JSON | `GET /api/common-controls/soa/{framework}` |
-| **Assessment PDF** | A completed questionnaire with answers, evidence and score | PDF | `GET /api/assessments/{assessment_id}/export-pdf` |
+| **Assessment PDF** | A completed questionnaire with answers, evidence and score | PDF | `GET /api/assessments/{assessment_id}/download-pdf` |
 | **DPDP audit pack** | Event log slice + module state, SHA-256 sealed | JSON · PDF | DPDP Compliance → Audit & Export · `POST /api/dpdp/audit/pack` → `…/pack/{pack_id}/pdf` |
 | **DPDP breach reports** | Rule 7(2) Board report and CERT-In report text | Text (for filing) | Breach → **Report text** · `GET /api/dpdp/breach/{incident_id}/dpb-report-text` · `…/cert-in-report-text` |
 | **Executive compliance PDF** | Executive summary, framework status with chart, trend, readiness, strengths, open control gaps | PDF | Executive Dashboard → **Export PDF** · `GET /api/executive-dashboard/export-pdf` — see [Executive Dashboard](./executive-dashboard.md#executive-reports) |

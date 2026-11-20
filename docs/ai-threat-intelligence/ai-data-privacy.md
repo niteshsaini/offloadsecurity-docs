@@ -87,7 +87,7 @@ Without the switch, AI features are also inactive when no provider key is availa
 The whole platform can run **fully on-premises** — see [On-Premises](../on-premises/index.mdx). One caveat to plan for:
 
 :::warning[AI features still call the external provider]
-Even in an on-premises deployment, AI features send prompts — including the data listed above — to the **external** LLM provider over the network using your key; the model itself is not run inside your environment. If sending prompts to an external AI provider is not acceptable for your data-residency requirements, **disable AI features** (above) and use the platform without them. Everything else — scanning, findings, risk, compliance, reporting — runs entirely within your environment.
+Even in an on-premises deployment, AI features send prompts — including the data listed above — to the **external** LLM provider over the network using your key; the model itself is not run inside your environment. If sending prompts to an external AI provider is not acceptable for your data-residency requirements, **disable AI features** (above) and use the platform without them. Scanning, findings, risk, compliance and reporting then run without an LLM. A few non-AI features also make outbound calls, such as secret validation and vulnerability enrichment; see [What needs outbound access](../on-premises/deployment.md#what-needs-outbound-access).
 :::
 
 :::note[Usage analytics in the web interface]

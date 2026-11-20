@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>API Reference | Offload Security Docs</title>
+  <meta name="description" content="OpenAPI reference for the Offload Security API: every operation an API key can call, with the key scope each one needs. Versioned with the platform.">
+  <link rel="icon" href="/img/favicon.png">
+  <style>
+    :root { --bar-bg: #0f172a; --bar-fg: #e2e8f0; --bar-muted: #94a3b8; --accent: #60a5fa; }
+    body { margin: 0; background: #ffffff; font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif; }
+    .bar { display: flex; flex-wrap: wrap; gap: 0.75rem 1.25rem; align-items: center; padding: 0.6rem 1rem; background: var(--bar-bg); color: var(--bar-fg); font-size: 0.9rem; }
+    .bar a { color: var(--accent); text-decoration: none; }
+    .bar a:hover { text-decoration: underline; }
+    .bar .home { color: var(--bar-fg); font-weight: 600; }
+    .bar label { color: var(--bar-muted); }
+    .bar select { margin-left: 0.4rem; padding: 0.2rem 0.4rem; border-radius: 4px; border: 1px solid #334155; background: #1e293b; color: var(--bar-fg); font: inherit; }
+    .bar .spacer { flex: 1; }
+    noscript p { padding: 1rem; }
+  </style>
+</head>
+<body>
+  <div class="bar">
+    <a class="home" href="/">Offload Security Docs</a>
+    <a href="/api-reference">API guides</a>
+    <label>Version
+      <select id="version" aria-label="API version"></select>
+    </label>
+    <span class="spacer"></span>
+    <a id="download" href="#" download>Download OpenAPI JSON</a>
+  </div>
+  <noscript><p>The interactive reference needs JavaScript. Download the OpenAPI file: <a href="/api/openapi/1.4.1-beta.8.json">1.4.1-beta.8</a> · <a href="/api/openapi/1.4.0.json">1.4.0</a>.</p></noscript>
+  <div id="redoc"></div>
+  <!-- Pinned Redoc build. -->
+  <script src="https://cdn.jsdelivr.net/npm/redoc@2.1.5/bundles/redoc.standalone.js"></script>
+  <script>
+    // Newest first. Add each release's OpenAPI file here (tools/openapi/README.md).
+    var VERSIONS = [
+      { id: '1.4.1-beta.8', label: '1.4.1-beta.8 (pre-release)' },
+      { id: '1.4.0', label: '1.4.0 (stable)' }
+    ];
+    var params = new URLSearchParams(location.search);
+    var wanted = params.get('version');
+    var current = VERSIONS.some(function (v) { return v.id === wanted; }) ? wanted : VERSIONS[0].id;
+    var select = document.getElementById('version');
+    VERSIONS.forEach(function (v) {
+      var o = document.createElement('option');
+      o.value = v.id; o.textContent = v.label; o.selected = v.id === current;
+      select.appendChild(o);
+    });
+    select.addEventListener('change', function () {
+      params.set('version', select.value);
+      location.search = params.toString();
+    });
+    var url = '/api/openapi/' + current + '.json';
+    document.getElementById('download').href = url;
+    Redoc.init(url, {
+      hideDownloadButton: true,
+      expandResponses: '200,201',
+      sortTagsAlphabetically: true,
+      theme: { colors: { primary: { main: '#2563eb' } }, typography: { fontFamily: "'Inter', system-ui, sans-serif" } }
+    }, document.getElementById('redoc'));
+  </script>
+</body>
+</html>

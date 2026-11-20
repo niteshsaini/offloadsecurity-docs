@@ -13,7 +13,8 @@ Pick your entry point:
 
 | Guide | Use it when |
 |---|---|
-| **[Quickstart](../getting-started.md)** | You have 30 minutes and want your first scan, finding, ticket, and alert. |
+| **[Quickstart](../getting-started.md)** | You have about 15 minutes and want your first scan and finding. Self-hosting? It links the installer first. |
+| **[Tickets, Alerts & Automation](./connect-integrations.md)** | You've run a first scan and want findings in Jira, alerts in a chat channel or webhook, and a CI/CD gate. Needs third-party access. |
 | **[First 7 Days](./first-7-days.md)** | You've finished the quickstart and want a day-by-day plan to reach an operating program. |
 | **[Security Engineer journey](./security-engineer-journey.md)** | You own scanning, triage, and remediation, and want the pages that matter to you, in order. |
 | **[Compliance Officer journey](./compliance-officer-journey.md)** | You own frameworks, assessments, evidence, and audits. |

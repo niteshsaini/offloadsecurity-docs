@@ -27,7 +27,7 @@ Continuous endpoint and SIEM coverage through [Wazuh Integration](../on-premises
 
 ### Data residency and PHI-conscious architecture
 
-The on-premises model is designed so that sensitive telemetry stays inside your control boundary. That matters when the data being observed can itself reveal information about patients, clinicians, and clinical systems.
+The on-premises model stores sensitive telemetry, findings and evidence inside your control boundary; the optional features that send data out (AI, secret validation, notifications, usage analytics) are listed with how to disable each in [What needs outbound access](../on-premises/deployment.md#what-needs-outbound-access). That matters when the data being observed can itself reveal information about patients, clinicians, and clinical systems.
 
 ### Cloud and health-tech coverage in the same pane
 
