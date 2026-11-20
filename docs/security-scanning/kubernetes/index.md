@@ -18,7 +18,7 @@ Kubernetes Security assesses your clusters for risky workloads, over-permissive 
 
 | Capability | Detail |
 | --- | --- |
-| **Read-only onboarding** | A self-contained kubeconfig, or for GKE a service-account key. Managed clusters found on connected cloud accounts are listed as **Discovered — not connected** and connected in one click. |
+| **Read-only onboarding** | The API server, token and CA printed by the RBAC script, a self-contained kubeconfig, or for GKE a service-account key. Kubeconfigs that would run commands or read host files are refused. Managed clusters found on connected cloud accounts are listed as **Discovered — not connected** and connected in one click. |
 | **Least-privilege RBAC profiles** | Generated `ClusterRole` scripts — **Minimal** (no Secrets, no ConfigMaps) or **Extended** (adds ConfigMaps; never Secrets). |
 | **Multi-engine scans** | **Trivy** (workload misconfigurations and image vulnerabilities), **Polaris** (workload best practices) and **Kubescape** (all controls, including NSA-CISA, MITRE and CIS mappings). |
 | **Honest scope** | Every scan states what it did not assess — CIS control-plane and node sections, failed scanners, denied namespaces — and never counts those as passed. |
@@ -28,7 +28,7 @@ Kubernetes Security assesses your clusters for risky workloads, over-permissive 
 | **Coverage** | Connected clusters scanned, scheduled, uncovered or stale, plus discovered clusters not yet connected and any discovery source that is missing. |
 
 :::note[What scans do not cover]
-Clusters are scanned remotely through the Kubernetes API. **CIS Kubernetes Benchmark sections 1–4** (control plane, etcd, node and kubelet configuration) need kube-bench running on a node, so they are **not tested** in 1.4.0 and are reported as *not assessed*. See [Scanning & Findings — What a scan does not cover](./scanning-and-findings.md#not-covered).
+Clusters are scanned remotely through the Kubernetes API. **CIS Kubernetes Benchmark sections 1–4** (control plane, etcd, node and kubelet configuration) need kube-bench running on a node, so they are **not tested** and are reported as *not assessed*. See [Scanning & Findings — What a scan does not cover](./scanning-and-findings.md#not-covered).
 :::
 
 ## The workspace
@@ -48,7 +48,7 @@ Clusters are scanned remotely through the Kubernetes API. **CIS Kubernetes Bench
 
 ```mermaid
 flowchart LR
-    A[Onboard or connect cluster<br/>kubeconfig / GKE key] --> B[Connectivity test<br/>version · nodes · namespaces · RBAC]
+    A[Onboard or connect cluster<br/>SA token / kubeconfig / GKE key] --> B[Connectivity test<br/>version · nodes · namespaces · RBAC]
     B --> I[Verify cluster identity]
     I --> C[Scan<br/>Trivy · Polaris · Kubescape]
     C --> D[Findings<br/>dedup + triage]

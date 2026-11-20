@@ -48,6 +48,8 @@ Both are records with evidence, not automated scans: the platform does not run y
 
 **Coverage** is the module's [coverage dashboard](../cloud-security/index.md): registered systems that are scanned, scheduled or **not covered** by any assessment or test, findings by severity, top systems by severity, stale coverage (no assessment in 30 days) and inactive systems. It is the fastest way to see which registered systems are governance-only entries.
 
+A system counts as covered when it has a **submitted** risk assessment, a bias test (recorded by hand or from an automated run), or a **completed** security test. Draft risk assessments that the wizard saves while you type, and prompt-injection tests that are queued, running or failed, do not count.
+
 ![AI Governance Coverage & Risk: total models, scanned, scheduled, not covered; findings and models coverage donuts](/img/screenshots/ai-threat-intelligence/aig-coverage.webp)
 
 ## Operations

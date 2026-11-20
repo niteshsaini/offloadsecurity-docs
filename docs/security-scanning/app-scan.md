@@ -15,7 +15,7 @@ App Scan is the platform's DAST assessment of one application. It runs every rel
 - The **Run Scans** permission ([RBAC](../authentication/rbac-team-management.md)).
 - Written authorization to test the application. You attest to it in the launcher.
 - For an authenticated scan: a **dedicated test account**, ideally on staging. An authenticated scan acts as that user and can change or delete data the account can reach.
-- A private (RFC 1918) target needs `ALLOW_PRIVATE_SCAN_TARGETS=true` on the deployment.
+- A private (RFC 1918) target needs `ALLOW_PRIVATE_SCAN_TARGETS=true` on the deployment. A cloud-metadata address, `localhost`, a host name that does not resolve, or a private address while that setting is off is refused when you start the scan (HTTP 422), and no scan is created. The login, probe and OAuth token URLs are checked the same way.
 
 ## Steps
 
@@ -23,7 +23,7 @@ App Scan is the platform's DAST assessment of one application. It runs every rel
 2. **Enter the application URL**, for example `https://app.example.com`.
 3. **Choose the tools.** Security Headers, SSL/TLS Config, OWASP Web Misconfiguration, OWASP API Top 10, Technology Fingerprint, Known CVEs in Stack (NVD + CISA KEV + FIRST EPSS), WAF Detection, Traffic Capture (headless browser recording of XHR / fetch calls), Information Disclosure, OWASP ZAP, Nuclei, Nmap and testssl.sh.
 4. **Choose standards to map to**: ASVS Level 1, ASVS Level 2, OWASP Web Top 10, OWASP API Top 10, NIST SSDF.
-5. **Set the scan intensity** (Quick, Standard, Comprehensive) and the **Scanner Resource Mode**:
+5. **Set the scan intensity** — **Quick** (ZAP up to 10 minutes), **Standard** (ZAP up to 45 minutes) or **Comprehensive** (ZAP up to 11.5 hours) — and the **Scanner Resource Mode**:
    - **Gentle** — fragile target: tools run one after another at a low request rate with a pause between them.
    - **Normal** (default) — one scanner at a time at a moderate rate.
    - **Aggressive** — all heavy tools at once at full rate; only for a well-resourced platform host and a target behind a CDN or WAF.
@@ -33,6 +33,8 @@ App Scan is the platform's DAST assessment of one application. It runs every rel
 9. **Leave Allow state-changing probes off** unless this is a test environment ([what it does](./native-scans.md#opt-in-state-changing-probes)).
 10. **Fill in Authorization & scope**: tick the attestation, add a reference, the environment and, if you have one, the authorized-until date ([Engagement & Evidence](./scan-evidence.md)).
 11. **Launch.** The launcher stays open and shows the live login check; **View detailed results** opens the assessment.
+
+If your team already has an App Scan of the same target **with the same settings** in progress, no second scan starts: the launcher opens the running scan and says so. The same target with different tools, standards, authentication or options starts a new scan. Over the API, the start returns HTTP 200 with `deduplicated: true` and the running scan's `app_scan_id`; send `allow_duplicate: true` to start a second copy anyway.
 
 ## Authenticate the scan
 
@@ -78,13 +80,31 @@ Give a lower-privilege account (login form on the same page, bearer token, cooki
 
 Open the assessment on the **Assessments** tab:
 
-- **Progress** — while running, each tool shows as Queued, Running, Completed, Failed, Timed out, Cancelled or Skipped. A failed tool counts as done for the bar and is named.
-- **Security Score** — the A–F grade. A partial run's score is labeled **provisional**; a run where no tool completed has no grade.
+- **Progress** — while running, each tool shows as Queued, Running, Completed, Failed, Timed out, Cancelled or Skipped, with the findings found so far. A failed tool counts as done for the bar and is named. A tool that stops making progress is marked **stalled**. **Cancel scan** stops the scan and frees its worker slot; a cancelled scan records no rating.
+- **Security Score** — the A–F grade. If any requested tool failed, timed out or was stopped part-way, the scan shows **Incomplete — not graded** in the UI and in every report, and that tool's controls count as errored, never as passed. Older partial scans that were stored with a provisional grade are shown as Incomplete too. A tool that does not apply to the target (for example the TLS tools on an `http://` URL) is listed as **Not applicable to this target** and does not stop the grade.
 - **Overview** — target, duration, tools run, authentication verdict, excluded paths and which tools enforced them, session checks, the access-control outcome, the tool versions that ran, and the API surface (endpoints in the inventory, new since last scan, no longer seen).
-- **Findings** — filter by severity or **Confirmed** (findings the platform actively proved exploitable). Expand a finding for the evidence, the request to reproduce it (method, URL, parameter, payload, or Nuclei template and matcher, or a curl command) and the fix. The table shows the first 100 rows of a filter; the downloaded report has every finding.
+- **Findings** — filter by severity or **Confirmed** (findings the platform actively proved exploitable). Expand a finding for the evidence, the request to reproduce it (method, URL, parameter, payload, or Nuclei template and matcher, or a curl command) and the fix. The table shows the first 100 rows of a filter; the downloaded report has every finding. Security Headers reports one titled finding per missing header, rated Medium or Low; headers that are present count as passed checks, not as findings.
 - **Standards Coverage** — per standard: total, automated, passed, failed, manual and pass rate.
 
 Download the assessment as **HTML Report** or **PDF Report** from the page header once it has completed.
+
+## Time limits and stalled tools
+
+Each in-process tool has a wall-clock limit so that a stuck tool cannot hold a worker slot for hours. When a tool reaches its limit or stalls, it is stopped, the scan finishes as **Incomplete — not graded**, and the worker slot is freed. OWASP API Top 10 and API discovery keep the results they already had: for API discovery, the endpoints it found.
+
+| Setting (`.env`) | Default | Meaning |
+| --- | --- | --- |
+| `APP_SCAN_TOOL_BUDGET_S` | 1200 (20 minutes) | Limit for each in-process tool |
+| `APP_SCAN_TOOL_BUDGET_<TOOL>_S` | 7200 for `OWASP_API` and `API_DISCOVERY` | Limit for one tool (minimum 30) |
+| `APP_SCAN_STALL_AUTO_CANCEL` | `true` | Stop a tool whose stall is observed; `false` only reports it |
+| `APP_SCAN_STALL_MINUTES` | 15 | How long a tool may go without progress before it counts as stalled |
+| `APP_SCAN_ABANDONED_DRAIN_S` | 300 (10–3600) | How long the scan waits, when it ends, for tool work that did not stop when cancelled |
+
+A tool cancelled together with its scan is tracked and cleaned up like a timed-out one. If tool work is still running after `APP_SCAN_ABANDONED_DRAIN_S`, the worker logs it by name and restarts its process after that task (the task result is kept), so the leftover work cannot run on inside the next scan. The settings are described in `.env.example`.
+
+:::note[Grades after upgrading to 1.4.1]
+Coverage counts only the controls a tool actually tested, so a rescan can grade lower than the same application did in 1.4.0, by up to 20 points. This is not a regression in the application.
+:::
 
 ## Retest a finding
 
@@ -94,7 +114,7 @@ Expand a finding and select **Retest this finding**. The platform probes that on
 
 ZAP, Nuclei, testssl.sh and Nmap run from images pinned by tag and digest, and Nuclei runs a pinned template release installed once on the scan volume, with update checks off:
 
-| Tool | Pinned in 1.4.0 |
+| Tool | Pinned version |
 | --- | --- |
 | OWASP ZAP | 2.17.0 |
 | Nuclei | v3.11.1, templates v10.4.9 |
@@ -107,7 +127,9 @@ Each assessment records what the deployment pins and what each tool actually ran
 
 - **The scan failed before any tool ran** — the login check failed. The failure card shows the reason; fix the credentials or probe URL and launch again.
 - **Browser Login is not in the Auth Type list** — the deployment has not set `DAST_BROWSER_AUTH=true`.
-- **Partial coverage banner** — one or more tools failed; the score covers only the checks that ran. The banner names the tools.
+- **Partial coverage banner** — one or more tools failed or timed out, so the scan is **Incomplete — not graded**. The banner names the tools.
+- **HTTP 422 when you start the scan** — the target, login, probe or token URL is a refused address (see [Before you begin](#before-you-begin)). Nothing was created.
+- **A tool was stalled or timed out** — see [Time limits and stalled tools](#time-limits-and-stalled-tools).
 - More in [Scanning Troubleshooting](./troubleshooting.md#web-api--host-scans).
 
 ## Next steps

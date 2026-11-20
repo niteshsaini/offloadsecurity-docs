@@ -10,7 +10,7 @@ description: "Offload Security 1.4.1-beta.5 (13 November 2026, pre-release): cre
 **Released:** 13 November 2026 · **Type:** Pre-release · **Image tag:** `1.4.1-beta.5` · **Previous pre-release:** [1.4.1-beta.4](./v1-4-1-beta-4.md) · **Built on:** 1.4.0
 
 :::caution[Pre-release]
-This beta is for testing, not for production. Credentialed scans are tested only against a simulated Greenbone; see [Known issues](#known-issues). The documentation pages describe 1.4.0 and may not yet cover what is new here.
+This beta is for testing, not for production. Credentialed scans are tested only against a simulated Greenbone; see [Known issues](#known-issues). The current documentation describes the latest pre-release, [1.4.1-beta.8](./v1-4-1-beta-8.md).
 :::
 
 This beta is 1.4.1-beta.4 plus the two changes that were still in review then: credentialed OpenVAS scans and the Python dependency update. **If you skipped beta.4, read [its notes](./v1-4-1-beta-4.md) too.** Its upgrade notes (scanner networking, ECR, OpenVAS, change monitoring) all still apply.

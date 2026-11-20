@@ -2,7 +2,7 @@
 title: "Roles, Teams & API Keys"
 sidebar_label: "Roles, Teams & API Keys"
 sidebar_position: 2
-description: "The six team roles and the permissions behind them, how teams isolate data and how to invite, promote and switch, and API keys for automation — scopes and presets, expiry, IP allowlists, rate limits, rotation with a grace period, revocation and usage."
+description: "The six team roles and the permissions behind them, how teams isolate data and how to invite, revoke, promote and switch, and API keys for automation — scopes and presets, expiry, IP allowlists, enforced per-key rate limits, rotation with a grace period, revocation and usage."
 ---
 
 # Roles, Teams & API Keys
@@ -20,7 +20,7 @@ Every member holds exactly one of six roles per team. **Admin** holds every perm
 | Permission | Security Manager | Security Analyst | Compliance Officer | Auditor | Viewer |
 | --- | :-: | :-: | :-: | :-: | :-: |
 | View dashboard · scans · IaC scans · risks · assessments · reports · alerts · cloud accounts | ✓ | ✓ | ✓ | ✓ | ✓ |
-| View triage | ✓ | ✓ | — | — | ✓ |
+| View triage | ✓ | ✓ | — | ✓ | ✓ |
 | Export reports | ✓ | ✓ | ✓ | ✓ | — |
 | View executive dashboard | ✓ | — | ✓ | — | — |
 | View integrations · remediations | ✓ | ✓ | ✓ | ✓ | — |
@@ -37,11 +37,15 @@ Every member holds exactly one of six roles per team. **Admin** holds every perm
 | Manage team · manage users | ✓ | — | — | — | — |
 | Manage cloud credentials | — | — | — | — | — |
 
+Since 1.4.1 the **Auditor** role can read Vulnerability Management and the triage queue. It stays read-only.
+
 Things only an **Admin** can do: invite or promote someone *to Admin*, manage cloud credentials, read the whole team's [audit trail](./audit-trail.md) and its SIEM export (others see their own entries), and see or revoke every API key in the team.
 
 A seventh role, **Integration**, is a service-account set — run scans and read results, with no credential access, remediation, or management permission. It is not offered in Team Management; it can be assigned through SSO (`OIDC_DEFAULT_ROLE` or a [group mapping](./session-management.md#group-to-role-mapping)).
 
-Permissions are checked on every request, in the API as well as the UI; a role that lacks a permission does not see the button and cannot call the endpoint.
+Permissions are checked on every request, in the API as well as the UI; a role that lacks a permission does not see the button and cannot call the endpoint. A refusal (403) names the role in plain words, for example "viewer".
+
+Team roles never make anyone a platform administrator. Someone invited as **Admin** also becomes an org Admin of the deployment, but deployment-wide controls (modules, tiers, Platform Setup, the platform-admin console) need the separate [platform-administrator](./platform-administration.md#org-admin-is-not-platform-administrator) flag.
 
 ## Teams
 
@@ -50,7 +54,9 @@ A team is the tenancy boundary: scans, findings, assets, risks, evidence, report
 - **Create Team** (Admin or Security Manager of your current team) makes a new team with you as its Admin. Name, description and organisation; a risk-appetite threshold and default compliance frameworks can be set on creation.
 - **Switch** by selecting a team card. The session is re-issued for the new team, so every subsequent request — and every API key created afterwards — is scoped to it.
 - **Change a role** from the dropdown next to a member. The member's sessions are ended so the new role applies at once.
-- **Remove** a member (Admin or Security Manager) ends their sessions and revokes their API keys for that team at once; their past actions stay in the audit trail.
+- **Remove** a member (Admin or Security Manager) ends their sessions and revokes their API keys for that team at once; their past actions stay in the audit trail. A team's only Admin cannot be removed or demoted.
+
+The platform administrator can also manage any team, including teams they are not in, from [Teams & Users](./platform-admin-console.md#teams--users).
 
 :::tip[Confirm the team before you act]
 Everything you create — a scan, a cloud account, an API key — belongs to the team that is active when you create it. The current team is shown at the top of Team Management and in the account menu.
@@ -64,7 +70,12 @@ Everything you create — a scan, a cloud account, an API key — belongs to the
 2. Enter the email and choose a role. Only an Admin can choose **Admin**.
 3. **Send Invitation.** An existing user is added immediately; a new user receives a registration link bound to that email, valid for 7 days. Invitations are rate-limited to 20 per inviter per hour, and refused for addresses outside the deployment's allowed domain when one is set.
 
-Security Managers cannot promote anyone (including themselves) to Admin.
+Security Managers cannot promote anyone (including themselves) to Admin. An **Admin** invitation is honored only while the person who sent it is still an active Admin of the team; if they were demoted or removed, the invitation can no longer be redeemed.
+
+### Revoke or decline an invitation
+
+- **Revoke.** The team card lists **Pending invitations** that the team has sent (Admin or Security Manager). Click the revoke button next to an invitation and confirm. The invite link stops working at once. Revoking while the invitee is accepting is safe: an accept that loses the race undoes its own change, and an invitation left half-accepted can still be revoked.
+- **Decline.** An invitee can reject an invitation they received, including invitations sent before 1.4.1.
 
 ## API keys for automation
 
@@ -86,7 +97,7 @@ The owner's standing is checked again on every request (cached for up to 30 seco
 | **Scopes available** | `scans:trigger` `scans:read` `scans:manage` · `vulnerabilities:read` `vulnerabilities:manage` · `assessments:read` `assessments:manage` · `cloud:read` `cloud:manage` · `risks:read` `risks:manage` · `reports:read` `reports:generate` · `admin:keys` `admin:audit` (Admin only; dropped from a non-Admin's key) |
 | **Expires in** | 90 days by default; 0 = never; 365 maximum |
 | **Environment** | `production` · `staging` · `development` · `ci` — a label for your own tracking, and a bulk-revoke selector |
-| **Rate limit** | Requests per minute for this key, 60 by default (1–600) |
+| **Rate limit** | Requests per minute for this key, 60 by default (1–600), enforced on every request made with the key |
 | **IP allowlist** *(API)* | Up to 50 addresses or CIDRs; requests from elsewhere are refused |
 
 The full key is shown **once**. Only a SHA-256 hash is stored; the list shows the prefix and each key's scopes so you can tell keys apart.
@@ -107,12 +118,18 @@ Keys created before scopes existed were given scopes automatically on upgrade (f
 
 ### Use, rotate, revoke
 
-- Send the key as `X-API-Key: osk_…`. Endpoints accept a session or a key; a key is refused for any endpoint outside its scopes, its team, or its IP allowlist, and after its expiry.
+- Send the key as `X-API-Key: osk_…`. Endpoints accept a session or a key; a key is refused for any endpoint outside its scopes, its team, or its IP allowlist, and after its expiry. Since 1.4.1 the IP allowlist and the rotation grace period are enforced on the CI/CD endpoints (`/api/cicd/*`) too.
+- **Rate limit.** Since 1.4.1 each key's `rate_limit_per_minute` is enforced across every route, in one 60-second bucket per key. Over the limit, the API answers **429** with `Retry-After` and `X-RateLimit-*` headers. The platform's per-IP limits still apply as well, so the effective limit can be lower. The count is shared across workers through Redis; without Redis it is counted per worker process.
 - **Edit** a key's name, description, scopes, IP allowlist, environment or rate limit (`PATCH /api/api-keys/{key_id}`).
-- **Rotate** issues a new key with the same scopes and keeps the old one working for a **grace period — 48 hours by default, 0–168 over the API** — so pipelines can be updated without downtime.
+- **Rotate** issues a new key with the same scopes and keeps the old one working for a **grace period — 48 hours by default, 0–168 over the API** — so pipelines can be updated without downtime. After the grace period the old key stops working everywhere, and an hourly job revokes it.
 - **Revoke** disables a key immediately and permanently; keys can be revoked in bulk, and a team Admin can see and revoke any key in the team (`/api/api-keys/admin/team-keys`).
 - **Usage** — request count, last used, and a 30-day analytics view per key; the key **audit log** records creation, rotation, revocation and blocked requests.
 - Each user may hold **25** active keys.
+- Deactivating a user revokes all of their keys. Reactivating the user does not restore them.
+
+:::note[Behind a reverse proxy]
+IP allowlists compare the client address the backend sees. Behind nginx or a load balancer, the operator must set `TRUSTED_PROXIES` to the proxy's exact address. Otherwise every request appears to come from the proxy, and allowlisted keys are refused. See [Deployment security settings](./platform-administration.md#deployment-security-settings).
+:::
 
 ## Related
 

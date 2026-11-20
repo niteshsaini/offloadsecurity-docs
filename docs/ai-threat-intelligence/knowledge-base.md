@@ -11,6 +11,17 @@ Every security team answers the same questions over and over — *what is our pa
 
 **Where:** left navigation → *Management* → **Knowledge Base**. Tabs: **AI Assistant**, **Document Management**, **Document Library**, **Questionnaire Auto-Fill**, **Answer Review**, **Policy Acknowledgement**, **Usage Analytics**.
 
+The status in the page header says whether the assistant can answer:
+
+| Status | Meaning |
+| --- | --- |
+| **AI Ready** | At least one document is searchable (processed, embeddings complete) **and** an LLM provider is configured |
+| *No documents yet — upload to enable answers* | Nothing uploaded |
+| *No documents searchable yet — check the Document Library* | Documents exist but none has finished processing or embedding |
+| *AI not configured — no LLM provider* | Documents are ready, but no provider is configured for the team or the deployment. **Ask** is disabled until one is added |
+| *AI switched off on this deployment* | The operator set `ENABLE_AI_FEATURES=false`; see [AI Data & Privacy](./ai-data-privacy.md#turning-ai-off) |
+| *AI provider status unknown* | The provider status could not be read |
+
 ## Documents
 
 ![Document Management: single or bulk upload; title, section, document type, sensitivity level, description, tags, file (PDF, Word, text)](/img/screenshots/ai-threat-intelligence/kb-upload.webp)
@@ -28,7 +39,7 @@ On upload the text is extracted, split into chunks and **embedded** for semantic
 
 ![Document Library: search, section filter, document cards with status, type, key topics, questions asked, views and date; Ask AI About This, Delete](/img/screenshots/ai-threat-intelligence/kb-documents.webp)
 
-**Document Library** searches by title, content or topic, filters by section, and shows per document how many questions it has answered, how often it was viewed, and any extraction warning. **Ask AI About This** opens the assistant scoped to that document. Documents are team-scoped and sensitivity is metadata for your own handling rules — every member of the team can read the library.
+**Document Library** searches by title, content or topic, filters by section, and shows per document the tags entered at upload, how many questions it has answered, how often it was viewed, and any extraction warning. **Ask AI About This** opens the assistant scoped to that document. Documents are team-scoped and sensitivity is metadata for your own handling rules — every member of the team can read the library.
 
 ## AI Assistant
 

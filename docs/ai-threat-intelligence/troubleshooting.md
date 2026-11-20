@@ -39,6 +39,12 @@ It shows techniques from your indicators, threat actors and alerts that carry AT
 **The Threat Actors / Campaigns / Alert Rules / Hunting tabs are missing.**
 They are API-only in the current release (`/api/enhanced-threat-intelligence/…`); the tabs were removed from the UI to reduce clutter. Records you create over the API still feed prioritisation.
 
+**A landscape report shows risk level *N/A*.**
+The period has no indicators, or none of them has a recognized severity; hover over *N/A* to see which. Choose a longer period or check that feeds are fetching.
+
+**An Executive Summary report has no IOC, CVE or actor detail.**
+That format leaves them out by design and says so. Generate a **Technical Analysis** or **Comprehensive Report** for the detail.
+
 ## Security Command Center
 
 **Run Triage Now or Triage new/changed says there is nothing to triage.**
@@ -94,6 +100,12 @@ Two independent causes: the score is below 50 %, or a **high** blocker exists �
 **Prompt tests all "pass" instantly.**
 No endpoint was given, so it was a dry run — payloads were recorded, nothing was sent. Provide an OpenAI-compatible chat endpoint (and key) for a live run.
 
+**A prompt test says it failed because the job was lost.**
+The job was queued but never started, usually because the API restarted. After two minutes it is marked failed instead of waiting forever. Run the test again.
+
+**A system with a risk assessment still shows *Not covered*.**
+Only **submitted** risk assessments count; a draft the wizard saved does not. Submit the assessment. Prompt tests count only once they complete.
+
 **A page showed "AI Governance" twice.**
 Cosmetic, fixed in the current release.
 
@@ -114,13 +126,19 @@ Extraction found little or no text (scanned PDF, image-only pages). Use **Re-pro
 **The questionnaire came back with no question column detected.**
 The detector looks for a header containing *question*, *query*, *requirement*, *control*, *criteria*, *check*, *assessment* or *description*, then falls back to the column with the longest text. Rename the column or use `POST …/questionnaire/detect-columns` to see what it found.
 
+**The header says *AI not configured* and Ask is disabled.**
+Documents are ready, but no LLM provider is configured for the team or the deployment. Add one under **AI Configuration** (Add Key → Test → Activate), or ask the operator to set a deployment key.
+
+**The header says *AI switched off on this deployment*.**
+The operator set `ENABLE_AI_FEATURES=false`. Uploads are still stored; their embeddings are completed when AI is switched back on. See [AI Data & Privacy](./ai-data-privacy.md#turning-ai-off).
+
 ## Frequently asked questions
 
 **Do the threat feeds send anything about my environment to the vendors?**
 No. Feeds are fetched (with your key where required); correlation happens inside the platform.
 
 **Which of these features call a model?**
-Only those in the [AI Data & Privacy](./ai-data-privacy.md) table, and only when a provider is configured. Feeds, correlation, the open-CVE lens, the ATT&CK matrix, rule-based triage, incident grouping, the Auto-Fix Engine, discovery and the AIBOM never do.
+Only those in the [AI Data & Privacy](./ai-data-privacy.md) table, only when a provider is configured, and never when the operator has set `ENABLE_AI_FEATURES=false`. Feeds, correlation, the open-CVE lens, the ATT&CK matrix, rule-based triage, incident grouping, the Auto-Fix Engine, discovery and the AIBOM never do.
 
 **Is AI Security Testing available?**
 No. It is in development, hidden from the menu, and its API is off unless the operator sets `AI_SECURITY_TESTING_ENABLED=true`. The prompt-injection tests on AI Governance → **Testing** are a separate, available feature.

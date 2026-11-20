@@ -46,7 +46,7 @@ From the detail view you can:
 | **HTML Report** / **PDF Report** / **DOCX Report** | A formatted report of this run — executive summary, findings by severity, coverage and completeness, remediation. Each download is fingerprinted and kept ([details](./scan-evidence.md#fingerprinted-frozen-exports)). |
 | **With Screenshots** | The web-scan report including captured evidence screenshots. |
 | **AI Summary** | A plain-language recap of what the scan found and what to do first. |
-| **Rescan** | Re-runs the same tool against the same target with the same profile, options, exclusions and attestation — the fastest way to verify a fix. Refused once the authorized window has ended. |
+| **Rescan** | Re-runs the same tool against the same target with the same profile, options, exclusions and attestation — the fastest way to verify a fix. Refused once the authorized window has ended. For an OpenVAS run, **Rescan** (like **Edit & re-run this scan setup**) opens the launcher with its targets, exclusions and credentials filled in, because it needs a fresh attestation and a check of its scan credentials ([Network Scans](./network-scans.md#authenticated-credentialed-scans)). |
 | **Delete** | Removes the run from the lists; it is kept as a tombstone for `SCAN_TOMBSTONE_DAYS` (default 30) before it is purged. |
 
 Report buttons appear for completed and partial runs.

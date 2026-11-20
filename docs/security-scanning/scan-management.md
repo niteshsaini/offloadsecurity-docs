@@ -31,17 +31,23 @@ At the top of the page, status cards summarize your schedules at a glance: total
 
 ### Which scan types can be scheduled
 
-| Scan type | On a schedule in 1.4.0 |
+| Scan type | What a scheduled run does |
 | --- | --- |
 | Cloud Security, Kubernetes | Dispatched to the onboarded accounts or clusters you pick |
 | Application Scan (App Scan) | Dispatched with the same options as a manual App Scan, including OAuth2 authentication |
 | Web Application | Dispatched as a Nuclei URL scan per target URL |
+| **Network** | One Nmap scan per target (IP, CIDR range or host name), started through the same path as a manual **Network Discovery** scan |
+| **Container Registry** | One image-scan job per registry you pick, the same job as scanning a registry's images in Container Security |
+| **OpenVAS (Greenbone)** | Re-runs the OpenVAS tasks you pick, the same call as **Scan now** on the task |
 | Other scan types in the list (API Security, API Discovery, Domain Recon, Lightweight Scan, SSL/TLS Monitor, code and IaC types) | Dispatched to the targets you enter |
-| **Network** and **Container Registry** | Offered, but every run fails with "not yet implemented" |
 
-:::warning[Network and Container Registry schedules do not run]
-In 1.4.0 the **Network** and **Container Registry** scan types — and the **Weekly Network Scan** and **Weekly Container Audit** templates — are listed but cannot run on a schedule: each run fails as not yet implemented. Run Nmap scans from **Scanning** ([Network Scans](./network-scans.md)), schedule an **App Scan** with the Nmap tool for recurring port coverage of an application, and use registry polling for images ([Container Security](./containers/index.md)).
-:::
+### Scheduled network, container registry and OpenVAS scans
+
+- **Network.** The **Weekly Network Scan** template runs an Nmap service-detection scan; other network schedules run a port scan. Targets start a few minutes apart, and a manual scan always starts first. Each run appears under **Scanning → Targeted runs** (tool `nmap`). A target whose scan is still running is not started twice. If you scan a target by hand while its scheduled scan is still waiting to start, your scan starts at once and the scheduled one is recorded as skipped.
+- **Container Registry.** A schedule scans the registry's images that have not been scanned yet; the **Weekly Container Audit** template re-scans every image. A run scans images already synced into the platform; it does not sync the registry first. A registry whose previous job is still queued or running is skipped as "already running", and one with no new images is skipped as "no new images". The jobs appear on the registry in [Container Security](./containers/index.md).
+- **OpenVAS (Greenbone).** Pick tasks that were created from Offload (**Infra Command Center → Network VAPT (OpenVAS)**, or **Schedule…** on a task there). Each run re-checks the task's target hosts against the OpenVAS target rules, refuses a task that was not created from Offload, and does not start a task that is already running. Results are imported like any other OpenVAS scan. Creating an OpenVAS schedule needs **Manage Scans**; see [OpenVAS scanning](../on-premises/openvas-scanning.md).
+
+A run in which every target or registry is refused for a reason a retry cannot fix (an invalid target, a removed registry) is marked failed with "all N targets refused" and is not retried. Fix the targets, then use **Run Now**.
 
 ### Create a schedule from a template (quickest)
 
@@ -49,8 +55,8 @@ Templates are pre-built schedules for common jobs (such as a daily cloud scan or
 
 1. Open the **Templates** tab, or select **From Template**.
 2. Pick the template that matches the scan you want to automate.
-3. Provide its targets: pick the onboarded **cloud accounts**, **Kubernetes clusters** or **registries** from the list, or enter **URLs / hosts / domains** one per line.
-4. For web, API, network and domain scan types, fill in **Authorization & scope** (see below).
+3. Provide its targets: pick the onboarded **cloud accounts**, **Kubernetes clusters**, **registries** or **OpenVAS tasks** from the list, or enter **URLs / hosts / domains** one per line.
+4. For web, API, network, OpenVAS and domain scan types, fill in **Authorization & scope** (see below).
 5. Select **Create Schedule**. The new schedule appears in the list and starts running on its cadence.
 
 ### Create a custom schedule
@@ -78,7 +84,7 @@ Schedules use **UTC** by default. When you set a cron expression, double-check i
 
 ### Authorization on scheduled scans
 
-Scheduled web, App Scan, API, SSL, domain, network and code scans carry the same **engagement record** as a manual launch: an attestation that you are authorized to test the targets, recorded with your name and the time, an optional reference, the environment, and an optional **authorized until** date ([Engagement & Evidence](./scan-evidence.md)).
+Scheduled web, App Scan, API, SSL, domain, network, OpenVAS and code scans carry the same **engagement record** as a manual launch: an attestation that you are authorized to test the targets, recorded with your name and the time, an optional reference, the environment, and an optional **authorized until** date ([Engagement & Evidence](./scan-evidence.md)).
 
 - When the deployment sets `SCAN_REQUIRE_AUTHORIZATION=true`, **Create Schedule** stays disabled until you attest.
 - At every run the platform checks the stored authorization again. If it is missing (when required) or past its end date, the run **fails, scanning nothing**, with the reason. If only some targets are refused, the others run and the refused ones are reported as failed targets.
@@ -87,13 +93,15 @@ Scheduled web, App Scan, API, SSL, domain, network and code scans carry the same
 
 ### Managing existing schedules
 
-Each schedule in the list shows its type, its cadence, the **Next Run** time, any **expiry**, and its current **status** (active, paused, expired, or completed). Use the row actions to:
+Each schedule in the list shows its type, its cadence, the **Next Run** time, any **expiry**, and its current **status** (active, paused, expired, or completed). Where the scheduler spreads start times so that schedules do not all fire at once, the **Next Run** time says so, for example "(cron 08:00 UTC · start spread up to 5 min)". While a run is in progress, the row shows **Running since** its start time. Use the row actions to:
 
-- **Run Now** — trigger the schedule immediately, without waiting for its next scheduled time.
+- **Run Now** — trigger the schedule immediately, without waiting for its next scheduled time. The history record is written before the run starts, and the API returns its execution ID. If another run of the same schedule is still in progress, the schedule's overlap policy decides: the new run is **queued** (it starts when the current run finishes) or **skipped**, and the notice says **Run Queued** or **Run Not Started** with the reason, never that a run started.
 - **Pause / Resume** — temporarily stop a schedule and restart it later.
-- **View Details** — a summary showing the last run, the next run, total / successful / failed run counts, and lifecycle details (validity period, expiry date, auto-renewal, grace period).
+- **View Details** — a summary showing the last run, the next run, total / successful / failed run counts, and lifecycle details (validity period, expiry date, auto-renewal, grace period). Each run is counted once, including a run that failed before it could finish.
 - **Re-attest** — shown when the schedule's authorization needs renewing.
 - **Delete** — remove the schedule entirely.
+
+Runs of one schedule never overlap by accident: the cron trigger and **Run Now** take the same run lock, and a run that was cancelled or finished late cannot overwrite a newer run's record or lock.
 
 Filter the list with the tabs (**All Schedules**, **Scans**, **Assessments**, **Evidence**, **Reports**, **System Jobs**), search by name, and filter by status. The **Expiring Soon** tab highlights schedules whose validity is about to lapse so you can renew them in time.
 
@@ -107,8 +115,9 @@ Creating, editing, pausing, and deleting schedules requires the **Manage Scans**
 
 A schedule simply runs a scan on your behalf — so once it fires, the resulting scan behaves exactly like one you started manually.
 
-- **Scan history (results):** Scheduled App Scans appear on **Scanning → Assessments**, marked **scheduled**; scheduled single-tool web scans appear on **Scanning → Targeted runs** alongside manual scans; cloud, Kubernetes and code scans appear in their own modules.
-- **Scheduler execution history:** The Unified Scheduler's **History** tab records every time a schedule ran — when it started, how long it took, whether it **completed**, **failed**, or is still **running**, and a short result summary. Select any row to expand it for the full configuration and result details (for example, how many accounts or clusters were scanned, and which targets were refused).
+- **Scan history (results):** Scheduled App Scans appear on **Scanning → Assessments**, marked **scheduled**; scheduled single-tool web scans and scheduled network (Nmap) scans appear on **Scanning → Targeted runs** alongside manual scans; scheduled registry scans appear as scan jobs on the registry in Container Security; scheduled OpenVAS runs are imported into Vulnerability Management; cloud, Kubernetes and code scans appear in their own modules.
+- **Scheduler execution history:** The Unified Scheduler's **History** tab records every time a schedule ran — when it started, how long it took, its status and a short result summary. Filter by status: **Succeeded**, **Partial** (some targets failed; each is listed with its reason), **Failed**, **Running**, **Queued** or **Missed** (due but never fired, for example while the scheduler was stopped). A queued run that waits too long is marked expired with the reason. Select any row to expand it for the full configuration and result details (for example, how many accounts or clusters were scanned, and which targets were refused or skipped). If the history cannot be read, the tab shows an error rather than an empty list, and malformed records are skipped and counted on the page.
+- **Code Command Center:** a repository schedule's **Run once now** (or the immediate first scan of a new schedule) says when the scan was queued or skipped because a run is already in progress, instead of reporting it as started.
 
 Together, these give you two complementary views: the **History** tab tells you whether your automation is firing reliably, and the scan results view shows you what those runs actually found.
 
@@ -136,7 +145,7 @@ Use **Re-scan** for a one-off "run that again" check. If you find yourself re-sc
 
 ## Result retention
 
-Scan data is not kept forever. Each kind of data has a retention window, enforced by database expiry and by a **retention cycle that runs automatically every day**. The shipped defaults in 1.4.0:
+Scan data is not kept forever. Each kind of data has a retention window, enforced by database expiry and by a **retention cycle that runs automatically every day**. The shipped defaults:
 
 | Data | Default retention | Set with |
 | --- | --- | --- |
@@ -149,7 +158,7 @@ Scan data is not kept forever. Each kind of data has a retention window, enforce
 
 The windows are deployment settings: an operator changes them in the environment and restarts the platform. Before deletion, the retention cycle also **summarizes** older data (so trend reporting keeps working after the full detail is gone) and can **archive** it.
 
-Over the API, `GET /api/scan-retention/status` and `GET /api/scan-retention/policies` show the active windows, and `POST /api/scan-retention/run-cycle` runs a retention cycle on demand (requires **Manage Scans**).
+Over the API, `GET /api/scan-retention/status` and `GET /api/scan-retention/policies` show the active windows, and `POST /api/scan-retention/run-cycle` runs a retention cycle on demand (requires a team **Admin** or the platform admin; API keys are refused). Each cycle is recorded, and a nightly cycle works through any backlog of data to summarize or archive in batches.
 
 :::warning[Deletion is permanent]
 Once data passes its retention window it is removed for good. If you have a compliance requirement to retain scan evidence for a set period, have your operator raise the relevant variable **before** that data ages out, and keep downloaded reports with their SHA-256 digests ([Engagement & Evidence](./scan-evidence.md#fingerprinted-frozen-exports)).

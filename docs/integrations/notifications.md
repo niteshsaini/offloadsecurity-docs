@@ -36,7 +36,7 @@ Without any rule or preference, a team receives:
 | **Security alert** (new or reopened) | Severity **high or above** — the threshold is `alerts.min_severity` in the team's preferences, `ALERT_NOTIFY_MIN_SEVERITY` for the deployment | In-app, Slack, Teams, Google Chat — and PagerDuty / webhook when the team has enabled them |
 | **New critical / high finding** | From cloud scans and real-time cloud events; collapsed to at most one notification per team and severity per window, so a scan does not produce one message per finding | In-app; a Slack `security_alert`; for **critical**, a Jira ticket when Jira is connected |
 | **SLA warning / breach** | From [SLA Management](../vulnerability-risk/sla-management.md) | In-app, email, Slack, Teams, Google Chat |
-| **Compliance drift / threshold breached** | From [Drift Detection](../compliance/drift-detection.md) | In-app, email |
+| **Compliance drift / threshold breached** | From the drift alert policies in [Drift Detection](../compliance/drift-detection.md) (severity threshold, drift types, recipients) | In-app, email and Slack by default; Microsoft Teams when a policy turns it on. Never PagerDuty or webhook |
 | **Scan failed** | Failure classified (connectivity, credentials, tool error, timeout, permission) with a remediation hint | In-app, email, Slack |
 | **Platform event** — integration unhealthy, certificate expiring, worker down | Raised by the health checks and monitors | In-app always; Slack as `system_error` (critical / high) or `system_notification`; email to `ADMIN_EMAIL` for critical / high |
 
@@ -46,7 +46,7 @@ Email respects each member's opt-out; the bell is the place everyone sees everyt
 
 **Where:** the bell in the top bar; the badge is the unread count.
 
-Every notification for the team is listed newest first with its priority, title, message and — when there is somewhere to go — an action link. **Mark read**, **mark all read** and **dismiss** are per user, so one analyst clearing the list does not clear it for the team. Notifications expire after their retention window; the API (`GET /api/notifications?unread_only=true`) returns the same list for scripts and dashboards.
+Every notification for the team is listed newest first with its priority, title, message and — when there is somewhere to go — an action link. **Mark read**, **mark all read** and **dismiss** are per user, so one analyst clearing the list does not clear it for the team. A notification leaves the list when it expires, 30 days after it was raised, and is deleted after **90 days** (`IN_APP_NOTIFICATIONS_RETENTION_DAYS` on the backend). A scan that keeps failing the same way, or a background task that keeps failing, adds one notification rather than one per run. The API (`GET /api/notifications?unread_only=true`) returns the same list for scripts and dashboards.
 
 ## Slack
 
@@ -164,6 +164,8 @@ Preferences are per team and per user. The alert part — on/off, minimum severi
 - **Per user** — `PUT /api/notifications/preferences/me` `{opted_out, muted_categories}` lets an individual stop receiving email and in-app notifications, or mute categories, without affecting the team.
 
 Absent preferences mean *deliver everywhere that is configured*, so nothing changes until someone writes them.
+
+When preferences switch off every channel a notification asked for, nothing is sent and the notification is recorded as **suppressed**, a final state. It is not queued as *pending*, retried later, or reported as sent.
 
 ## Verify a channel
 

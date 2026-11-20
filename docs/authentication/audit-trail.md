@@ -21,7 +21,7 @@ Every write request to the API — every `POST`, `PUT`, `PATCH` and `DELETE`, wh
 | **Outcome** | HTTP status and success / failure |
 | **Context** | A summary of the request body for writes (first 500 characters) with sensitive fields — passwords, secrets, tokens, session ids, API keys and anything named like them — replaced by `***REDACTED***`; sign-in, registration, MFA and SSO exchanges log no body at all |
 
-Health checks, live-event streams and documentation endpoints are not recorded. Audit trail entries are **not pruned automatically**; they are kept until an operator removes them.
+Health checks, live-event streams, documentation endpoints and, since 1.4.1, CORS preflight (`OPTIONS`) requests are not recorded. Audit trail entries are **not pruned automatically**; they are kept until an operator removes them.
 
 ### Who can read what
 
@@ -29,12 +29,12 @@ Health checks, live-event streams and documentation endpoints are not recorded. 
 | --- | --- |
 | Any member | Their **own** events in the active team |
 | Team **Admin** | Every event in the active team, filterable by user; verify and SIEM export for the team |
-| **Platform administrator** | Every event on the deployment, across teams |
+| **Platform administrator** | Every event on the deployment, across teams (from inside the [platform-admin IP allowlist](./platform-admin-console.md#platform-admin-ip-allowlist) when one is set) |
 
-`GET /api/audit-trail?user_id=&action=&start_date=&end_date=&success_only=&limit=&skip=` queries it (wildcards such as `user.*` work on `action`; up to 1,000 events per page); `GET /api/audit-trail/user/{user_id}` narrows to a person; `GET /api/audit-trail/actions` lists the action vocabulary; `GET /api/audit-trail/export` returns **CSV** (up to 10,000 events — team Admin or platform administrator).
+`GET /api/audit-trail?user_id=&action=&start_date=&end_date=&success_only=&team_id=&resource=&limit=&skip=` queries it (wildcards such as `user.*` work on `action`; `resource` matches part of the request path; `team_id` is for the platform administrator; up to 1,000 events per page); `GET /api/audit-trail/user/{user_id}` narrows to a person; `GET /api/audit-trail/actions` lists the action vocabulary; `GET /api/audit-trail/export` returns **CSV** (up to 10,000 events — team Admin or platform administrator). The `X-Audit-Total`, `X-Audit-Exported` and `X-Audit-Truncated` response headers say whether the export is complete.
 
-:::note[No audit screen in the UI]
-There is no screen that lists the audit trail. The API, the CSV export and the SIEM export below are the way in. The only audit-style screen is the platform administrator's **User Activity**, which shows sign-ins, not the request trail.
+:::note[The Audit Log screen is for the platform administrator]
+Since 1.4.1 the platform administrator has an **Audit Log** page with filters, CSV export, chain verification and SIEM export. See [Platform-Admin Console](./platform-admin-console.md#audit-log). Team Admins and members still read the trail through the API and the exports.
 :::
 
 ## Integrity and SIEM export
@@ -57,7 +57,7 @@ Entries written before 1.4.0 are left as they were and reported as unchained. Wh
 
 ## Authentication events
 
-Independently of the request trail, the sign-in system records `login_success`, `login_failed`, `login_blocked` (lockout), `login_throttled`, `account_auto_unlocked`, `session_created`, `session_destroyed`, `session_expired`, `session_revoked`, `user_registered`, password changes, administrator-issued resets and *Require change* flags, with the IP address and user agent. These events are hash-chained too (the `auth` store above). They feed the platform administrator's **Login history** below and `GET /api/auth/audit-log` (platform administrator).
+Independently of the request trail, the sign-in system records `login_success`, `login_failed`, `login_blocked` (lockout), `login_throttled`, `account_auto_unlocked`, `session_created`, `session_destroyed`, `session_expired`, `session_revoked`, `user_registered`, password changes, administrator-issued resets and *Require change* flags, with the IP address and user agent. These events are hash-chained too (the `auth` store above). Since 1.4.1 the store also records the platform administrator's account actions: unlocks, deactivations, MFA resets, sign-outs, platform-admin grants and revocations, step-up attempts, team and member changes made from Teams & Users, Security Policy changes, access-review exports and scanner image overrides. They feed the platform administrator's **Login history** below, the **Auth events** tab of the Audit Log, `GET /api/audit-trail/auth-events?event=&email=&start_date=&end_date=&limit=&skip=` and `GET /api/auth/audit-log` (all platform administrator).
 
 ## Per-feature logs
 
@@ -83,13 +83,16 @@ Every account on the deployment in one place — who is signed in right now, fro
 
 ![Live sessions: user, presence, IP, client, via, signed in, expires; Sign out](/img/screenshots/platform-security/user-activity-sessions.webp)
 
+In 1.4.1 the Users tab adds search, a status filter and more account actions (MFA reset and enforcement, sign out everywhere, unlock, deactivate and reactivate, and platform-admin grants). These are described on [Platform-Admin Console](./platform-admin-console.md#user-activity).
+
 Two account actions live here because they are the administrator's answer when email is not configured: **Reset password** shows a single-use reset link (valid 24 hours by default) to hand to the user directly — it is also emailed when SMTP is set — and **Require change** signs the user out of every session and forces a new password at the next sign-in. Neither works on SSO-only accounts. The page says so itself when SMTP is missing.
 
-Listing sessions here is read-only by design: opening the page does not refresh anyone's session or make them look active. Resetting a user's MFA is not on this page; it is an API call (see [Signing In & Sessions](./session-management.md#enforcing-mfa-for-everyone)).
+Listing sessions here is read-only by design: opening the page does not refresh anyone's session or make them look active. **Reset password** and **Require change** ask for your password again first ([step-up](./platform-admin-console.md#step-up-re-authentication)).
 
 ## Related
 
 - [Signing In & Sessions](./session-management.md) — the events that produce the login history.
 - [Roles, Teams & API Keys](./rbac-team-management.md) — who is a team Admin, and the `admin:audit` scope.
 - [Platform Administration](./platform-administration.md) — the account that sees across teams.
+- [Platform-Admin Console](./platform-admin-console.md) — the Audit Log page and the other platform-admin pages.
 - [Platform Security API](./api.md#audit-trail-and-user-activity) — the endpoints on this page.

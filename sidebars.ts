@@ -104,9 +104,13 @@ const sidebars: SidebarsConfig = {
       link: {type: 'doc', id: 'release-notes/index'},
       // Newest first. Add each release's page here when it is cut.
       items: [
+        'release-notes/v1-4-1-beta-8',
+        'release-notes/v1-4-1-beta-7',
         'release-notes/v1-4-1-beta-6',
         'release-notes/v1-4-1-beta-5',
         'release-notes/v1-4-1-beta-4',
+        'release-notes/v1-4-1-beta-3',
+        'release-notes/v1-4-1-beta-1',
         'release-notes/v1-4-0',
       ],
     },

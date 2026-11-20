@@ -45,6 +45,13 @@ Validators exist for about 40 providers — among them GitHub, GitLab, Slack, St
 
 Each secret also carries a **verdict** — *Confirmed secret*, *Likely secret*, *Likely false positive* or *Not a secret* — with a confidence and the reason; open the finding to see why. A reviewer can override the verdict, with a reason. While a verdict marks a secret as not actionable (for example *Likely false positive*), automated fixes, tickets and the release gate skip it until someone overrides the verdict.
 
+The verdict errs toward keeping a possible secret actionable:
+
+- **Every pass gets a verdict**, including secrets from the platform's supplementary scanner, so an environment-variable reference (`process.env.DB_PASSWORD`) or handling code (`encrypt(dto.password)`) is not reported as a hard-coded password. A hash or encrypt call is dismissed only when every argument is a variable; `encrypt(12345678)` stays actionable.
+- **Key-material names are not dismissed.** A value under an encryption, signing, SSH, KMS or GPG key name, or any value that looks generated, is never treated as non-secret on its name alone.
+- **A comment does not hide a value.** A word such as "example" or "TODO" elsewhere on the line, or a trailing `#` / `//` comment, lowers the confidence of a high-entropy value to medium but keeps it actionable.
+- **Reasons never quote the source.** The stored reason shows the value only as a mask (nothing for values under 12 characters, at most four characters otherwise), never the source line.
+
 ## Push protection
 
 The same detectors are available for pre-commit / pre-push hooks and CI steps, so a secret is caught before it reaches the remote. There is no screen for this; it works through the hooks and the API.

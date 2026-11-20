@@ -7,7 +7,12 @@ import type * as Preset from '@docusaurus/preset-classic';
 // URLs never move. When the next release is cut, snapshot this one first
 // (`npm run docusaurus docs:version <this value>` — it then lives under
 // /<version>/) and bump this constant. See VERSIONING.md.
-const CURRENT_RELEASE = '1.4.0';
+const CURRENT_RELEASE = '1.4.1-beta.8';
+// While the root describes a pre-release, the last final release keeps its
+// own snapshot (not marked "unmaintained") and a site-wide notice says which
+// docs you are reading. Set PRERELEASE = false when 1.4.1 ships final.
+const PRERELEASE = true;
+const STABLE_RELEASE = '1.4.0';
 
 // Optional, cookieless analytics — off unless set at build time (the deploy
 // workflow passes these from the repository's Actions variables):
@@ -87,10 +92,18 @@ const config: Config = {
           lastVersion: 'current',
           versions: {
             current: {
-              label: `${CURRENT_RELEASE} (current)`,
+              label: PRERELEASE ? `${CURRENT_RELEASE} (pre-release)` : `${CURRENT_RELEASE} (current)`,
               path: '',
               badge: true,
               banner: 'none',
+            },
+            [STABLE_RELEASE]: {
+              label: PRERELEASE ? `${STABLE_RELEASE} (stable)` : STABLE_RELEASE,
+              path: STABLE_RELEASE,
+              badge: true,
+              // The stable release is still supported while the root is a
+              // pre-release; Docusaurus's default banner would call it unmaintained.
+              banner: PRERELEASE ? 'none' : 'unmaintained',
             },
           },
         },
@@ -137,6 +150,13 @@ const config: Config = {
   ],
 
   themeConfig: {
+    ...(PRERELEASE && {
+      announcementBar: {
+        id: `prerelease-${CURRENT_RELEASE}`,
+        content: `These docs describe <b>${CURRENT_RELEASE}</b>, a pre-release. Running ${STABLE_RELEASE}? Read the <a href="/${STABLE_RELEASE}/">${STABLE_RELEASE} documentation</a> · <a href="/release-notes">Release notes</a>`,
+        isCloseable: true,
+      },
+    }),
     image: 'img/offload-social-card.png',
     // Explicit entity description for search + AI answer engines. Matches the
     // canonical short description used across the marketing site and profiles.

@@ -48,7 +48,17 @@ Set `full_run=true` only when the step ran the tool over the whole repository. O
 
 *Imported findings* on the same tab lists what arrived: severity, rule, CWE, file and lines, the tool and its version, the repository (and branch) and status. Filter by tool, repository, severity and status (**Open**, **Suppressed**, **Resolved**, **Other decisions**, **Any status**).
 
-Imported findings are triaged — assigned, accepted, marked false positive — in Vulnerability Management's [Triage queue](../../vulnerability-risk/vulnerability-management/triage.md) with every other finding. The Code Command Center **Findings** tab shows the platform's own scans only.
+Imported findings are triaged — assigned, accepted, marked false positive — in Vulnerability Management's [Triage queue](../../vulnerability-risk/vulnerability-management/triage.md) with every other finding. The Code Command Center **Findings** tab shows the platform's own scans only. Over the API, `GET /api/code/findings` lists code findings with SARIF imports included (`source=sarif:*` for imports only), and the Code Command Center **Overview** shows open SARIF findings as a separate figure.
+
+### Remove a SARIF source
+
+To take an imported tool's results out of a repository scope — for example after a test upload — call:
+
+```
+DELETE /api/cicd/sarif/sources?scope_key=<scope_key>&scanner=sarif:<tool>
+```
+
+Take the `scope_key` and `scanner` from `GET /api/cicd/sarif/sources`; leave out `scanner` to remove every SARIF tool in that scope. The findings are resolved exactly as an empty complete run of that tool would resolve them: history is kept, a finding another tool or a platform scan still reports stays open, and a person's decision is never changed. It needs the team **Admin** role (or an API key whose owner is a team admin) and is written to the audit log.
 
 ## How results are mapped
 

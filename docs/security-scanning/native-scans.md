@@ -7,7 +7,7 @@ description: "Launch an App Scan or a targeted single-tool run — ZAP, Nuclei, 
 
 # Running Web, API & Host Scans
 
-The **Scanning** module is where you actively test a target you can reach over the network: a web application, an API, a host or network range, a TLS endpoint or a whole domain. In 1.4.0 it is one module with three tabs:
+The **Scanning** module is where you actively test a target you can reach over the network: a web application, an API, a host or network range, a TLS endpoint or a whole domain. It is one module with three tabs:
 
 | Tab | What it holds |
 | --- | --- |
@@ -34,12 +34,13 @@ The **Assessment Type** list groups the options as the launcher shows them.
 | Assessment | What it tests | Engine | Profiles (times as the form states them) |
 | --- | --- | --- | --- |
 | **App Scan** (recommended) | Every relevant web / API tool against one application, with standards mapping and a consolidated report | ZAP, Nuclei, Nmap, testssl.sh and native analyzers | Depends on the tools and profile you select |
-| **Web Vulnerability Scan** | Injection (XSS, SQLi), insecure configuration, crawl of SPA routes | OWASP ZAP | Quick 1–2 min (passive) · Standard 5–10 min (spider + active) · Comprehensive 15–20 min (AJAX spider + active) |
+| **Web Vulnerability Scan** | Injection (XSS, SQLi), insecure configuration, crawl of SPA routes | OWASP ZAP | Quick up to 10 min (passive) · Standard up to 45 min (spider + active) · Comprehensive up to 11.5 h (AJAX spider + active) |
 | **Nuclei Vulnerability Scan** | Known CVEs, exposures and misconfigurations from a pinned template release | Nuclei | Quick 1–2 min (critical/high) · Standard 3–5 min (critical/high/medium) · Comprehensive 5–10 min (full template set) · CVE Detection · Misconfiguration Scan |
 | **Security Headers Check** | HSTS, CSP, X-Frame-Options and the rest | shcheck | seconds |
 | **API Discovery** | Find endpoints: OpenAPI / Swagger spec paths, JavaScript crawl, GraphQL introspection, common REST paths, `.well-known` | native API scanner | varies |
 | **API Deep Scan** | OWASP API Top 10 testing of discovered or supplied endpoints; upload an OpenAPI file or Postman collection, or give a spec URL | native API scanner | varies |
 | **Network Discovery** | Host discovery, TCP / UDP port scans, service and version detection, NSE scripts, OS detection | Nmap | See [Network Scans](./network-scans.md) |
+| **Network Vulnerability Scan (OpenVAS, authenticated)** | Network vulnerability checks on up to 64 hosts, IPs or CIDR ranges; with scan credentials, local security checks on each host (SSH, SMB, SNMP, ESXi) | Greenbone OpenVAS, through your Greenbone integration | Greenbone's scan config; see [Network Scans](./network-scans.md#openvas-scans-from-the-platform) |
 | **SSL/TLS Security Test** | Protocol versions, cipher strength, certificate chain, known TLS weaknesses, on the port you give (default 443) | testssl.sh | Quick · Standard · Comprehensive · Vulnerability Focus |
 | **Domain Scan** | Reconnaissance and OSINT for a domain: DNS records, email security (SPF, DKIM, DMARC), WHOIS, subdomains, common ports, WAF, technologies, headers, certificate, exposed paths, HTTP methods | native recon | minutes |
 | **Subdomain Enumeration** · **Technology Detection** · **WAF Detection** · **Comprehensive Lightweight Scan** | Single lightweight checks | native analyzers | seconds–minutes |
@@ -54,12 +55,12 @@ The separate "API Security Testing" option is gone from the launcher; use **API 
 2. Enter the **target**: a full URL (`https://app.example.com`) for web and API scans, a hostname, IP or CIDR range for Nmap, a hostname for testssl.sh, a bare domain for reconnaissance.
 3. Pick the tool's **profile** (see the table above).
 4. For a page behind a login, set up authentication (below).
-5. For ZAP, Nuclei, Nmap and testssl.sh, fill in **Authorization & scope** (below). **Submit** stays disabled until you tick the attestation.
+5. For ZAP, Nuclei, Nmap, OpenVAS and testssl.sh, fill in **Authorization & scope** (below). **Submit** stays disabled until you tick the attestation.
 6. **Launch.** The scan runs in the background; you can leave the page. A targeted run opens its own run detail under **Targeted runs**, where it shows as running and then completed, partial or failed.
 
 ### Authorization & scope
 
-App Scan, Web Vulnerability Scan (ZAP), Nuclei, Network Discovery (Nmap) and SSL/TLS Security Test runs carry an **engagement record**:
+App Scan, Web Vulnerability Scan (ZAP), Nuclei, Network Discovery (Nmap), Network Vulnerability Scan (OpenVAS) and SSL/TLS Security Test runs carry an **engagement record**:
 
 | Field | Purpose |
 | --- | --- |
@@ -67,7 +68,7 @@ App Scan, Web Vulnerability Scan (ZAP), Nuclei, Network Discovery (Nmap) and SSL
 | **Engagement / ticket reference** | Optional, up to 200 characters. |
 | **Environment** | Production, Staging, Development, Test, or not specified. The report states what you chose instead of assuming production. |
 | **Authorized until** | Optional end of the authorized window. A past date is refused, and **Rescan** is refused once the window has ended. |
-| **Excluded hosts** (Nmap) / **Excluded paths** (ZAP) | Hosts or CIDRs Nmap must skip; paths ZAP must not touch, such as `/logout` or `/admin/**`. |
+| **Excluded hosts** (Nmap, OpenVAS) / **Excluded paths** (ZAP) | Hosts or CIDRs the network scanner must skip; paths ZAP must not touch, such as `/logout` or `/admin/**`. |
 
 The record is described in [Engagement & Evidence](./scan-evidence.md).
 
@@ -100,7 +101,7 @@ A run that could not finish is never shown as clean. If ZAP could not run and on
 
 ## Automating these scans
 
-Every assessment is an API call (`POST /api/app-scan`, `POST /api/native-scans/web-vulnerability`, `/network-discovery`, `/ssl-security`, `/security-headers`, `/nuclei/url-scan`) that returns an id you poll — see the [Scanning API](./api.md#web-api--host-scans) and, for pipelines, [CI/CD & Automation](./code/ci-cd-and-automation.md). Recurring runs are configured in [Scan Management & Scheduling](./scan-management.md).
+Every assessment is an API call (`POST /api/app-scan`, `POST /api/native-scans/web-vulnerability`, `/network-discovery`, `/network-vulnerability`, `/ssl-security`, `/security-headers`, `/nuclei/url-scan`) that returns an id you poll — see the [Scanning API](./api.md#web-api--host-scans) and, for pipelines, [CI/CD & Automation](./code/ci-cd-and-automation.md). Recurring runs are configured in [Scan Management & Scheduling](./scan-management.md).
 
 ## Related
 

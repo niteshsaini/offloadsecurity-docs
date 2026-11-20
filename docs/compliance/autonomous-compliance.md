@@ -45,6 +45,8 @@ After every refresh the engine compares each active framework's implementation s
 
 Breaches surface on the overview (*Active Breaches*), on the *Breaches* sub-tab, as a **Threshold Crossed** drift, and through [alert policies](./drift-detection.md#alert-policies).
 
+Each breach also sends a threshold alert to the team in-app and by email, and to Slack or Google Chat when connected under Integrations. Microsoft Teams is opt-in: threshold alerts post to Teams only when an enabled drift alert policy turns Teams on and the team's notification settings neither switch Teams off nor mute the category. Each run logs how many sends were delivered, skipped or failed per channel.
+
 ## Trends and timeline
 
 ![Implementation Score Trends: score per active framework at each engine evaluation with the 70% threshold line and a 7 / 30 / 90 days / all time-range selector](/img/screenshots/compliance/compliance-engine-trends.webp)

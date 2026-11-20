@@ -10,7 +10,7 @@ description: "Offload Security 1.4.1-beta.6 (14 November 2026, pre-release): App
 **Released:** 14 November 2026 · **Type:** Pre-release · **Image tag:** `1.4.1-beta.6` · **Previous pre-release:** [1.4.1-beta.5](./v1-4-1-beta-5.md) · **Built on:** 1.4.0
 
 :::caution[Pre-release]
-This beta is for testing, not for production. Nothing in it has been tested on a live instance yet; see [Known issues](#known-issues). The documentation pages describe 1.4.0 and may not yet cover what is new here.
+This beta is for testing, not for production. Nothing in it has been tested on a live instance yet; see [Known issues](#known-issues). The current documentation describes the latest pre-release, [1.4.1-beta.8](./v1-4-1-beta-8.md).
 :::
 
 This beta is 1.4.1-beta.5 plus five fixes from the 11 November end-to-end test report. **If you skipped beta.4 or beta.5, read [beta.4's notes](./v1-4-1-beta-4.md) and [beta.5's notes](./v1-4-1-beta-5.md) too.**
