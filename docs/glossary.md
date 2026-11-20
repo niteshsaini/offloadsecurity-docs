@@ -1,7 +1,7 @@
 ---
 title: "Glossary"
 sidebar_position: 14
-description: "The terms Offload Security uses across its screens and documentation — findings and occurrences, fingerprints, provenance and frozen reports, risk exceptions, SCF controls, drift, KEV and EPSS, teams and roles, API-key scopes, AIBOM."
+description: "The terms Offload Security uses across its screens and documentation — findings and occurrences, fingerprints, provenance and frozen reports, risk exceptions, SCF controls, drift, KEV and EPSS, cloud change records, teams and roles, platform-admin controls, API-key scopes, AIBOM."
 ---
 
 # Glossary
@@ -31,6 +31,7 @@ Terms as the product uses them, in the order you are likely to meet them.
 | **EPSS** | Exploit Prediction Scoring System — the probability (0–1) a CVE is exploited in the next 30 days. |
 | **SBOM** | Software bill of materials for a repository or image (CycloneDX / SPDX); the source of license compliance and the AIBOM. |
 | **Raw findings** | The per-scanner view in Vulnerability Management, before triage groups and ranks them. |
+| **Credentialed scan** | A Greenbone OpenVAS scan that signs in to the host with a stored SSH, SMB, SNMP or ESXi credential so it can run local checks, such as installed-package CVEs. Each host shows *authenticated*, *login failed* or *unauthenticated*; a failed login does not close earlier local-check findings. |
 | **SARIF import** | Uploading a SARIF 2.1.0 log from another scanner (CodeQL, Semgrep, Snyk Code…) in Code Command Center or from CI; its results become findings beside the platform's own. |
 
 ## Triage, risk and SLAs
@@ -48,6 +49,8 @@ Terms as the product uses them, in the order you are likely to meet them.
 | **Exception** | A documented, time-boxed decision not to fix a finding or apply a control, with an approver. |
 | **Risk exception** | In Vulnerability Management → Risk exceptions: a formally requested, time-limited exception for one finding (accept risk, suppress or defer), approved by someone other than the requester. While approved it is left out of open, overdue, SLA and severity counts and hidden from the Cloud Security and Kubernetes findings views; it can be revoked. |
 | **Investigation record (case file)** | The **Case file** on a triaged finding: priority evidence, owner (or why there is none), the next action, closure proof (fix PRs, rescan verification) and a timeline across handoffs. Read-only. |
+| **Change record** | The record the platform keeps for every cloud write event in Cloud Events: what changed, on which resource and account, who made it, and whether it was expected. Shown on the **Changes** tab. |
+| **Unexplained change** | A change record not made by a pipeline, cloud automation or an approved identity — for example a person, the root account or an unapproved machine identity. It raises an alert. An analyst can review it as expected (which resolves the alert) or confirm it as unexplained. |
 | **Fix first** | In Infra Command Center → Endpoint Security, Wazuh host vulnerabilities ranked by triage priority, with a roll-up of which package upgrades fix the most. |
 
 ## Compliance
@@ -87,7 +90,11 @@ Terms as the product uses them, in the order you are likely to meet them.
 | **Team** | The tenancy boundary. Every record belongs to one team; you work in one *active team* and may belong to several. |
 | **Role** | One of six per team — Admin, Security Manager, Security Analyst, Compliance Officer, Auditor, Viewer — mapped to named permissions. |
 | **Permission** | A named capability checked on every request (`run_scans`, `manage_integrations`, `execute_remediations`…). |
-| **Platform administrator** | The first account on a deployment; sees across teams, runs User Activity and Client Menu Visibility, keeps password sign-in when SSO is enforced. |
+| **Platform administrator** | A deployment-wide administrator, separate from the team roles. The first account on a deployment is one, and since 1.4.1 a platform admin can grant the role to other users. Sees across teams, uses the platform admin console, keeps password sign-in when SSO is enforced. Someone invited as Admin is an organization admin, not a platform admin. |
+| **Platform admin console** | The pages only platform admins see: User Activity, Teams & Users, Audit Log, System Health, Access Review, Security Policy and Client Menu Visibility. |
+| **Break-glass** | A way in when normal access fails. The platform always keeps at least one active platform admin who can sign in with a local password, so someone can get in if SSO is down; `ADMIN_IP_ALLOWLIST_ENFORCE=false` lifts an admin IP allowlist that locks every admin out. |
+| **Step-up** | Re-entering your password (and authenticator code when MFA is on) before a sensitive platform-admin action. The confirmation lasts 15 minutes by default. |
+| **Access review** | A periodic check of who has access: on the **Access Review** page, export every user's entitlements, record a signed-off review against a hashed snapshot, and optionally deactivate dormant users. |
 | **API key** | `osk_…` credential for automation, acting as its creator within a scope set, with expiry, IP allowlist and rate limit. |
 | **Scope** | A permission granted to an API key, e.g. `scans:trigger`, `vulnerabilities:read`. |
 | **Audit trail** | The record of every authenticated change and export — actor, team, action, outcome — kept in a tamper-evident per-team hash chain that can be verified and exported to a SIEM. |
@@ -95,6 +102,7 @@ Terms as the product uses them, in the order you are likely to meet them.
 | **Webhook subscription** | A signed JSON delivery of platform events to an endpoint you control. |
 | **Unified Scheduler** | The one view of every recurring scan and job across modules. |
 | **On-premises** | The full platform as a Docker Compose stack on your own host, with private targets in scope. |
+| **Demo mode** | `DEMO_MODE=true`: the platform runs read-only with sample data for a public demo. Every write is refused, AI and scheduled jobs are off, and a banner says so. Used on Offload's demo server; customer installs leave it unset. |
 | **Endpoint 360** | One page per Wazuh agent: identity, what to fix first, vulnerabilities, network findings from OpenVAS, alerts, compliance, file integrity, ATT&CK techniques and logins. In Infra Command Center → Endpoint Security. |
 | **Capability health** | Per-integration and per-feed status: whether each source is still delivering, why it stopped, and how to restore it. |
 | **Help panel** | The **Help** button on each module page: task guides with steps, errors and limits; `?help=<guide>` links open one guide. |

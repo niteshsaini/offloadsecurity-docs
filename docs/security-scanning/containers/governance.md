@@ -15,27 +15,38 @@ Scanning tells you what is in an image. These four tabs turn that into control: 
 
 ![Image Policies tab: quick-start templates (Production – Strict Security, Development – Permissive, CI/CD Pipeline Validation), an active Production – Strict Security policy, and the validate-image form](/img/screenshots/security-scanning/ctr-image-policies.webp)
 
-A policy is a set of rules an image must satisfy. The create form sets **Max Critical Vulnerabilities**, **Max High Vulnerabilities** and **Max Image Age (days)**; starting from a template also carries the template's other rules.
+A policy is a set of rules an image must satisfy. The create form sets **Max Critical Vulnerabilities**, **Max High Vulnerabilities**, **Max Medium Vulnerabilities** (blank means no limit), **Max Image Age (days)** and **Require signature**; starting from a template also carries the template's other rules.
 
 | Rule | Effect | Set from |
 | --- | --- | --- |
-| **Max critical / high vulnerabilities** | Violation when the count is over the limit, or when the count is unknown (the image was not scanned). | Form, templates |
+| **Max critical / high / medium vulnerabilities** | Violation when the count is over the limit, or when the count is unknown (the image was not scanned, or the scan failed). | Form, templates |
 | **Max image age** | Warning only, never a violation. | Form, templates |
 | **Allowed / blocked registries** | Violation when the registry host does not match (exact, glob such as `*.amazonaws.com`, domain suffix, or dotted-label match). | Templates, API |
 | **Block `latest` tag** | Violation for `:latest` or an untagged reference. | Templates, API |
 | **Allowed tag pattern** | Violation when the tag does not match the regular expression (for example semantic versions). | Templates, API |
 | **Required labels** | Violation for each missing label. | Templates, API |
-| **Require signature** | Violation unless the request says the image is signed. | Templates, API |
+| **Require signature** | In the CI gates, verified with a keyless Cosign check (below). In **Validate Image**, evaluated from the status you enter. | Form, templates |
+
+A rule the engine has no check for is listed as **not evaluated** with its reason, never silently treated as passed.
 
 **Quick Start from Template** offers **Production - Strict Security**, **Development - Permissive** and **CI/CD Pipeline Validation**. Adjust the thresholds and save. Policies are team-scoped.
 
-:::warning[Limits of the policy engine in 1.4.0]
-- **Medium counts are not enforced.** The *Production - Strict Security* template stores a `max_medium_vulns` value, but no rule evaluates it.
-- **Require signature is not verified.** The policy engine reads an `is_signed` value from the request; it does not run cosign. The CI gate below always sends `is_signed: false`, so a policy that requires a signature **fails every CI check**. Verify signatures separately with `POST /api/container-security/image/verify-signature` (see [Image Scanning — Other image checks](./image-scanning.md#other-image-checks-api-only)).
-- There is no enable/disable control in the UI; a policy shows **Active** unless it was disabled over the API.
+Each policy has an **enforcement mode**. Only an **enforce** policy blocks an image (`allowed: false`, CI `exit_code` 1); an **audit** policy reports its violations without blocking.
+
+:::warning[Policies saved from the UI are audit-only]
+The policy form has no enforcement-mode control and does not carry a template's mode, so every policy saved from the UI — including one started from *Production - Strict Security* — is stored in **audit** mode and never blocks a pipeline. To block, create the policy over the API with `"enforcement_mode": "enforce"`:
+
+```bash
+curl -s -X POST "$OFFLOAD_HOST/api/container-security/policies" \
+  -H "X-API-Key: $OFFLOAD_API_KEY" -H "Content-Type: application/json" \
+  -d '{ "name": "Production gate", "enforcement_mode": "enforce",
+        "rules": { "max_critical_vulns": 0, "max_high_vulns": 0, "block_latest_tag": true } }'
+```
 :::
 
-**Validate Image Against Policies** takes an image name plus the critical and high counts you enter and returns pass/fail with every violated rule. It does not look up a scan for you.
+There is no enable/disable control in the UI; a policy shows **Active** unless it was disabled over the API.
+
+**Validate Image Against Policies** takes an image name, the critical, high and medium counts you enter, and a **Signed?** choice (unknown, yes or no), and returns allowed or blocked with every violation, warning and rule not evaluated. Nothing is scanned or verified here: a blank count or an unknown signature status is treated as unknown, so a policy limit on it reports *count unknown* or *signature status unknown*.
 
 The **AI Policy Assistant** asks the AI assistant for recommended production policies, a gap analysis of your current policies, or an optimization review.
 
@@ -54,7 +65,16 @@ curl -s -X POST "$OFFLOAD_HOST/api/container-security/cicd/scan-and-validate" \
   }'
 ```
 
-The gate scans the image with **Trivy**. The response carries `scan_results`, `policy_validation` (each rule and whether it passed), `allowed` and an `exit_code` (0 pass, 1 fail) you can return from the step. The gate **fails closed**: when the scan did not complete, the vulnerability counts are unknown and any policy with a vulnerability limit reports a violation. Pair it with the code-side gates in [CI/CD & Automation](../code/ci-cd-and-automation.md).
+The gate scans the image with **Trivy**. The response carries `scan_results`, `policy_validation` (each rule and whether it passed), `allowed` and an `exit_code` (0 pass, 1 fail) you can return from the step. The gate **fails closed**: when the scan did not complete, the vulnerability counts are unknown (`null` in the summary) and any policy with a vulnerability limit reports a violation. Pair it with the code-side gates in [CI/CD & Automation](../code/ci-cd-and-automation.md).
+
+What the CI gates (this call and the `container_image` scan from CI) check differently from the UI:
+
+- **Signatures.** When an enabled policy requires a signature, the gate runs a read-only keyless (Sigstore) `cosign verify` alongside the Trivy scan. A verified signature passes; *no signatures found* is a violation; anything inconclusive — registry sign-in, no route to Sigstore, or an image signed with a Cosign key pair (`cosign sign --key`), which is not checked — is reported as *signature not verified* and also counts as a violation. Any valid Sigstore signer is accepted; the signer and issuer are reported in `signature_verification`, not pinned.
+- **Labels and image age.** The gates do not read the image configuration, so **Required labels** and **Max image age** are listed under `rules_not_evaluated` with a reason, never checked against placeholder values.
+
+:::note[Air-gapped installs]
+The signature check runs a Cosign container and needs to reach the registry and Sigstore. On an install without that access, a policy that requires a signature reports *signature not verified* for every image.
+:::
 
 ## Registry webhooks
 
@@ -100,7 +120,7 @@ For source-code SBOMs with licence analysis, see [SBOM & Licences](../code/sbom-
 
 ![Compliance tab: security posture trend chart, the container compliance report form (target ID, target type, framework, Generate and Latest) and the supported frameworks, starting with CIS Docker Benchmark 1.6.0 and NIST 800-53 Rev 5](/img/screenshots/security-scanning/ctr-compliance.webp)
 
-- **Security Posture Trend** — total findings per scan over time.
+- **Security Posture Trend** — total findings per scan, oldest to newest, with the time shown for scans on the same day. A scan with no vulnerability count (failed, or SBOM only) shows a grey stub, not a green zero.
 - **Container Compliance Report** — choose a **target type** (**Account**, **Registry** or **Image**), the **target**, a **framework** (**CIS Docker Benchmark 1.6.0**, **NIST 800-53 Rev 5**, **PCI-DSS v4.0**, **SOC 2**) and generate. The report scores the mapped controls against the latest completed scan of each image in the target, listing controls assessed, passed and failed. Controls the scanners cannot observe are reported as *not assessed* rather than passed.
 
 ### What a report is made of {#report-manifest}
@@ -121,7 +141,7 @@ When a report is issued (new in 1.4.0), the exact findings it graded are frozen 
 | Open an issued report exactly as issued | `GET /api/container-security/compliance-report/{report_id}` |
 | Latest report for a target (team-scoped) | `GET /api/container-security/compliance-report/latest?target_id=&framework=` |
 
-Report history, past-scan reports and issued-report retrieval are API-only in 1.4.0.
+Report history, past-scan reports and issued-report retrieval are API-only.
 
 :::tip[Registry-level reports]
 Choose target type **Registry** to get one report across every scanned image in a registry — the view an auditor wants for "all production images", instead of one report per tag.

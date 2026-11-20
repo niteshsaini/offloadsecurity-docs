@@ -35,6 +35,7 @@ Before building a report, check whether it already exists. This page is the comp
 | **Risk executive summary** | Register posture for a board pack | JSON (+ PDF data) | `GET /api/risk-management/reports/executive-summary` · `…/executive-pdf-data` |
 | **Heat map export** | 5 × 5 matrix data | JSON | Risk Management → Heat Map → **Heat Map Export** |
 | **SLA breaches** | Current breach list | JSON | `GET /api/sla/breaches` |
+| **Threat landscape report** | Indicators, severity mix, risk level and recommendations for the last 7, 30 or 90 days. The format sets the body: **Executive Summary** (headline numbers, top recommendations, omitted sections listed), **Technical Analysis** (all detail, no summary) or **Comprehensive Report** (everything). Times are UTC | On screen · JSON | Threat Intelligence → **Reports** → **Generate Report** · `POST /api/threat-intelligence/landscape-report` · history `GET …/landscape-reports` · `…/landscape-reports/{report_id}` — see [Threat Intelligence](../ai-threat-intelligence/threat-intelligence.md#reports) |
 
 ## Compliance and audit
 

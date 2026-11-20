@@ -12,7 +12,7 @@ A security test is only useful to an auditor or a client if you can show, later,
 
 ## The engagement record
 
-App Scan and targeted ZAP, Nuclei, Nmap and testssl.sh runs carry an engagement record:
+App Scan and targeted ZAP, Nuclei, Nmap, OpenVAS and testssl.sh runs carry an engagement record:
 
 | Field | Source |
 | --- | --- |
@@ -62,7 +62,7 @@ A run that did not fully happen is never presented as clean:
 
 - A run where a tool stopped part-way, timed out or fell back to built-in checks is **partial**, with the reason. ZAP's fallback is labeled "Built-in HTTP checks (OWASP ZAP did not run)", never "OWASP ZAP".
 - Reports include partial runs and list failed, missing or still-running runs as **NOT TESTED** with their reason in a **Coverage & Completeness** section.
-- An App Scan where no tool completed is **failed** with no grade; a partial App Scan's grade is **provisional**.
+- An App Scan where no tool completed is **failed** with no grade; an App Scan where any requested tool failed, timed out or was stopped part-way is **Incomplete — not graded**, in the UI and in every report.
 
 ## Fingerprinted, frozen exports
 
@@ -81,7 +81,7 @@ Every report you download for a targeted run (HTML, PDF, DOCX, JSON or CSV):
 Verification matches the digest against your team's scan exports and generated consolidated reports.
 
 :::note[API only]
-Export history, exact re-download and verification are available over the API in 1.4.0; the run detail does not list issued exports.
+Export history, exact re-download and verification are available over the API; the run detail does not list issued exports.
 :::
 
 ## Deleted scans are tombstoned

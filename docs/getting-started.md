@@ -44,7 +44,7 @@ Every scan uses **read-only** credentials and only ever *reads* your environment
 3. On success you land on the **Dashboard**.
 
 :::note[First administrator]
-The first administrator account is created during platform setup. If you're the operator who installed the platform, sign in with the admin email and the password you set (`DEFAULT_ADMIN_EMAIL` / `DEFAULT_ADMIN_PASSWORD`). You can then invite teammates and assign roles from **Team Management**.
+The first administrator account is created during platform setup, and it is the deployment's **platform admin**. If you installed the platform with the [one-file installer](./on-premises/deployment.md), its first run generates the admin password and prints the login and password when it finishes; both are kept in the install directory's `.env` (`DEFAULT_ADMIN_EMAIL` / `DEFAULT_ADMIN_PASSWORD`). Change the password after your first sign-in. You can then invite teammates and assign roles from **Team Management**. Someone you invite as **Admin** becomes an admin of your organization, not a platform admin; see [RBAC & Team Management](./authentication/rbac-team-management.md).
 :::
 
 ## 2. Tour the dashboard

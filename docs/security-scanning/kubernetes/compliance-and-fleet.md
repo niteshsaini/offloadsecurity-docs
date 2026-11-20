@@ -54,7 +54,7 @@ Every scan that is not a complete failure freezes its CIS, NIST, PCI DSS and SOC
 | List a cluster's frozen reports | `GET /api/k8s/compliance/history/{cluster_id}?framework=&limit=&skip=` |
 | Open one exactly as issued | `GET /api/k8s/compliance/reports/{report_id}?format=json\|html\|pdf` |
 
-Frozen reports are API-only in 1.4.0 and are removed with the compliance retention period.
+Frozen reports are API-only and are removed with the compliance retention period.
 
 Every compliance export downloaded over the API — live or frozen — carries its SHA-256 in the `X-Content-SHA256` header and is recorded, so the file can be verified later with `GET /api/native-scans/exports/verify?sha256={hex}`.
 

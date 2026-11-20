@@ -15,13 +15,13 @@ Cloud Security tells you how your accounts are configured. This section covers e
 
 | Workspace | Where | What you scan | Engines |
 | --- | --- | --- | --- |
-| **[Scanning](./native-scans.md)** | **Scanning** → **Assessments** · **Targeted runs** · **New scan** | URLs, APIs, hosts, networks, TLS endpoints, domains | OWASP ZAP, Nuclei, Nmap, testssl.sh, native header / API / fingerprint / recon analyzers |
+| **[Scanning](./native-scans.md)** | **Scanning** → **Assessments** · **Targeted runs** · **New scan** | URLs, APIs, hosts, networks, TLS endpoints, domains | OWASP ZAP, Nuclei, Nmap, testssl.sh, Greenbone OpenVAS (through your Greenbone connection), native header / API / fingerprint / recon analyzers |
 | **[Code Command Center](./code/index.md)** | **Code Command Center** | Git repositories, uploaded archives, build artifacts | OpenGrep + Bandit (SAST), OSV.dev (SCA), Gitleaks (secrets), Checkov (IaC), Syft + Grype (SBOM / images), SonarQube (integration) |
 | **[Container Security](./containers/index.md)** | **Container Security** | Images in Amazon ECR, Google Artifact Registry and Azure Container Registry; Dockerfiles | Trivy, Grype, Syft, native Dockerfile rules |
 | **[Kubernetes Security](./kubernetes/index.md)** | **Kubernetes Security** | EKS / GKE / AKS / on-prem clusters | Trivy, Polaris, Kubescape, kube-hunter (kube-bench does not apply to clusters scanned over the API and is reported as skipped) |
-| **[Infra Command Center](./infra-command-center.md)** | **Infra Command Center** | CI pipelines, WAF rules, API endpoints under load | CI/CD API keys, WAF test suite, load tester |
+| **[Infra Command Center](./infra-command-center.md)** | **Infra Command Center** | Greenbone OpenVAS tasks, CI pipelines, WAF rules, API endpoints under load | Greenbone OpenVAS, CI/CD API keys, WAF test suite, load tester |
 
-**Scanning** is one module in 1.4.0. Its **Assessments** tab holds App Scan, the graded multi-tool DAST assessment of one application ([Run an App Scan](./app-scan.md)); **Targeted runs** holds single-tool runs such as one Nmap or testssl.sh scan ([Scan Results](./scan-results.md)); **New scan** is the one launcher for both. The other four workspaces keep their own results views and also feed the unified views.
+**Scanning** is one module. Its **Assessments** tab holds App Scan, the graded multi-tool DAST assessment of one application ([Run an App Scan](./app-scan.md)); **Targeted runs** holds single-tool runs such as one Nmap or testssl.sh scan ([Scan Results](./scan-results.md)); **New scan** is the one launcher for both. The other four workspaces keep their own results views and also feed the unified views.
 
 ## How it fits together
 
@@ -54,7 +54,7 @@ Every Scanning run also records how it was produced and under what authorization
 | --- | --- |
 | Test a web application or API, with login, before release | [Run an App Scan](./app-scan.md) |
 | Run one tool against a target (ZAP, Nuclei, testssl.sh, headers, recon) | [Running Web, API & Host Scans](./native-scans.md) |
-| Port-scan hosts and produce a network VAPT report | [Network Scans & VAPT Report](./network-scans.md) |
+| Port-scan hosts, run OpenVAS scans and produce a network VAPT report | [Network Scans & VAPT Report](./network-scans.md) |
 | Compare a run with the last one, download reports, prove what was issued | [Scan Results](./scan-results.md) · [Engagement & Evidence](./scan-evidence.md) |
 | Scan a repository or wire scans into CI | [Connecting Repositories](./code/connecting-repositories.md) → [Running Code Scans](./code/running-code-scans.md) → [CI/CD & Automation](./code/ci-cd-and-automation.md) |
 | Scan the images in your registries | [Registries](./containers/registries.md) → [Image Scanning](./containers/image-scanning.md) |
@@ -63,12 +63,12 @@ Every Scanning run also records how it was produced and under what authorization
 | Automate over REST | [Scanning API](./api.md) |
 
 :::warning[Only scan what you own]
-Web, API, network and load tests send real traffic to the target, and an authenticated scan acts as the account you give it. Run them only against systems you own or are explicitly authorized to test, and use the gentler profiles on production. The launcher asks you to confirm that authorization for App Scan, ZAP, Nuclei, Nmap and testssl.sh runs and records it with the scan.
+Web, API, network and load tests send real traffic to the target, and an authenticated scan acts as the account you give it. Run them only against systems you own or are explicitly authorized to test, and use the gentler profiles on production. The launcher asks you to confirm that authorization for App Scan, ZAP, Nuclei, Nmap, OpenVAS and testssl.sh runs and records it with the scan.
 :::
 
 ## Prerequisites
 
 - Platform permissions: **Run Scans** to start scans, **View Scans** to read results, **Manage Container Security** for registries, policies and clusters ([RBAC](../authentication/rbac-team-management.md)).
-- Private (RFC 1918) scan targets are refused unless the deployment sets `ALLOW_PRIVATE_SCAN_TARGETS=true`. Loopback and cloud-metadata addresses are always refused.
+- Private (RFC 1918) scan targets are refused unless the deployment sets `ALLOW_PRIVATE_SCAN_TARGETS=true` (OpenVAS scans follow `OPENVAS_ALLOW_PRIVATE_TARGETS`, on by default). Loopback and cloud-metadata addresses are always refused.
 - For registries and clusters discovered from the cloud: a connected account ([Connecting Cloud Accounts](../cloud-security/connecting-accounts.md)) with the roles in [Required Permissions](../cloud-security/permissions.md).
 - For repositories: a Git provider token (GitHub, GitLab or Bitbucket) with read access.

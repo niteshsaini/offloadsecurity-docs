@@ -2,20 +2,34 @@
 title: "Infra Command Center"
 sidebar_label: "Infra Command Center"
 sidebar_position: 8
-description: "See your connected infrastructure sources, wire the platform's scan into GitHub Actions or Jenkins in three steps, test whether your WAF blocks common attack payloads, and load-test an API endpoint."
+description: "See your connected infrastructure sources, run Greenbone OpenVAS scans, wire the platform's scan into GitHub Actions or Jenkins in three steps, test whether your WAF blocks common attack payloads, and load-test an API endpoint."
 ---
 
 # Infra Command Center
 
-The Infra Command Center collects the operational checks that sit next to scanning: the infrastructure sources you have connected (the **Endpoint Security** view of a Wazuh connection, and the **GitHub Actions** and **Jenkins** setup guides for the platform's scan step), plus two built-in DAST checks that need no connection — a **WAF test** that fires real attack payloads at a URL to see what gets through, and an **API load test**. Authenticated web app and API scans run from [Scanning](./native-scans.md); source-code scanning lives in [Code Command Center](./code/index.md).
+The Infra Command Center collects the operational checks that sit next to scanning: the infrastructure sources you have connected (the **Endpoint Security** view of a Wazuh connection, **Network VAPT (OpenVAS)** for a Greenbone connection, and the **GitHub Actions** and **Jenkins** setup guides for the platform's scan step), plus two built-in DAST checks that need no connection — a **WAF test** that fires real attack payloads at a URL to see what gets through, and an **API load test**. Authenticated web app and API scans run from [Scanning](./native-scans.md); source-code scanning lives in [Code Command Center](./code/index.md).
 
 **Where:** left navigation → **Infra Command Center**.
 
 ## Overview and tabs
 
-The **Overview** tab lists the connected sources and the built-in tests. The **Endpoint Security**, **GitHub Actions** and **Jenkins** tabs appear only once that integration is connected for your team in **Integrations**; until then the Overview offers a link to connect each one. **WAF Testing** and **API Load Test** are always shown.
+The **Overview** tab lists the connected sources and the built-in tests. The **Endpoint Security**, **Network VAPT (OpenVAS)**, **GitHub Actions** and **Jenkins** tabs appear only once that integration is connected for your team in **Integrations**; until then the Overview offers a link to connect each one. **WAF Testing** and **API Load Test** are always shown.
 
 **Endpoint Security** is the in-platform view of your Wazuh agents (alerts, vulnerabilities, compliance, agent health and Endpoint 360). It is documented under [Wazuh](../integrations/wazuh.md); its **Network VAPT findings on this host** panel is described in [Network Scans & VAPT Report](./network-scans.md#host-side-correlation-with-wazuh).
+
+## Network VAPT (OpenVAS)
+
+**Where:** Infra Command Center → **Network VAPT (OpenVAS)** (shown once Greenbone OpenVAS is connected in Integrations).
+
+The tab lists the team's Greenbone tasks with their target, scan config, status, progress and last completed scan; tasks created from Offload are marked **Created from Offload**.
+
+- **Scan now** / **Stop** start or stop a task. Starting asks you to confirm that you are authorized to test its targets, and the task's existing targets are checked against the same rules as a new scan.
+- **New scan** creates a target and a task in Greenbone (named `offload-…`) for the hosts, IP addresses or CIDR ranges you enter, with the scan config, port list and scanner you choose. Untick **Start the scan now** to create the task without running it.
+- **Edit** changes the name, note, targets, excluded hosts, scan config, port list, scanner and credentials of an idle task created from Offload. A running task cannot be edited.
+- **Delete** moves a task created from Offload and its target to Greenbone's trashcan. Its findings stay open and are marked as source removed after the next sync; deleting a task is never treated as a fix.
+- **Schedule…** creates an **OpenVAS (Greenbone)** schedule in the Unified Scheduler that re-runs the task **Daily**, **Weekly (Monday)** or **Monthly (1st)** at the hour (UTC) you pick, with an authorization attestation ([Scan Management](./scan-management.md#scheduled-network-container-registry-and-openvas-scans)).
+
+Starting and stopping need **Run Scans**; edit, delete and schedule need **Manage Scans**. Results, credentialed scans and the other ways to start a scan are described in [Network Scans & VAPT Report](./network-scans.md#openvas-scans-from-the-platform).
 
 ## GitHub Actions and Jenkins
 

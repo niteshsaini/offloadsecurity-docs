@@ -2,7 +2,7 @@
 title: "Cloud Security Troubleshooting & FAQ"
 sidebar_label: "Troubleshooting & FAQ"
 sidebar_position: 13
-description: "Fix the common Cloud Security problems — validation failures, scans that stay queued or come back partial, empty dashboards, findings that reappear — and answers to the questions teams ask most."
+description: "Fix the common Cloud Security problems — validation failures, scans that stay queued or come back partial, empty dashboards, findings that reappear, missing cloud events and changes — and answers to the questions teams ask most."
 ---
 
 # Cloud Security Troubleshooting & FAQ
@@ -14,6 +14,9 @@ The trust policy on your role does not allow the platform's principal, or the **
 
 **A scan is refused because the identity belongs to a different AWS account.**
 Every AWS scan verifies with `sts:GetCallerIdentity` that the role or keys reached the 12-digit account you entered. The credentials belong to another account — replace them under **Cloud Accounts → Credentials & Health** (see [Rotate an account's credentials](./account-management.md#rotate-an-accounts-credentials)).
+
+**A scan or ECR sign-in is refused with "no AWS credential is stored for this account … refusing to scan with the platform's own identity".**
+The account has no stored access keys or cross-account role, and the platform does not fall back to its own AWS identity (instance profile, task role or host credentials). Add the account's credential under **Cloud Accounts → Credentials & Health**. Only a self-hosted deployment that scans the AWS account it runs in should set `CSPM_ALLOW_PLATFORM_IDENTITY=true` in `.env` (read by the backend and the Celery worker). Even then, the identity must belong to the account being scanned.
 
 **GCP validation fails with `PERMISSION_DENIED` or `API has not been used in project`.**
 Enable the APIs listed in [Required Permissions](./permissions.md#bucket-a--read-only-scanning) (`cloudasset`, `cloudresourcemanager`, `compute`, `iam`, …) **on the service account's own project** and grant the roles at project — or org — level. For organizations, run **Check readiness** first; it names each missing API and role and shows the command to fix it.
@@ -46,6 +49,9 @@ A job failed, Prowler reported check errors in a region (for example access deni
 
 **The scan finished `failed` immediately.**
 Almost always authentication — the same causes as validation failures above. Run **Test Connection** to confirm.
+
+**Scans that use an instance role or Azure Managed Identity fail after upgrading to 1.4.1.**
+Scanner containers, including Prowler, now use Docker bridge networking (`SCANNER_DOCKER_NETWORK=bridge`). An identity read from the instance metadata service may not be reachable from a bridge container; for example, IMDSv2 with a hop limit of 1 does not reach it. Prefer a stored credential (a cross-account role or a service principal). If you must keep the metadata identity, raise the IMDSv2 hop limit or ask your operator to set `SCANNER_DOCKER_NETWORK=host`, which gives every scanner container the host's network.
 
 **Findings count is much lower than expected.**
 Check the run's **region scope** (printed in its report). The Manage Accounts quick scan of an AWS account with no saved regions covers `us-east-1` only — its button reads *Quick scan (us-east-1)*. Full and incremental scans cover every enabled region unless regions are configured; if the enabled-region lookup failed, the run fell back to 13 common regions and its report says so.
@@ -95,6 +101,18 @@ Check, in order: your team has a webhook token (**Cloud Events** setup panel); t
 
 **Events arrive but no findings are created.**
 Only catalogued, security-relevant events create findings; others are stored as *ignored*, and failed API calls as *skipped*. Events for a cloud account your team has not onboarded are stored as *rejected*. Trigger a known one (for example a security-group ingress change) on an onboarded account to confirm the pipeline.
+
+**AWS console sign-ins or secret reads never appear.**
+The EventBridge rule is missing the console sign-in event type or uses the default `ENABLED` state, which drops read-only calls. Update the rule to the current pattern with state `ENABLED_WITH_ALL_CLOUDTRAIL_MANAGEMENT_EVENTS` — see [Update an existing AWS rule](./cloud-events.md#update-an-existing-aws-rule).
+
+**The Changes tab is empty although Cloud Events shows events.**
+Only successful calls that changed something are recorded as changes; reads and failed calls are not. Check the window filter, and make a test change (for example, add a tag) on an onboarded account. See [Cloud Change Monitoring](./change-monitoring.md).
+
+**My pipeline's changes show as unexplained.**
+Add the pipeline's identity under **Changes → Approved identities**. For AWS, approve the role ARN (`arn:aws:iam::<account>:role/<name>`), not the assumed-role session. A console session in that role, or a person impersonating an approved GCP service account, is labelled a person by design.
+
+**A change's detail says its alert could not be recorded.**
+The platform could not write the alert after retrying, so the change is not on Alerts. Review it on the Changes tab.
 
 ## Frequently asked questions
 

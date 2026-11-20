@@ -65,7 +65,8 @@ In the repository's branch protection, add the `OffloadSecurity / …` check to 
 ### What you see on the PR
 
 - A check named `OffloadSecurity / code_security` (or the scan type you chose), passing or failing, with annotations on the changed lines.
-- A comment: *Offload security review — PASSED/FAILED*, the number of changed files scanned, new vs. already-present counts by severity, and a link to the full report.
+- A comment: *Offload security review — PASSED/FAILED*, the number of changed files scanned, new vs. already-present counts by severity, and **View the full results in OffloadSecurity**, a link to the run. The check run's **Details** button opens the same run.
+- The link uses the platform's public URL, or else `https://<DOMAIN_NAME>`; with neither set, no link is added rather than a `localhost` one. A run from an installation that no team has claimed yet gets no link.
 - When the PR is a fix PR the platform itself opened, merging it triggers a re-scan of the base branch to verify the fix.
 
 ## GitLab and Bitbucket — merge-request webhooks

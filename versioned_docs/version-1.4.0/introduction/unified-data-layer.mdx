@@ -1,0 +1,107 @@
+---
+title: "The Data Lake & Single Pane of Glass"
+sidebar_label: "Data Lake & Single Pane of Glass"
+sidebar_position: 3
+description: "How Offload Security's data lake normalizes findings from every scanner into one shared model — deduplicated and correlated to assets, controls and evidence — and renders it as a single pane of glass."
+---
+
+import DocFaq from '@site/src/components/DocFaq';
+
+# The Data Lake & Single Pane of Glass
+
+Everything in the previous pages rests on one architectural idea: **every module writes to, and reads from, a shared security data layer — a data lake — and the Vulnerability Dashboard renders it as a single pane of glass.** This is what makes Offload Security a *platform* rather than a bundle of tools that happen to share a login.
+
+## One data lake underneath everything
+
+As findings are produced — a cloud misconfiguration, a container CVE, a web-app vulnerability, a code issue, an endpoint or host finding from Wazuh — they are **normalized into a common model and stored in one unified data layer.** Assets, findings, controls, evidence, alerts, and threat intelligence all live in that same correlated store, keyed to a shared notion of *what the asset is* and *what the finding is*.
+
+Because the data lake is the common substrate:
+
+- **No module owns its own island of data.** A scanner doesn't keep its results to itself; it contributes them to the lake, where every other module can use them.
+- **The same finding is one record**, whether it was seen once or a thousand times, and whether one scanner found it or three did.
+- **Adding a source enriches the whole platform**, not just one screen — connect a new scanner or cloud account and its data immediately participates in risk, compliance, reporting, and correlation.
+
+## Every module is interlinked
+
+Because they share the data lake, the modules are **interconnected by design** — the output of one is the input of the next:
+
+```mermaid
+flowchart TB
+    subgraph Sources["Every source contributes"]
+        direction LR
+        CL["Cloud Security"]
+        AP["App / API / Network"]
+        CD["Code / SAST / SBOM"]
+        CK["Container / Kubernetes"]
+        WZ["On-Prem: Wazuh"]
+        TP["Connected tools<br/>(Wazuh · Greenbone OpenVAS · SARIF imports<br/>SonarQube / Jenkins summaries · Jira two-way)"]
+        TI["Threat Intelligence"]
+    end
+
+    LAKE[("Unified security data layer<br/>— the data lake —<br/>assets · findings · controls · evidence · alerts")]
+
+    subgraph Panes["Read from the same lake"]
+        direction LR
+        VD["Vulnerability Dashboard<br/>★ single pane of glass"]
+        RR["Risk Register"]
+        CMP["Compliance & Evidence"]
+        AL["Alerts"]
+        REP["Reports"]
+    end
+
+    CL --> LAKE
+    AP --> LAKE
+    CD --> LAKE
+    CK --> LAKE
+    WZ --> LAKE
+    TP --> LAKE
+    TI --> LAKE
+
+    LAKE --> VD
+    LAKE --> RR
+    LAKE --> CMP
+    LAKE --> AL
+    LAKE --> REP
+```
+
+A vulnerability resolves against an **asset**; the asset carries its **cloud, container, or on-prem context**; the finding promotes into the **[Risk Register](../vulnerability-risk/risk-management/index.md)**; the risk maps to a **[compliance control](../compliance/index.md)**; the control accrues **[evidence](../compliance/evidence-hub.md)**; and **[threat intelligence](../ai-threat-intelligence/threat-intelligence.md)** re-scores it as the outside world changes — all without an analyst re-keying anything between systems.
+
+## The Vulnerability Dashboard is the single pane of glass
+
+The **[Vulnerability Dashboard](../vulnerability-risk/vulnerability-management/index.mdx)** is where the data lake becomes visible and actionable. It is not "the cloud scanner's results" or "the code scanner's results" — it is **every finding from every source, in one queue**, deduplicated, risk-scored, and tracked to closure:
+
+- **Native modules** — Cloud Security, application/API/network scanning, SAST and code, SBOM/license, and container and Kubernetes all land here.
+- **On-prem telemetry** — host and endpoint findings from Wazuh contribute to the same view.
+- **Connected tools** — [Wazuh](../on-premises/wazuh-integration.md) host CVEs, alerts and endpoints are synced into the same stores; the latest report of each [Greenbone OpenVAS](../on-premises/openvas-scanning.md) scan task becomes vulnerability occurrences; SARIF 2.1.0 logs from other code scanners (CodeQL, Semgrep, Snyk Code and others) are imported in Code Command Center; SonarQube and Jenkins contribute project and job summaries (SonarQube issues are not imported as findings); Jira carries findings out as tickets and brings status back. Other catalog integrations verify a connection today rather than import findings — the [Integration Catalog](../integrations/third-party.md) says which is which, tool by tool.
+
+The result is one place where a team can see its vulnerability exposure from every scanner the platform runs — cloud, code, container, Kubernetes, web, API, network — plus the host layer from Wazuh, instead of logging into each product to assemble the picture by hand.
+
+:::note[Why "single pane of glass" is more than a slogan here]
+Many tools claim a single pane by *linking out* to other consoles. Offload Security is different: the data itself is ingested into a shared lake and normalized, so the Vulnerability Dashboard shows a unified, deduplicated, comparable list — not a directory of other dashboards. One severity scale, one asset identity, one queue.
+:::
+
+## Why this matters
+
+- **Complete exposure, in one view.** You see your true vulnerability posture across cloud, on-prem, code, and every connected tool — not a per-product slice.
+- **No duplicated triage.** The same issue found by two scanners is one record, triaged once.
+- **Consolidation without rip-and-replace.** Keep the scanners you rely on; Offload Security unifies their output rather than forcing you to abandon them. See **[Integrations](../integrations/third-party.md)**.
+- **Governance flows automatically.** Because everything shares the lake, risk, compliance, evidence, and reporting stay current as findings open and close — the whole point of **[centralized ingestion](../on-premises/centralized-ingestion.md)**.
+
+---
+
+In short: the data lake is the foundation, the interlinked modules are the structure, and the **Vulnerability Dashboard is the window** — one pane of glass onto everything, including the products you've already integrated.
+
+<DocFaq items={[
+  {
+    q: "How does Offload Security deduplicate findings from multiple scanners?",
+    a: "Every finding is normalized into a shared model keyed to a common notion of the asset and the issue. Duplicate findings reported by different scanners are reconciled against that model, so an analyst triages each issue once.",
+  },
+  {
+    q: "What is the difference between scanner aggregation and unified vulnerability management?",
+    a: "Aggregation simply collects outputs side by side. Unified vulnerability management normalizes findings into one model, deduplicates them, correlates each to its asset, control and evidence, and updates risk and compliance state automatically as findings open and close.",
+  },
+  {
+    q: "Can Offload ingest findings from tools like Wazuh, SonarQube or Snyk?",
+    a: "Wazuh and Greenbone OpenVAS, yes: Wazuh agents, alerts and host CVEs, and the latest OpenVAS report of each scan task, land in the same data lake and appear in the deduplicated, risk-scored queue alongside Offload's own findings. Code scanners that export SARIF 2.1.0 (CodeQL, Semgrep, Snyk Code and others) can be imported in Code Command Center. SonarQube and Jenkins contribute summaries; Snyk, AWS Security Hub and similar catalog entries verify a connection today and do not import findings. Indicators can be imported via STIX.",
+  },
+]} />

@@ -2,7 +2,7 @@
 title: "Integrations API"
 sidebar_label: "API"
 sidebar_position: 13
-description: "Catalog, wizard, sync, health and data endpoints; data collection health; Slack routing, notification preferences and the in-app center; webhook subscriptions; Jira and GitHub / GitLab issues; the audit-trail SIEM export; SMTP and channel tests — with the permission each one needs."
+description: "Catalog, wizard, sync, health and data endpoints; data collection health; Greenbone OpenVAS scan control; Slack routing, notification preferences and the in-app center; webhook subscriptions; Jira and GitHub / GitLab issues; the audit-trail SIEM export; SMTP and channel tests — with the permission each one needs."
 ---
 
 # Integrations API
@@ -32,6 +32,22 @@ Send the key as `X-API-Key`; calls are scoped to the key's team.
 | Health | `GET /api/integrations/health-status` · `GET …/health-status/{integration_id}` · `POST /api/integrations/recheck/{integration_id}` | Latest recorded checks; recheck runs one now (**Manage Integrations**) |
 | Request a tool | `POST /api/integrations/request-custom` `{tool_name, description, …}` | **Manage Integrations** |
 | Data collection health | `GET /api/capability-health?stale_days=7` · `GET /api/capability-health/recovery?days=30` | Every source's state, reason and restore steps; detection and restore times. **View Integrations** |
+
+## Greenbone OpenVAS scan control
+
+Back the [Network VAPT (OpenVAS)](./openvas.md#run-scans-from-the-platform) tab. Every call goes to the team's connected Greenbone instance; 404 when it is not connected.
+
+| Task | Endpoint | Notes |
+| --- | --- | --- |
+| Tasks · one task | `GET /api/integrations/greenbone-openvas/tasks` · `GET …/greenbone-openvas/tasks/{task_id}` | Live status and progress. The single read returns the target, attached credentials, `can_edit` / `can_delete` and `managed_by`. **View Integrations** |
+| Scan options | `GET /api/integrations/greenbone-openvas/scan-options` | Scan configs, port lists, scanners. **Run Scans** |
+| Start · stop | `POST …/greenbone-openvas/tasks/{task_id}/start` `{engagement?}` · `POST …/tasks/{task_id}/stop` | Start applies the OpenVAS target rules. **Run Scans** |
+| New scan | `POST /api/integrations/greenbone-openvas/scans` `{name, targets[], exclude_hosts[], scan_config_id?, port_list_id?, scanner_id?, start_now, request_id?, engagement?}` | `start_now: false` creates without scanning; a repeated `request_id` returns the scan it created. **Run Scans** |
+| Edit · delete | `PATCH …/greenbone-openvas/tasks/{task_id}` `{name?, comment?, scan_config_id?, scanner_id?, targets?, exclude_hosts?, port_list_id?, credential_ids?}` · `DELETE …/tasks/{task_id}` | Tasks created from Offload only; refused (409) while queued or running and for tasks of a credentialed scan setup. Delete moves to Greenbone's trashcan. **Manage Scans** |
+| Endpoint host scan | `GET` · `POST /api/integrations/wazuh/endpoints/{agent_id}/openvas-scan` | One Wazuh host's OpenVAS state; POST scans it (**Run Scans**) |
+| Coverage | `GET /api/integrations/greenbone-openvas/coverage?state=&search=&skip=&limit=` · `POST …/coverage/scan` `{agent_ids[]?, state?, engagement?}` | Wazuh hosts by scan state. The POST is a background job (poll `GET /api/jobs/{job_id}`); without `agent_ids` it scans up to 100 hosts in the state (default `not_scanned`). **Run Scans** |
+
+Recurring OpenVAS scans are schedules with `entity_config.scan_type: "openvas"` and the task id in `target_config.resource_ids`, created through the Scheduler API.
 
 ## Notifications
 
@@ -94,5 +110,7 @@ Session-only: these endpoints do not accept API keys. They back the [GitHub & Gi
 | Connect, test, sync, reconfigure, remove; Slack routing rules; team notification preferences; create / change / test webhook subscriptions; GitHub & GitLab Issues admin settings; SMTP / Jira / Confluence config routes | **Manage Integrations** (`manage_integrations`) — Admin, Security Manager |
 | Read notifications, mark read / dismiss, personal preferences | any authenticated team member |
 | Create Jira tickets for selected findings | **Vulnerability Management** |
+| Start, stop and create OpenVAS scans; Endpoint 360 and coverage scans | **Run Scans** (`run_scans`) |
+| Edit, delete and schedule OpenVAS tasks | **Manage Scans** (`manage_scans`) |
 
 See [Authentication](../api-reference/authentication.md) for key scopes and [Conventions](../api-reference/conventions.md) for pagination, error shapes and rate limits.

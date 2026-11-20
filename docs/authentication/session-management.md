@@ -15,14 +15,16 @@ Two ways in — a password (with MFA on top) or your identity provider — and o
 
 | Rule | Value |
 | --- | --- |
-| Password | At least **12 characters** with an uppercase letter, a lowercase letter, a digit and a special character, and not on the built-in list of common passwords |
+| Password | At least **12 characters** (or the longer minimum set on [Security Policy](./platform-admin-console.md#security-policy)) with an uppercase letter, a lowercase letter, a digit and a special character, and not on the built-in list of common passwords |
 | Storage | PBKDF2-SHA256, 600,000 iterations, a unique salt per user — never reversible |
 | Lockout | **5** failed attempts from one address lock sign-in to that account **from that address** for **15 minutes**; further failures from the same address double the lock (30, then 60 minutes, the cap). Other addresses are not locked, so a third party cannot lock a user out |
 | Account-wide brake | After 20 recent failures on one account across all addresses, every attempt on it is slowed (1 s, rising to 10 s). This is a delay, never a lock |
 | Enumeration | A wrong email and a wrong password take the same time and give the same answer |
 | First sign-in | An account created by an administrator with a temporary password is sent to **Change password** before anything else |
 
-IPv6 addresses are grouped by /64 for the lockout. Failure counters are forgotten an hour after the lock they caused would have ended.
+IPv6 addresses are grouped by /64 for the lockout and, since 1.4.1, for the platform's per-IP rate limits. Failure counters are forgotten an hour after the lock they caused would have ended. The platform administrator can clear a lock with **Unlock** on User Activity.
+
+The values above are the built-in floors. The platform administrator can make the minimum length, the number of failures before backoff and the first backoff duration stricter on [Security Policy](./platform-admin-console.md#security-policy), but never looser.
 
 ## Multi-factor authentication
 
@@ -40,7 +42,7 @@ With MFA on, a correct password returns an MFA challenge rather than a session; 
 
 ### Enforcing MFA for everyone
 
-MFA enforcement is a **deployment-wide** setting that only the [platform administrator](./platform-administration.md) can change, from a signed-in session (not an API key), and only after enabling MFA on their own account. There is no switch in the UI; it is set over the API:
+MFA enforcement is a **deployment-wide** setting that only a [platform administrator](./platform-administration.md) can change, from a signed-in session (not an API key), and only after enabling MFA on their own account. Since 1.4.1 it is a button on User Activity: **Enforce MFA for everyone** (or **Stop enforcing MFA**). The action asks for your password again ([step-up](./platform-admin-console.md#step-up-re-authentication)). The same setting is available over the API:
 
 ```
 POST /api/auth/mfa/enforce
@@ -54,7 +56,7 @@ While enforcement is on:
 
 When SSO is used and the identity provider already performs MFA, the operator can set `OIDC_TRUST_IDP_MFA=true` so SSO users are not asked twice. With it left at `false` (the default), an account that has platform MFA enabled gets the same MFA challenge after SSO as after a password.
 
-A user who has lost both the authenticator and the backup codes cannot recover alone. The platform administrator can reset that user's MFA with `POST /api/auth/mfa/admin/reset/{user_id}` (API only): MFA is cleared, the user is signed out everywhere and notified (in-app, and by email when SMTP is configured), and the reset is audited. Under enforcement their next sign-in is the restricted, enrol-only session.
+A user who has lost both the authenticator and the backup codes cannot recover alone. The platform administrator can reset that user's MFA with **Reset MFA** on User Activity (step-up), or with `POST /api/auth/mfa/admin/reset/{user_id}`: MFA is cleared, the user is signed out everywhere and notified (in-app, and by email when SMTP is configured), and the reset is audited. Under enforcement their next sign-in is the restricted, enrol-only session.
 
 ## Single sign-on (OIDC)
 
@@ -65,7 +67,7 @@ The platform is an OpenID Connect relying party (authorization code + PKCE) for 
 | `OIDC_ENABLED` · `OIDC_ISSUER` · `OIDC_CLIENT_ID` · `OIDC_CLIENT_SECRET` | Turn SSO on and point it at the provider (discovery from the issuer URL) |
 | `OIDC_PROVIDER_NAME` | The label on the **Sign in with …** button |
 | `OIDC_SCOPES` | `openid email profile` by default |
-| `OIDC_ENFORCED` | Refuse password sign-in for everyone except the platform administrator (the break-glass account); the login page hides the password form |
+| `OIDC_ENFORCED` | Refuse password sign-in for everyone except platform administrators (the break-glass accounts); the login page hides the password form. When a platform-admin IP allowlist is set, this exception only works from inside it |
 | `OIDC_AUTO_PROVISION` · `OIDC_DEFAULT_ROLE` | Create an account on first SSO sign-in (on by default) with this role (`viewer` by default) |
 | `OIDC_ALLOWED_EMAIL_DOMAINS` | Only provision users from these domains; empty falls back to the deployment's registration domain. An address invited explicitly by a team admin is admitted even outside the list |
 | `OIDC_REQUIRE_EMAIL_VERIFIED` | `true` (default) rejects only an explicit `email_verified=false`; `strict` requires `email_verified=true` (Entra ID never sends the claim, so `strict` blocks it); `false` never checks |
@@ -87,10 +89,10 @@ Group mapping is configured **only in the environment** — there is no UI for i
 ## Sessions
 
 - A session is an opaque random token stored **hashed** server-side (Redis, with MongoDB as fallback); the browser holds the token and sends it as `Authorization: Bearer`.
-- Sessions last **24 hours** from sign-in. There is no silent extension — sign in again after a day.
-- A user may hold **5** sessions at once (laptop, phone, a second browser); the oldest is evicted when a sixth is created.
+- Sessions last **24 hours** from sign-in by default. There is no silent extension — sign in again when the session ends. The platform administrator can shorten the lifetime on [Security Policy](./platform-admin-console.md#security-policy); the change applies to new sign-ins.
+- A user may hold **5** sessions at once by default (laptop, phone, a second browser); the oldest is evicted when one more is created. The platform administrator can lower this limit. Since 1.4.1, ended and expired sessions are dropped from the count at each sign-in.
 - **Sign Out** deletes the session server-side. Switching teams re-issues the session bound to the new team.
-- Sessions are also ended for you when a team admin **changes your role** or **removes you** from a team, when the platform administrator signs a session out from [User Activity](./audit-trail.md#user-activity-platform-administrator), sets **Require change** or resets your MFA, and when MFA enforcement is turned on while you have no MFA.
+- Sessions are also ended for you when a team admin **changes your role** or **removes you** from a team, when a platform administrator signs a session out from [User Activity](./audit-trail.md#user-activity-platform-administrator), uses **Sign out everywhere**, sets **Require change**, resets your MFA or deactivates your account, when your platform-admin role is revoked, and when MFA enforcement is turned on while you have no MFA.
 
 ## Changing and resetting passwords
 
@@ -100,11 +102,13 @@ Group mapping is configured **only in the environment** — there is no UI for i
 - **Forgot your password?** on the login page emails a single-use link valid for **30 minutes** (`PASSWORD_RESET_TTL_MINUTES`) — always with the same "if an account exists…" answer. It needs the deployment's SMTP to be configured.
 - Without SMTP, or for a locked-out colleague, the platform administrator issues a reset link from User Activity (**Reset password**, valid **24 hours** by default, `PASSWORD_RESET_ADMIN_TTL_MINUTES`) or flags the account with **Require change**, which signs the user out and sends the next sign-in straight to *Change password*. Neither applies to SSO-only accounts — reset those at the identity provider.
 
-There is no password expiry or password-history rule; use SSO if your policy requires them.
+There is no password expiry or password-history rule; use SSO if your policy requires them. A stricter minimum length set on Security Policy applies at the next password change; existing passwords keep working.
 
 ## Registration and invitations
 
 The **first account** on a new deployment registers itself and becomes the platform administrator; from then on registration is **invitation-only**. An invitation carries the team and role, is bound to the invited email, expires after **7 days** (`INVITATION_EXPIRY_DAYS`) and is stored hashed. A team admin may send **20 invitations an hour** (`INVITE_RATE_LIMIT_COUNT` / `…_WINDOW_SECONDS`). Where the deployment set an **allowed email domain**, invitations outside it are refused. See [Roles, Teams & API Keys](./rbac-team-management.md#invite-a-teammate-and-assign-a-role).
+
+The role in the invitation becomes the new user's deployment-level role as well. Someone invited as **Admin** becomes an org Admin, never a platform administrator: no invitation can grant that (see [Org Admin is not platform administrator](./platform-administration.md#org-admin-is-not-platform-administrator)). A registration that fails partway is rolled back cleanly. The platform administrator can also create a user directly in a team from [Teams & Users](./platform-admin-console.md#teams--users).
 
 ## Related
 
