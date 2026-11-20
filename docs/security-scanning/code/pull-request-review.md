@@ -26,7 +26,7 @@ flowchart LR
 1. **Exact commit.** The review checks out the commit the event names, not "the latest on the branch", so a status is always about the code it is attached to. The result records the requested and resolved commit.
 2. **Changed files only.** Only files touched by the change are scanned, which is what keeps a review fast enough to sit in the merge path.
 3. **New vs pre-existing.** Each finding is classified as **new** (introduced by this change) or **pre-existing** (already on the target branch). The classification ignores line numbers, so a file re-indented by the change does not turn old findings into new ones.
-4. **Decoration.** New findings get **inline comments** on the affected lines, worst severity first, up to 30 per review; one **summary comment** lists everything; a **commit status** reports pass or fail. If the scan itself fails, a *failed* status is published with the reason — a review never leaves a required check pending.
+4. **Decoration.** New findings get **inline comments** on the affected lines, worst severity first, up to 30 per review; one **summary comment** lists everything; a **commit status** reports pass or fail. On GitHub, the comment and the check run's **Details** button link to the run in Offload. If the scan itself fails, a *failed* status is published with the reason — a review never leaves a required check pending.
 5. **Findings land in the platform** too: the same rows appear under **Findings** and the scan under **Reports**, with the usual triage lifecycle.
 
 ### The gate

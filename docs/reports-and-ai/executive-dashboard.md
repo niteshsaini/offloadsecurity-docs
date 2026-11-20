@@ -35,7 +35,9 @@ Leadership does not ask which SCF control is partial; it asks *are we ready for 
 
 ![Comprehensive Gap Analysis: implementation score 57.2%, 11 frameworks, 24 total gaps, a critical-gaps tile of 10; gap cards with framework, priority, control, SCF domain, open findings, assignment and control status](/img/screenshots/reports-and-ai/exec-gap-analysis.webp)
 
-**Generate Gap Analysis** turns the current gaps into a document: overall score, frameworks analysed, gaps by priority, the critical gaps in full, per-framework gap counts, recommendations grouped as *immediate (0–30 days)*, *short-term (1–3 months)* and *long-term (3–6 months)*, and a risk-impact assessment (financial, operational, reputational). Export it as PDF or email it to stakeholders from the buttons at the bottom.
+**Generate Gap Analysis** turns the current gaps into a document: overall score, frameworks analysed, gaps by priority, the top-priority gaps in full, per-framework gap counts, recommendations grouped as *immediate (0–30 days)*, *short-term (1–3 months)* and *long-term (3–6 months)*, and a risk-impact assessment (financial, operational, reputational). Export it as PDF or email it to stakeholders from the buttons at the bottom.
+
+The **Critical Gaps** tile counts every open gap with *Critical* priority. The **Top Priority Gaps** list below it is a separate thing: the ten highest-priority gaps of any priority, Critical first, headed *top 10 of N* when there are more. Gap counts by priority are taken over **every** open gap, not over the sample listed on the overview, and a priority outside Critical, High, Medium and Low is counted as *other*, so the buckets always add up to the total. The roadmap, board metrics, executive reports, **Export PDF** and scheduled reports use the same counts.
 
 ## Remediation roadmap
 

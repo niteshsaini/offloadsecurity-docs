@@ -21,7 +21,7 @@ A Software Bill of Materials answers "what exactly is in this build?" — and on
 | **Upload** | **Choose SBOM file** — CycloneDX (JSON or XML) or SPDX (JSON), up to 25 MB (`MAX_SBOM_UPLOAD_BYTES`) — and **Upload & Analyze**. You get the full analysis without connecting the repository; the report is listed with provider *upload*. |
 | **As part of a scan** | Every **Full Code Security** or **SBOM & License Scan** produces one ([Running Code Scans](./running-code-scans.md)). |
 
-Reports list the repository, the commit it describes, status, component count and licence summary; **Show: application / owner** narrows the list once repositories are mapped ([Repository ownership](./connecting-repositories.md#repository-ownership)).
+**SBOM Reports** are grouped as a tree: **repository → branch → report**, newest first, like the Reports tab. Each repository and branch shows its true number of reports; a branch with more reports than are shown says *showing latest N*. Each report shows the commit it describes, its status, component count, licence summary and any error, with a delete action. Search by repository, branch or application, and page through repositories; **Show: application / owner** narrows the list once repositories are mapped ([Repository ownership](./connecting-repositories.md#repository-ownership)). Uploaded SBOMs are filed under the branch *upload*.
 
 ### Licence enrichment (opt-in)
 

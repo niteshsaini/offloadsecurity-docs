@@ -57,7 +57,7 @@ Opening a control shows its evidence, comments and a **Why this status** panel: 
 
 ![Evidence Freshness: tiles for fresh (more than 14 days left), expiring within 14 days, no expiry set, expired / retired and total evidence items, above the auditor-package download buttons](/img/screenshots/compliance/evidence-hub-freshness.webp)
 
-Evidence ages. Manual evidence carries a **valid-until** date; assessments carry a validity window; scan evidence is superseded by the next scan. Freshness splits all of the team's evidence items into four buckets that add up to the total: **Fresh**, **Expiring within** the window, **No expiry set** (current until archived or revoked) and **Expired / retired** (expired, archived, revoked or superseded; earns no credit). Expired evidence stops supporting its controls and appears as an *Evidence Expired* [drift](./drift-detection.md).
+Evidence ages. Manual evidence carries a **valid-until** date; assessments carry a validity window; scan evidence is superseded by the next scan. Freshness splits all of the team's evidence items into five buckets that add up to **Total evidence items**: **Fresh**, **Expiring within** the window, **No expiry set** (current until archived or revoked), **Expired / retired** (expired, archived, revoked or superseded; earns no credit) and **Not credited** (unexpired evidence that earns no compliance credit: a failing check, a rejected or unreviewed upload, domain-wide context, or an unconfirmed policy mapping). If the server ever reports a bucket the page does not list, the page says how many items it holds rather than dropping them from view. Expired evidence stops supporting its controls and appears as an *Evidence Expired* [drift](./drift-detection.md).
 
 ## Smart breakdown
 
@@ -90,6 +90,10 @@ Manual evidence from the last cycle — the access-review export, the pen-test r
 **Quick Upload** takes a title, an evidence type (document, screenshot, config, policy), one or more **SCF control IDs** and the file. The **Evidence Wizard** starts from the other end — pick a framework, see its controls without evidence, and upload against each.
 
 ![Interactive Evidence Upload wizard, first step: choose one of the 11 enabled frameworks (NIST 800-53 Rev 5, SOC 2, PCI DSS 4.0.1, ISO 27001:2022 …) to walk through its controls and upload evidence](/img/screenshots/compliance/evidence-hub-wizard.webp)
+
+### Viewing an uploaded file
+
+**View** on an evidence item opens it in the browser only when it is a PDF, a PNG, JPEG, GIF or WebP image, or plain text. Every other type, including HTML, SVG, Office documents, CSV and ZIP, is downloaded instead of opened, so an uploaded file can never run script in the application. Such files are served as downloads with the original filename; text files are served as UTF-8, including from S3-backed evidence storage.
 
 ## Auditor package
 

@@ -41,6 +41,7 @@ curl -s "$OFFLOAD_API_URL/api/cicd/scan-types" \
 - **Not every endpoint takes a key.** Keys reach only the route families their scopes map to (scans, vulnerabilities, cloud, risks, reports, assessments, and the audit-trail SIEM export). Alerts, webhooks, integrations, teams and API key management are session-only and refuse keys with `403`. See [What an API key can reach](../api-reference/authentication.md#what-an-api-key-can-reach).
 - **Scope least privilege.** A pipeline that only triggers scans doesn't need a key that can manage accounts. Pick the narrowest preset that fits the job.
 - **Keys are secrets.** Store them in your CI/CD secret store or a vault, never in source control. Rotate and revoke them from the same screen; key creation, rotation and revocation are recorded in the key audit log.
+- **Per-key limits and allowlists are enforced.** Each key's per-minute rate limit applies on every route it calls, and a key restricted to IP addresses or CIDR ranges is refused from anywhere else, including on the `/api/cicd/*` pipeline endpoints. See [Rate limit, IP allowlist and rotation](../cli-and-cicd.md#rate-limit-ip-allowlist-and-rotation).
 
 :::warning[Treat keys like passwords]
 An API key carries its scopes' permissions for your team. If a key is exposed, revoke it immediately and issue a new one.
@@ -48,7 +49,9 @@ An API key carries its scopes' permissions for your team. If a key is exposed, r
 
 ## The API reference
 
-The platform can serve its own interactive reference, generated from the
+**Start with the [published API reference](pathname:///api/reference/?version=1.4.1-beta.8)**: every operation an API key can call in this release, with the scope each needs, generated from the platform at the release tag ([OpenAPI JSON](pathname:///api/openapi/1.4.1-beta.8.json)). See [API Reference](../api-reference/index.md#openapi-reference).
+
+The platform can also serve its own interactive reference, covering the full route map including internal routes, generated from the
 running server and self-hosted on your instance (no external dependencies, so
 it works in air-gapped deployments):
 

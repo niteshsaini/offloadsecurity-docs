@@ -3,7 +3,7 @@ title: "Endpoint Security: Working Wazuh Data"
 sidebar_label: "Endpoint Security"
 sidebar_position: 4.1
 new_in: 1.4.0
-description: "Work Wazuh endpoint data inside the platform — open any host's Endpoint 360, fix the riskiest vulnerabilities and package upgrades first, triage grouped alerts with tickets and SLAs, review login anomalies, cut file-integrity noise, see ATT&CK techniques, and check the Wazuh server's own health."
+description: "Work Wazuh endpoint data inside the platform — open any host's Endpoint 360, fix the riskiest vulnerabilities and package upgrades first, triage grouped alerts with tickets and SLAs, review login anomalies, cut file-integrity noise, see ATT&CK techniques, and check the Wazuh server's own health, and see which endpoints OpenVAS has scanned."
 ---
 
 # Endpoint Security: Working Wazuh Data
@@ -30,13 +30,17 @@ One page per Wazuh agent with everything the platform knows about that host.
 | Identity · Cloud VM link | Agent details; the linked cloud VM (account, region, CSPM findings, exposure as scored), candidates, link history, and controls to confirm, change or mark "not a cloud VM" |
 | Fix first on this host | The package upgrades that resolve this host's vulnerabilities |
 | Vulnerabilities | Host CVEs |
-| Network VAPT findings on this host | Greenbone OpenVAS findings matched to this host, with the host-side verdict — see [OpenVAS Scanning](./openvas-scanning.md#host-side-correlation-with-wazuh) |
+| Network VAPT findings on this host | Greenbone OpenVAS findings matched to this host, with the host-side verdict — see [OpenVAS Scanning](./openvas-scanning.md#host-side-correlation-with-wazuh). From 1.4.1 the panel also shows this host's OpenVAS scan state and a **Trigger Network VAPT scan** action (needs Run scans and a connected Greenbone) |
 | Alert groups · Recent alerts | Grouped alerts with triage state; the latest individual alerts |
 | MITRE ATT&CK (30 days) | Techniques seen on this host |
 | Failed configuration checks | SCA failures, with the SCF controls each one affects |
 | File integrity · Logins | Grouped file changes for this host; its login activity and anomalies |
 
 Each panel says whether it is live from Wazuh or stored from the last sync, and how old it is. If Wazuh is unreachable the panel shows the error with **Retry**, never an empty table.
+
+## OpenVAS coverage
+
+**Endpoint Security → OpenVAS coverage** (1.4.1) uses the team's Greenbone OpenVAS connection. It lists every Wazuh endpoint with an IP address as **Scanned**, **Not scanned**, **Scan in progress** or **Failed**, from the Greenbone tasks whose targets cover it, with a coverage percentage. You can scan one host, the hosts you select, or up to 100 not-scanned hosts at a time (needs Run scans); each host gets its own Greenbone task. See [OpenVAS Scanning](./openvas-scanning.md#scan-endpoints-endpoint-360-and-openvas-coverage).
 
 ## Fix first
 
@@ -122,5 +126,5 @@ Use Health first when syncs time out or panels show "not read — the sync ran o
 
 - [Wazuh Integration](./wazuh-integration.md) — what syncs and what stays in Wazuh.
 - [Agent Health & Cloud Links](./wazuh-agent-fleet.md) — fleet hygiene, stale agents, VM links.
-- [OpenVAS Scanning](./openvas-scanning.md) — network VAPT findings and their host-side verdict.
+- [OpenVAS Scanning](./openvas-scanning.md) — network VAPT findings, their host-side verdict, and OpenVAS scans of endpoints.
 - [Vulnerability Management triage](../vulnerability-risk/vulnerability-management/triage.md) — the priority Fix first ranks by.

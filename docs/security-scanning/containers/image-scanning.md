@@ -13,26 +13,24 @@ Three ways to scan: **Quick Scan** for any image reference the platform can pull
 
 **Where:** Container Security → **Quick Scan**.
 
-:::warning[Known issue in 1.4.0: Quick Scan fails on on-premises installs]
-Quick Scan runs its scanners inside the API service, which has no Docker access in the on-premises deployment, so every Quick Scan ends **failed** with *Cannot connect to the Docker daemon*. Scan an image by reference on the scan workers instead: `POST /api/container-registries/scan-image` with `{ "image_uri": "nginx:1.27" }`. The results appear under **Scan Results** like any other image scan.
-:::
-
 ![Quick Scan tab: SBOM / vulnerability detection / real-time integration cards, the container image name field (nginx:1.27), the Vulnerabilities and Full Analysis scan types, and the Start Security Scan button](/img/screenshots/security-scanning/ctr-quick-scan.webp)
 
-1. Enter the **image reference** — `nginx:1.27`, `ghcr.io/org/app:2.4.0`, or a full registry path such as `<account>.dkr.ecr.<region>.amazonaws.com/app:1.4`. Public images work without setup. Private ECR, Artifact Registry and ACR images use a connected cloud account; images in other private registries cannot be pulled.
+1. Enter the **image reference** — `nginx:1.27`, `ghcr.io/org/app:2.4.0`, or a full registry path such as `<account>.dkr.ecr.<region>.amazonaws.com/app:1.4`. Public images work without setup. Private ECR, Artifact Registry and ACR images use a connected cloud account (see [Registries — Limits](./registries.md#limits) for which account); images in other private registries cannot be pulled.
 2. Pick the **scan type**:
 
    | Type | Runs | Use when |
    | --- | --- | --- |
-   | **Full Analysis** (recommended) | Syft SBOM + Trivy vulnerabilities, recommendations | Default — what you need to decide whether an image may ship. Runs in the background. |
-   | **Vulnerabilities** | Trivy CVE scan with fix versions | Fast check of a base image. |
+   | **Full Analysis** (recommended) | Syft SBOM + Trivy vulnerabilities, recommendations | Default — what you need to decide whether an image may ship. Queued on the container scan worker. |
+   | **Vulnerabilities** | Trivy CVE scan with fix versions | Fast check of a base image. Runs while you wait. |
 
-3. **Start Security Scan.** The result opens on **Scan Results**; a Full Analysis appears there when it completes.
+3. **Start Security Scan.** A Full Analysis is listed on **Scan Results** as **Queued**, then **Running**, and the list refreshes on its own until it finishes. A Vulnerabilities scan opens its result when it returns.
 
 For an SBOM only, use the [SBOM tab](./governance.md#sbom-lifecycle) instead.
 
-:::warning[Prefer Full Analysis]
-A **Vulnerabilities** scan whose scanner failed can show zero counts instead of a failure. Full Analysis and registry scans mark a scan whose vulnerability engines all failed as **failed**, never as a clean zero.
+Both scan types report failure honestly: when Trivy fails, the scan is listed as **Failed** with the error and shows no counts, never a clean zero. The page header shows the Trivy, Grype and Syft versions this deployment runs; a version the platform cannot determine (for example a scanner image on a floating tag such as `latest`) shows **—**.
+
+:::note[Images are pulled from their registry]
+Scanners pull the image from its registry with the registry sign-in described on [Registries](./registries.md); they cannot read the host's local Docker image store. Push a locally built image to a registry before you scan it.
 :::
 
 ## Registry scans
@@ -87,17 +85,19 @@ Read any banner first:
 
 | Section | What it tells you |
 | --- | --- |
-| **Vulnerability Summary** | Counts by severity (critical / high / medium / low / negligible), total, a **risk level** and **risk score**. Negligible is not reported by these scanners and shows 0. |
+| **Vulnerability Summary** | Counts by severity (critical / high / medium / low / negligible), total, a **risk level** and **risk score**. Negligible is not reported by these scanners and shows 0. A scan with no vulnerability result (failed, or SBOM only) shows the risk score as **N/A — Not scored**. |
 | **Top Vulnerabilities** | The first 20 vulnerabilities: CVE, package, severity and **Fix Available** — the version(s) that fix it. No *Fix Available* line means the scanner reported no fixed version. |
 | **Software Bill of Materials** | Total packages and the first 50 packages of the inventory. |
 | **Recommendations** | Plain-language next steps — upgrade the base image, pin versions, drop packages. |
 | **Exports** | **JSON** (full result), **CSV** (vulnerability table), **SBOM** (CycloneDX), and an **AI Summary** for a ticket or a release note. The exports contain every vulnerability. |
 
-**Risk score** = 25 per critical + 10 per high + 3 per medium, capped at 100. 75 or more is Critical risk, 50 High, 25 Medium, below that Low. It ignores Low findings and whether a fix exists.
+**Risk score** = 25 per critical + 10 per high + 3 per medium, capped at 100. 75 or more is Critical risk, 50 High, 25 Medium, below that Low. It ignores Low findings and whether a fix exists. Quick Scans and registry scans use the same formula; registry scans recorded before 1.4.1 are scored from their stored severity counts when a vulnerability engine completed.
+
+The **scan type** shown on each row of Scan Results comes from the tools that ran: Syft with Grype or Trivy is **Full Analysis**, a vulnerability engine alone is **Vulnerabilities**, Syft alone is **SBOM**, plus **Secrets**, **Signature** and **Image Scan** for anything else. The scan-type filter offers the same labels. A record whose vulnerability tool failed is listed as **Failed**, including records an earlier release stored as completed. SBOM, secrets and signature scans are not assessed for vulnerabilities, so they never appear under the **No Issues** filter.
 
 Every export is fingerprinted and recorded so it can be verified later — see [Scan Records & Evidence](./scan-evidence.md#verifiable-exports).
 
-To see what changed between two scans of an image (new, fixed and superseded CVEs), use the compare API described in [Scan Records & Evidence](./scan-evidence.md#compare-two-scans). The **Security Posture Trend** on the Compliance tab plots total findings per scan over time.
+To see what changed between two scans of an image (new, fixed and superseded CVEs), use the compare API described in [Scan Records & Evidence](./scan-evidence.md#compare-two-scans). The **Security Posture Trend** on the Compliance tab plots total findings per scan, oldest to newest; a scan with no vulnerability count shows a grey stub rather than a zero.
 
 :::tip[Fix the base image first]
 Most of an application image's CVEs come from its base. Compare `python:3.9-slim` (1,200+ findings in the example above) with a current slim or distroless base before chasing individual packages.
@@ -141,7 +141,7 @@ Before 1.4.0 the Hadolint step failed on every Dockerfile, so only the native ru
 | Check | Endpoint | Notes |
 | --- | --- | --- |
 | Secrets in image layers (TruffleHog 3.97.9) | `POST /api/container-security/image/secrets` (`{ "image", "only_verified"? }`) | Returns detector type, file path and layer digest with a masked sample — never the secret value. An image TruffleHog could not read is reported as a failed scan, not as "no secrets". |
-| Signature verification (cosign 3.1.3) | `POST /api/container-security/image/verify-signature` (`{ "image", "identity"?, "oidc_issuer"? }`) | Read-only `cosign verify`. Without `identity` / `oidc_issuer` any valid Sigstore signature passes; set both for production. Not connected to image policies — see [Require signature](./governance.md#image-admission-policies). |
+| Signature verification (cosign 3.1.3) | `POST /api/container-security/image/verify-signature` (`{ "image", "identity"?, "oidc_issuer"? }`) | Read-only `cosign verify`. Without `identity` / `oidc_issuer` any valid Sigstore signature passes; set both for production. The CI policy gates run the same keyless verify — see [Require signature](./governance.md#image-admission-policies). |
 
 ## Related
 

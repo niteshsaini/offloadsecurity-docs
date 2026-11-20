@@ -60,6 +60,8 @@ An **OWASP LLM01** red-team suite of eight probes — direct instruction overrid
 - Give an **OpenAI-compatible chat endpoint** (and, optionally, a key used only for this run and never stored) and the suite is sent live; each probe is scored on whether the response shows the injected behaviour, and the result is recorded against the model with pass / fail per category.
 - Leave the endpoint blank for a **dry run**: the payloads are recorded for manual execution against a system the platform cannot reach (an internal assistant, a vendor console).
 
+**Run Tests** queues the suite as a background job. The page shows that it is queued or running and updates when the job finishes, with the results or the reason it failed. A job that never started (for example because the API restarted) is marked failed with a reason two minutes after it was queued, so it does not wait indefinitely. Only completed tests count toward [coverage](./ai-governance.md#coverage).
+
 Results are evidence for the model's risk assessment; a production LLM system with no test is one of the ISO 42001 [certification blockers](./ai-governance.md#compliance--iso-42001). When the team has an LLM provider, the model judges whether each response shows the injected behaviour; without one, or when the judge's answer cannot be used, scoring falls back to keyword heuristics (a verdict made heuristic by the team's AI budget says so).
 
 :::note[Not the same as "AI Security Testing"]

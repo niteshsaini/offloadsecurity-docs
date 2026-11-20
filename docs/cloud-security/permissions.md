@@ -288,6 +288,8 @@ Registry **discovery** rides on Bucket A; **pulling images to scan** needs pull 
 | **GCP Artifact Registry / GCR** | `roles/artifactregistry.reader` (+ `roles/storage.objectViewer` for legacy `gcr.io`) |
 | **Azure ACR** (`*.azurecr.io`) | **`AcrPull`** — add this role to the service principal (it is **not** in the base Azure role set above). An account connected with Managed Identity cannot sign in to ACR. |
 
+**How ECR sign-in works.** An ECR pull signs in as the connected AWS account that owns the registry (or the team's only AWS account), using that account's stored access keys or cross-account role, and the account number is checked with `sts:GetCallerIdentity`. If the team has several AWS accounts and none owns the registry, the pull is refused as ambiguous rather than guessing. The platform's own AWS identity is used only for an account with no stored credential, and only when the operator sets `CSPM_ALLOW_PLATFORM_IDENTITY=true` (the same switch AWS scans honor). A cross-account role with a wrong trust policy or external ID fails the sign-in.
+
 See [Container Security](../security-scanning/containers/index.md).
 
 ---
@@ -301,8 +303,8 @@ ongoing ingestion.
 
 | Cloud | Event source → webhook |
 | --- | --- |
-| **AWS** | CloudTrail → **EventBridge** rule → API destination → `POST /api/cloud-events/webhook/aws` (token in the `x-offload-webhook-token` header) |
-| **GCP** | Cloud Audit Logs → **Pub/Sub** log sink → push subscription → `POST /api/cloud-events/webhook/gcp/<team token>` |
+| **AWS** | CloudTrail → **EventBridge** rule (state *Enabled with all CloudTrail management events*) → API destination → `POST /api/cloud-events/webhook/aws` (token in the `x-offload-webhook-token` header) |
+| **GCP** | Cloud Audit Logs → **Pub/Sub** log sink → push subscription → `POST /api/cloud-events/webhook/gcp/<team token>`. Enable **Data Write** audit logs for services whose data changes you want in [Change Monitoring](./change-monitoring.md). |
 | **Azure** | Activity Log → **Event Grid** system topic → subscription → `POST /api/cloud-events/webhook/azure/<team token>` |
 
 The setup permissions belong to whoever **creates the event source** (an admin):

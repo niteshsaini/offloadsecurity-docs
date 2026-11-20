@@ -36,6 +36,34 @@ Then, in the same PR:
 
 1.4.0 is then served at `/1.4.0/...` with a banner pointing to the latest.
 
+## API reference (every release)
+
+Export the published OpenAPI file and the route list for the new tag and add
+the version to the reference page's menu: see `tools/openapi/README.md`.
+`tools/openapi/check_doc_endpoints.py` (run on every pull request) then checks
+that every endpoint the docs name exists in that release.
+
+## Pre-releases (1.4.1-beta.N)
+
+Customers run betas, so the root follows the **latest published pre-release**:
+
+1. **Before the first docs change for a pre-release line**, snapshot the last
+   final release (`docs:version 1.4.0`, or copy `docs/` to
+   `versioned_docs/version-1.4.0/` plus `versions.json` and the sidebar JSON).
+   Remove `release-notes/` from the snapshot and point its sidebar entry at
+   `/release-notes`: release notes are version-independent and live only in
+   the current docs.
+2. In `docusaurus.config.ts` set `CURRENT_RELEASE` to the beta tag,
+   `PRERELEASE = true` and `STABLE_RELEASE` to the last final release. The
+   stable snapshot is then labelled "(stable)" without the "unmaintained"
+   banner, and an announcement bar says which docs the reader is on.
+3. Each published beta gets its own release-notes page
+   (`docs/release-notes/v1-4-1-beta-N.md`) and a row in the index table. Bump
+   `CURRENT_RELEASE` to the newest beta.
+4. When the final release ships, set `CURRENT_RELEASE = '1.4.1'` and
+   `PRERELEASE = false`. The previous final release's snapshot then gets the
+   normal "unmaintained" banner.
+
 ## Patch releases (1.4.1)
 
 No snapshot. Patch releases share their minor version's docs: add the release

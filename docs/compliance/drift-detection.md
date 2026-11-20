@@ -2,7 +2,7 @@
 title: "Drift Detection"
 sidebar_label: "Drift Detection"
 sidebar_position: 3
-description: "Catch a control that regressed, lost its evaluation or was marked not applicable while failing, an attestation that scans contradict, evidence that expired or a framework that fell below its threshold, each reported once with the findings behind it, and route it to email, Slack or in-app notifications."
+description: "Catch a control that regressed, lost its evaluation or was marked not applicable while failing, an attestation that scans contradict, evidence that expired or a framework that fell below its threshold, each reported once with the findings behind it, and route it through alert policies to email, Slack, Microsoft Teams or in-app notifications."
 ---
 
 # Drift Detection
@@ -37,7 +37,7 @@ A framework that has not been assessed never crosses a threshold, and nothing is
 
 ## How changes are found
 
-Every change to a control's status is written to the compliance audit log as it happens. Drift detection reads those recorded transitions, so a change made today is reported on the next detection run, not the next day.
+Every change to a control's status is written to the compliance audit log as it happens, whoever made it: the engine, a status set over the API, or a [manual override](./compliance-dashboard.md#manual-overrides) (set, unlock, or an approved exception) that changes the status. An override's drift names who set it and the reason. Drift detection reads those recorded transitions, so a change made today is reported on the next detection run, not the next day.
 
 - Detection runs with every 4-hourly compliance refresh, after scans, and when you click **Run Drift Detection**.
 - Each change is reported once, no matter how many runs see it. The summary tiles (**Total Drifts**, **Regressions**, **Evidence Expired**, **New in Clean**, **Threshold Crossed**) count the drifts new in the latest run.
@@ -56,21 +56,35 @@ A regression whose control maps to one of the [remediation playbooks](./autonomo
 
 ![Alert Policies: create a policy with name, drift types to monitor, minimum severity and notification channels (Email, Slack, Teams); active policy "Payments API regressions" for Control Regression and Threshold Crossed, minimum high, email and in-app](/img/screenshots/compliance/compliance-drift-policies.webp)
 
-An **alert policy** decides which drifts become notifications:
+An **alert policy** decides which drifts become notifications. Alert policies are the only drift notifier: each drift run sends one notification per matching policy, and nothing else pages for drift.
 
 | Field | Meaning |
 | --- | --- |
 | **Drift Types to Monitor** | Any of the control, evidence and threshold types above; empty = all. A policy that monitors *Control Regression* also matches *No Longer Evaluated*, *Failing Control Marked N/A* and a re-evaluation into fail. |
-| **Minimum Severity** | Lowest drift severity that notifies: *Medium+* (the form's default), *High+* or *Critical only* |
-| **Notification Channels** | Email and Slack, using the integrations configured under [Notifications](../integrations/notifications.md); in-app notifications are always on |
+| **Minimum Severity** | Lowest drift severity that notifies: *Info (all)* (every severity), *Low+*, *Medium+* (the form's default), *High+* or *Critical only* |
+| **Notification Channels** | **Email**, **Slack** and **Microsoft Teams**. Every policy also requests an in-app notification. |
 
-Choose at least one of Email or Slack; with neither selected the policy notifies in-app only. Policies apply to all of the team's active frameworks; there is no per-framework filter. Recipients are the policy's escalation recipients (set over the API), or every team member when none are set. With no policy configured, a default applies: severity *high* and above, by email, Slack and in-app.
+Slack and Microsoft Teams post to the webhooks connected under [Integrations](../integrations/notifications.md), and are skipped when none is connected; a connected Google Chat webhook also receives the alert. Microsoft Teams is **opt-in**: it is off unless a policy turns it on. The team's notification settings still apply on top of the policy: a muted category, a channel switched off, or a person's opt-out removes that channel or recipient.
 
-Policies are evaluated after every detection run. Each notification lists up to 10 matching drifts; the full list is on the tab.
+Drift alerts never page **PagerDuty** or the team's alert webhook. An outbound webhook that subscribes to compliance drift events still receives the event.
 
-:::note
-The policy form also offers a **Teams** channel and an *Info (all)* severity. In 1.4.0 drift notifications are delivered by email, Slack and in-app only, so selecting Teams has no effect, and *Info (all)* is evaluated as *High+*. Use *Medium+* to be notified of the most drifts.
-:::
+Policies apply to all of the team's active frameworks; there is no per-framework filter. Recipients are the policy's escalation recipients (set over the API), or every team member when none are set. With no policy configured, a default applies: severity *high* and above, by email, Slack and in-app (not Teams).
+
+Policies are evaluated after every detection run, and each policy is sent independently, so a failure in one does not hold back or re-send the others. Each notification lists up to 10 matching drifts; the full list is on the tab. A stored policy shows its minimum severity (for example *Min: Info (all)*) and its channels; the API rejects an unknown severity or channel with an error instead of saving it.
+
+### Delivery outcome
+
+The platform records what happened to each drift's notification. The outcome is kept with the drift event and in the backend logs; it is not shown on the tab or returned by the drift history API.
+
+| Outcome | Meaning |
+| --- | --- |
+| **delivered** | At least one channel delivered it |
+| **silenced** | Nothing was sent by design: no policy matched, the category is muted, every channel is switched off, every recipient opted out, or the drift is a repeat on an Alerts-board row that is still open |
+| **undeliverable** | None of the requested channels is configured. Final: connecting a channel later does not resend it |
+| **failed** | A channel failed and none delivered; retried on later runs |
+| **gave up** | Still failing after 5 attempts; not retried |
+
+Whatever the outcome, the drift stays in the report, in Drift History and on the Alerts board. When a policy fails or reaches no channel, a warning is logged naming the recipients who missed the alert.
 
 ## Related
 

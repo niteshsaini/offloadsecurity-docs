@@ -123,11 +123,19 @@ one-minute window shared across workers (when Redis is configured):
 Exceeding a limit returns **429** with `Retry-After` and `X-RateLimit-*`
 headers. Your reverse proxy may apply its own limits as well.
 
-:::note[Per-key rate limit is not enforced in 1.4.0]
-API keys carry a `rate_limit_per_minute` value (default 60, max 600), but
-release 1.4.0 stores it without enforcing it. The per-IP limits above are what
-apply. Keep a modest concurrency and honor `429` with exponential backoff.
-:::
+### Per-key rate limit
+
+Each API key also has its own limit, `rate_limit_per_minute` (default 60,
+range 1–600). It is enforced on every request made with the key, whatever the
+route or scope, in one bucket per key over a 60-second window (shared across
+workers through Redis, per worker process if Redis is unavailable). Beyond it
+the API answers **429** with the same body, `Retry-After` and `X-RateLimit-*`
+headers as the per-IP limit. The per-IP limits above still apply, so the
+effective limit can be lower. Session callers are not affected by the per-key
+limit.
+
+IPv6 clients are counted per /64 network for the per-IP limits; an
+IPv4-mapped address counts as its IPv4 address.
 
 ## IDs and timestamps
 

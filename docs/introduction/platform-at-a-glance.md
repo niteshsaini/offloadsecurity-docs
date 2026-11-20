@@ -60,13 +60,13 @@ Findings from every source converge in **Vulnerability Management**, resolve aga
 
 | Module | What it does | Read more |
 |---|---|---|
-| **Cloud Security (CSPM)** | Continuous misconfiguration assessment of AWS, Azure and GCP, identity and network analysis, real-time cloud events, a remediation queue. | [Cloud Security](../cloud-security/index.md) |
+| **Cloud Security (CSPM)** | Continuous misconfiguration assessment of AWS, Azure and GCP, identity and network analysis, real-time cloud events with change monitoring (who made each change and whether it was expected), a remediation queue. | [Cloud Security](../cloud-security/index.md) |
 | **Scanning** | One module: **Assessments** (App Scan — an authenticated, graded web and API assessment), **Targeted runs** (OWASP ZAP, Nuclei, Nmap, testssl.sh, API discovery and others, one tool at a time) and **New scan**. Each run records its provenance and authorization and can be compared with the previous run. | [App & Infrastructure Scanning](../security-scanning/index.md) |
 | **Code Command Center** | Static analysis, secrets detection, dependency (SCA) and IaC scanning of your repositories, pull / merge request review, and SARIF import from other scanners. | [API & Code Scanning](../security-scanning/code/index.md) |
 | **SBOM & License Scanning** | Software bill-of-materials generation and open-source **license compliance** across code and container images. | [Container Security](../security-scanning/containers/index.md) |
 | **Container Security** | Registry discovery and image scanning for ECR, Artifact Registry / GCR and ACR (through a connected cloud account); any other image, including Docker Hub, is scanned by reference. SBOMs, image policies and rollout tracking. | [Container Security](../security-scanning/containers/index.md) |
 | **Kubernetes Security** | Cluster onboarding and scanning, a fleet heat map, grouped findings and compliance reports. | [Kubernetes Security](../security-scanning/kubernetes/index.md) |
-| **Infra Command Center & On-Premises** | The whole platform self-hosted; network and private URL/API scanning of internal targets; Wazuh endpoint telemetry synced in (with an Endpoint 360 page per host); Greenbone OpenVAS results imported into Vulnerability Management — for assets that never leave your network. | [On-Premises](../on-premises/index.mdx) |
+| **Infra Command Center & On-Premises** | The whole platform self-hosted; network and private URL/API scanning of internal targets; Wazuh endpoint telemetry synced in (with an Endpoint 360 page per host); Greenbone OpenVAS scans created, started and scheduled from the platform (with stored credentials for authenticated scans), and their results imported into Vulnerability Management — for assets that never leave your network. | [On-Premises](../on-premises/index.mdx) |
 
 ### Unify, prioritize & govern
 

@@ -26,7 +26,7 @@ These are recommended defaults for a typical production deployment, not universa
 | Web apps & APIs | Your externally reachable applications and APIs, as App Scans with a recorded authorization — [Native Scans](../security-scanning/native-scans.md). |
 | Internal infrastructure | If you have significant on-prem estate, see [On-Premises & Private Infrastructure](../on-premises/index.mdx). |
 
-All cloud, registry and cluster access is **read-only** — there is no write path from the scanner into your environment. Active web scans send test traffic to the target; state-changing probes are off unless you allow them.
+Cloud, registry and cluster **scanning** is read-only: the scanners use the read-only roles above and change nothing. Writes exist, but they are separate capabilities, each off by default or behind an approval: live cloud remediation (`REMEDIATION_LIVE_EXECUTE`, plus an approval per action), fix pull requests, ticketing, OpenVAS task management and notifications. Active web, API and network scans send test traffic to their targets; state-changing probes are off unless you allow them. Secret validation calls each leaked secret's provider by default (`SECRET_VALIDATION_ENABLED`). Review the full list in [What Offload Reads, Tests and Changes](../what-offload-changes.md) and decide which to leave off.
 
 For regulated environments, consider setting `SCAN_REQUIRE_AUTHORIZATION=true` so every web, API and network scan must carry an authorization attestation (it is off by default so existing API and CI callers keep working, and such scans are reported as "authorization not recorded").
 
@@ -82,7 +82,8 @@ Then:
 
 - **Least role that works** ([Roles, Teams & API Keys](../authentication/rbac-team-management.md)): engineers get **Security Analyst**, leads get **Security Manager**, GRC gets **Compliance Officer**, executives get **Viewer**, external reviewers get **Auditor**. Keep **Admin** to a small number of people.
 - Use **teams** to separate environments or business units that shouldn't see each other's data.
-- **API keys**: use the scoped presets (CI/CD Basic for pipelines, Read Only for exports) rather than Full Access; keep the default 90-day expiry and rotate on schedule. Add IP allowlists for keys used from fixed infrastructure.
+- **API keys**: use the scoped presets (CI/CD Basic for pipelines, Read Only for exports) rather than Full Access; keep the default 90-day expiry and rotate on schedule. Add IP allowlists for keys used from fixed infrastructure; behind nginx, the operator must set `TRUSTED_PROXIES` first, or allowlisted keys are refused ([CLI & CI/CD](../cli-and-cicd.md#rate-limit-ip-allowlist-and-rotation)).
+- **Platform admins** (self-hosted): keep at least two, so access does not depend on one person, and give each MFA. On **Security Policy**, tighten password, lockout and session settings to your policy, and consider the admin IP allowlist. Run an **Access Review** on a fixed cycle (the page reminds you after 90 days by default). See [Platform-admin controls](../trust-and-security.md#platform-admin-controls).
 
 ## CI/CD gates
 
@@ -100,5 +101,6 @@ Run through this list monthly:
 - [ ] Critical alerts have a named channel and someone acknowledges them.
 - [ ] Compliance evidence isn't expiring faster than it's refreshed.
 - [ ] API keys in use are scoped, unexpired, and attributable to an owner.
+- [ ] Self-hosted: **System Health** (platform admin) shows no failing source, and the last access review is within your review cycle.
 
-If all six hold, your configuration is doing its job — the interesting work is now remediation and risk reduction, not platform upkeep.
+If all seven hold, your configuration is doing its job — the interesting work is now remediation and risk reduction, not platform upkeep.

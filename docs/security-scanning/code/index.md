@@ -21,7 +21,7 @@ The Code Command Center is where source code gets tested before it becomes a run
 | **SAST** | OpenGrep + Bandit (+ SonarQube when connected) | Injection, insecure deserialization, weak crypto, dangerous calls — per file and line, with code context |
 | **Dependency / SCA** | OSV.dev, enriched with CISA KEV and EPSS | Vulnerable packages across lockfiles (npm, pip, Go, Maven, …), with fixed versions and exploit-likelihood signals |
 | **Secrets** | Gitleaks + live validation | API keys, tokens, passwords and private keys in code, config **and git history** — each checked against its provider to tell a live credential from a rotated one |
-| **IaC** | Checkov | Terraform, CloudFormation, Kubernetes manifests, Dockerfiles — public buckets, open security groups, unencrypted storage |
+| **IaC** | Checkov | Terraform and OpenTofu, CloudFormation, Kubernetes manifests, Dockerfiles (including `Dockerfile-prod` and `Containerfile`) — public buckets, open security groups, unencrypted storage |
 | **SBOM & Licences** | Syft (CycloneDX), licence enrichment via deps.dev | Component inventory, licence families and obligations, policy-pack checks |
 | **Compiled Image Scan** | Trivy + Grype | The Docker image a pipeline just built |
 
@@ -38,7 +38,7 @@ The Code Command Center is where source code gets tested before it becomes a run
 | **Suppressions** | What is hidden, since when and until when — by rule, with revoke. | [Findings & Reports](./findings-and-reports.md#suppressions) |
 | **SARIF Imports** | Bring in results from CodeQL, Semgrep or any other SARIF 2.1.0 scanner. | [SARIF Imports](./sarif-imports.md) |
 | **Reports** | Scan history by repository → branch → run; each run's frozen report, PDF export and AI analysis. | [Findings & Reports](./findings-and-reports.md#scan-reports) |
-| **SBOM & Licenses** | Generate or upload SBOMs, licence governance, CycloneDX / SPDX / VEX exports, fix plans. | [SBOM & Licences](./sbom-and-licenses.md) |
+| **SBOM & Licenses** | Generate or upload SBOMs, browse them by repository → branch → report, licence governance, CycloneDX / SPDX / VEX exports, fix plans. | [SBOM & Licences](./sbom-and-licenses.md) |
 | **Automation** | **Git Connections**, **PR Review** settings and the team quality gate, **GitHub App**, **CI/CD Pipeline** generation. | [Connecting Repositories](./connecting-repositories.md) · [Pull Request Review](./pull-request-review.md) · [CI/CD & Automation](./ci-cd-and-automation.md) |
 
 ## How it flows

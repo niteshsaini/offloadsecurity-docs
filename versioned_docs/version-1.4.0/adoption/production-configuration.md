@@ -1,0 +1,104 @@
+---
+title: "Recommended Production Configuration"
+sidebar_label: "Production Configuration"
+sidebar_position: 4
+description: "Opinionated starting points for coverage, scan schedules, SLAs, alerting, ticketing, compliance, and access control in a production deployment."
+---
+
+# Recommended Production Configuration
+
+This page is the answer to "what does a *good* setup look like?" — opinionated starting points for each area of the platform.
+
+:::warning[Starting points, not requirements]
+These are recommended defaults for a typical production deployment, not universal requirements. Your regulators, risk appetite, and team size may justify different choices — the point is to start from something deliberate rather than from empty settings.
+:::
+
+## Coverage
+
+**Principle: connect everything you'd be embarrassed to discover was unmonitored.**
+
+| Surface | Recommendation |
+|---|---|
+| Cloud accounts | Connect **all** production accounts/projects/subscriptions, not a sample. For GCP, onboard the organization or folder so new projects are discovered; AWS accounts and Azure subscriptions are added one by one, so add new ones as they are created — [Required Permissions](../cloud-security/permissions.md). |
+| Container registries | Every ECR, Artifact Registry and ACR registry that feeds production deploys; images from other registries by reference — [Container Security](../security-scanning/containers/index.md). |
+| Kubernetes | All production clusters; EKS/GKE/AKS clusters found on connected cloud accounts are listed for you to connect, and the Clusters tab counts discovered-but-not-connected clusters — [Kubernetes Security](../security-scanning/kubernetes/index.md). |
+| Code repositories | Every repo that ships to production — [Code Command Center](../security-scanning/code/index.md). |
+| Web apps & APIs | Your externally reachable applications and APIs, as App Scans with a recorded authorization — [Native Scans](../security-scanning/native-scans.md). |
+| Internal infrastructure | If you have significant on-prem estate, see [On-Premises & Private Infrastructure](../on-premises/index.mdx). |
+
+All cloud, registry and cluster access is **read-only** — there is no write path from the scanner into your environment. Active web scans send test traffic to the target; state-changing probes are off unless you allow them.
+
+For regulated environments, consider setting `SCAN_REQUIRE_AUTHORIZATION=true` so every web, API and network scan must carry an authorization attestation (it is off by default so existing API and CI callers keep working, and such scans are reported as "authorization not recorded").
+
+## Scan schedules
+
+For cloud posture, the platform can run a **daily incremental** and a **weekly full** scan automatically ([How Cloud Scans Run](../cloud-security/scan-orchestration.md)) — confirm those recurring scans actually exist for your accounts rather than assuming them. Create them, and schedules for everything else, in **Management → Unified Scheduler** ([Scan Management & Scheduling](../security-scanning/scan-management.md)):
+
+| Scan type | Recommended starting cadence |
+|---|---|
+| Cloud posture | Daily incremental + weekly full — confirm both schedules exist for every account. |
+| Container images | Weekly, plus webhook auto-scan on push where the registry supports it. |
+| Kubernetes | Weekly. |
+| Web application / API (DAST) | Weekly for key applications; after major releases for the rest. |
+| Code (SAST/SCA/secrets) | On every pipeline run via [CI/CD integration](../cli-and-cicd.md); a weekly scheduled scan as a safety net for repos without CI coverage. |
+
+Two settings that matter more than the cadence itself:
+
+- **Turn on failure notifications** for every schedule. A scan that silently stops running is worse than one that runs rarely — you keep trusting stale data.
+- Schedules run in **UTC** by default — pick hours that avoid your own maintenance windows.
+
+## Remediation SLAs
+
+Start with the documented defaults via **Create Default Policies** in [SLA Management](../vulnerability-risk/sla-management.md):
+
+| Policy | Resolution target |
+|---|---|
+| Critical – Production | 24 hours |
+| High – Production | 7 days |
+| Medium – Production | 30 days |
+
+Then:
+
+- Configure escalation rules so an approaching deadline and an actual breach each notify the right people automatically.
+- Treat the **Breach Dashboard** as your weekly operational health check.
+- Rely on scan-verified closure: a finding reaches **Verified** only when a follow-up scan no longer detects it, and reappearing findings are automatically **Reopened** — a closed Jira ticket is not proof of a fix ([Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx)).
+
+## Alerting & ticketing
+
+**Principle: criticals interrupt a human; everything else batches.**
+
+- **Slack or Teams** ([Notifications](../integrations/notifications.md)): send **Critical and High** findings to your on-call/security channel. On Slack, routing rules can map category, severity, and source to different channels. Don't send Medium/Low to chat — that's how channels get muted.
+- **Email (SMTP)**: configure it for the daily SOC digest (per-alert email is not sent) and for scheduled reports.
+- **Jira** ([Jira](../integrations/jira.md)): connect it so critical findings become tickets automatically, high ones on request, and ticket status flows back — remediation happens in the tool engineers already use. GitHub Issues and GitLab Issues are also available as ticketing targets. (ServiceNow is a catalog entry today, not a connection.)
+- **SIEM**: forward platform alerts, finding changes and the audit trail to **Splunk** (HTTP Event Collector) or any **syslog / CEF** SIEM, or subscribe any HTTP collector to signed [webhook subscriptions](../integrations/webhooks.md) (including `alert.created`, `alert.updated` and `alert.resolved`) so the SOC sees platform events alongside everything else.
+
+## Compliance
+
+- Activate **one or two frameworks** you actually answer to — not the whole catalog. The SCF common-control model means adding more later costs little ([Supported Frameworks](../compliance/supported-frameworks.md)).
+- Run **Collect All Evidence** in the [Evidence Hub](../compliance/evidence-hub.md) once scans are flowing, then keep evidence fresh automatically: cloud and scan evidence expires on a validity window (see the Evidence Hub validity table), so recurring scans keep it perpetually current.
+- **Indian regulated entities:** follow the deployment shape in [India Regulatory Readiness](../industries/india-regulatory-readiness.md) (private deployment, anchor framework, reporting clocks) and enable the [DPDP module](../compliance/dpdp-privacy.md).
+
+## Access control
+
+- **Least role that works** ([Roles, Teams & API Keys](../authentication/rbac-team-management.md)): engineers get **Security Analyst**, leads get **Security Manager**, GRC gets **Compliance Officer**, executives get **Viewer**, external reviewers get **Auditor**. Keep **Admin** to a small number of people.
+- Use **teams** to separate environments or business units that shouldn't see each other's data.
+- **API keys**: use the scoped presets (CI/CD Basic for pipelines, Read Only for exports) rather than Full Access; keep the default 90-day expiry and rotate on schedule. Add IP allowlists for keys used from fixed infrastructure.
+
+## CI/CD gates
+
+- Start with **fail on Critical only**, then tighten to include High once the team trusts the signal and the backlog is under control — [CLI & CI/CD](../cli-and-cicd.md).
+- Prefer the **GitHub App** on GitHub (inline PR annotations, auto-scan); use the GitHub Action or plain REST calls elsewhere.
+- Export **SARIF** if other tools in your pipeline consume it, and import SARIF 2.1.0 from scanners you keep (CodeQL, Semgrep and others) so their results join the same triage queue — [CLI & CI/CD](../cli-and-cicd.md#import-sarif-from-other-scanners).
+
+## What "healthy" looks like
+
+Run through this list monthly:
+
+- [ ] Every production account, registry, cluster, and repo is connected — spot-check against your cloud org's account list.
+- [ ] No schedule has been silently failing — the Unified Scheduler history shows recent successful runs for every schedule.
+- [ ] The SLA Breach Dashboard trend is flat or improving.
+- [ ] Critical alerts have a named channel and someone acknowledges them.
+- [ ] Compliance evidence isn't expiring faster than it's refreshed.
+- [ ] API keys in use are scoped, unexpired, and attributable to an owner.
+
+If all six hold, your configuration is doing its job — the interesting work is now remediation and risk reduction, not platform upkeep.

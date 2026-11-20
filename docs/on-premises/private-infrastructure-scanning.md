@@ -18,7 +18,7 @@ The scanners that assess your public applications are the same ones that assess 
 | Internal TLS endpoints | **SSL/TLS Security Test** — protocols, ciphers, certificate chain | testssl.sh |
 | Any HTTP service | **Security Headers Check** | native analyzer |
 | Hosts, ranges, CIDRs | **Network Discovery** — ping sweep, top-1000 or all 65,535 TCP ports, top-100 UDP, service / version and OS detection — see [Internal Network Visibility](./internal-network-visibility.md#running-a-network-discovery-scan) | nmap |
-| Hosts your Greenbone instance scans | Authenticated or unauthenticated network vulnerability scans, run in Greenbone and imported | Greenbone / OpenVAS — see [OpenVAS Scanning](./openvas-scanning.md) |
+| Hosts your Greenbone instance can reach | Authenticated or unauthenticated network vulnerability scans, run on your Greenbone scanner (started there or from the platform) and imported | Greenbone / OpenVAS — see [OpenVAS Scanning](./openvas-scanning.md) |
 | Internal container images and registries | Image scanning; private registries with credentials | Trivy, Syft / Grype — see [Container Security](../security-scanning/containers/index.md) |
 | On-premises Kubernetes clusters | Cluster onboarding and scanning over a kubeconfig or the agent | see [Kubernetes Security](../security-scanning/kubernetes/index.md) |
 
@@ -26,7 +26,7 @@ The scanners that assess your public applications are the same ones that assess 
 
 1. **`ALLOW_PRIVATE_SCAN_TARGETS=true`** in `.env`, for the backend and the workers. Private ranges (`10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`) become valid targets; loopback, link-local and cloud-metadata addresses (`169.254.169.254`) remain blocked whatever the setting.
 2. **Name resolution** — the worker containers use the host's DNS; internal names must resolve there (or use IPs).
-3. **Reachability** — the host running the stack needs a route and firewall path to the target segment. Scanner containers run on the same host (ZAP on its own bridge network, `ZAP_DOCKER_NETWORK`), so "can the host reach it" is the test.
+3. **Reachability** — the host running the stack needs a route and firewall path to the target segment. Scanner containers run on the same host on Docker bridge networks (`SCANNER_DOCKER_NETWORK`, default `bridge` from 1.4.1; ZAP on its own, `ZAP_DOCKER_NETWORK`) and reach targets through the host's routes, so "can the host reach it" is the test. On a bridge network, `localhost` or `127.0.0.1` in a target means the scanner container, not the host. Set `SCANNER_DOCKER_NETWORK=host` to go back to host networking.
 4. **Authorization** — App Scan, web, network, TLS and Nuclei scans record who authorized testing the target. Set `SCAN_REQUIRE_AUTHORIZATION=true` to refuse scans without that record; scheduled scans then fail, scanning nothing, once the stored authorization expires.
 5. **Private CAs** — set `INTEGRATION_VERIFY_SSL` / `SMTP_CA_CERT` for integrations and mail; scans of internal HTTPS services with a private certificate report the trust issue as a TLS finding rather than failing.
 

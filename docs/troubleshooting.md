@@ -1,6 +1,6 @@
 ---
 title: "Troubleshooting & FAQ"
-description: "Fix the most common Offload Security problems, framed as symptom, likely cause and fix: scans with no findings or stuck runs, cloud connection failures, container pulls and CI/CD 401/403 errors."
+description: "Fix the most common Offload Security problems, framed as symptom, likely cause and fix: scans with no findings or stuck runs, cloud connection failures, container pulls and CI/CD 401, 403 and 429 errors."
 sidebar_label: "Troubleshooting"
 sidebar_position: 11
 ---
@@ -142,12 +142,11 @@ If a private scan won't run, try a known public image (like `nginx:latest`) in *
 
 **Fix.**
 1. **Send the key in the right header.** Use the **`X-API-Key`** header — not an `Authorization: Bearer` header.
-2. **Use a valid, current key.** Keys start with the **`osk_`** prefix and the full value is shown **only once** when you create it, so make sure your pipeline has the complete key stored as a secret. If the key was rotated, switch to the new one (rotation includes a short grace period, but the old key does eventually retire).
+2. **Use a valid, current key.** Keys start with the **`osk_`** prefix and the full value is shown **only once** when you create it, so make sure your pipeline has the complete key stored as a secret. If the key was rotated, switch to the new one: the old key keeps working only for the rotation grace period (48 hours by default), then gets `401` and is revoked within the hour.
 3. **Check the key's scope.** A key can only do what it's scoped for. To trigger scans it needs the scan-trigger scope; to read results it needs the read scope. A key without the right scope is rejected even though it's authentic.
-4. **Check IP allowlisting.** If the key is restricted to specific IP addresses, calls from any other address are blocked. Confirm your CI runner's egress IP is on the list.
 
 :::note[Where to manage keys]
-Create, scope, rotate, and IP-restrict API keys under the account menu → **API Keys**. For setup and pipeline examples, see [Roles, Teams & API Keys](./authentication/rbac-team-management.md).
+Create, scope and rotate API keys under the account menu → **API Keys**; IP allowlists are set through the API. For setup and pipeline examples, see [Roles, Teams & API Keys](./authentication/rbac-team-management.md) and [CLI & CI/CD](./cli-and-cicd.md#rate-limit-ip-allowlist-and-rotation).
 :::
 
 ### My pipeline gets a 403 (authenticated but forbidden)
@@ -155,6 +154,14 @@ Create, scope, rotate, and IP-restrict API keys under the account menu → **API
 **Likely cause.** The key authenticated, but it lacks permission for that specific action, or you're targeting another team's data.
 
 **Fix.** Grant the key the scope the action requires, and confirm the key belongs to the **team** whose data you're acting on. Every key — like every user — is scoped to a single team's data.
+
+**IP allowlist.** If the key is restricted to specific IP addresses, calls from any other address get `403` on the `/api/cicd/*` pipeline endpoints (`401` on other routes). Confirm your CI runner's egress IP is on the list. If the runner's address is listed and calls still fail, the backend may be seeing your reverse proxy's address instead: the operator sets `TRUSTED_PROXIES` in `.env` to the proxy's exact address. Since 1.4.1 the allowlist is also enforced on the `/api/cicd/*` pipeline endpoints.
+
+### My pipeline gets a 429 Too Many Requests
+
+**Likely cause.** The key's own per-minute limit (**Rate Limit (req/min)**, default 60) or a per-IP limit was reached.
+
+**Fix.** Wait for the time in the `Retry-After` header and retry; poll status less often (every 15 seconds is enough). If one key serves several pipelines, raise its limit (up to 600) or give each pipeline its own key. The per-IP limits still apply.
 
 ---
 

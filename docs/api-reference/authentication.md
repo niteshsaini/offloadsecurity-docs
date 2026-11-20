@@ -55,9 +55,9 @@ curl -s -X POST "$OFFLOAD_HOST/api/api-keys" \
 | `scopes` | string[] | `null` | Explicit scopes; overrides `scope_preset` |
 | `scope_preset` | string | `null` | One of the presets below. With neither field set, the key gets `ci_cd_basic` |
 | `expires_in_days` | int | `90` | `0`–`365`; `0` = never expires |
-| `ip_allowlist` | string[] | `null` | Up to 50 entries; exact IP addresses (matched as strings, no CIDR ranges) |
+| `ip_allowlist` | string[] | `null` | Up to 50 entries: IP addresses or CIDR ranges (`203.0.113.7`, `203.0.113.0/24`), stored in canonical form; an invalid entry is refused with `400`. Empty = any address |
 | `environment` | string | `production` | Label: `production` / `staging` / `development` / `ci` |
-| `rate_limit_per_minute` | int | `60` | `1`–`600`. Recorded on the key; see the note under [Rate limits](./conventions.md#rate-limits) |
+| `rate_limit_per_minute` | int | `60` | `1`–`600`. Enforced per key; see [Per-key rate limit](./conventions.md#per-key-rate-limit) |
 | `metadata` | object | `null` | Arbitrary key/values (repo, pipeline name) |
 
 Each user can hold up to **25 active keys**.
@@ -191,14 +191,23 @@ All of these need a signed-in session. Writes need **Manage Integrations**.
 
 Rotation returns a new key (shown once) and keeps the old one valid for
 `grace_period_hours` (default `48`, range `0`–`168`) so you can roll it out
-without downtime.
+without downtime. The new key copies the old key's IP allowlist. After the
+grace period the old key is refused (`401`), and an hourly task revokes it and
+records the revocation in the key audit log.
+
+Since 1.4.1 the IP allowlist and the rotation grace period are enforced on the
+`/api/cicd/*` pipeline endpoints as well as on the rest of the API. The client
+address is taken from `X-Forwarded-For` only when the request arrives through a
+proxy listed in `TRUSTED_PROXIES`; behind nginx, the operator must set it, or
+allowlisted keys are refused. See
+[CLI & CI/CD](../cli-and-cicd.md#rate-limit-ip-allowlist-and-rotation).
 
 ## Errors
 
 | Status | Meaning | Fix |
 | --- | --- | --- |
-| `401 Unauthorized` | Missing, invalid, expired or revoked key; IP not in the allowlist; or a session-only endpoint called with a key | Check the `X-API-Key` header, the key's status, or use a session |
-| `403 Forbidden` | Key lacks the route family's scope, the route is session-only for keys, or the owner's team role lacks the permission | The message names the missing scope or says the route is session-only |
-| `429 Too Many Requests` | Rate limit exceeded | Back off; see [Rate limits](./conventions.md#rate-limits) |
+| `401 Unauthorized` | Missing, invalid, expired or revoked key; a rotated key past its grace period; IP not in the allowlist (outside `/api/cicd/*`); or a session-only endpoint called with a key | Check the `X-API-Key` header, the key's status, or use a session |
+| `403 Forbidden` | Key lacks the route family's scope, the route is session-only for keys, the owner's team role lacks the permission, or (on `/api/cicd/*`) the IP is not in the allowlist | The message names the missing scope, says the route is session-only, or says the IP is not allowed |
+| `429 Too Many Requests` | The key's per-minute limit or a per-IP limit was exceeded | Wait for `Retry-After`; see [Rate limits](./conventions.md#rate-limits) |
 
 See [Conventions](./conventions.md) for the error format.
