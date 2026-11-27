@@ -186,6 +186,10 @@ GATE=$(curl -s "$OFFLOAD_API_URL/api/cicd/scans/$SCAN_ID/results" \
 
 For GitHub repositories, the **Offload Security Scan** action wraps everything above: it triggers the scan, waits for completion, posts a results comment on the pull request, and fails the job based on your threshold.
 
+:::note[Getting the action]
+The action is not published on the GitHub Marketplace. Ask your Offload Security contact for the action package, add it to a repository in your own organization (the examples below use `your-org/offload-scan-action`), and pin workflows to a release tag or commit SHA rather than a branch. Until then, the REST calls in [section 2](#2-trigger-a-scan-from-any-ci-system-rest-api) do the same job from any CI system.
+:::
+
 ### Set up
 
 1. Create an API key with the **CI/CD Pipeline (Basic)** preset (see step 1).
@@ -210,7 +214,7 @@ jobs:
       contents: read
     steps:
       - name: Run Offload Security Scan
-        uses: niteshsaini/offload-cspm/github-action@main
+        uses: your-org/offload-scan-action@v1
         with:
           api_url: ${{ secrets.OFFLOAD_API_URL }}
           api_key: ${{ secrets.OFFLOAD_API_KEY }}
@@ -247,7 +251,7 @@ The action exposes results you can use in later steps, including `scan_id`, `sta
 ```yaml
       - name: Run Security Scan
         id: scan
-        uses: niteshsaini/offload-cspm/github-action@main
+        uses: your-org/offload-scan-action@v1
         with:
           api_url: ${{ secrets.OFFLOAD_API_URL }}
           api_key: ${{ secrets.OFFLOAD_API_KEY }}
