@@ -84,7 +84,7 @@ Dependency findings usually outnumber everything else and are the cheapest to fi
 
 ![Reports tab, Scan History: juice-shop.zip grouped by branch (upload) with two runs — a partial scan with 1,121 findings by severity and the note that one tool (cve_manifest) failed, and an earlier failed scan — plus search, Refresh and page-size controls](/img/screenshots/security-scanning/code-reports.webp)
 
-**Scan History** is grouped **repository → branch → run**, so a repository's whole history reads in one place and each run keeps its full report. Each run shows its type, status (**completed**, **completed with errors** when a tool failed, **failed**) and date. Search by repository, branch or application ([Repository ownership](./connecting-repositories.md#repository-ownership)). Tick runs — or a branch to select all of its runs — and **Delete selected** to prune.
+**Scan History** is grouped **repository → branch → run**, so a repository's whole history reads in one place and each run keeps its full report. Each run shows its type, status (**completed**, **completed with errors** when a tool failed, **failed**) and date. A **partial coverage** marker next to the status — on the run, and rolled up to its branch and repository — means a tool could assess only part of the input, for example when some dependencies could not be resolved; the run's report names the gap. The report shows a failed-tool notice and a partial-coverage notice side by side when both apply. Search by repository, branch or application ([Repository ownership](./connecting-repositories.md#repository-ownership)). Tick runs — or a branch to select all of its runs — and **Delete selected** to prune.
 
 Open a run for the detail view:
 

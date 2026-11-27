@@ -36,7 +36,7 @@ SCAN_ID=$(curl -s -X POST "$OFFLOAD_API_URL/api/cicd/scans/trigger" \
 while : ; do
   STATUS=$(curl -s "$OFFLOAD_API_URL/api/cicd/scans/$SCAN_ID/status" \
     -H "X-API-Key: $OFFLOAD_API_KEY" | jq -r '.data.status')
-  case "$STATUS" in completed|failed) break ;; esac
+  case "$STATUS" in completed|completed_with_errors|failed) break ;; esac
   sleep 10
 done
 
@@ -169,9 +169,9 @@ unmodified with `GET /api/native-scans/exports/verify?sha256=…` (scope
 ## Good practices
 
 - **Least-privilege keys.** Give each automation its own scoped key; revoke it when the job is retired.
-- **Be idempotent and poll politely.** Poll status with a sensible interval and an overall timeout, and stop on every terminal status (`failed` and `partial` as well as `completed`).
+- **Be idempotent and poll politely.** Poll status with a sensible interval and an overall timeout, and stop on every terminal status (`failed`, `partial` and, for CI/CD code scans, `completed_with_errors`, as well as `completed`).
 - **Handle pagination.** List endpoints are paged; loop until you have read every page (as in example 2).
-- **Respect rate limits.** Limits are per client IP (60 requests per minute on the vulnerability and findings paths, 100 elsewhere). Back off on `429` and honor `Retry-After`.
+- **Respect rate limits.** Limits are per client IP (60 requests per minute on the vulnerability and findings paths, 100 elsewhere) and, for API keys, per key (the key's own per-minute limit, 60 by default). Back off on `429` and honor `Retry-After`.
 - **Prefer webhooks for "react to X".** A webhook fires when the event happens; polling wastes calls.
 - **Check the response shape.** Read enveloped payloads from `.data`, and treat any non-2xx status as a failure to handle.
 

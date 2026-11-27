@@ -32,7 +32,7 @@ As banks modernize onto AWS, Azure, and GCP, misconfiguration is the leading cau
 This is where finance is different from a pure-SaaS company, and where fragmented tools fall short. Core banking, back-office, and internal applications run on **private infrastructure** — and they're often the highest-value targets. Offload Security reaches inside the network to cover them:
 
 - **[Internal network visibility](../on-premises/internal-network-visibility.md)** — a live inventory of internal assets.
-- **[Greenbone OpenVAS](../on-premises/openvas-scanning.md)** — results of your internal-host OpenVAS scans (including the internal scans PCI DSS requires) imported into Vulnerability Management, with a network VAPT report and a host-side check against the Wazuh agent on the same host.
+- **[Greenbone OpenVAS](../on-premises/openvas-scanning.md)** — internal-host OpenVAS scans (including the internal scans PCI DSS requires), started or scheduled from the platform or in Greenbone, with results imported into Vulnerability Management, with a network VAPT report and a host-side check against the Wazuh agent on the same host.
 - **[Private URL/API scanning](../on-premises/private-infrastructure-scanning.md)** — testing internal banking applications and APIs.
 - **Data residency** — because these engines run inside your boundary, sensitive scan data stays on-prem.
 

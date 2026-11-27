@@ -2,7 +2,7 @@
 title: "Webhooks"
 sidebar_label: "Webhooks"
 sidebar_position: 3
-description: "Subscribe your SIEM, SOAR or automation to platform events — alerts, scans, findings, SLA, compliance, risk, remediation, evidence, assessments — as signed JSON deliveries with retries and a delivery log, managed on the Integrations page or over the API."
+description: "Subscribe your SIEM, SOAR or automation to platform events — alerts, scans, findings, SLA, compliance, risk, remediation, evidence, assessments and more — as signed JSON deliveries with retries and a delivery log, managed on the Integrations page or over the API."
 ---
 
 # Webhooks
@@ -55,28 +55,29 @@ The response carries a `subscription_id` (`whsub_…`). `PUT /api/webhooks/{subs
 
 ## Event types
 
-`GET /api/webhooks/event-types/list` returns the current list, with a payload example for the alert events. These are the events the platform publishes:
+`GET /api/webhooks/event-types/list` returns the current list, with a payload example for the alert events. The list contains only event types the platform actually publishes for a team:
 
 | Family | Events |
 | --- | --- |
 | Alerts | `alert.created` · `alert.updated` · `alert.resolved` |
-| Scans | `scan.started` · `scan.completed` |
-| Findings | `finding.created` (new **critical / high** findings) · `cloud_event.finding_created` |
-| Cloud accounts | `cloud_account.added` · `cloud_account.removed` |
-| SLA | `sla.warning` · `sla.breached` · `sla.escalated` |
-| Compliance | `compliance.score_changed` · `compliance.drift_detected` · `compliance.threshold_breached` |
-| Risk | `risk.created` · `risk.updated` · `risk.threshold_breached` |
-| Cloud remediation | `remediation.requested` · `approved` · `executed` · `simulated` (dry run, no cloud change) · `failed` · `rolled_back` |
-| Evidence | `evidence.uploaded` · `evidence.approved` · `evidence.expiring_soon` · `evidence.expired` |
+| Scans | `scan.started` (a scheduled scan was dispatched) · `scan.completed` (cloud runs and every scan whose results are stored; `scan_type` says which) · `scan.failed` (one per failed scan, the same failure that raises the *Scan Failed* alert) |
+| Findings | `finding.created` (new **critical / high** finding from a cloud scan) · `finding.resolved` (a scan no longer detects it) · `finding.reopened` (detected again, or its accepted-risk / suppression window expired; `reason` says which) · `cloud_event.finding_created` |
+| SLA | `sla.breached` (counts per team and check) · `sla.escalated` (one per escalation level) |
+| Compliance | `compliance.score_changed` · `compliance.drift_detected` · `compliance.threshold_breached` · `compliance.sync_completed` |
+| Risk | `risk.created` · `risk.updated` · `risk.deleted` · `risk.deduplicated` · `risk.auto_imported` · `risk.threshold_breached` (a KRI crossed its threshold) · `risk.treatment_created` · `risk.kri_created` |
+| Cloud remediation | `remediation.requested` · `approved` (single step, or the last approval level) · `executed` · `simulated` (dry run, no cloud change) · `failed` · `rolled_back` |
+| Evidence | `evidence.auto_collected` · `evidence.expiring_soon` · `evidence.expired` |
 | Assessments | `assessment.submitted` · `assessment.completed` |
+| Knowledge Base | `document.uploaded` |
+| Other | `bia.rpo_violation` · `vulnerability.ingested` · `container.sbom_generated` · `threat.feed_processed` · `threat.alert_created` · `integration.ticket_created` (Jira) · `integration.notification_sent` · `schedule.renewed` · `schedule.expired` · `report.generated` · `security_graph.analysis_completed` |
 
-The list also carries every other type the platform's event bus defines, with a description derived from its name.
+`*` matches every event above, including types added later.
 
-:::warning[Listed but not published]
-`scan.failed`, `scan.progress`, `finding.updated`, `finding.resolved` and `finding.reopened` are subscribable, but **nothing publishes them in 1.4.0** — a subscription to them receives nothing. For finding lifecycle changes, use [SIEM Forwarding](./siem-forwarding.md); for alert lifecycle changes, use the `alert.*` events.
-:::
+`finding.created` is published per new critical or high cloud finding — the same events that drive Slack alerts and Jira tickets — not for every medium and low. `finding.resolved` and `finding.reopened` are one event per finding, so a large scan can resolve hundreds at once; they are published only when at least one enabled webhook in the team selects them.
 
-`finding.created` is published per new critical or high finding — the same events that drive Slack alerts and Jira tickets — not for every medium and low.
+**Types that are no longer listed.** Event types the platform defines but never publishes (for example `scan.progress`, `finding.updated`, `sla.warning`, `cloud_account.added` / `removed`, `evidence.uploaded`, `evidence.approved`) are not subscribable. A webhook saved with one of them earlier stays editable and is shown as an unknown type that never fires; it receives nothing, as before. For triage decisions on findings use [SIEM Forwarding](./siem-forwarding.md); for API-key changes and sign-ins use the audit trail.
+
+**Deprecated alias.** `kb.document_uploaded` (and `kb.*`) still receives Knowledge Base uploads, delivered once under the current name `document.uploaded`. Use `document.uploaded` for new webhooks.
 
 ### Alert events
 
@@ -149,7 +150,7 @@ Before 1.4.0, subscriptions with a secret were signed with an untimestamped `X-W
 - **Deliveries** on a webhook opens its delivery log: time, event type, delivered / failed, HTTP code (— when no answer came back), latency, attempt *n of 4* with the next retry, and the error (cut at 500 characters, and marked). Filter by Delivered / Failed and page through it; entries are kept **30 days**. Over the API: `GET /api/webhooks/{subscription_id}/deliveries?limit=50&offset=0&outcome=failed`.
 - Each webhook shows Enabled / Disabled, its event types, the last delivery and HTTP code, attempt counts, failures in a row and the last error. Test sends are shown separately (*Last test …*) and do not change those counts.
 - **Auto-disable.** A webhook whose endpoint has failed every attempt for at least **24 hours** (50 or more attempts in a row) is disabled automatically — it reads *Disabled automatically* with the reason and last error, and an alert is raised. Fix the receiver, then click **Enable**; the failure count starts again from zero.
-- A retried delivery carries the same `X-Webhook-ID`; de-duplicate on it. Deliveries run concurrently and can arrive out of order — order one alert's events by `data.updated_at`, other events by `data.occurred_at`.
+- A retried delivery carries the same `X-Webhook-ID`; de-duplicate on it. Deliveries run concurrently (at most 8 in flight per webhook in each backend process; a burst queues behind them) and can arrive out of order — order one alert's events by `data.updated_at`, other events by `data.occurred_at`.
 
 Deliveries never delay the scan or the finding that produced the event. They are also **best effort, not a queue**: events are not stored for replay, so an event raised while the platform is restarting can be lost. Treat the platform pages or API as the source of truth.
 

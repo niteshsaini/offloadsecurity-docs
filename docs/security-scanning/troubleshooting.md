@@ -10,7 +10,13 @@ description: "Fix the common problems across web, code, container and Kubernetes
 ## Web, API & host scans
 
 **The scan stays `running` far longer than its profile says.**
-Comprehensive ZAP and Nuclei scans of large applications can take longer than the estimate, but a scan that shows no progress for over an hour is usually a target that stopped responding or blocks the scanner. Check the target from the platform's network, then **Rescan** with a *Standard* profile, or run an App Scan with the **Gentle** resource mode.
+A Comprehensive ZAP scan can run for up to 11.5 hours by design. A scan that shows no progress for a long time is usually a target that stopped responding or blocks the scanner. Check the target from the platform's network, then **Rescan** with a *Standard* profile, or run an App Scan with the **Gentle** resource mode. In an App Scan, a tool that stops making progress is marked **stalled** and, by default, stopped ([Time limits and stalled tools](./app-scan.md#time-limits-and-stalled-tools)).
+
+**Starting an App Scan opened an existing scan instead.**
+Your team already had an App Scan of the same target with the same settings in progress, so no second copy was started. Change a setting to run a different scan, or wait for the running one. Over the API, send `allow_duplicate: true`.
+
+**An App Scan shows *Incomplete — not graded*.**
+At least one requested tool failed, timed out or was stopped part-way. The banner names it. Fix the cause (often a slow or blocking target) and rescan; the grade is given only when every applicable tool completed.
 
 **Submit is greyed out in the launcher.**
 App Scan, ZAP, Nuclei, Nmap and testssl.sh runs need the **I am authorized to test this target** box ticked under **Authorization & scope**.
@@ -19,7 +25,7 @@ App Scan, ZAP, Nuclei, Nmap and testssl.sh runs need the **I am authorized to te
 The deployment sets `SCAN_REQUIRE_AUTHORIZATION=true`. Send an `engagement` object with `"attested": true` ([Scanning API](./api.md#web-api--host-scans)). A `valid_until` in the past is also refused.
 
 **"Target refused" for an internal host or range.**
-Private (RFC 1918) targets need `ALLOW_PRIVATE_SCAN_TARGETS=true` on the deployment; loopback, link-local and cloud-metadata addresses are always refused. An Nmap range larger than `SCAN_MAX_NETWORK_HOSTS` (default 4,096 addresses) is refused too.
+Private (RFC 1918) targets need `ALLOW_PRIVATE_SCAN_TARGETS=true` on the deployment; loopback, link-local and cloud-metadata addresses are always refused. An Nmap range larger than `SCAN_MAX_NETWORK_HOSTS` (default 4,096 addresses) is refused too. App Scan checks its target, login, probe and token URLs when you start it and answers HTTP 422 without creating a scan. OpenVAS scans follow `OPENVAS_ALLOW_PRIVATE_TARGETS` (on by default) instead.
 
 **Rescan is refused.**
 The run's authorized window (**Authorized until**) has ended. Start a new scan with a fresh attestation.
@@ -45,8 +51,14 @@ Results are per run. **Rescan** the target and open the new run: **Compared with
 **I deleted a scan by mistake.**
 Deleted runs are kept as tombstones for `SCAN_TOMBSTONE_DAYS` (default 30) but are not restorable from the UI; contact your administrator or support with the scan ID.
 
-**Scheduled network or container scans always fail with "not yet implemented".**
-Those two schedule types do not run in 1.4.0 — see [Scan Management](./scan-management.md#which-scan-types-can-be-scheduled).
+**A scheduled network, registry or OpenVAS run failed with "all N targets refused".**
+Every target was refused for a reason a retry cannot fix: an invalid target, a removed registry, or an OpenVAS task that was not created from Offload. The run lists each target with its reason. Fix them, then use **Run Now** ([Scan Management](./scan-management.md#scheduled-network-container-registry-and-openvas-scans)).
+
+**A scheduled registry run did nothing ("no new images").**
+A container registry schedule scans only images that have not been scanned yet, and only images already synced into the platform. Sync the registry in Container Security, or use the **Weekly Container Audit** template to re-scan every image.
+
+**Run Now says *Run Queued* or *Run Not Started*.**
+Another run of the same schedule is still in progress. Depending on the schedule's overlap policy the new run waits for it (queued) or is skipped; the notice gives the reason.
 
 **Cloud posture scans are not in the list.**
 By design — they live on Cloud Security → [Cloud Scans](../cloud-security/scan-orchestration.md#scan-history). Scanning is for application and host testing.
@@ -57,7 +69,10 @@ By design — they live on Cloud Security → [Cloud Scans](../cloud-security/sc
 The token expired, was revoked, or lacks read access to the organization. Reconnect under Automation → Git Connections with a fresh token that has repository read scope (and SSO authorization if your organization enforces it).
 
 **The scan finished `completed_with_errors`.**
-One engine could not run — most often a missing lockfile for SCA, a language OpenGrep has no rules for, or a build artifact that is not a supported type. Open the report: the tools that ran are complete; the failing tool's error is shown. Re-run after fixing the input.
+One engine could not run — most often dependencies that could not be resolved at all, a language OpenGrep has no rules for, or a build artifact that is not a supported type. Open the report: the tools that ran are complete; the failing tool's error is shown. Re-run after fixing the input.
+
+**The report says *Partial coverage* for dependencies.**
+The package manager could resolve only some dependencies (for example "112 of 212 npm dependencies could not be resolved"). The scan completes and the resolved dependencies are assessed; the gap is disclosed on the scan and marked **partial coverage** in the Reports tree. The release and pull-request gate still fail on it by default; see the next entry.
 
 **Far fewer dependency findings than expected.**
 SCA resolves dependencies from **manifests and lockfiles** (such as `package-lock.json`, `yarn.lock`, `requirements.txt`, `poetry.lock`, `go.sum`, `pom.xml`). Repositories without them cannot be resolved precisely; commit the lockfile or upload an SBOM under SBOM & Licenses.
@@ -87,7 +102,13 @@ The verification scan could not prove the fix: it ran on a different commit, its
 The button's tooltip names the reason. The deployment switch is `AGENTIC_FIX_ENABLED=true` **and** the fix worker must be running under the `agentic-fix` compose profile; then a team admin switches agentic fixes on in the Findings tab banner. A run also needs a model provider configured for the team.
 
 **A CI pipeline fails the gate but I see no critical findings.**
-Check the gate that fired: the severity threshold (`fail_on_severity`), the **SCA policy pack** (an AGPL or malicious-package rule blocks regardless of severity), or the **image admission policy**. The pipeline log names the rule and the pack version.
+Check the gate that fired: the severity threshold (`fail_on_severity`), the **SCA policy pack** (an AGPL or malicious-package rule blocks regardless of severity), the **image admission policy**, or incomplete scanner coverage. Partial dependency coverage fails the gate unless the team gate policy sets `fail_on_partial_dependency_coverage` to `false` (API only), which turns it into a note. The pipeline log names the rule and the pack version.
+
+**A repository's `.checkov.yaml` settings are ignored.**
+Only `check`, `skip-check`, `framework`, `skip-framework` and `skip-path` are read from a scanned repository's Checkov config. Every other key, including `external-checks-dir` and `external-checks-git`, is ignored because it could run the repository's code on the platform. Put custom IaC policies in the [custom rules](./code/custom-rules.md) directory.
+
+**The GitHub pull-request comment or check has no link to Offload.**
+The link is built from the platform's public URL, or else from `https://<DOMAIN_NAME>`. Set one of them on the deployment. Runs from a GitHub App installation that is not yet claimed by a team get no link.
 
 ## Containers
 
@@ -107,6 +128,12 @@ Verify the registry sends to the exact callback URL and that its signature match
 
 **Connectivity test fails.**
 In order: the API server URL is reachable from the platform (private clusters need a route or a bastion); the token or kubeconfig has not expired; the RBAC profile is applied (`kubectl auth can-i list pods --as=system:serviceaccount:<ns>:<sa>`). A kubeconfig that points at a private-network or metadata address, or uses an `exec` credential plugin, is rejected on purpose.
+
+**The cluster card shows "Kubeconfig refused".**
+The stored kubeconfig uses an `auth-provider` (gcp, oidc, azure), an `exec` command or a file path for its credentials. These are refused at upload and every time the kubeconfig is used, because they would run a command or read a file on the platform. Upload a kubeconfig with a service-account token or a client certificate instead; see [Replace credentials](./kubernetes/onboarding-clusters.md#replace-credentials).
+
+**The cluster card shows "Scan lost".**
+The scan missed a deadline: it waited in the queue longer than `K8S_SCAN_QUEUE_MAX_HOURS` (24 hours by default), or its worker stopped during the 2-hour run window. The card says which. Start the scan again; see [Queued scans](./kubernetes/scanning-and-findings.md#queued-scans).
 
 **The scan finished `degraded`.**
 The per-scan API budget (`K8S_SCAN_MAX_API_CALLS`, default 5,000) was exhausted on a large cluster. Results are partial; raise the budget for that deployment or scan namespaces selectively.

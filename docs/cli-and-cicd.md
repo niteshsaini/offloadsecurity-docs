@@ -24,7 +24,7 @@ This page covers the pipeline/scan workflow. For the platform's complete REST AP
 - **Use the GitHub Action** — a turn-key action that runs the scan, waits for it, posts a summary comment on the PR, and exposes findings counts and a report link as step outputs.
 
 :::note[Authentication]
-Pipeline requests authenticate with an **API key** (not your login). Create the key once, store it as a CI secret, and send it on every request. Keys are scoped, expirable, and revocable.
+Pipeline requests authenticate with an **API key** (not your login). Create the key once, store it as a CI secret, and send it on every request. Keys are scoped, expirable, revocable, rate-limited per key, and can be restricted to source IP addresses.
 :::
 
 ---
@@ -37,13 +37,25 @@ API keys are managed from the **API Keys** screen, reached from the **account me
 2. Select **Create API Key**.
 3. Give the key a recognizable **name** (for example, `GitHub Actions – web app`).
 4. Choose a **scope preset**. For pipeline scanning use **CI/CD Pipeline (Basic)**, which grants exactly `scans:trigger` and `scans:read` — enough to start scans and read their results. Use **CI/CD Pipeline (Full)** if your jobs also need to manage scans or read vulnerabilities.
-5. Set **Expires in (days)** (default **90**, maximum **365**). Optionally adjust the environment label and per-minute rate limit.
-6. Select **Create** and **copy the key immediately** — it is shown only once. Keys begin with the prefix `osk_`.
+5. Set **Expires in (days)** (default **90**, maximum **365**). Optionally adjust the **Environment** label and **Rate Limit (req/min)**.
+6. Select **Create Key** and **copy the key immediately** — it is shown only once. Keys begin with the prefix `osk_`.
 
 Store the key in your CI provider's secret store (GitHub Actions secrets, GitLab CI/CD variables, Jenkins credentials, a vault, etc.). Never commit it to your repository.
 
 :::tip[Least privilege & rotation]
 Pick the narrowest preset that works (start with **CI/CD Pipeline (Basic)**), keep an expiry set, and rotate keys periodically. You can **revoke** a key at any time from the same screen if it is ever exposed.
+:::
+
+### Rate limit, IP allowlist and rotation
+
+These controls apply on every route that accepts an API key, including the `/api/cicd/*` pipeline endpoints:
+
+- **Per-key rate limit.** Each key's **Rate Limit (req/min)** (default 60, 1–600) is enforced across every route it calls. Beyond it the API answers `429` with a `Retry-After` header. The per-IP limits still apply, so the effective limit can be lower.
+- **IP allowlist.** A key can be restricted to source addresses or CIDR ranges (for example `203.0.113.7` or `203.0.113.0/24`) with the `ip_allowlist` field of `POST /api/api-keys` or `PATCH /api/api-keys/{key_id}`. The **API Keys** screen does not edit it. An empty list allows every address. A request from an address outside the list gets `403` on the `/api/cicd/*` endpoints and `401` on other routes.
+- **Rotation.** **Rotate** issues a new key; the old one keeps working for a grace period (48 hours from the screen; `grace_period_hours`, 0–168, on `POST /api/api-keys/{key_id}/rotate`). After the grace period the old key gets `401` and an hourly task revokes it.
+
+:::warning[Allowlists behind a reverse proxy]
+The platform reads the client address from `X-Forwarded-For` only when the request comes through a proxy listed in `TRUSTED_PROXIES` in `.env`. It is empty by default, so behind nginx the backend sees the proxy's own address and an allowlisted key can get `403`. Set `TRUSTED_PROXIES` to the exact address of the proxy in front of the backend (for example the nginx container), never a whole Docker range. Before 1.4.1, allowlists and rotation grace were not enforced on `/api/cicd/*`; check keys that have an allowlist before you upgrade.
 :::
 
 ---
@@ -76,7 +88,7 @@ curl -s -X POST "$OFFLOAD_API_URL/api/cicd/scans/trigger" \
 | `fail_on_severity` | No | Severity gate: `critical`, `high`, `medium`, or `low`. Sets `gate_passed=false` when findings at or above this level are found. |
 | `branch` | No | Git branch to scan, for the code-security scan types. |
 | `pipeline_context` | No | Free-form metadata about the build (repo, branch, commit, build ID) stored with the scan. |
-| `callback_url` | No | HTTPS webhook the platform POSTs to when the scan completes. Must resolve to a public address (checked at trigger and again at send; redirects are not followed). Signed with your team's webhook signing secret (`X-Offload-Timestamp`, `X-Offload-Signature-V1`). |
+| `callback_url` | No | HTTPS webhook the platform POSTs to when the scan completes. Must resolve to a public address (checked at trigger and again at send; redirects are not followed). Signed with your team's webhook signing secret (`X-Offload-Timestamp`, `X-Offload-Signature-V1`). The payload's `status` is the same terminal status the status endpoint returns. |
 
 **Common `scan_type` values and their profiles**
 
@@ -127,7 +139,7 @@ SCAN_ID=$(curl -s -X POST "$OFFLOAD_API_URL/api/cicd/scans/trigger" \
 
 ### Poll status
 
-The scan runs in the background. Poll its status until it reaches a terminal state (`completed` or `failed`):
+The scan runs in the background. Poll its status until it reaches a terminal state: `completed`, `completed_with_errors` or `failed`. `completed_with_errors` means a code-security scan ran but some of its tools failed; its findings are real and are stored, and the gate fails closed on a partial run.
 
 ```bash
 curl -s "$OFFLOAD_API_URL/api/cicd/scans/$SCAN_ID/status" \
@@ -136,7 +148,7 @@ curl -s "$OFFLOAD_API_URL/api/cicd/scans/$SCAN_ID/status" \
 
 ### Fetch results and gate the build
 
-Once the scan is `completed`, fetch the full results — including the severity breakdown and the `gate_passed` verdict — and fail the job if the gate didn't pass:
+Once the scan is in a terminal state, fetch the full results — including the severity breakdown and the `gate_passed` verdict — and fail the job if the gate didn't pass:
 
 ```bash
 RESULT=$(curl -s "$OFFLOAD_API_URL/api/cicd/scans/$SCAN_ID/results" \
@@ -170,7 +182,7 @@ while :; do
   STATUS=$(curl -s "$OFFLOAD_API_URL/api/cicd/scans/$SCAN_ID/status" \
     -H "X-API-Key: $OFFLOAD_API_KEY" | jq -r '.data.status')
   echo "status: $STATUS"
-  case "$STATUS" in completed|failed) break;; esac
+  case "$STATUS" in completed|completed_with_errors|failed) break;; esac
   sleep 15
 done
 
@@ -244,6 +256,8 @@ jobs:
 | `cloud_account_id` | No | — | Cloud account to authenticate to ECR / Artifact Registry / ACR with, when you have several of one provider. |
 | `poll_interval` | No | `15` | Seconds between status polls. |
 
+If an App Scan of the same target with the same settings is already running for your team, the action follows that scan instead of starting a second one, and says so in the log; the gate then applies to the earlier scan. A scan cancelled in the platform fails the job.
+
 ### Outputs
 
 The action exposes results you can use in later steps, including `scan_id`, `status`, `total_findings`, `critical_count`, `high_count`, `medium_count`, `low_count`, `info_count`, `security_rating` (A–F), `security_score` (0–100), and `report_url`; in `code_repo` mode also `release_gate` (`pass`, `review` or `fail`), `release_gate_policy_version` and `sbom_scan_id`.
@@ -288,12 +302,14 @@ curl -s "$OFFLOAD_API_URL/api/ci/scan/$SCAN_ID/sarif" \
 ```
 
 ```yaml
-      - uses: github/codeql-action/upload-sarif@v3
+      - uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: offload.sarif
 ```
 
 For a scan started with `POST /api/cicd/scans/trigger`, `GET /api/cicd/scans/{scan_id}/sarif` returns the same SARIF 2.1.0 (`409` until the scan has completed).
+
+The upload job needs `security-events: write`. On a private repository, GitHub refuses the upload unless its paid Code Security add-on is enabled; the findings are in Offload Security either way.
 
 ### Import SARIF from other scanners
 
@@ -315,6 +331,8 @@ curl -s -X POST \
 | `full_run` | `true` only when the tool scanned the whole repository and branch with its normal rules; findings it no longer reports are then resolved. |
 
 Logs over the size or result limit (`SARIF_UPLOAD_MAX_BYTES`, `SARIF_INGEST_MAX_RESULTS`) are refused whole, never truncated. Suppressions in the log are imported as suppressed findings. The same upload is available in the UI under **Code Command Center → SARIF Imports**, and `GET /api/cicd/sarif/sources` lists what has been imported.
+
+To remove an imported source, a team admin calls `DELETE /api/cicd/sarif/sources?scope_key=<scope>&scanner=sarif:<tool>` with a `scope_key` from the listing (omit `scanner` for every SARIF tool in that scope). Its findings are resolved as an empty `full_run=true` upload would resolve them: history is kept, a finding another tool still reports stays open, and triage decisions are not overwritten.
 
 ### Configure a release-gate policy
 
@@ -348,6 +366,8 @@ Both **require authentication**, so embed them in an internal dashboard rather t
 
 `GET /api/ci/pipeline/{provider}` returns a ready-to-edit config snippet — `github_actions`, `gitlab_ci`, `bitbucket`, `azure_devops`, or `jenkins` — each wired to call the endpoints above. These are starter templates you commit and adapt; there's no server-side runner for GitLab/Bitbucket/Azure/Jenkins (the deepest native integration is with GitHub — see below).
 
+For GitHub there is also a multi-scan workflow generator: **Code Command Center → Automation → CI/CD Pipeline** (or `POST /api/cicd/pipeline/comprehensive`). Generated workflows declare their permissions (`contents: read`, `actions: read`). Uploading results to GitHub Code Scanning is opt-in: tick **Also upload results to GitHub Code Scanning** (API: `upload_to_code_scanning`, a JSON boolean, default `false`), which adds the upload step and `security-events: write`. Without it, the SARIF is kept as a workflow run artifact and the findings are in Offload Security.
+
 ### PR / MR comment
 
 `GET /api/ci/scan/{scan_id}/pr-comment` returns a preformatted Markdown summary you can post as a pull-request or merge-request comment from any CI system.
@@ -361,7 +381,7 @@ The [GitHub Action](#3-the-github-action) is the simplest option and works in an
 - posts findings as **inline annotations on the pull request** using GitHub's Check Runs, and
 - can **auto-scan** on pushes to the default branch and on pull requests — no workflow file to maintain.
 
-Because the App creates a GitHub **check** on each pull request, you can mark that check as a **required status** so a failing scan blocks the merge. The check is pinned to the pull request's **head commit**, scans only the changed files, separates **new** findings from pre-existing ones, and passes or fails on the scan's own results. Configure per-repository auto-scan and check behavior from the platform's integration settings. GitLab and Bitbucket get the same review through a webhook — see [Pull Request Review](./security-scanning/code/pull-request-review.md).
+Because the App creates a GitHub **check** on each pull request, you can mark that check as a **required status** so a failing scan blocks the merge. The check's **Details** link and the PR comment link back to the full run in Offload Security (**Scanning → Targeted runs**). The link uses the platform's configured public URL, or `https://<DOMAIN_NAME>`; when neither is set, no link is added. The check is pinned to the pull request's **head commit**, scans only the changed files, separates **new** findings from pre-existing ones, and passes or fails on the scan's own results. Configure per-repository auto-scan and check behavior from the platform's integration settings. GitLab and Bitbucket get the same review through a webhook — see [Pull Request Review](./security-scanning/code/pull-request-review.md).
 
 The App's PR scans are **scoped to the changed files and diffed against the base branch**, so the check fails on what the PR introduced, not on pre-existing findings. Setup, per-repository options, the GitLab/Bitbucket merge-request webhooks and troubleshooting are in **[Pull Request Scanning](./security-scanning/code/pull-request-scanning.md)**.
 
@@ -379,7 +399,9 @@ Scans triggered from CI/CD are first-class citizens in the platform:
 
 | Symptom | Likely cause |
 |---|---|
-| `401 Unauthorized` | Missing/invalid `X-API-Key`, an expired or revoked key, or a key without the required scope. |
+| `401 Unauthorized` | Missing/invalid `X-API-Key`, an expired or revoked key, a rotated key past its grace period, or a key without the required scope. |
+| `403` with an allowlisted key | The request's address is not in the key's IP allowlist. Behind nginx, check `TRUSTED_PROXIES` (see [Rate limit, IP allowlist and rotation](#rate-limit-ip-allowlist-and-rotation)). |
+| `429 Too Many Requests` | The key's per-minute limit or a per-IP limit was reached. Wait for `Retry-After`. |
 | `400 Unknown scan_type` | The `scan_type` isn't one of the supported values — check `GET /api/cicd/scan-types`. |
 | Status stays `pending`/`running` | The scan is still in progress; keep polling. Large scans (full ZAP) can take 20+ minutes. |
 | GitHub Action: no PR comment | The job is missing `permissions: pull-requests: write`. |

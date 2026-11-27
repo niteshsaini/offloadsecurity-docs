@@ -2,7 +2,7 @@
 title: "AI Data & Privacy"
 sidebar_label: "AI Data & Privacy"
 sidebar_position: 6
-description: "What the platform's own AI features send to the model — including finding, asset and control records, code snippets and policy document text — where it goes, the per-team budget, how it is cached and isolated per tenant, which features never call a model, and how to run with AI off, including the on-premises caveat that prompts still reach the provider you chose."
+description: "What the platform's own AI features send to the model — including finding, asset and control records, code snippets and policy document text — where it goes, the per-team budget, how it is cached and isolated per tenant, which features never call a model, and how to switch AI off for the whole deployment, including the on-premises caveat that prompts still reach the provider you chose."
 ---
 
 # AI Data & Privacy
@@ -61,14 +61,37 @@ To cut cost and latency, the AI assistant uses a three-tier cache:
 
 ## Turning AI off
 
-AI features are active **only when an LLM provider key is available** to the team. To disable AI, make sure no key exists anywhere: remove the team keys under *AI Configuration* **and** leave `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `GOOGLE_AI_API_KEY` (and the deprecated `EMERGENT_LLM_KEY`) unset in the deployment environment. The rest of the platform works unchanged; the Security Command Center falls back to its rule-based mode.
+New in 1.4.1: the operator can switch every AI feature off for the whole deployment with one variable in `.env`:
+
+```bash
+ENABLE_AI_FEATURES=false
+```
+
+It is `true` by default (unset or empty also means on). Accepted values are `true` / `1` / `yes` / `on` and `false` / `0` / `no` / `off`; any other value is treated as **off**, and the message names it as unrecognized. Recreate the backend and worker containers after changing it (`docker compose up -d`).
+
+With the switch off, no prompt, document text or finding is sent to an LLM or embeddings provider — chat, triage, Knowledge Base answers and embeddings, evidence mapping, agentic fixes, live AI-SPM prompt-injection tests, the provider *Test connection* ping and the Cohere reranker are all covered. How each feature refuses:
+
+- Requests are answered with HTTP 503 and the code `AI_FEATURES_DISABLED`, with a message that names the variable.
+- Queued jobs (AI-SPM prompt tests, agentic fixes) fail with the same message.
+- A Knowledge Base upload still stores the document; its summary is skipped and its embeddings stay pending until AI is switched back on, when it is re-embedded. The Knowledge Base header reads *AI switched off on this deployment*.
+- Features that have a non-AI path (evidence mapping, rule-based advisors, the Security Command Center's rule-based mode) fall back to it and say why.
+
+`GET /api/ai/status` and `GET /api/llm/providers` report `ai_features_enabled` and `ai_disabled_reason`. The rest of the platform works unchanged.
+
+One exception, by design: [secret detection](../security-scanning/code/secret-detection.md) still checks whether a *discovered, leaked* OpenAI or Anthropic key is live. That is a key-validity call to the vendor; no platform data is sent.
+
+Without the switch, AI features are also inactive when no provider key is available to a team: no team keys under *AI Configuration*, and `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `GOOGLE_AI_API_KEY` (and the deprecated `EMERGENT_LLM_KEY`) unset in the deployment environment. `ENABLE_AI_FEATURES=false` is the more reliable control, because a key added later has no effect while it is off.
 
 ## On-premises and data residency
 
 The whole platform can run **fully on-premises** — see [On-Premises](../on-premises/index.mdx). One caveat to plan for:
 
 :::warning[AI features still call the external provider]
-Even in an on-premises deployment, AI features send prompts — including the data listed above — to the **external** LLM provider over the network using your key; the model itself is not run inside your environment. If sending prompts to an external AI provider is not acceptable for your data-residency requirements, **disable AI features** (above) and use the platform without them. Everything else — scanning, findings, risk, compliance, reporting — runs entirely within your environment.
+Even in an on-premises deployment, AI features send prompts — including the data listed above — to the **external** LLM provider over the network using your key; the model itself is not run inside your environment. If sending prompts to an external AI provider is not acceptable for your data-residency requirements, **disable AI features** (above) and use the platform without them. Scanning, findings, risk, compliance and reporting then run without an LLM. A few non-AI features also make outbound calls, such as secret validation and vulnerability enrichment; see [What needs outbound access](../on-premises/deployment.md#what-needs-outbound-access).
+:::
+
+:::note[Usage analytics in the web interface]
+Separately from AI, the web interface in this release loads the PostHog analytics library and sends product-usage events to PostHog's US cloud (`us.i.posthog.com`) using a project key built into the frontend. The Content Security Policy allows those PostHog hosts. There is no setting to turn this off in this release. If browsers that use the platform must not reach external hosts, block `*.posthog.com` at your network egress or proxy.
 :::
 
 ## Related

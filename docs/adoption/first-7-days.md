@@ -7,7 +7,7 @@ description: "A day-by-day plan that takes you from a first connected account to
 
 # First 7 Days — from first scan to operating program
 
-The **[Quickstart](../getting-started.md)** gets you through your first scan, finding, ticket, and alert. This plan takes the next step: seven focused sessions that end with the platform running as a program — scheduled scans, owned findings, SLAs, alerts, compliance tracking, and an executive view.
+The **[Quickstart](../getting-started.md)** gets you through your first scan and finding, and **[Tickets, Alerts & Automation](./connect-integrations.md)** connects ticketing, alert channels and CI/CD. This plan takes the next step: seven focused sessions that end with the platform running as a program — scheduled scans, owned findings, SLAs, alerts, compliance tracking, and an executive view.
 
 Each "day" is a working session of roughly one to two hours. Compress or stretch the calendar as you like — the **order** is what matters, because each day builds on the previous one.
 

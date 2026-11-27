@@ -21,7 +21,7 @@ It is built for teams that need to **prove** security, not just perform it — w
 | A **CISO or security leader** | A live, defensible picture of risk and compliance posture across the whole estate, trending over time. |
 | A **compliance officer or auditor** | A control library, assessment engine, and evidence vault that produces audit-ready packages continuously — not the week before the audit. |
 | A **DevSecOps team** | Security that runs in the pipeline and reports back to the same platform the rest of the org uses. |
-| A **regulated enterprise** | A governance system of record that spans cloud *and* private infrastructure, with on-premises scanning and Wazuh endpoint telemetry for the assets that never leave your network. |
+| A **regulated enterprise** | A governance system of record that spans cloud *and* private infrastructure, with on-premises scanning and Wazuh endpoint telemetry for assets on your private network. On-premises, the platform's data stays on your infrastructure apart from the [outbound connections you allow](/on-premises/deployment#what-needs-outbound-access). |
 
 ## What makes it different
 

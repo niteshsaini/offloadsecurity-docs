@@ -19,7 +19,7 @@ Medical devices, imaging systems, nurse workstations, and OT rarely leave the ho
 
 ### Vulnerability management that reaches legacy internal systems
 
-Your [Greenbone OpenVAS](../on-premises/openvas-scanning.md) scans — authenticated or unauthenticated, configured and run in Greenbone inside your network — are imported into Vulnerability Management, surfacing exposures on internal hosts a public SaaS scanner can't reach. With the platform deployed on-premises, scan data about sensitive systems stays within your boundary.
+Your [Greenbone OpenVAS](../on-premises/openvas-scanning.md) scans — authenticated or unauthenticated, run by Greenbone inside your network and created, started or scheduled from the platform or in Greenbone itself — are imported into Vulnerability Management, surfacing exposures on internal hosts a public SaaS scanner can't reach. With the platform deployed on-premises, scan data about sensitive systems stays within your boundary (the web app's browser usage analytics are the exception; see [Usage analytics](../trust-and-security.md#usage-analytics)).
 
 ### Endpoint and telemetry monitoring without shipping data out
 
@@ -27,7 +27,7 @@ Continuous endpoint and SIEM coverage through [Wazuh Integration](../on-premises
 
 ### Data residency and PHI-conscious architecture
 
-The on-premises model is designed so that sensitive telemetry stays inside your control boundary. That matters when the data being observed can itself reveal information about patients, clinicians, and clinical systems.
+The on-premises model stores sensitive telemetry, findings and evidence inside your control boundary; the optional features that send data out (AI, secret validation, notifications, usage analytics) are listed with how to disable each in [What needs outbound access](../on-premises/deployment.md#what-needs-outbound-access). That matters when the data being observed can itself reveal information about patients, clinicians, and clinical systems.
 
 ### Cloud and health-tech coverage in the same pane
 

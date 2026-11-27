@@ -21,6 +21,9 @@ Findings reach controls on the 4-hourly refresh and after scans; **Run Now** doe
 **Total Controls says 1,003 but the catalog has 1,534.**
 Total Controls counts controls referenced by your *active* frameworks. Activate more frameworks from the Frameworks tile to widen the scope (and lower the percentages, since more controls become in-scope).
 
+**The catalog shows more controls than the SCF release, or the same control twice.**
+Earlier releases could create duplicate catalog rows when the backend and the scheduler both imported the SCF catalog at startup. The current release merges duplicates into one row per SCF ID at startup and then builds a unique index on the SCF ID, before any import writes; team control state is kept separately and is not affected. If the index still cannot be built, the import fails (and is retried on the next start) instead of reporting the catalog as seeded. The control count should stay the same across restarts.
+
 **Two teams see different scores for the same framework.**
 Correct: control state, evidence, overrides, thresholds, assessments and the active framework set are all per team. The catalog is shared; nothing else is.
 
@@ -70,7 +73,13 @@ Each change is reported once. If the 4-hourly refresh or a post-scan run already
 Drift is read from the compliance audit log of status changes. Check that compliance refreshes are running (the Compliance Engine *Total Syncs* tile and timeline) and that the Celery beat is running. Earlier releases could fail the daily snapshot on an index-name conflict at startup; the current release tolerates it.
 
 **Alert policy fires but nothing arrives.**
-The policy chooses drifts; delivery uses the channels configured under [Notifications](../integrations/notifications.md). Confirm the channel is enabled and its test passes, and that the drift's severity meets the policy's minimum (expired evidence is *medium*). Drift notifications go to email, Slack and in-app only: a policy with only **Teams** selected notifies in-app, and *Info (all)* behaves as *High+*.
+The policy chooses drifts; delivery uses the channels configured under [Notifications](../integrations/notifications.md). Confirm the channel is enabled and its test passes, and that the drift's severity meets the policy's minimum (expired evidence is *medium*). Slack and Microsoft Teams are skipped when no webhook is connected under Integrations, and the team's notification settings (a muted category, a channel switched off, a personal opt-out) can remove a channel or recipient. A policy or channel that fails is logged as a warning in the backend logs, with the recipients who missed the alert. See [Delivery outcome](./drift-detection.md#delivery-outcome).
+
+**Drift alerts do not reach PagerDuty or our alert webhook.**
+By design: drift alerts go only to the channels an alert policy selects (email, Slack, Microsoft Teams, in-app, and a connected Google Chat). An outbound webhook subscribed to compliance drift events still receives the event.
+
+**A manual override changed a control's status but no drift appeared.**
+In the current release an override, unlock or approved exception that changes a control's status is recorded as a status change and reported on the next detection run. An override that leaves the status as it was (for example locking a control at its current status) is not drift.
 
 ## Evidence
 
@@ -119,6 +128,9 @@ Some applicable controls have no scanner or workflow evidence in the platform an
 
 **An audit pack fails verification with "signed under a different key".**
 The pack was sealed under an earlier `DPDP_AUDIT_SIGNING_KEY` (or `SECRET_KEY`, when no signing key is set). It does not indicate tampering; verify with the key that was in use when the pack was generated.
+
+**DPIA, SDF or vendor actions are missing from an audit pack.**
+Earlier releases recorded only breach actions in the DPDP audit log. The current release also records DPIA, SDF and vendor assessment actions, from the time of the upgrade; packs for earlier periods do not contain them.
 
 **The DPIA tab shows an error page.**
 An earlier release crashed the tab when a DPIA existed (`completeness_percentage` serialisation). Upgrade; no data is lost.

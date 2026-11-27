@@ -45,6 +45,8 @@ After every refresh the engine compares each active framework's implementation s
 
 Breaches surface on the overview (*Active Breaches*), on the *Breaches* sub-tab, as a **Threshold Crossed** drift, and through [alert policies](./drift-detection.md#alert-policies).
 
+Each breach also sends a threshold alert to the team in-app and by email, and to Slack or Google Chat when connected under Integrations. Microsoft Teams is opt-in: threshold alerts post to Teams only when an enabled drift alert policy turns Teams on and the team's notification settings neither switch Teams off nor mute the category. Each run logs how many sends were delivered, skipped or failed per channel.
+
 ## Trends and timeline
 
 ![Implementation Score Trends: score per active framework at each engine evaluation with the 70% threshold line and a 7 / 30 / 90 days / all time-range selector](/img/screenshots/compliance/compliance-engine-trends.webp)
@@ -77,7 +79,7 @@ Expired evidence stops supporting its controls and shows up as an *Evidence Expi
 Twenty cloud-native fixes for the misconfigurations that most often drag a framework down: public S3, unencrypted storage, open security groups, missing CloudTrail or GuardDuty, public RDS, IMDSv1, unused access keys, and their GCP and Azure equivalents. Each playbook carries a **risk level** and **rollback parameters**.
 
 - **Process Active Findings** first runs a dry run and asks you to confirm: "N findings → M new actions (K already pending)". Confirming creates the **remediation actions**. A finding never gets a second open action for the same playbook, so clicking again does not create duplicates.
-- Actions from **low-risk playbooks** (10 of the 20) are auto-approved; the rest wait for **Approve** / **Deny**. The person who created an action cannot approve it.
+- Every action starts as *pending* and waits for **Approve** / **Deny**, including actions from the playbooks marked low-risk (*auto-approve* only makes such a playbook the preferred match). The person who created an action cannot approve it.
 - **Execute** runs the fix; **Rollback** reverts it using the stored parameters. Every step is recorded and exported in the [remediation audit report](./audit-reports.md).
 
 Processing findings and approving, denying, executing or rolling back actions require the **Execute Remediations** permission.

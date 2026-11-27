@@ -26,7 +26,16 @@ custom-rules/
 └── iac/        acme-required-tags.yaml
 ```
 
-Rules apply to **every repository** scanned by the deployment. Repository-specific rules belong in the repository itself (a `.semgrep/` directory or `.gitleaks.toml`), which the engines honour as they always have.
+Rules apply to **every repository** scanned by the deployment. What a repository can set for itself:
+
+| Engine | Read from the repository | Not read |
+| --- | --- | --- |
+| OpenGrep | `.semgrepignore` (paths only) | An in-repository `.semgrep.yml` or `.semgrep/` rules: the platform passes its own `--config` |
+| Bandit | `.bandit` at the repository root: `skips`, `tests`, `exclude_dirs` | — |
+| Gitleaks | `.gitleaks.toml` (merged with the platform's rules, see below), `.gitleaksignore` | — |
+| Checkov | `.checkov.yaml` / `.checkov.yml` keys `check`, `skip-check`, `framework`, `skip-framework`, `skip-path` | Every other key, including `external-checks-dir` and `external-checks-git`, which would run the repository's Python on the platform |
+
+Inline suppressions (`# nosemgrep`, `# nosec`, `# gitleaks:allow`, `# checkov:skip=…`) work as usual. Custom IaC policies belong in the `iac/` directory here, not in the repository.
 
 ## Hot reload
 

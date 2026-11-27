@@ -19,17 +19,17 @@ Container Security covers the images you build and pull: the registries they liv
 | Capability | Detail |
 | --- | --- |
 | **Registry connections** | AWS ECR, Google Artifact Registry (and legacy GCR) and Azure Container Registry, through a cloud account you have already connected. Images are synced, browsed and scanned in place. |
-| **Image scanning** | Registry scans run **Syft** (SBOM) plus two vulnerability engines, **Grype** and **Trivy**, against one resolved image digest. **Quick Scan** scans any image reference the platform can pull. |
+| **Image scanning** | Registry scans run **Syft** (SBOM) plus two vulnerability engines, **Grype** and **Trivy**, against one resolved image digest. **Quick Scan** scans any image reference the platform can pull; its Full Analysis runs on the container scan worker. A scan whose vulnerability engine failed is shown as failed, never as clean. |
 | **Dockerfile scanning** | 14 native rules plus Hadolint — root user, `latest` tags, secrets in `ENV`, `ADD` from URLs, missing `HEALTHCHECK` — graded before the image is built. |
-| **Image policies** | Maximum critical/high counts, image age and (from templates) allowed registries, blocked `latest` and required labels — validated in the UI or from CI with one call. |
+| **Image policies** | Maximum critical/high/medium counts, image age, required signature and (from templates) allowed registries, blocked `latest` and required labels — validated in the UI or from CI with one call. CI gates verify keyless Cosign signatures. |
 | **Registry webhooks** | Signed push events queue a scan of the pushed image: ECR (via SNS), Artifact Registry/GCR, or a generic sender that signs its deliveries. ACR and Docker Hub do not sign their own deliveries — see [Governance](./governance.md). |
 | **Rollout** | Where an image runs in your onboarded Kubernetes clusters, matched by digest, and whether a fixed build has replaced the old one everywhere. |
 | **SBOM lifecycle** | Generate CycloneDX, SPDX or Syft JSON SBOMs per image, keep them, download them. |
 | **Compliance reports** | CIS Docker Benchmark 1.6, NIST 800-53, PCI DSS and SOC 2 per image, registry or account. Each report is frozen when issued. |
-| **Coverage** | Registries scanned / scheduled / uncovered / stale, same model as Cloud Security. A registry whose scans failed does not count as covered. |
+| **Coverage** | Registries scanned / scheduled / uncovered / stale, same model as Cloud Security. Counts both connected registries and registries imported from cloud discovery (a registry in both is counted once, and the tab says how many came from each). A registry whose scans failed does not count as covered. |
 
 :::note[Other registries]
-Docker Hub, Harbor, Quay, GitLab, JFrog and other registries cannot be added as registry connections in 1.4.0. Scan their images one at a time by reference with **Quick Scan** (or from CI); only images the platform can pull without signing in can be scanned that way. See [Registries — Supported registries](./registries.md#supported-registries).
+Docker Hub, Harbor, Quay, GitLab, JFrog and other registries cannot be added as registry connections. Scan their images one at a time by reference with **Quick Scan** (or from CI); only images the platform can pull without signing in can be scanned that way. See [Registries — Supported registries](./registries.md#supported-registries).
 :::
 
 ## The workspace
@@ -47,7 +47,7 @@ Docker Hub, Harbor, Quay, GitLab, JFrog and other registries cannot be added as 
 | **Compliance** | Generate container compliance reports. | [Policies, Webhooks, SBOM & Compliance](./governance.md#compliance-reports) |
 | **Rollout** | Check where an image runs and whether a fix has rolled out. | [Image Rollout](./rollout.md) |
 
-**Schedule Scans** in the page header opens the Unified Scheduler.
+**Schedule Scans** in the page header opens the Unified Scheduler, where Container Registry schedules run registry scan jobs — see [Registries — Scheduled scans](./registries.md#scheduled-scans). The header also shows the scanner versions this deployment runs.
 
 ## How it flows
 

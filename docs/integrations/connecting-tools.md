@@ -41,11 +41,11 @@ The platform contacts the tool with the credentials from step 2 and shows the re
 | PagerDuty | Sends an `info` **test event** to the service and resolves it straight away. Depending on the service's rules, on-call may still be notified |
 | Splunk · Syslog / CEF | Sends one real `connection.test` event and says exactly what was verified (syslog has no acknowledgement; over UDP nothing is confirmed) |
 | SMTP Email | Connects, negotiates STARTTLS when enabled, authenticates. No mail is sent |
-| GitHub Actions | No remote call: the integration generates pipeline configuration, so the step reports that and passes |
+| GitHub Actions | No remote call. The step reads **Pipeline setup required** and links to **Code Command Center → Automation → CI/CD Pipeline** (opens in a new tab), where the workflow is generated. Return to the wizard and click **Next** to finish |
 
 ![Setup GitHub Actions, step 3: Connection Test — "Connection Successful!" with the tool's message that it integrates via CI/CD pipeline configs, and the response time](/img/screenshots/integrations/wizard-step3-test.webp)
 
-A failed test shows the tool's own error (`Authentication failed — check username and API token`, `Webhook returned HTTP 404: no_service`, `535 authentication failed`), and **Next** stays disabled until a test passes. A passing test moves on automatically after a moment; a partial success (Wazuh without its Indexer) or a result marked **Not tested** waits so you can read it and click Next yourself. Each test sends exactly one message or event — press the test again if it failed.
+A failed test shows the tool's own error (`Authentication failed — check username and API token`, `Webhook returned HTTP 404: no_service`, `535 authentication failed`), and **Next** stays disabled until a test passes. A passing test moves on automatically after a moment; a partial success (Wazuh without its Indexer), a result marked **Not tested**, or the GitHub Actions *Pipeline setup required* result waits so you can read it and click Next yourself. Each test sends exactly one message or event — press the test again if it failed.
 
 ## Step 4 — Health monitoring
 
