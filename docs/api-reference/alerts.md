@@ -37,7 +37,7 @@ GET /api/alerts
 | `page` | int | `1` | Page-based pagination |
 | `limit` | int | `50` | `1`–`200` |
 | `severity` | string | — | `critical` / `high` / `medium` / `low` |
-| `source` | string | — | `vulnerability` / `scan` / `integration` / `system` / `threat_intel` / `compliance` / `other` |
+| `source` | string | — | `vulnerability` / `scan` / `integration` / `system` / `threat_intel` / `compliance` / `cloud_change` (unexplained cloud changes, since 1.4.1) / `other` |
 | `status` | string | — | `new` / `acknowledged` / `investigating` / `escalated` / `resolved` / `false_positive` / `closed` |
 | `category` | string | — | Category filter |
 | `assigned_to` | string | — | Owner filter |

@@ -22,7 +22,7 @@ Cloud Security is where you connect your AWS accounts, GCP projects and Azure su
 | **Remediation workflow** | Resolve, suppress with an expiry, or create a tracked remediation task with an owner and due date. |
 | **Identity & network posture** | Identity (CIEM) analysis that evaluates effective permissions from the actual policies on AWS, GCP and Azure, and AWS network reachability through route tables, NACLs and load balancers. |
 | **Point-in-time reports** | Each completed or partial run's findings are frozen, so a run's PDF or Word report can be reproduced later and two runs can be compared. Issued PDF and HTML reports are fingerprinted. |
-| **Continuous monitoring** | Daily incremental and weekly full scans are scheduled the moment an account connects; real-time cloud events, SSL certificate expiry and coverage decay are tracked alongside. |
+| **Continuous monitoring** | Daily incremental and weekly full scans are scheduled the moment an account connects; real-time cloud events, every cloud change (who made it and whether it was expected), SSL certificate expiry and coverage decay are tracked alongside. |
 | **Asset Inventory & Attack Paths** | Every discovered resource lands in a normalized inventory (with encryption-at-rest status) that feeds the security graph and attack-path analysis. |
 
 ## The Cloud Security workspace
@@ -40,6 +40,7 @@ Open **Cloud Security** in the left navigation (under *Cloud & Infrastructure*).
 | **Compliance** | Read per-framework scores per account. | [Compliance & Benchmark Checks](./prowler-integration.md) |
 | **Custom Policies** | Write your own checks against the cloud inventory and see their results per account. | [Custom Cloud Policies](./custom-policies.md) |
 | **Cloud Events** | Follow real-time CloudTrail / Audit Log / Activity Log events. | [Real-Time Cloud Events](./cloud-events.md) |
+| **Changes** | See every change in your cloud accounts, who made it and whether it was expected; review unexplained changes. | [Cloud Change Monitoring](./change-monitoring.md) |
 | **Cloud Scans** | Browse scan history, open a run's summary, download its point-in-time report or compare it with the previous run. | [Running Cloud Scans](./scan-orchestration.md) and [Point-in-Time Reports](./point-in-time-reports.md) |
 
 :::note[Tab renamed in 1.4.0]

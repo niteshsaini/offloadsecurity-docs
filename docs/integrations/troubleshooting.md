@@ -30,6 +30,12 @@ Agents will sync; alerts and vulnerabilities will not. On a single-node deployme
 **Greenbone OpenVAS: connection refused or timeout.**
 The integration speaks GMP over TLS on port **9390**, not the web UI on 9392. Check that gvmd's GMP is exposed on that host and port — the bundled `docker-compose.openvas.yml` provides the TLS bridge — and that firewalls allow it. See [OpenVAS](./openvas.md).
 
+**Greenbone OpenVAS: Scan now or New scan is refused by Greenbone.**
+The Greenbone account in the integration cannot create or start tasks (for example an Observer). Give it a role that can, such as **User**. In Offload, starting and creating scans needs **Run Scans**; editing, deleting and scheduling tasks needs **Manage Scans**. See [Run scans from the platform](./openvas.md#run-scans-from-the-platform).
+
+**Greenbone OpenVAS: a scan finished but its results are not in Vulnerability Management yet.**
+Finished scans are imported within `OPENVAS_COMPLETION_CHECK_MINUTES` (default 5; `0` turns the check off), or by the 30-minute sync. With **Manage Integrations**, **Sync now** on the card imports them at once.
+
 **Jira: "default_project_key is required" or "Jira not configured or ticket creation failed".**
 The project key is required. A Jira connection saved before it became required may have none: **Reconfigure** and enter a project the Jira user can create issues in.
 
@@ -72,7 +78,7 @@ The platform tries the transitions `Done`, `Resolve`, `Close` in that order; a c
 An issue closed as *not planned* never resolves its finding; a person decides in the platform. Otherwise status is read every 15 minutes (200 issues per provider per run) — click **Refresh statuses**. See [GitHub & GitLab Issues](./git-issues.md).
 
 **My webhook subscription receives nothing for some event types.**
-`scan.failed`, `scan.progress`, `finding.updated`, `finding.resolved` and `finding.reopened` are listed but not published in 1.4.0. Use `alert.*` events, or [SIEM Forwarding](./siem-forwarding.md) for finding lifecycle changes.
+The event list contains only types the platform publishes. A webhook saved earlier with a type that was never published (for example `scan.progress`, `finding.updated` or `sla.warning`) shows it as an unknown type and receives nothing for it. Check the [event types](./webhooks.md#event-types); for triage decisions on findings, use [SIEM Forwarding](./siem-forwarding.md).
 
 **A webhook reads "Disabled automatically".**
 Its endpoint failed every delivery for at least 24 hours (50 or more attempts in a row). Fix the receiver, then click **Enable**; send a test event to check.

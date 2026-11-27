@@ -13,7 +13,7 @@ sidebar_position: 13
 A unified security platform: cloud posture (CSPM), code and container security, vulnerability management, Kubernetes, on-prem visibility, compliance automation, risk management, and privacy (DPDP) — all feeding one normalized findings model, one risk register, and one reporting layer. Start with [What is Offload Security](./introduction/index.md).
 
 **Is it SaaS or on-premises?**
-Both. The managed platform is the default; regulated customers can run the full platform **inside their own environment**, where data never leaves their network. See [On-Premises](./on-premises/index.mdx).
+Both. The managed platform is the default; regulated customers can run the full platform **inside their own environment**, where scan data, findings, evidence and reports stay in their network. The web app does send browser usage analytics to PostHog; see [Usage analytics](./trust-and-security.md#usage-analytics). See [On-Premises](./on-premises/index.mdx).
 
 **Which cloud providers are supported?**
 AWS, Google Cloud, and Azure — with read-only access wherever the provider supports it. Depth varies by provider: GCP can be onboarded by organization or folder, while AWS accounts and Azure subscriptions are connected one at a time (bulk scans, tests and deletes then work across them). See [Cloud Security](./cloud-security/index.md) and [permissions](./cloud-security/permissions.md).
@@ -38,19 +38,22 @@ Encrypted at rest (Fernet — AES-128-CBC with HMAC) under a key the deployment 
 **What do AI features see?**
 Only data your team already has access to — finding and asset details, and for some features code snippets around a finding or the text of documents you uploaded to the Knowledge Base — and nothing tenant-derived is stored in shared caches. A team can configure its own provider (Anthropic, OpenAI or Google) and key, or use the deployment-wide key the operator set; with neither, the AI features are off and everything else works. See [how AI handles your data](./trust-and-security.md#how-ai-features-handle-your-data).
 
+**Does the platform send usage data anywhere?**
+The backend does not send usage data. The web app sends browser usage analytics to PostHog's US cloud, including on on-premises installs, and there is no setting to turn it off in this release. See [Usage analytics](./trust-and-security.md#usage-analytics).
+
 **Can we report a vulnerability in the platform?**
 Yes — **security@offloadsecurity.com**. See the [responsible disclosure](./trust-and-security.md#responsible-disclosure) policy.
 
 ## Access and operations
 
 **Can I create custom roles?**
-Not today — six fixed roles per team (Admin, Security Manager, Security Analyst, Compliance Officer, Auditor, Viewer) plus scoped API keys. See [Roles, Teams & API Keys](./authentication/rbac-team-management.md).
+Not today — six fixed roles per team (Admin, Security Manager, Security Analyst, Compliance Officer, Auditor, Viewer) plus scoped API keys. Separately, the deployment has one or more **platform admins**, who manage every team, user and the security policy from the platform-admin pages. See [Roles, Teams & API Keys](./authentication/rbac-team-management.md) and [Platform-admin controls](./trust-and-security.md#platform-admin-controls).
 
 **How do I sign in with our identity provider?**
 The deployment operator configures OIDC (Okta, Entra ID, Google Workspace, Keycloak, Auth0…) and can enforce it; see [Signing In & Sessions](./authentication/session-management.md).
 
 **What runs on our side in an on-premises install?**
-A Docker Compose stack of prebuilt images on a host you own — API, web front end, several Celery worker pools, the beat scheduler, MongoDB, Redis, a Docker socket proxy for the scanner containers, and an encrypted backup service. The agentic-fix services start only if you enable their Compose profile. See [Deployment & Operations](./on-premises/deployment.md) and [Architecture](./architecture.md).
+A Docker Compose stack of prebuilt images on a host you own, installed and upgraded with the one-file installer — API, web front end, several Celery worker pools (including a maintenance worker with no Docker access), the beat scheduler, MongoDB, Redis, a Docker socket proxy for the scanner containers, and an encrypted backup service. The agentic-fix services start only if you enable their Compose profile. See [Deployment & Operations](./on-premises/deployment.md) and [Architecture](./architecture.md).
 
 ## Compliance
 

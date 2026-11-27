@@ -2,7 +2,7 @@
 title: "Onboarding Clusters"
 sidebar_label: "Onboarding Clusters"
 sidebar_position: 1
-description: "Add EKS, GKE, AKS or other clusters with a read-only kubeconfig or GKE service-account key, connect clusters discovered on your cloud accounts, choose an RBAC profile, and test connectivity."
+description: "Add EKS, GKE, AKS or other clusters with a read-only service-account token, kubeconfig or GKE service-account key, connect clusters discovered on your cloud accounts, choose an RBAC profile, and test connectivity."
 ---
 
 # Onboarding Clusters
@@ -24,11 +24,14 @@ The platform needs a Kubernetes identity that can **read** the resources it asse
 
 ![RBAC Profiles tab: Minimal (recommended) vs Extended profile cards with security level, and the Minimal profile's permission grant list](/img/screenshots/security-scanning/k8s-rbac-profiles.webp)
 
-Select **Generate Deployment Script**, choose the profile, the **namespace** and the **service account name**, and copy or download the script. Run it with a `kubectl` context that has cluster-admin: it creates the namespace if needed, applies the service account, `ClusterRole` and binding, creates a long-lived service-account token Secret (falling back to a bound token only if the token controller is disabled), and prints the **API server URL and token**. The same `ClusterRole` is listed in [Required Permissions — Bucket B](../../cloud-security/permissions.md#bucket-b--kubernetes-in-cluster-rbac).
+Select **Generate Deployment Script**, choose the profile, the **namespace** and the **service account name**, and copy or download the script. Run it with a `kubectl` context that has cluster-admin: it creates the namespace if needed, applies the service account, `ClusterRole` and binding, creates a long-lived service-account token Secret (falling back to a bound token only if the token controller is disabled), and prints three values: **API server**, **Token** and **CA data**. The CA comes from the kubeconfig `kubectl` is using (the CA that verifies that API server), else from the token Secret's `ca.crt`; the script says which. The same `ClusterRole` is listed in [Required Permissions — Bucket B](../../cloud-security/permissions.md#bucket-b--kubernetes-in-cluster-rbac).
 
 ![Deployment Script dialog: script details (Minimal profile, namespace default, service account cspm-scanner), the generated bash script, and usage instructions](/img/screenshots/security-scanning/k8s-rbac-script.webp)
 
-The platform needs a **kubeconfig**, not a bare token. Put the printed values into a self-contained kubeconfig before onboarding:
+Onboard with the printed values in one of two ways:
+
+- **Service Account Token** method — paste the three values into the Add Cluster form as they are ([below](#add-a-cluster)). The platform builds the kubeconfig for you.
+- **Kubeconfig File** method — put them into a self-contained kubeconfig yourself:
 
 ```yaml
 apiVersion: v1
@@ -63,16 +66,31 @@ Select **➕ Add Cluster** and fill in:
 | **Cluster name** | How it appears in dashboards, e.g. `production-eks`. Must be unique in the team. |
 | **Project** (optional) | Groups clusters in the list, e.g. `payments-platform`. Clusters without one appear under **Ungrouped**. |
 | **Cloud provider** | Amazon EKS, Google GKE, Azure AKS, On-Premises or Other. |
-| **Onboarding method** | **Kubeconfig File**, **Service Account Token** or **Service Account**. Recorded with the cluster; in every case the credential below is what the platform connects with. |
+| **Onboarding method** | **Kubeconfig File**, **Service Account Token** or **Service Account**. Decides which credential fields the form shows (below). |
 | **RBAC Profile** | Minimal or Extended, matching what you applied. |
-| **Credentials (Base64 Encoded)** | A self-contained kubeconfig, base64-encoded on one line (`base64 -w 0 kubeconfig.yaml`; on macOS `base64 -i kubeconfig.yaml`). For **GKE**, a GCP service-account JSON key with `roles/container.viewer` instead — a fresh token is minted for every scan. |
-| **API Server URL** (optional) | The cluster's API endpoint. |
-| **GKE location / GKE cluster name** (GKE, optional) | Tell the platform which GKE cluster the service-account key is for. Alternatively give its API server URL, or name the cluster exactly as in GKE. |
+
+The credential fields depend on the method:
+
+| Method | Fields |
+| --- | --- |
+| **Service Account Token** | **API Server URL** (required), **Service Account Token** (required, as printed — no base64 encoding) and **Cluster CA Certificate** (optional; the printed *CA data*, or a PEM certificate). |
+| **Kubeconfig File** or **Service Account** | **Credentials (Base64 Encoded)** — a self-contained kubeconfig, base64-encoded on one line (`base64 -w 0 kubeconfig.yaml`; on macOS `base64 -i kubeconfig.yaml`). For **GKE**, a GCP service-account JSON key with `roles/container.viewer` instead — a fresh token is minted for every scan. Optional **API Server URL**, and for GKE optional **GKE location / GKE cluster name** to say which cluster the key is for (or name the cluster exactly as in GKE). |
+
+With **Service Account Token**, the platform builds a kubeconfig from the three values, checks it with the same safety rules as an uploaded one, and stores it encrypted. TLS is always verified: leave the CA empty only when the API server's certificate is issued by a public CA. EKS, GKE, AKS and kubeadm clusters use a private CA and need it.
+
+A team cannot onboard the same API server twice. The check compares the normalized address (host, port and path), so differently written URLs for one cluster are refused with *"A cluster with API server … already exists in this team"*, and a discovered cluster that the team already onboarded another way cannot be connected again.
 
 On save, select 🔗 on the cluster card to run the **connectivity test**: it reaches the API server, records the Kubernetes version, counts nodes and namespaces, and checks list access to pods, deployments, services, namespaces, nodes, roles, cluster roles and network policies (plus ConfigMaps for Extended). The cluster shows **Pending** until its first scan, and a **weekly scan is scheduled automatically**.
 
 :::warning[Kubeconfig safety]
-Kubeconfigs are validated before they are stored. A kubeconfig that uses an `exec:` sign-in plugin (the default from `aws eks update-kubeconfig` and `gcloud container clusters get-credentials`), a `cmd` or `tokenFile` token source, or `insecure-skip-tls-verify: true` is refused. A `server` that points at loopback, link-local or a cloud-metadata address is refused; private cluster endpoints are allowed. Credentials are encrypted at rest.
+Kubeconfigs are validated when they are uploaded **and again every time they are used**. A user entry may carry only static, in-line credentials: `token`, `client-certificate-data` / `client-key-data`, or username and password. Refused:
+
+- any `exec:` sign-in plugin (the default from `aws eks update-kubeconfig` and `gcloud container clusters get-credentials`), `cmd`, and any `auth-provider` (gcp, oidc, azure);
+- file paths on the platform host: `tokenFile`, `client-certificate`, `client-key`, or a cluster `certificate-authority` path (use the `-data` forms);
+- unknown user fields, and (at upload) `insecure-skip-tls-verify: true`;
+- a `server` or `proxy-url` that points at loopback, link-local or a cloud-metadata address. Private cluster endpoints are allowed.
+
+A cluster whose stored kubeconfig is refused at use — for example one stored before these checks — shows **Kubeconfig refused** on its card, with the reason and a **Replace credentials** action. Re-upload a token or client-certificate kubeconfig, or use the Service Account Token method. Credentials are encrypted at rest.
 :::
 
 Stored cluster credentials expire after **90 days** by default. Replace them before then (see [Managing clusters](#managing-clusters)).
@@ -102,8 +120,15 @@ Each cluster card shows provider, status (**Active**, **Pending**, **Scanning**,
 | **📊 Dashboard** | Opens the cluster's own view — security score, findings by category and scanner, recent scans and what each did not test. See [Scanning & Findings](./scanning-and-findings.md#the-cluster-dashboard). |
 | **🚀 Scan** | Opens the scan settings and starts a scan. |
 | **🔗** | Re-runs the connectivity test. |
-| **✏️ Edit** | Change name, project, RBAC profile; **Replace credentials** (the new kubeconfig must reach the same API server); **Reset cluster identity**. |
+| **✏️ Edit** | Change name, project, RBAC profile; **Replace credentials** (see below); **Reset cluster identity**. |
 | **Delete** | Removes the cluster with its findings, scans and schedules. Its scans and findings are kept as tombstones until retention purges them, so the evidence is not erased at once. |
+
+### Replace credentials {#replace-credentials}
+
+In the Edit dialog, **Replace credentials** takes a new credential; leave it empty to keep the stored one. A replaced credential is valid for 90 days.
+
+- **Kubeconfig or GKE key clusters** — paste a new base64 kubeconfig (or GKE service-account JSON). A new kubeconfig must reach the same API server.
+- **Service Account Token clusters** — paste the new token as printed by the script. It is used with the cluster's API server and the CA the platform recorded at onboarding; paste a **New Cluster CA Certificate** with it if the CA has rotated. The dialog says which case applies: a CA on record, no custom CA (public CA assumed), or none on record. In the last case the CA is read from the stored credential, and if that credential has expired or cannot be read the save is refused until you paste the CA too. A base64 kubeconfig for the same API server is also accepted.
 
 Tick several cards (only clusters with credentials can be selected) to scan or delete them in bulk. A bulk scan of more than five clusters asks you to confirm, and the scans are staggered.
 

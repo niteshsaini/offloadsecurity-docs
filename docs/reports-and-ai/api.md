@@ -22,7 +22,7 @@ Send the key as `X-API-Key`; calls are scoped to the key's team.
 | --- | --- | --- |
 | Overview | `GET /api/executive-dashboard/overview` | Maturity, per-framework status, priority gaps, certification readiness, strengths, 90-day trend, recommendations — the same scorer as Compliance Posture. |
 | Metrics | `GET /api/executive-dashboard/compliance-metrics?period_days=90` (≤ 365) · `GET /api/executive-dashboard/board-metrics` | |
-| Generate | `POST /api/executive-dashboard/gap-analysis` · `POST /api/executive-dashboard/remediation-roadmap` · `POST /api/executive-dashboard/executive-report?report_type=summary\|detailed\|board` | **View Dashboard**. |
+| Generate | `POST /api/executive-dashboard/gap-analysis` · `POST /api/executive-dashboard/remediation-roadmap` · `POST /api/executive-dashboard/executive-report?report_type=summary\|detailed\|board` | **View Dashboard**. Gap analysis returns `critical_gap_count` (every open Critical gap) and `top_gaps` (the ten highest-priority gaps); `critical_gaps` is kept as the same list as `top_gaps` for older clients, so do not count it. |
 | PDF | `GET /api/executive-dashboard/export-pdf?report_type=summary\|board\|gap-analysis` | Branded PDF of the overview (PDF stream); same builder as scheduled reports. |
 | Work the gaps | `PUT /api/executive-dashboard/gaps/{gap_id}/assign?owner=` · `PUT …/gaps/{gap_id}/status?status=` · `PUT …/roadmap/{milestone_id}/progress?progress=` | `gap_id` is the SCF ID. |
 
@@ -45,6 +45,7 @@ Send the key as `X-API-Key`; calls are scoped to the key's team.
 | Container / Kubernetes | `GET /api/container/scans/{scan_id}/export?format=json\|csv\|cyclonedx` · `POST /api/container-security/compliance-report` · `POST /api/k8s/compliance/report` | |
 | Cloud findings | `GET /api/cspm/findings/export?format=csv\|xlsx` | Session-authenticated only. |
 | Risk | `GET /api/risk-management/reports/export?format=json\|csv` · `…/reports/executive-summary` · `…/reports/executive-pdf-data` | |
+| Threat landscape | `POST /api/threat-intelligence/landscape-report` `{report_period_days, report_format: executive\|technical\|comprehensive, target_audience: executive\|technical\|mixed}` · `GET …/landscape-reports` · `GET …/landscape-reports/{report_id}` | The format sets which sections the stored report contains; an unsupported value returns 400. Times are UTC. Generating needs **Manage Threat Intelligence**. |
 | Network VAPT | `GET /api/export/network-vapt` · `.html` · `.docx` | Greenbone OpenVAS + nmap; any of **Vulnerability View**, **View Scans**, **View Assessments**. Wazuh host correlation only for callers with **View Integrations**. |
 | Verify / re-download issued reports | `GET /api/native-scans/exports/verify?sha256=` · `GET /api/export/issued/{sha256}` · `GET /api/native-scans/results/{scan_id}/exports` · `…/exports/{sha256}` | Did your team receive exactly this file; the byte-for-byte issued copy (409 if the kept copy no longer matches). |
 | Compliance | `POST /api/compliance-engine/reports/generate` → `GET …/reports/{report_id}/download/{section}` · `GET /api/evidence-completion/auditor-package/{framework}` · `GET /api/common-controls/soa/{framework}` · `GET /api/assessments/{assessment_id}/export-pdf` · `GET /api/dpdp/audit/pack/{pack_id}/pdf` | See [Compliance & GRC API](../compliance/api.md). |

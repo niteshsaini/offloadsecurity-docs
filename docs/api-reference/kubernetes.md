@@ -142,6 +142,11 @@ Poll `GET /api/k8s/scan/{scan_id}` until `status` is `completed`, `failed`,
 `scan_health` (`ok` / `degraded` / `failed`), `outcome` (`complete` / `partial`
 / `failed`) and `successful_scanners` before trusting the result.
 
+During a fleet-wide scan, a cluster's scan can wait in the queue as `pending`
+for a long time. Since 1.4.1 a queued scan is not failed as lost while it
+waits: it counts as live from when a worker picks it up, or until its queue
+deadline (`K8S_SCAN_QUEUE_MAX_HOURS`, 24 hours by default). Keep polling.
+
 ## Compare two scans
 
 :::note[New in 1.4.0 · API-only]

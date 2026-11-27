@@ -22,7 +22,7 @@ flowchart TB
 
   API["Application API<br/>(FastAPI · REST · 1..N uvicorn workers)"]
   Q[("Queue and cache<br/>(Redis)")]
-  W["Celery workers<br/>general · scan · code · long · docker-control"]
+  W["Celery workers<br/>general · maintenance · scan · code · long · docker-control"]
   DSP["docker-socket-proxy<br/>(allow-listed Docker API)"]
   SC["Scanner engines (pinned versions)<br/>ZAP · Nuclei · nmap · testssl · Prowler · Kubescape … (containers)<br/>Trivy · Syft · Grype (also in-image)"]
   BK["Backup service<br/>(encrypted MongoDB backups)"]
@@ -48,9 +48,14 @@ flowchart TB
 ```
 
 - **Application API (FastAPI).** Serves the web app and the REST API, enforces authentication, RBAC and per-team tenancy, and dispatches work. It runs as one process by default; since 1.4.0 the operator can run several uvicorn worker processes with `WEB_CONCURRENCY` (`auto` = up to 4, bounded by the container's CPU limit), with shared state such as rate limits held in Redis. The interactive API docs (Swagger / ReDoc) are on outside production and off when `ENVIRONMENT=production` unless `ENABLE_API_DOCS` is set.
-- **Celery workers.** Long-running work runs on background workers, not in the request path, so the UI stays responsive. Work is queued through Redis to separate worker pools so one kind of work cannot starve another: a general worker, a cloud **scan** worker, a **code** worker (repositories, registries, Kubernetes), a **long** worker for multi-hour web scans, a small **docker-control** worker for the short Docker questions an API request waits on (is an image cached, cancel a scan container, lint a Dockerfile, verify a signature), and the beat scheduler.
+- **Celery workers.** Long-running work runs on background workers, not in the request path, so the UI stays responsive. Work is queued through Redis to separate worker pools so one kind of work cannot starve another:
+  - a **general** worker (scan orchestration, compliance, threat feeds, syncs), which also serves the `docker_housekeeping` queue for periodic Docker chores such as scanner-image warmup and removing stale scan containers;
+  - a **maintenance** worker (`celery-maintenance-worker`, since 1.4.1) for periodic sweeps, queue heartbeats, notifications, SIEM forwarding, SLA and GRC checks and retention. It has no Docker access, and its own pool means long syncs on the general worker can no longer delay these jobs;
+  - a cloud **scan** worker, a **code** worker (repositories, registries, Kubernetes) and a **long** worker for multi-hour web scans;
+  - a small **docker-control** worker for the short Docker questions an API request waits on (is an image cached, cancel a scan container, lint a Dockerfile, verify a signature);
+  - the beat scheduler. Periodic tasks that run more than once a day expire before their next run, so a backlog cannot build up.
 - **Scanner tools.** Every engine runs at one pinned version, recorded on each run. OWASP ZAP, Nuclei, nmap, testssl.sh, Prowler, Kubescape and the other heavier engines run as **single-use, resource-capped sibling containers** torn down when the scan completes; Trivy, Syft and Grype also ship in the worker image.
-- **Docker socket proxy.** The web backend holds no Docker socket. Workers reach Docker through `docker-socket-proxy`, which forwards only the Docker API calls the platform makes (no exec, build, volume or swarm calls). It narrows the Docker API surface; it does not sandbox the workers themselves.
+- **Docker socket proxy.** The web backend holds no Docker socket. Workers reach Docker through `docker-socket-proxy`, which forwards only the Docker API calls the platform makes (no exec, build, volume or swarm calls) and refuses container creates that ask for privileged mode, devices, added capabilities, unconfined security profiles or binds of protected host paths. It narrows the Docker API surface; it does not sandbox the workers themselves. Since 1.4.1 scanner containers use Docker bridge networking by default (`SCANNER_DOCKER_NETWORK=bridge`) rather than the host network; an operator can set it back to `host`.
 - **Data stores.** Application data lives in MongoDB, partitioned into purpose-specific databases (platform, orchestration, vulnerability, native scans, knowledge base) and always scoped to a team. Large artifacts — raw tool output kept as scan evidence, frozen reports, uploaded evidence — go to mounted volumes or an S3-compatible bucket.
 - **Backups.** A `backup` service takes scheduled MongoDB backups (every 24 hours and kept 14 days by default), encrypts them to the operator's `age` public key — it refuses to back up unencrypted unless explicitly allowed — and periodically restore-verifies the newest archive. See [Deployment & Operations](./on-premises/deployment.md).
 - **External systems.** Cloud provider APIs are accessed with **read-only** credentials; integrations ingest or push data; the LLM provider is called only when AI features are enabled.
@@ -84,11 +89,13 @@ The same platform runs either as a managed service or entirely inside your envir
 
 | | **SaaS (managed)** | **On-premises / self-hosted** |
 |---|---|---|
-| **Where it runs** | Offload-operated cloud | A Docker Compose stack of prebuilt images on your host — see [Deployment & Operations](./on-premises/deployment.md). The agentic-fix services (`agent-launcher`, `agent-sandbox`, `agent-egress`, `celery-fix-worker`) start only under the `agentic-fix` Compose profile. |
+| **Where it runs** | Offload-operated cloud | A Docker Compose stack of prebuilt images on your host — see [Deployment & Operations](./on-premises/deployment.md). The agentic-fix services start only under the `agentic-fix` Compose profile. |
 | **Where your data lives** | Offload-managed stores, team-isolated | **Entirely within your environment** |
 | **Cloud scanning** | Read-only, over the provider APIs | Same |
 | **Internal network reach** | — | Internal hosts, private apps / APIs (once `ALLOW_PRIVATE_SCAN_TARGETS` is set), [Wazuh](./on-premises/wazuh-integration.md), Greenbone / OpenVAS |
 | **AI features** | Call the external LLM provider (optional) | Call the external LLM provider (optional) — or **disable** them; see [AI Data & Privacy](./ai-threat-intelligence/ai-data-privacy.md) |
+
+The agentic-fix services are `agent-launcher`, `agent-sandbox`, `agent-egress` and `celery-fix-worker`. The repository also contains a `docker-compose.demo.yml` overlay that runs the same images as a read-only public demo with sample data (`DEMO_MODE=true`). It is for Offload's demo server, not for customer installs; with `DEMO_MODE` unset, nothing in the platform changes.
 
 For internal-network coverage, ingestion and the on-prem architecture, see **[On-Premises](./on-premises/index.mdx)**.
 

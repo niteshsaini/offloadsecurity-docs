@@ -21,6 +21,9 @@ Same cause; fixed in the current release — the card takes the framework name f
 **"Organisational compliance maturity" is not the average of the cards I see.**
 It averages every *active* framework, including ones scrolled out of view. Check the framework activation panel on Compliance Posture.
 
+**Gap Analysis showed 10 critical gaps while the roadmap said there were none.**
+In 1.4.0 the **Critical Gaps** tile showed the length of the top-ten list (gaps of any priority), and counts were taken from a 25-gap sample. Fixed in 1.4.1: the tile counts every open Critical gap, the list is labelled **Top Priority Gaps**, and every count covers all open gaps. Regenerate the gap analysis after upgrading.
+
 **The roadmap says a phase runs "Weeks 51-50" / phase 1 is a year long.**
 Fixed in the current release: phases are consecutive, sized for parallel work, and an empty phase has no timeline. Either way, treat the roadmap as a skeleton — the durations are not an estimate of your effort.
 
@@ -39,7 +42,7 @@ Delivery needs the platform's SMTP configuration ([Notifications](../integration
 Older builds resolved the compliance scorer through a handle that exists only in the API process, so the Celery-generated PDF lost its framework table (`score for … failed: 'core'` in the worker log). Fixed in the current release.
 
 **Nothing runs at all.**
-The `run-due-scheduled-reports` beat fires every 30 minutes on the `maintenance` queue; a schedule is due once `next_run` has passed (09:00 UTC on its day). Confirm Celery beat and a worker for that queue are running.
+The `run-due-scheduled-reports` beat fires every 30 minutes on the `maintenance` queue; a schedule is due once `next_run` has passed (09:00 UTC on its day). Since 1.4.1 that queue is served by its own `celery-maintenance-worker` container. Confirm that it and `celery-beat` are running (`docker compose ps celery-maintenance-worker celery-beat`); after upgrading from 1.4.0, run `docker compose up -d` so the new container is created. A check that expires unrun while the queue is busy is made up by the next one: a schedule stays due until it runs.
 
 ## Consolidated and module reports
 

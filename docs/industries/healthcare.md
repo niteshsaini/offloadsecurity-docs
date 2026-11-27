@@ -19,7 +19,7 @@ Medical devices, imaging systems, nurse workstations, and OT rarely leave the ho
 
 ### Vulnerability management that reaches legacy internal systems
 
-Your [Greenbone OpenVAS](../on-premises/openvas-scanning.md) scans — authenticated or unauthenticated, configured and run in Greenbone inside your network — are imported into Vulnerability Management, surfacing exposures on internal hosts a public SaaS scanner can't reach. With the platform deployed on-premises, scan data about sensitive systems stays within your boundary.
+Your [Greenbone OpenVAS](../on-premises/openvas-scanning.md) scans — authenticated or unauthenticated, run by Greenbone inside your network and created, started or scheduled from the platform or in Greenbone itself — are imported into Vulnerability Management, surfacing exposures on internal hosts a public SaaS scanner can't reach. With the platform deployed on-premises, scan data about sensitive systems stays within your boundary (the web app's browser usage analytics are the exception; see [Usage analytics](../trust-and-security.md#usage-analytics)).
 
 ### Endpoint and telemetry monitoring without shipping data out
 

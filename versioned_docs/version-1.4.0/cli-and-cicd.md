@@ -1,0 +1,389 @@
+---
+title: "CLI & CI/CD Integration"
+description: "Run Offload Security scans from CI/CD and gate releases on the results: API keys, REST calls from any CI system, the GitHub Action, SARIF export and import, release-gate policy and the GitHub App."
+sidebar_label: "CLI & CI/CD"
+sidebar_position: 10
+---
+
+# CLI & CI/CD Integration
+
+Run Offload Security scans straight from your pipeline and **gate releases on the results**. You can call the platform with plain `curl` from any CI system (GitHub Actions, GitLab CI, Jenkins, CircleCI, and more), or drop in the ready-made **GitHub Action** for application and container scans with results posted right on the pull request.
+
+Every scan you trigger from CI/CD also shows up in the platform UI alongside your other scans, so findings flow into the same Vulnerability Management, Risk, and Reporting workflows you already use.
+
+:::tip[Looking for the full API?]
+This page covers the pipeline/scan workflow. For the platform's complete REST API — authentication, conventions, endpoint guides (cloud accounts, Kubernetes, vulnerabilities, alerts), and copy-paste workflows — see the **[API Reference](./api-reference/index.md)**; for automation patterns and webhooks, see **[API & Automation](./api-automation/index.md)**.
+:::
+
+## What it does
+
+- **Trigger scans from a pipeline** — start a web, network, SSL/TLS, API, container, Kubernetes, or code-security scan with a single authenticated request.
+- **Fail the build on findings** — set a severity threshold (`critical`, `high`, `medium`, `low`) and let the pipeline fail when matching findings are detected.
+- **Poll for status and pull results** — check progress and fetch the full findings payload when the scan finishes.
+- **Get a verdict** — each completed scan returns a `gate_passed` flag and a severity breakdown so your job can pass or fail accordingly.
+- **Use the GitHub Action** — a turn-key action that runs the scan, waits for it, posts a summary comment on the PR, and exposes findings counts and a report link as step outputs.
+
+:::note[Authentication]
+Pipeline requests authenticate with an **API key** (not your login). Create the key once, store it as a CI secret, and send it on every request. Keys are scoped, expirable, and revocable.
+:::
+
+---
+
+## 1. Create an API key
+
+API keys are managed from the **API Keys** screen, reached from the **account menu in the top-right** of the platform.
+
+1. Open the **account menu (top-right)** and select **API Keys**.
+2. Select **Create API Key**.
+3. Give the key a recognizable **name** (for example, `GitHub Actions – web app`).
+4. Choose a **scope preset**. For pipeline scanning use **CI/CD Pipeline (Basic)**, which grants exactly `scans:trigger` and `scans:read` — enough to start scans and read their results. Use **CI/CD Pipeline (Full)** if your jobs also need to manage scans or read vulnerabilities.
+5. Set **Expires in (days)** (default **90**, maximum **365**). Optionally adjust the environment label and per-minute rate limit.
+6. Select **Create** and **copy the key immediately** — it is shown only once. Keys begin with the prefix `osk_`.
+
+Store the key in your CI provider's secret store (GitHub Actions secrets, GitLab CI/CD variables, Jenkins credentials, a vault, etc.). Never commit it to your repository.
+
+:::tip[Least privilege & rotation]
+Pick the narrowest preset that works (start with **CI/CD Pipeline (Basic)**), keep an expiry set, and rotate keys periodically. You can **revoke** a key at any time from the same screen if it is ever exposed.
+:::
+
+---
+
+## 2. Trigger a scan from any CI system (REST API)
+
+Any pipeline that can run `curl` can drive the platform. Send your API key in the **`X-API-Key`** header.
+
+### Start a scan
+
+```bash
+curl -s -X POST "$OFFLOAD_API_URL/api/cicd/scans/trigger" \
+  -H "X-API-Key: $OFFLOAD_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "scan_type": "nuclei",
+    "target": "https://staging.example.com",
+    "scan_profile": "standard",
+    "fail_on_severity": "high"
+  }'
+```
+
+**Request fields**
+
+| Field | Required | Description |
+|---|---|---|
+| `scan_type` | Yes | What to run (see the table below). |
+| `target` | Yes | URL, IP, hostname, container image reference, or Git repository URL — depending on the scan type. |
+| `scan_profile` | No | Scan depth/profile (defaults to a sensible value per scan type). |
+| `fail_on_severity` | No | Severity gate: `critical`, `high`, `medium`, or `low`. Sets `gate_passed=false` when findings at or above this level are found. |
+| `branch` | No | Git branch to scan, for the code-security scan types. |
+| `pipeline_context` | No | Free-form metadata about the build (repo, branch, commit, build ID) stored with the scan. |
+| `callback_url` | No | HTTPS webhook the platform POSTs to when the scan completes. Must resolve to a public address (checked at trigger and again at send; redirects are not followed). Signed with your team's webhook signing secret (`X-Offload-Timestamp`, `X-Offload-Signature-V1`). |
+
+**Common `scan_type` values and their profiles**
+
+| `scan_type` | Scans | Typical `scan_profile` |
+|---|---|---|
+| `nuclei` | Fast template-based vulnerability scan | `quick`, `standard`, `comprehensive`, `cve`, `misconfig` |
+| `web_vulnerability` | Web application (OWASP ZAP) | `quick`, `standard`, `comprehensive` |
+| `network_discovery` | Network discovery / port scan (Nmap) | `ping_sweep`, `port_scan`, `service_detection`, `comprehensive`, `vulnerability_scan` |
+| `ssl_security` | SSL/TLS configuration (testssl.sh) | `quick`, `standard`, `comprehensive`, `vulnerability` |
+| `security_headers` | HTTP security headers | `standard` |
+| `api_security` | API security testing | `standard` |
+| `container_image` / `compiled_image` | Container image vulnerabilities (Trivy + Grype, SBOM with Syft) | `standard` |
+| `kubernetes_manifest` | Kubernetes manifest checks | `standard` |
+| `lightweight_comprehensive` | Combined lightweight scans with scoring | `standard` |
+| `code_security` | SAST (OpenGrep, Bandit) + dependencies (OSV) + secrets (Gitleaks) + IaC (Checkov) | `standard` |
+| `sast` / `dependency_scan` / `secret_scan` / `iac_scan` / `sbom` | Individual code-security scans (`sbom` uses Syft) | `standard` |
+
+:::tip[Discover scan types programmatically]
+`GET /api/cicd/scan-types` (with your `X-API-Key`) returns the live list of supported scan types, their available profiles, and descriptions — handy for keeping pipeline config in sync.
+:::
+
+### Read the trigger response
+
+A successful trigger returns a `scan_id` and the URLs to follow it:
+
+```json
+{
+  "data": {
+    "scan_id": "…",
+    "status": "pending",
+    "scan_type": "nuclei",
+    "scan_profile": "standard",
+    "target": "https://staging.example.com",
+    "status_url": "/api/cicd/scans/<scan_id>/status",
+    "results_url": "/api/cicd/scans/<scan_id>/results"
+  }
+}
+```
+
+Capture the `scan_id` for the next steps:
+
+```bash
+SCAN_ID=$(curl -s -X POST "$OFFLOAD_API_URL/api/cicd/scans/trigger" \
+  -H "X-API-Key: $OFFLOAD_API_KEY" -H "Content-Type: application/json" \
+  -d '{"scan_type":"nuclei","target":"https://staging.example.com","scan_profile":"standard","fail_on_severity":"high"}' \
+  | jq -r '.data.scan_id')
+```
+
+### Poll status
+
+The scan runs in the background. Poll its status until it reaches a terminal state (`completed` or `failed`):
+
+```bash
+curl -s "$OFFLOAD_API_URL/api/cicd/scans/$SCAN_ID/status" \
+  -H "X-API-Key: $OFFLOAD_API_KEY" | jq '.data.status'
+```
+
+### Fetch results and gate the build
+
+Once the scan is `completed`, fetch the full results — including the severity breakdown and the `gate_passed` verdict — and fail the job if the gate didn't pass:
+
+```bash
+RESULT=$(curl -s "$OFFLOAD_API_URL/api/cicd/scans/$SCAN_ID/results" \
+  -H "X-API-Key: $OFFLOAD_API_KEY")
+
+echo "$RESULT" | jq '.data.findings_by_severity'
+
+if [ "$(echo "$RESULT" | jq -r '.data.gate_passed')" = "false" ]; then
+  echo "Security gate failed — findings at or above the configured severity."
+  exit 1
+fi
+```
+
+The results payload includes `status`, `findings_count`, `findings_by_severity`, `gate_passed`, `fail_on_severity`, your `pipeline_context`, and the full `result` object.
+
+:::note[Container image policies]
+For `container_image` scans, any **enforce-mode** image policies configured for your team are evaluated against the findings, and a failing policy also sets `gate_passed=false`. Audit-mode policies are recorded but don't fail the gate. See **[Container Security](./security-scanning/containers/index.md)**.
+:::
+
+### Example: minimal pipeline step
+
+```bash
+# 1) Trigger
+SCAN_ID=$(curl -s -X POST "$OFFLOAD_API_URL/api/cicd/scans/trigger" \
+  -H "X-API-Key: $OFFLOAD_API_KEY" -H "Content-Type: application/json" \
+  -d '{"scan_type":"web_vulnerability","target":"'"$STAGING_URL"'","scan_profile":"standard","fail_on_severity":"high"}' \
+  | jq -r '.data.scan_id')
+
+# 2) Poll until terminal
+while :; do
+  STATUS=$(curl -s "$OFFLOAD_API_URL/api/cicd/scans/$SCAN_ID/status" \
+    -H "X-API-Key: $OFFLOAD_API_KEY" | jq -r '.data.status')
+  echo "status: $STATUS"
+  case "$STATUS" in completed|failed) break;; esac
+  sleep 15
+done
+
+# 3) Enforce the gate
+GATE=$(curl -s "$OFFLOAD_API_URL/api/cicd/scans/$SCAN_ID/results" \
+  -H "X-API-Key: $OFFLOAD_API_KEY" | jq -r '.data.gate_passed')
+[ "$GATE" = "true" ] || { echo "Security gate failed"; exit 1; }
+```
+
+---
+
+## 3. The GitHub Action
+
+For GitHub repositories, the **Offload Security Scan** action wraps everything above: it triggers the scan, waits for completion, posts a results comment on the pull request, and fails the job based on your threshold.
+
+### Set up
+
+1. Create an API key with the **CI/CD Pipeline (Basic)** preset (see step 1).
+2. In your repository, add these **secrets** (Settings → Secrets and variables → Actions):
+   - `OFFLOAD_API_URL` — your platform URL (for example `https://security.yourcompany.com`).
+   - `OFFLOAD_API_KEY` — the API key you created.
+   - `STAGING_URL` — the environment to scan.
+3. Add a workflow, for example `.github/workflows/security-scan.yml`:
+
+```yaml
+name: Security Scan
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write   # required to post the PR comment
+      contents: read
+    steps:
+      - name: Run Offload Security Scan
+        uses: niteshsaini/offload-cspm/github-action@main
+        with:
+          api_url: ${{ secrets.OFFLOAD_API_URL }}
+          api_key: ${{ secrets.OFFLOAD_API_KEY }}
+          target_url: ${{ secrets.STAGING_URL }}
+          fail_on: high
+```
+
+### Key inputs
+
+| Input | Required | Default | Description |
+|---|---|---|---|
+| `api_url` | Yes | — | Base URL of your Offload Security platform. |
+| `api_key` | Yes | — | API key with `scans:trigger` and `scans:read` scopes. |
+| `target_url` | Yes* | — | URL to scan for a web scan. *Required unless `container_image` is set. |
+| `container_image` | No | — | Image reference to scan instead of a URL (for example `…dkr.ecr.<region>.amazonaws.com/<repo>:<tag>`). Triggers a container scan and takes precedence over `target_url`. |
+| `scan_types` | No | all | Comma-separated scan types. Web: `security_headers`, `ssl_config`, `owasp_top_10`, `technology_detection`, `waf_detection`, `owasp_api`, `zap`, `nuclei`, `nmap`, `testssl`. Container: `vulnerability`, `trivy`, `sbom`, `secrets`, `signature`. |
+| `standards` | No | `asvs-l2,owasp-web-top10` | Compliance standards to map findings against: `asvs-l1`, `asvs-l2`, `owasp-web-top10`, `owasp-api-top10`, `nist-ssdf`. |
+| `fail_on` | No | `critical` | Severity that fails the job: `critical`, `high`, `medium`, `low`, or `none` (never fail). |
+| `timeout` | No | `1800` | Maximum seconds to wait for the scan (default 30 minutes). |
+| `comment_on_pr` | No | `true` | Post the results summary as a PR comment. |
+| `auth_config` | No | — | JSON for authenticated scanning (form login, bearer token, cookie, or custom header). |
+| `code_repo` | No | — | `owner/repo` — switches the action to the SBOM + license **release gate** for a repository the platform's Git connection can reach (usually `${{ github.repository }}`). Takes precedence over `container_image` and `target_url`. |
+| `code_branch` | No | PR head / pushed branch | Branch for the `code_repo` scan. |
+| `git_provider` | No | `github` | Provider of `code_repo` on the platform: `github` or `bitbucket`. |
+| `fail_on_gate` | No | `fail` | For `code_repo`: `fail` (only a failing gate breaks the build), `review` (review or fail breaks it) or `none`. |
+| `set_commit_status` | No | `true` | Post the release-gate verdict as an `offload/release-gate` commit status (needs `statuses: write`). |
+| `cloud_account_id` | No | — | Cloud account to authenticate to ECR / Artifact Registry / ACR with, when you have several of one provider. |
+| `poll_interval` | No | `15` | Seconds between status polls. |
+
+### Outputs
+
+The action exposes results you can use in later steps, including `scan_id`, `status`, `total_findings`, `critical_count`, `high_count`, `medium_count`, `low_count`, `info_count`, `security_rating` (A–F), `security_score` (0–100), and `report_url`; in `code_repo` mode also `release_gate` (`pass`, `review` or `fail`), `release_gate_policy_version` and `sbom_scan_id`.
+
+```yaml
+      - name: Run Security Scan
+        id: scan
+        uses: niteshsaini/offload-cspm/github-action@main
+        with:
+          api_url: ${{ secrets.OFFLOAD_API_URL }}
+          api_key: ${{ secrets.OFFLOAD_API_KEY }}
+          target_url: https://staging.example.com
+          fail_on: none   # capture results without failing the job
+      - name: Block deploy on critical findings
+        if: steps.scan.outputs.critical_count > 0
+        run: |
+          echo "Blocking — ${{ steps.scan.outputs.critical_count }} critical findings"
+          exit 1
+```
+
+:::tip[Authenticated scans]
+To scan behind a login, pass an `auth_config` JSON string (`form`, `bearer`, `cookie`, or `header`). Store credentials as secrets and reference them inside the JSON. Authenticated scans take longer — raise `timeout` accordingly.
+:::
+
+:::warning[Reachability]
+The platform performs the scan from its own network, so `target_url` (and registry images) must be **reachable from the platform** — `localhost` and private-only addresses won't work. For PR workflows, point at a preview or staging environment.
+:::
+
+---
+
+## 4. SARIF export and import, release-gate policy, and badges
+
+Beyond triggering scans, the platform exposes CI helpers under `/api/ci` for teams that want native GitHub Code Scanning, a reusable gate policy, or status badges. These accept the same **`X-API-Key`** header as the scan endpoints.
+
+### Export findings as SARIF
+
+Fetch a scan's findings as **SARIF 2.1.0** and hand them to GitHub Code Scanning — or any SARIF-aware tool:
+
+```bash
+curl -s "$OFFLOAD_API_URL/api/ci/scan/$SCAN_ID/sarif" \
+  -H "X-API-Key: $OFFLOAD_API_KEY" -o offload.sarif
+```
+
+```yaml
+      - uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: offload.sarif
+```
+
+For a scan started with `POST /api/cicd/scans/trigger`, `GET /api/cicd/scans/{scan_id}/sarif` returns the same SARIF 2.1.0 (`409` until the scan has completed).
+
+### Import SARIF from other scanners
+
+The platform also **imports** SARIF 2.1.0 from other tools (CodeQL, Semgrep, Checkmarx, Snyk Code, Trivy, gitleaks and others). The results become findings in Code Command Center and the Vulnerability Management triage queue, beside the platform's own. Use an API key with the `scans:trigger` scope:
+
+```bash
+curl -s -X POST \
+  "$OFFLOAD_API_URL/api/cicd/sarif/upload?repository=https://github.com/acme/shop&branch=main&default_branch=main&commit_sha=$GIT_SHA&full_run=true" \
+  -H "X-API-Key: $OFFLOAD_API_KEY" \
+  -H "Content-Type: application/sarif+json" \
+  --data-binary @results.sarif
+```
+
+| Parameter | Meaning |
+| --- | --- |
+| `repository` | The repository URL your code scans target; use the same URL every time (findings are kept per repository). Falls back to the log's `versionControlProvenance`. |
+| `branch` / `default_branch` | The scanned branch, and the repository's default branch. A non-default branch is kept apart and never resolves the default branch's findings. |
+| `commit_sha` | The scanned commit. |
+| `full_run` | `true` only when the tool scanned the whole repository and branch with its normal rules; findings it no longer reports are then resolved. |
+
+Logs over the size or result limit (`SARIF_UPLOAD_MAX_BYTES`, `SARIF_INGEST_MAX_RESULTS`) are refused whole, never truncated. Suppressions in the log are imported as suppressed findings. The same upload is available in the UI under **Code Command Center → SARIF Imports**, and `GET /api/cicd/sarif/sources` lists what has been imported.
+
+### Configure a release-gate policy
+
+Instead of a per-request `fail_on_severity`, set a **team-wide gate policy** once and evaluate any scan (or your overall posture) against it:
+
+```bash
+# View the current policy
+curl -s "$OFFLOAD_API_URL/api/ci/gate/policy" -H "X-API-Key: $OFFLOAD_API_KEY"
+
+# Update it (requires the integrations-management permission)
+curl -s -X PUT "$OFFLOAD_API_URL/api/ci/gate/policy" \
+  -H "X-API-Key: $OFFLOAD_API_KEY" -H "Content-Type: application/json" \
+  -d '{"max_critical":0,"max_high":5,"max_medium":50,"block_on_critical":true,"block_on_known_exploited":true}'
+
+# Evaluate a scan against the policy — returns a pass/fail verdict and exit code
+curl -s "$OFFLOAD_API_URL/api/ci/gate?scan_id=$SCAN_ID" -H "X-API-Key: $OFFLOAD_API_KEY"
+```
+
+The policy caps findings by severity (`max_critical`, `max_high`, `max_medium`, `max_low`; `-1` means no limit) and can **block on any critical** finding or on any finding in the **CISA KEV** (Known Exploited Vulnerabilities) catalog. It also sets a minimum score (`min_score`), what to do when the vulnerability database is stale (`stale_advisories`: `review`, `block` or `ignore`) and whether IaC that Checkov could not assess fails the gate (`fail_on_unassessed_iac`, off by default). Fields you leave out keep their stored values. Past evaluations are available at `GET /api/ci/gate/history` (up to 200 per page; `paged=true` returns the true total).
+
+### Status badges
+
+Two live SVG badges reflect your team's posture:
+
+- `GET /api/ci/badge/security.svg` — passing, or the count of high / critical findings.
+- `GET /api/ci/badge/compliance.svg` — compliance coverage percentage.
+
+Both **require authentication**, so embed them in an internal dashboard rather than a public README.
+
+### Generate starter pipeline config
+
+`GET /api/ci/pipeline/{provider}` returns a ready-to-edit config snippet — `github_actions`, `gitlab_ci`, `bitbucket`, `azure_devops`, or `jenkins` — each wired to call the endpoints above. These are starter templates you commit and adapt; there's no server-side runner for GitLab/Bitbucket/Azure/Jenkins (the deepest native integration is with GitHub — see below).
+
+### PR / MR comment
+
+`GET /api/ci/scan/{scan_id}/pr-comment` returns a preformatted Markdown summary you can post as a pull-request or merge-request comment from any CI system.
+
+---
+
+## 5. Deeper GitHub integration: the GitHub App
+
+The [GitHub Action](#3-the-github-action) is the simplest option and works in any repo. For tighter integration, install the **Offload Security GitHub App**, which:
+
+- posts findings as **inline annotations on the pull request** using GitHub's Check Runs, and
+- can **auto-scan** on pushes to the default branch and on pull requests — no workflow file to maintain.
+
+Because the App creates a GitHub **check** on each pull request, you can mark that check as a **required status** so a failing scan blocks the merge. The check is pinned to the pull request's **head commit**, scans only the changed files, separates **new** findings from pre-existing ones, and passes or fails on the scan's own results. Configure per-repository auto-scan and check behavior from the platform's integration settings. GitLab and Bitbucket get the same review through a webhook — see [Pull Request Review](./security-scanning/code/pull-request-review.md).
+
+The App's PR scans are **scoped to the changed files and diffed against the base branch**, so the check fails on what the PR introduced, not on pre-existing findings. Setup, per-repository options, the GitLab/Bitbucket merge-request webhooks and troubleshooting are in **[Pull Request Scanning](./security-scanning/code/pull-request-scanning.md)**.
+
+---
+
+## After the scan
+
+Scans triggered from CI/CD are first-class citizens in the platform:
+
+- They appear in your scan history and on the **Dashboard**, scoped to your active team.
+- Findings flow into **[Vulnerability Management](./vulnerability-risk/vulnerability-management/index.mdx)** for triage and SLA tracking.
+- Significant findings can be promoted to the **[Risk Register](./vulnerability-risk/risk-management/index.md)** and rolled into reports.
+
+## Troubleshooting
+
+| Symptom | Likely cause |
+|---|---|
+| `401 Unauthorized` | Missing/invalid `X-API-Key`, an expired or revoked key, or a key without the required scope. |
+| `400 Unknown scan_type` | The `scan_type` isn't one of the supported values — check `GET /api/cicd/scan-types`. |
+| Status stays `pending`/`running` | The scan is still in progress; keep polling. Large scans (full ZAP) can take 20+ minutes. |
+| GitHub Action: no PR comment | The job is missing `permissions: pull-requests: write`. |
+| Scan can't reach the target | The target isn't reachable from the platform (private/`localhost` address). |
+
+## Related
+
+- **[Scan Management](./security-scanning/scan-management.md)** — review, filter, and re-run scans in the UI.
+- **[Container Security](./security-scanning/containers/index.md)** — image scanning, SBOMs, and image policies.
+- **[API & Code Scanning](./security-scanning/code/index.md)** — SAST, secrets, dependency, and IaC scanning details.
+- **[Vulnerability Management](./vulnerability-risk/vulnerability-management/index.mdx)** — work the findings your pipeline produces.

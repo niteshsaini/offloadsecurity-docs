@@ -36,13 +36,21 @@ A scan is bounded by a **per-scan API-call budget** (5,000 calls by default, `K8
 
 While it runs the card shows **Scanning**. The scan ends **complete**, **partial** (at least one scanner failed or was denied access — the cluster shows **Degraded**) or **failed**. A scanner that exits successfully but produces no output counts as failed, not as a clean result.
 
+### Queued scans {#queued-scans}
+
+Cluster scans run on a limited number of Kubernetes scan worker slots, so a fleet-wide or bulk scan queues most clusters. A queued scan stays pending until a worker picks it up, for up to 24 hours (`K8S_SCAN_QUEUE_MAX_HOURS`). Once picked up, it has a 2-hour run window. Only a scan that misses one of these deadlines — its worker was lost, or it waited in the queue past the deadline — is marked failed, and the card then shows **Scan lost** with which of the two happened. Starting a scan again on a cluster whose queued scan was not picked up within 2 hours replaces it with a new one; scheduled launches never replace a queued scan.
+
+:::note[Fixed in 1.4.1]
+In 1.4.0 a scan still waiting in the queue after 2 hours was failed as **Scan lost** before it ever ran, so large fleets showed many lost scans.
+:::
+
 ## What a scan does not cover {#not-covered}
 
 Every scan records a **coverage** block that states what it did not assess, and nothing in it is counted as passed:
 
 | Not tested | Why |
 | --- | --- |
-| **CIS sections 1–4** — control plane, etcd, node and kubelet configuration | Needs kube-bench on a node. Always not tested in 1.4.0. |
+| **CIS sections 1–4** — control plane, etcd, node and kubelet configuration | Needs kube-bench on a node. Always not tested. |
 | Trivy node-level checks | Off: they would create a job in your cluster. Trivy still scans workload images and objects. |
 | Checks of any scanner that failed | Named with its error. |
 | Kubescape controls it skipped | Usually missing read access. |
@@ -71,7 +79,7 @@ Select **📊 Dashboard** on a cluster card, or a cluster on the Fleet Heatmap.
 
 - **Security Score** (0–100 with a letter grade) — derived from open findings weighted by severity. It shows **Not Assessed** until a scan in which a scanner produced output completes; a scan whose scanners all failed never grades a cluster.
 - **Findings Summary** — open findings by severity, with a link to the Findings tab pre-filtered to this cluster.
-- **Findings by Category** and **by Scanner** — where the risk sits and which engine reported it.
+- **Findings by Category** and **by Scanner** — where the risk sits and which engine reported it. Kubescape findings take the category of their Kubescape control; a finding without one is **Uncategorized**. Findings stored before 1.4.1 under the category *Kubescape* show as Uncategorized until the next scan rewrites them.
 - **Recent Scans** — each scan's outcome and its **Not tested in this scan** list.
 - **🚀 Start Scan** and **← Back** to the clusters.
 
@@ -81,7 +89,7 @@ Select **📊 Dashboard** on a cluster card, or a cluster on the Fleet Heatmap.
 
 ![Findings tab: filters for cluster, severity, status (Open Only) and scanner, tiles for 212 findings, 49 unique checks and 76.9% fewer rows to triage, and the checks list grouped by check with Resolve all / Suppress all / False positive actions](/img/screenshots/security-scanning/k8s-findings.webp)
 
-Filter by **cluster**, **severity**, **status** (the default is **Open Only**) and **scanner**; the tiles above update to the filtered set. **AI Summary** produces a short narrative of what matters most in the current view. An empty list says why: *No clusters connected*, *Not scanned yet*, or no findings after a scan of a cluster in scope.
+Filter by **cluster**, **severity**, **status** (the default is **Open Only**) and **scanner**; the tiles above update to the filtered set. Over the API, `GET /api/k8s/findings?category=` filters by the same categories the dashboard shows (`uncategorized` included), and `GET /api/k8s/findings/grouped?group_by=category` groups by them. **AI Summary** produces a short narrative of what matters most in the current view. An empty list says why: *No clusters connected*, *Not scanned yet*, or no findings after a scan of a cluster in scope.
 
 Each finding shows the severity, scanner, check ID, the **resource** (kind, name, namespace), first and last seen, a description and the **remediation**. Open one for the full detail, then act:
 
@@ -102,7 +110,7 @@ Sort the fleet by severity on the Fleet Heatmap and work the critical findings o
 - A finding is auto-resolved only when the scanner that reported it succeeded in this scan and could have seen it again: within the scanned namespaces, outside any namespace the credential was denied, and within the severity filter.
 - Your **Suppressed** and **False Positive** decisions persist across re-scans.
 - When a scanner upgrade changes how a finding is identified, its first-seen date and your triage carry over to the new identifier.
-- Findings feed the cluster's compliance scores ([Compliance & Fleet Posture](./compliance-and-fleet.md)), Vulnerability Management, and the security graph used by Attack Path Analysis.
+- Findings feed the cluster's compliance scores ([Compliance & Fleet Posture](./compliance-and-fleet.md)), Vulnerability Management, and the security graph used by Attack Path Analysis. In Triage and work items, each finding is labelled with the cluster's **name** (the internal cluster ID only when no name is on record); existing findings pick up the name at the next sync.
 
 ### Workload exposure in the triage score
 
@@ -124,7 +132,7 @@ Compares a scan with an earlier one of the same cluster (by default the previous
 | `triaged` | Gone because someone suppressed or accepted it in between. |
 | `persisting` | In both, including a finding carried to a new identifier. |
 
-Lists are complete. The comparison is API-only in 1.4.0.
+Lists are complete. The comparison is API-only.
 
 ## Related
 

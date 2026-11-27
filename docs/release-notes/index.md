@@ -10,7 +10,18 @@ Each platform release is a version number (`MAJOR.MINOR.PATCH`) and a matching s
 
 | Version | Released | Type | Notes |
 | --- | --- | --- | --- |
-| **1.4.0** (current) | 31 October 2026 | Beta | [1.4.0 release notes](./v1-4-0.md) |
+| **1.4.1-beta.8** (latest) | 19 November 2026 | Pre-release | [1.4.1-beta.8 release notes](./v1-4-1-beta-8.md) |
+| 1.4.1-beta.7 | 15 November 2026 | Pre-release | [1.4.1-beta.7 release notes](./v1-4-1-beta-7.md) |
+| 1.4.1-beta.6 | 14 November 2026 | Pre-release | [1.4.1-beta.6 release notes](./v1-4-1-beta-6.md) |
+| 1.4.1-beta.5 | 13 November 2026 | Pre-release | [1.4.1-beta.5 release notes](./v1-4-1-beta-5.md) |
+| 1.4.1-beta.4 | 12 November 2026 | Pre-release | [1.4.1-beta.4 release notes](./v1-4-1-beta-4.md) |
+| 1.4.1-beta.3 | 9 November 2026 | Pre-release | [1.4.1-beta.3 release notes](./v1-4-1-beta-3.md) |
+| 1.4.1-beta.1 | 2 November 2026 | Pre-release | [1.4.1-beta.1 release notes](./v1-4-1-beta-1.md) |
+| **1.4.0** (stable) | 31 October 2026 | Beta | [1.4.0 release notes](./v1-4-0.md) |
+
+Pre-releases (`1.4.1-beta.N`) are builds for testing, not for production. 1.4.1-beta.2 was not published.
+
+**Which docs describe which release:** the docs at the site root describe the latest pre-release, **1.4.1-beta.8**; pages for features added in 1.4.1 carry a *New in 1.4.1* badge. The [1.4.0 documentation](/1.4.0/) is kept as it was for installs still on 1.4.0. Choose either from the version menu.
 
 ## Versioned documentation
 
@@ -18,6 +29,7 @@ These docs are versioned with the platform. The version selector at the top righ
 
 - **The current release** is served at the site root (`docs.offloadsecurity.com/...`). Links to it never change between releases.
 - **Earlier releases** stay available under their version number (`docs.offloadsecurity.com/<version>/...`) once a newer release ships, with a banner saying they are no longer the latest.
+- **While the root describes a pre-release**, the last final release (1.4.0) stays under its version number without the "no longer maintained" banner, and a notice at the top of every page says which docs you are reading.
 - 1.4.0 is the first release published with versioned docs. Earlier releases have no separate documentation snapshot.
 
 :::tip[Which version am I running?]

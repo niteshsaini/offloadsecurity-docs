@@ -95,7 +95,15 @@ It is a map of *observed activity and intelligence*, not of your defensive cover
 
 ## Reports
 
-**Threat Landscape Reporting** generates a report for a period (last 7, 30 or 90 days) in a chosen format (**Executive Summary**, **Technical Analysis**, **Comprehensive Report**) from the team's indicators: threats analysed, new threats discovered, active actors and campaigns, top techniques, and recommendations. Reports are kept in **Report History** and retrievable over the API.
+**Threat Landscape Reporting** generates a report for a period (last 7, 30 or 90 days) from the team's indicators: threats analysed, new threats discovered, active actors and campaigns, top techniques, and recommendations. The **Report Format** you choose decides what the report contains:
+
+| Format | Contents |
+| --- | --- |
+| **Executive Summary** | Headline counts, severity mix, risk level, a summary written from the report's own numbers, the top three recommendations (with the total) and priority actions. Indicator, IOC, CVE and actor detail is left out, and the report says so |
+| **Technical Analysis** | All detail sections, without the executive summary |
+| **Comprehensive Report** | Everything |
+
+The **risk level** is the highest indicator severity in the period. It shows *N/A* when the period has no indicators, or when none of its indicators has a recognized severity; hover over it to see which. Reports are kept in **Report History**, with their generation time read as UTC, and are retrievable over the API exactly as stored. An unsupported format is refused with HTTP 400.
 
 ![Threat Landscape Reporting: report period and format, Generate Report and Refresh History; report history with one generated report](/img/screenshots/ai-threat-intelligence/ti-reporting.webp)
 
@@ -104,7 +112,7 @@ It is a map of *observed activity and intelligence*, not of your defensive cover
 ![Bulk Import/Export & IOC Lifecycle: import CSV/JSON/STIX, export STIX 2.1 filtered by type; confidence decay, aging configuration, expiration policy](/img/screenshots/ai-threat-intelligence/ti-import-export.webp)
 
 - **Bulk import** — paste CSV, JSON or STIX 2.1 (there is no file upload); indicators are validated, duplicates are skipped, and imports default to TLP:AMBER and confidence 50.
-- **Bulk export** — STIX 2.1 (or CSV / JSON), optionally filtered by indicator type, for sharing with a partner or loading into a SIEM; expired indicators are left out.
+- **Bulk export** — downloads a file: a STIX 2.1 bundle (or CSV / JSON), optionally filtered by indicator type, for sharing with a partner or loading into a SIEM; expired indicators are left out. Over the API, `POST /api/enhanced-threat-intelligence/bulk-export?download=true` returns the file itself, and a `tlp_filter` in the request limits the export to that TLP marking. In the CSV, a value that a spreadsheet would run as a formula (starting with `=`, `+`, `-` or `@`) is prefixed with `'`, because indicator values and descriptions come from outside sources.
 - **Archiving** — a daily clean-up archives indicators not seen for **90 days**, including ones you created or imported. Archived indicators stop matching.
 - **Indicator aging** *(when configured for the team under IOC Lifecycle Management)* — confidence **decays** by a set percentage per day (0.5 % by default, floor 10 %) and indicators **expire** after a time-to-live (90 days by default, configurable per type). Aging is applied daily and can be applied on demand. This is why the dashboard's *active threats* is not a monotonically growing number.
 

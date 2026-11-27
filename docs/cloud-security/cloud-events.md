@@ -7,7 +7,7 @@ description: "Stream CloudTrail, Google Cloud Audit Log and Azure Activity Log e
 
 # Real-Time Cloud Events
 
-Scans tell you the state of an account every day. **Cloud Events** tells you the moment it changes. Your cloud pushes audit events to your team's platform webhook; the platform keeps the security-relevant ones, enriches them with who did what from where, raises a finding for each, and shows them on a live feed.
+Scans tell you the state of an account every day. **Cloud Events** tells you the moment it changes. Your cloud pushes audit events to your team's platform webhook; the platform keeps the security-relevant ones, enriches them with who did what from where, raises a finding for each, and shows them on a live feed. Every change, security-listed or not, also appears on the **Changes** tab ([Cloud Change Monitoring](./change-monitoring.md)).
 
 **Where:** Cloud Security → **Cloud Events**.
 
@@ -15,10 +15,13 @@ Scans tell you the state of an account every day. **Cloud Events** tells you the
 
 ## What you get
 
-- **Curated, not raw.** Only events that matter for security are kept — roughly **270 AWS**, **220 GCP** and **155 Azure** event types across identity, network, storage, logging, encryption, compute and database. Everything else is recorded as ignored, and failed API calls are skipped because they changed nothing.
+- **Curated, not raw.** Only events that matter for security are kept — roughly **270 AWS**, **220 GCP** and **155 Azure** event types across identity, network, storage, logging, encryption, compute and database. Everything else is kept off this feed (stored as *ignored*), and failed API calls are skipped because they changed nothing.
 - **Enriched.** Each event shows the **actor / principal**, **source IP**, **user agent / client**, **service**, **region**, **account or project**, the **affected resource**, the **permissions** involved and a plain-language **What happened** summary. The **raw audit log** is one click away.
 - **A finding per event.** Each security-relevant event creates a real-time finding (severity from the event catalogue) next to your scan findings, so *CloudTrail logging stopped* or *S3 bucket policy made public* is triaged in the same place as everything else.
 - **Noise control.** IAM policy changes that only touch provider service agents are marked as noise; **Hide noise** (on by default) keeps the feed readable while the events remain searchable.
+- **A change record for every write.** Every call that changed something, including actions outside the security list, is also kept as a change record with who made it and whether it was expected. Those records feed the **Changes** tab; see [Cloud Change Monitoring](./change-monitoring.md).
+
+Events and change records are kept for 90 days by default (operators set `CLOUD_EVENT_RETENTION_DAYS`).
 
 ## Set up event delivery
 
@@ -32,12 +35,34 @@ On **Cloud Events**, open the setup panel and select **Generate token** (needs *
 
 | Cloud | Route | Webhook |
 | --- | --- | --- |
-| **AWS** | CloudTrail → **EventBridge rule** → API destination. Create an EventBridge *connection* with authorization type **API Key**, key name `x-offload-webhook-token` and your token as the value. | `POST https://<your-host>/api/cloud-events/webhook/aws` |
+| **AWS** | CloudTrail → **EventBridge rule** → API destination. Use the rule pattern and state shown [below](#the-aws-eventbridge-rule). Create an EventBridge *connection* with authorization type **API Key**, key name `x-offload-webhook-token` and your token as the value. | `POST https://<your-host>/api/cloud-events/webhook/aws` |
 | **AWS via SNS** | SNS HTTPS subscriptions cannot send headers, so subscribe the URL with the token in the path. | `POST https://<your-host>/api/cloud-events/webhook/aws/<team token>` |
-| **GCP** | Cloud Audit Logs → **Logging sink** → Pub/Sub topic → **push subscription** to the URL with the token. | `POST https://<your-host>/api/cloud-events/webhook/gcp/<team token>` |
+| **GCP** | Cloud Audit Logs → **Logging sink** → Pub/Sub topic → **push subscription** to the URL with the token. Admin Activity logs are always on; to track data writes (for example Cloud Storage object changes), enable **Data Write** audit logs for those services. | `POST https://<your-host>/api/cloud-events/webhook/gcp/<team token>` |
 | **Azure** | Activity Log → **Event Grid** system topic → event subscription (endpoint type *Webhook*) to the URL with the token. The subscription validation handshake is handled automatically. | `POST https://<your-host>/api/cloud-events/webhook/azure/<team token>` |
 
 The token can be sent either in the URL path or in the `x-offload-webhook-token` header, for any provider.
+
+### The AWS EventBridge rule
+
+The rule sends every CloudTrail call that changed something, the read-type calls on the security list (such as `GetSecretValue`, `AssumeRole` and `ConsoleLogin`), and console sign-ins. Other reads are not sent.
+
+```json
+{"detail-type":["AWS API Call via CloudTrail","AWS Console Sign In via CloudTrail"],"$or":[{"detail":{"readOnly":[false]}},{"detail":{"eventName":["AssumeRole","AssumeRoleWithSAML","AssumeRoleWithWebIdentity","ConsoleLogin","GetFederationToken","GetPasswordData","GetSecretValue","GetSessionToken"]}}]}
+```
+
+Set the rule's state to **Enabled with all CloudTrail management events** (`ENABLED_WITH_ALL_CLOUDTRAIL_MANAGEMENT_EVENTS`). With the default `ENABLED` state, EventBridge does not deliver read-only calls, so the security-relevant reads never arrive. If the console does not offer that state, set it with the AWS CLI:
+
+```bash
+aws events put-rule --name offload-security-cloud-events \
+  --event-pattern '<the pattern above>' \
+  --state ENABLED_WITH_ALL_CLOUDTRAIL_MANAGEMENT_EVENTS
+```
+
+In Terraform, set `state = "ENABLED_WITH_ALL_CLOUDTRAIL_MANAGEMENT_EVENTS"` on the `aws_cloudwatch_event_rule` (AWS provider 5.x or later). The in-app guide shows the CLI, console and Terraform versions with your instance's URLs.
+
+#### Update an existing AWS rule
+
+Rules created from the 1.4.0 instructions match only `AWS API Call via CloudTrail` and use the default state. They keep delivering changes, but console sign-ins and the security-relevant reads do not arrive. Run the `put-rule` command above against the existing rule name to update it. Once events are arriving, the guide is under **Setup instructions** on the **Cloud Events** tab.
 
 ### Authenticating the webhook
 
@@ -65,6 +90,7 @@ Events are visible to your team only. When the same provider account is connecte
 
 ## Related
 
+- [Cloud Change Monitoring](./change-monitoring.md) — every change, who made it, and whether it was expected.
 - [Required Permissions — Bucket C](./permissions.md#bucket-c--cloud-events-auditactivity-streaming) — the one-time setup rights per cloud.
 - [Reviewing & Triaging Findings](./findings.md) — where event-driven findings are worked.
 - [Notifications](../integrations/notifications.md) — routing critical events to Slack, Teams, email or a SIEM.

@@ -2,7 +2,7 @@
 title: "Cloud Security API"
 sidebar_label: "API"
 sidebar_position: 12
-description: "Every Cloud Security workflow over REST — connect accounts, start and poll scans, point-in-time reports and run comparison, grouped findings, custom policies, compliance scores, identity and network analysis, cloud events and SSL domains."
+description: "Every Cloud Security workflow over REST — connect accounts, start and poll scans, point-in-time reports and run comparison, grouped findings, custom policies, compliance scores, identity and network analysis, cloud events and change monitoring, and SSL domains."
 ---
 
 # Cloud Security API
@@ -125,6 +125,9 @@ See [Custom Cloud Policies](./custom-policies.md) for the condition language.
 | Setup guide | `GET /api/cloud-events/setup-guide` | Per-provider URLs and steps for your instance. |
 | Recent events | `GET /api/cloud-events/recent?limit=50&provider=&severity=` | Enriched events (raw log omitted). |
 | Ingestion stats | `GET /api/cloud-events/stats` | Totals and per-provider counts. |
+| List changes | `GET /api/cloud-events/changes?hours=24&skip=0&limit=50&account_id=&provider=&actor_kind=&status=&search=` | Newest first. `hours` up to 2160 (90 days); `limit` up to 200; `actor_kind` `person` · `pipeline` · `cloud_automation` · `unknown`; `status` `expected` · `unexplained`. `total` is the real count for the filter; `summary` covers the window. Each row includes the previous change to the same resource. See [Cloud Change Monitoring](./change-monitoring.md). |
+| Review a change | `POST /api/cloud-events/changes/{event_id}/review` | Body `{ "status": "expected" \| "unexplained", "reason" }` (10–2000 characters). `expected` resolves the change's alert. Needs **Acknowledge Alerts**. |
+| Approved change identities | `GET /api/cloud-events/approved-identities` · `GET` · `PUT /api/cloud-events/approved-identities/{account_id}` | `PUT` body `{ "identities": [{ "pattern", "label" }] }` replaces the list (at most 200; 8+ characters besides `*`) and relabels the last 7 days; the response gives the relabel and alert counts. `PUT` needs **Manage Cloud Accounts**. |
 
 ## SSL certificates
 

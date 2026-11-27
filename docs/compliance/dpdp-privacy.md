@@ -115,7 +115,14 @@ The **triage** views list incidents whose reportability decision is pending; the
 
 ![Audit & Export: retention policy (730 days, residency india), generate an audit pack for a period with Verify integrity and Download PDF, and the recent DPDP audit events](/img/screenshots/compliance/dpdp-audit.webp)
 
-Every DPDP action (a DPIA approved, a vendor assessed, a breach declared, a report recorded) is written to the **DPDP audit event log**. An **audit pack** is an export, for a period you select, of those events plus the module's state at period end (readiness, SDF classification, DPIA and vendor summaries), persisted in full as an immutable record and downloadable as PDF.
+DPDP actions are written to the **DPDP audit event log** with the actor and time:
+
+- **DPIA**: created, submitted, approved (with its validity), rejected (with the reason), superseded and expired.
+- **SDF classification**: each classification or reclassification, recording the effective SDF flag that is stored (a manual designation can stand over the questionnaire result, which is recorded separately).
+- **Vendor assessment**: each assessment or reassessment.
+- **Breach**: each step of the incident workflow, such as declaring a breach and recording a notification or filing.
+
+Audit writes are best-effort: if one fails, the action is still saved and the failure is logged. DPIA, SDF and vendor events are recorded from release 1.4.1 onward; earlier periods contain breach events only. An **audit pack** is an export, for a period you select, of those events plus the module's state at period end (readiness, SDF classification, DPIA and vendor summaries), persisted in full as an immutable record and downloadable as PDF.
 
 Packs are sealed with an **HMAC-SHA256** under a server-held key, so someone with database access cannot reseal an altered pack. **Verify integrity** recomputes the seal and reports the reason when it fails, distinguishing tampering, a pack from an earlier format (plain SHA-256), and a pack sealed under a different key. The key is `DPDP_AUDIT_SIGNING_KEY`, or one derived from the platform's `SECRET_KEY` when that is unset; rotating it makes older packs report "signed under a different key". A pack whose stored events are incomplete is refused rather than served.
 

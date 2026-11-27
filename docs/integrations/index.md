@@ -19,7 +19,7 @@ Not every connection means the same thing. Each card in the catalog carries a **
 
 | Badge | Meaning | Tools |
 | --- | --- | --- |
-| **pulls data in** | The platform syncs data *from* the tool into its own views | Wazuh (agents → assets, host CVEs → vulnerability occurrences, alerts → Alerts), Greenbone OpenVAS (scan results → vulnerability occurrences), SonarQube (project and open-issue snapshot), Jenkins (job summary) |
+| **pulls data in** | The platform syncs data *from* the tool into its own views | Wazuh (agents → assets, host CVEs → vulnerability occurrences, alerts → Alerts), Greenbone OpenVAS (scan results → vulnerability occurrences; scans can also be started and managed from the platform), SonarQube (project and open-issue snapshot), Jenkins (job summary) |
 | **two-way** | Data flows both directions | Jira — tickets are created from findings, and ticket status closes or reopens the finding |
 | **sends out** | The platform pushes alerts, events or documents *to* the tool | Slack, Microsoft Teams, Google Chat, SMTP Email, PagerDuty, Confluence, Splunk, Syslog / CEF, GitHub Actions (pipeline configuration) |
 | **connection test only** | The connection is verified and recorded; no data flows | OWASP ZAP, Burp Suite, Nuclei, Snyk, CloudMapper, AWS Security Hub, Prowler |

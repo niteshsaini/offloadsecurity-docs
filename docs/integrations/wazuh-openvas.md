@@ -28,14 +28,16 @@ Wazuh and OpenVAS answer two different questions about your internal estate. Run
 The two integrations sit at different depths in the platform:
 
 - **Wazuh telemetry streams into the platform** — agents become assets, alerts reach the centralized **[Alerts](../vulnerability-risk/alerts.md)**, and host CVE state becomes vulnerability occurrences in **[Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx)**. SCA and FIM are browsed in the Endpoint Security dashboard.
-- **OpenVAS results are synced over GMP** — every 30 minutes the latest report of each Greenbone scan task becomes vulnerability occurrences (one per check, host and port) in the same Vulnerability Management views. You still define targets, scan configurations and schedules in the Greenbone console.
+- **OpenVAS results are synced over GMP** — the latest report of each Greenbone scan task becomes vulnerability occurrences (one per check, host and port) in the same Vulnerability Management views, every 30 minutes and within minutes of a scan finishing. Scans can be started, stopped, created, edited, deleted and scheduled from **Infra Command Center → Network VAPT (OpenVAS)**, as well as in the Greenbone console.
+- **Wazuh agents are OpenVAS targets** — each host in Endpoint 360 shows its OpenVAS scan state and can be scanned from there, and the **OpenVAS coverage** tab in Endpoint Security lists which Wazuh hosts have been scanned, not scanned, are in progress or failed. See the [OpenVAS Scanning deep-dive](../on-premises/openvas-scanning.md).
 
 Together they give you continuous host visibility *and* network vulnerability assessment in one place — covering the endpoint-hardening and internal-scanning controls that regulated environments require.
 
 ## Get started
 
 1. Connect **[Wazuh](./wazuh.md)** (Manager API + Indexer).
-2. Connect **[OpenVAS](./openvas.md)** (GMP on port 9390) and define your internal scan scope in the Greenbone console.
-3. Review host and network findings together in **[Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx)**, and Wazuh alerts in **[Alerts](../vulnerability-risk/alerts.md)**.
+2. Connect **[OpenVAS](./openvas.md)** (GMP on port 9390), then create scans for your internal scope from **Network VAPT (OpenVAS)** or the Greenbone console. Add scan credentials for authenticated scans, which find missing patches on each host (see the [OpenVAS Scanning deep-dive](../on-premises/openvas-scanning.md)).
+3. Use the **OpenVAS coverage** tab in Endpoint Security to find Wazuh hosts that have never been scanned.
+4. Review host and network findings together in **[Vulnerability Management](../vulnerability-risk/vulnerability-management/index.mdx)**, and Wazuh alerts in **[Alerts](../vulnerability-risk/alerts.md)**.
 
 For the full architecture of internal coverage, see the **[On-Premises](../on-premises/index.mdx)** section.

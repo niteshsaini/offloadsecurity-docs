@@ -2,7 +2,7 @@
 title: "Platform Security Troubleshooting & FAQ"
 sidebar_label: "Troubleshooting & FAQ"
 sidebar_position: 6
-description: "Locked accounts, lost authenticators, forced MFA setup, SSO that refuses sign-in, invitations that never arrive, API keys that return 401 or 403, sessions that end early, audit events you cannot see or verify — and answers to frequent questions."
+description: "Locked accounts, lost authenticators, forced MFA setup, SSO that refuses sign-in, invitations that never arrive, API keys that return 401, 403 or 429, sessions that end early, audit events you cannot see or verify, platform-admin pages that refuse you — and answers to frequent questions."
 ---
 
 # Platform Security Troubleshooting & FAQ
@@ -10,13 +10,13 @@ description: "Locked accounts, lost authenticators, forced MFA setup, SSO that r
 ## Signing in
 
 **"Sign-in temporarily locked after too many failed attempts".**
-Five failures from one address lock sign-in to that account from that address for 15 minutes; failing again after the lock doubles it (30, then 60 minutes). Wait, or sign in from your usual network — other addresses are not locked. The platform administrator can see `login_blocked` events in *Login history*. If SSO is enforced on the deployment, passwords are refused for everyone but the platform administrator — use **Sign in with …**.
+By default, five failures from one address lock sign-in to that account from that address for 15 minutes; failing again after the lock doubles it (30, then 60 minutes). Security Policy may set stricter values. Wait, or sign in from your usual network — other addresses are not locked. The platform administrator can see `login_blocked` events in *Login history* and clear the lock with **Unlock** on User Activity. If SSO is enforced on the deployment, passwords are refused for everyone but the platform administrator — use **Sign in with …**.
 
 **Sign-in is slow for one account.**
 More than 20 recent failures on that account, from any address, slow every attempt by up to 10 seconds. It clears once the failures stop.
 
 **I lost my authenticator.**
-Use one of your backup codes at the MFA prompt, then **Regenerate** codes and re-enrol from **Multi-Factor Auth**. With no codes left you cannot sign in alone: ask the platform administrator to reset your MFA (`POST /api/auth/mfa/admin/reset/{user_id}`, API only). You are signed out and notified, and must enrol again if the deployment enforces MFA. Keep the backup codes somewhere you can reach without the phone.
+Use one of your backup codes at the MFA prompt, then **Regenerate** codes and re-enrol from **Multi-Factor Auth**. With no codes left you cannot sign in alone: ask the platform administrator to reset your MFA (**Reset MFA** on User Activity). You are signed out and notified, and must enrol again if the deployment enforces MFA. Keep the backup codes somewhere you can reach without the phone.
 
 **After signing in I can only see the MFA setup page.**
 The deployment enforces MFA and your account has none. Enrol; the rest of the platform unlocks on that session as soon as MFA is enabled.
@@ -31,7 +31,7 @@ The message is the same whether or not the email exists, and sending needs the p
 The account was created with a temporary password, or an administrator set **Require change**. Set a new password meeting the rules; other sessions of yours are ended.
 
 **I was signed out in the middle of the day.**
-Sessions are fixed at 24 hours from sign-in, and five concurrent sessions per user are kept (a sixth evicts the oldest). You are also signed out when a team admin changes your role or removes you from a team, when the platform administrator signs your session out, requires a password change or resets your MFA, and when MFA enforcement is switched on while you have no MFA.
+Sessions last 24 hours from sign-in, and five concurrent sessions per user are kept (one more evicts the oldest). The platform administrator may have set a shorter lifetime or a lower limit on Security Policy. You are also signed out when a team admin changes your role or removes you from a team, when a platform administrator signs your session out, uses **Sign out everywhere**, requires a password change, resets your MFA or deactivates your account, and when MFA enforcement is switched on while you have no MFA.
 
 ## SSO
 
@@ -61,6 +61,15 @@ The deployment restricts registration to one email domain (`PUT /api/auth/org-se
 **The invitee never got the email.**
 Invitation mail needs SMTP; without it, share the link from the response. Links expire after 7 days — send a new one.
 
+**I can't revoke an invitation.**
+Only pending invitations of your own team can be revoked, with **Manage Users** (Admin or Security Manager). A 409 means it was already accepted, rejected or revoked.
+
+**An Admin invitation no longer works.**
+An Admin invitation is honored only while the person who sent it is still an active Admin of the team. Ask a current Admin to send a new one.
+
+**I was invited as Admin, but I can't enable modules or open Platform Setup.**
+An invited Admin is an org Admin, not a platform administrator. Modules, tiers, Platform Setup and the platform-admin console need a platform administrator.
+
 **I switched teams and my API script broke.**
 API keys are bound to the team that was active when they were created; switching your own active team does not move them. Create a key per team.
 
@@ -70,16 +79,19 @@ API keys are bound to the team that was active when they were created; switching
 Creating, editing, rotating and revoking keys needs **Manage Integrations** — the Admin or Security Manager role.
 
 **401 with a valid-looking key.**
-Expired (`expires_in_days`), revoked, past its rotation grace period, or its owner's account is disabled. `GET /api/api-keys` shows status and expiry; rotated keys list the successor.
+Expired (`expires_in_days`), revoked, past its rotation grace period (enforced on `/api/cicd/*` too since 1.4.1), or its owner's account is disabled or deactivated. `GET /api/api-keys` shows status and expiry; rotated keys list the successor.
 
 **403 on an endpoint that works in the browser.**
 Sessions carry every scope; keys carry only theirs. The 403 names the missing scope — add it (`scans:manage`, `vulnerabilities:manage`, …) or choose a wider preset. If the message says the route is **session-only** or has **no scope mapping**, no key can call it; use a signed-in session. Also check the IP allowlist if the request comes from a new runner, and that the key's owner is still a member of the team (a key acts with its owner's *current* role).
+
+**Allowlisted keys are refused from the right address.**
+Behind nginx or a load balancer, the backend sees the proxy's address unless `TRUSTED_PROXIES` is set to the proxy's exact address. Since 1.4.1 the allowlist is also enforced on `/api/cicd/*`, so CI keys can start failing (403) after an upgrade when `TRUSTED_PROXIES` is unset.
 
 **A key shows "review scopes" or "Will be refused".**
 It was created before scopes were enforced and was given scopes automatically on upgrade. Check them in the scope editor on the API Keys page; "Will be refused" lists calls the key made before that its scopes now block.
 
 **429 from the key's own limit.**
-`rate_limit_per_minute` (60 by default) is per key and separate from the platform's rate limits; raise it on the key or spread calls.
+Since 1.4.1, `rate_limit_per_minute` (60 by default) is enforced per key, across every route. It is separate from the platform's per-IP limits, which still apply. Wait for `Retry-After`, raise the limit on the key, or spread calls.
 
 **I need to see keys a former colleague created.**
 Removing a member from a team revokes their keys for that team. For other keys, team Admins can use `GET /api/api-keys/admin/team-keys`, which lists every key in the team with its owner.
@@ -87,19 +99,41 @@ Removing a member from a team revokes their keys for that team. For other keys, 
 ## Audit trail
 
 **I only see my own events.**
-By design for non-Admin roles. A team Admin sees the whole team; the platform administrator sees every team.
+By design for non-Admin roles. A team Admin sees the whole team; the platform administrator sees every team, from inside the admin IP allowlist when one is set.
 
 **Page views and searches are not in the audit trail.**
 By design: only write requests (and report and export downloads) are recorded.
 
 **Login attempts are not in the audit trail export.**
-Sign-in requests are recorded without bodies, and the detailed authentication events (`login_failed`, `login_blocked`, `session_expired`, …) live in the separate authentication log — User Activity → *Login history*, or `GET /api/auth/audit-log` for the platform administrator.
+Sign-in requests are recorded without bodies, and the detailed authentication events (`login_failed`, `login_blocked`, `session_expired`, …) live in the separate authentication log — User Activity → *Login history*, the **Auth events** tab of the Audit Log, or `GET /api/auth/audit-log` for the platform administrator.
 
 **Verify returns `truncated` or `broken`.**
 `broken` means an entry, anchor or head no longer matches its signature — an edit. `truncated` means entries are missing from the start or the end. Both are logged at ERROR on the backend; treat them as a security event. An `unknown_key` result usually means the chain key was rotated without keeping the old value in `AUDIT_CHAIN_HMAC_KEY_PREVIOUS` (or `SECRET_KEY` changed while the chain key was derived from it) — see [Deployment & Operations](../on-premises/deployment.md#audit-trail-integrity).
 
 **Verify returns a `job_id` instead of a result.**
 The chain has more than 100,000 entries; poll `GET /api/audit-trail/verify/jobs/{job_id}`.
+
+## Platform-admin console
+
+**A platform-admin page says "not allowed from this network address".**
+A platform-admin IP allowlist is set on Security Policy and your address is outside it. Connect from an allowed network. If no platform administrator can, the operator sets `ADMIN_IP_ALLOWLIST_ENFORCE=false` in `.env` and restarts the backend.
+
+**Security Policy refuses to save the allowlist.**
+The list must include your current address. Also, behind a proxy the backend does not trust, it cannot see real addresses: the operator must set `TRUSTED_PROXIES`.
+
+**An action asks for my password again.**
+That is step-up re-authentication, valid for 15 minutes by default on that browser session. An SSO-only platform administrator cannot step up; a platform administrator with a local password must perform the action.
+
+**Revoking a platform admin is refused.**
+The deployment must keep at least one active platform admin, and at least one who can sign in with a local password. Grant the role to another suitable account first.
+
+**I granted platform admin, but the user doesn't see the pages.**
+A grant takes effect at their next sign-in.
+
+**I can't deactivate a user.**
+You can't deactivate yourself, a platform admin (revoke the role first), the last admin or a team's only admin.
+
+## Menus and API docs
 
 **Client Menu Visibility hid a module, but the API still answers.**
 Intended: menu visibility is presentation only. Permissions are what stop an action; use roles for that.
@@ -113,10 +147,10 @@ Swagger and ReDoc are off when `ENVIRONMENT=production`; the operator enables th
 Not in the current release: six fixed roles per team, plus scoped API keys for narrower automation access.
 
 **Is there a session-timeout setting?**
-No — 24 hours fixed. Use MFA, SSO enforcement and the platform administrator's *Sign out* for stricter control.
+Since 1.4.1 the platform administrator can shorten the absolute session lifetime (24 hours by default, at least 15 minutes) on Security Policy. There is no idle timeout.
 
 **Can I set password expiry or history rules?**
-No. Use SSO and set them at your identity provider.
+No. Security Policy can raise the minimum length, but not set expiry or history. Use SSO and set them at your identity provider.
 
 **Do API keys expire?**
 By default after 90 days; `0` creates a non-expiring key (not recommended). Rotation keeps the old key alive for 48 hours by default.

@@ -19,7 +19,7 @@ Most of what this page describes is stored on the scan record and returned by th
 | **Image identity** | The resolved digest, whether the scan was digest-pinned, and for multi-arch images the platform scanned. See [One digest, every tool](./image-scanning.md#digest-pinning). |
 | **Engines** | Each tool's version. Trivy: its report schema and time and the arguments used. Grype: its version. |
 | **Vulnerability database** | Trivy's database version and update time; Grype's database build time and schema. Each database's **age in days**, and **stale** when older than `CONTAINER_VULN_DB_MAX_AGE_DAYS` (default 7). |
-| **Registry login** | The registry host and whether a login was used or not required — never a credential. |
+| **Registry login** | The registry host and whether a login was used or not required — never a credential. ECR logins are made as the linked AWS account ([Registry sign-in](./registries.md#limits)). |
 | **Raw output** | For registry scans, each tool's original output is kept in object storage with its SHA-256. |
 | **Outcome per image** | Completed, partial or failed, from what Trivy and Grype actually returned. |
 | **What the scanners said** | Findings keep the scanner's own severity and fields; secrets and base-OS end-of-support are recorded on the scan. |
@@ -37,7 +37,7 @@ Every container scan — single image, bulk, scan job or registry sweep — reco
 - Without one, the registry's standing authorization applies. A registry sweep uses the cloud account's.
 - With none, the scan is recorded as *authorization not recorded* — never as authorized.
 
-When an administrator sets `SCAN_REQUIRE_AUTHORIZATION=true`, a scan without a current authorization is refused (HTTP 400), and webhook or polling auto-scans are skipped and logged. In 1.4.0 the container screens do not have authorization fields: record the first authorization for a registry by sending `engagement` with a scan over the API (for example `POST /api/container-registries/saved/{registry_id}/scan-existing`).
+When an administrator sets `SCAN_REQUIRE_AUTHORIZATION=true`, a scan without a current authorization is refused (HTTP 400), and webhook or polling auto-scans are skipped and logged. The container screens do not have authorization fields: record the first authorization for a registry by sending `engagement` with a scan over the API (for example `POST /api/container-registries/saved/{registry_id}/scan-existing`).
 
 ## Compare two scans of an image {#compare-two-scans}
 
@@ -54,7 +54,7 @@ Compares a registry image scan with a baseline — by default the image's previo
 | `not_in_new_image` | In the baseline, not in this scan, and the tag now names a **different digest**. The old image had it; it is not "fixed", because that image may still run. |
 | `unchanged` / `severity_changed` | Present in both. |
 
-The response also carries caveats when either scan was degraded, the scans used different tools, or a scan was by tag rather than digest. The comparison is API-only in 1.4.0.
+The response also carries caveats when either scan was degraded, the scans used different tools, or a scan was by tag rather than digest. The comparison is API-only.
 
 ## Verifiable exports {#verifiable-exports}
 
