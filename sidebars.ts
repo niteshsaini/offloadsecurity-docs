@@ -103,7 +103,12 @@ const sidebars: SidebarsConfig = {
       collapsed: true,
       link: {type: 'doc', id: 'release-notes/index'},
       // Newest first. Add each release's page here when it is cut.
-      items: ['release-notes/v1-4-0'],
+      items: [
+        'release-notes/v1-4-1-beta-6',
+        'release-notes/v1-4-1-beta-5',
+        'release-notes/v1-4-1-beta-4',
+        'release-notes/v1-4-0',
+      ],
     },
     {type: 'html', value: 'Learn more', className: 'sidebar-group', defaultStyle: true},
     {

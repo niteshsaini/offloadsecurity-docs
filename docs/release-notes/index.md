@@ -10,7 +10,12 @@ Each platform release is a version number (`MAJOR.MINOR.PATCH`) and a matching s
 
 | Version | Released | Type | Notes |
 | --- | --- | --- | --- |
+| 1.4.1-beta.6 | 14 November 2026 | Pre-release | [1.4.1-beta.6 release notes](./v1-4-1-beta-6.md) |
+| 1.4.1-beta.5 | 13 November 2026 | Pre-release | [1.4.1-beta.5 release notes](./v1-4-1-beta-5.md) |
+| 1.4.1-beta.4 | 12 November 2026 | Pre-release | [1.4.1-beta.4 release notes](./v1-4-1-beta-4.md) |
 | **1.4.0** (current) | 31 October 2026 | Beta | [1.4.0 release notes](./v1-4-0.md) |
+
+Pre-releases (`1.4.1-beta.N`) are builds for testing, not for production. They share the 1.4.0 documentation: there is no separate documentation version for them, and the pages may not yet describe what is new in a pre-release.
 
 ## Versioned documentation
 
